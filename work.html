@@ -187,6 +187,29 @@
 
   .toggle-btn { position: fixed; bottom: 60px; right: 14px; padding: 10px 16px; background: var(--rose); border: none; color: var(--bg); font-weight: 800; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 100px; cursor: pointer; font-family: 'SF Mono', Menlo, monospace; z-index: 49; }
 
+
+  /* TikTok-style scrollable phone with multi-slide feed */
+  .phone { overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .phone::-webkit-scrollbar { display: none; }
+  .phone-slide { position: relative; width: 100%; height: 100%; flex-shrink: 0; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; }
+  .phone-slide.vg1 { background: linear-gradient(180deg, #1a0a10 0%, #501838 70%, var(--rose) 100%); }
+  .phone-slide.vg2 { background: linear-gradient(160deg, #0a0a18 0%, #2a2a4a 50%, #8a8acf 100%); }
+  .phone-slide.vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
+  .phone-slide.vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
+  .phone-slide.vg5 { background: linear-gradient(200deg, #1a0a0a 0%, #5a2a10 50%, #c4533a 100%); }
+  .phone-slide.vg6 { background: linear-gradient(180deg, #0a0806 0%, #1a2a18 60%, var(--leaf) 100%); }
+  .phone-slide.vg7 { background: linear-gradient(135deg, #100808 0%, #3a1410 60%, var(--amber) 100%); }
+  .phone-slide::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(232,88,154,0.22) 0%, transparent 60%); }
+  .phone-slide::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.025) 3px 4px); pointer-events: none; }
+  .phone-slide .phone-overlay,
+  .phone-slide .phone-actions,
+  .phone-slide .phone-play,
+  .phone-slide .phone-progress { z-index: 5; }
+
+  /* Active sidebar item */
+  .sr-item.active { background: rgba(232,88,154,0.12); border-left: 2px solid var(--rose); padding-left: 8px; }
+  .sr-item { transition: all .15s; }
+
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 
   /* Vertical gradients for cycling */
@@ -326,29 +349,144 @@
   </div>
 
   <div class="shorts-stage">
-    <div class="phone">
-      <div class="phone-play"></div>
-
-      <div class="phone-overlay">
-        <div class="po-credit-tag">BTS · CHILDSTAR · 2025</div>
-        <div class="po-title">Day 3 — The hardest shot</div>
-        <div class="po-credits">
-          <strong>Grace VanderWaal</strong> — "CHILDSTAR: Final Act"<br>
-          Director · Executive Producer · 3 operators, one take
+    <div class="phone" id="phoneScroll">
+      <div class="phone-slide vg1" data-clip="0">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">BTS · CHILDSTAR · 2025</div>
+          <div class="po-title">Day 3 — The hardest shot</div>
+          <div class="po-credits"><strong>Grace VanderWaal</strong> — "CHILDSTAR: Final Act"<br>Director · Executive Producer · 3 operators, one take</div>
+          <div class="po-music">Original sound — Grace VanderWaal</div>
         </div>
-        <div class="po-music">Original sound — Grace VanderWaal</div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">142K</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">3.2K</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">8.1K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
       </div>
-
-      <div class="phone-actions">
-        <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">142K</span></div>
-        <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">3.2K</span></div>
-        <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">8.1K</span></div>
-        <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+      <div class="phone-slide vg2" data-clip="1">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">BTS · LIGHTING</div>
+          <div class="po-title">How I lit the bedroom scene</div>
+          <div class="po-credits">Cinematographer<br>One key, one bounce, one practical</div>
+          <div class="po-music">Original sound — landbound</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">87K</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">1.4K</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">2.1K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
       </div>
-
-      <div class="phone-progress"><div class="fill"></div></div>
-      <div class="swipe-hint"><span>↑</span><span>↓</span></div>
+      <div class="phone-slide vg3" data-clip="2">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">MUSIC · TWO FEET · 2024</div>
+          <div class="po-title">Two Feet — vertical cut</div>
+          <div class="po-credits"><strong>Two Feet</strong><br>Director · DP · Editor · VFX</div>
+          <div class="po-music">Bad Things — Two Feet</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">1.8M</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">42K</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">89K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
+      </div>
+      <div class="phone-slide vg4" data-clip="3">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">EDITS · 2024</div>
+          <div class="po-title">Edit timeline reveal</div>
+          <div class="po-credits">Resolve timeline showcase<br>How a 4-min music video gets cut</div>
+          <div class="po-music">Original sound — landbound</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">412K</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">12K</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">18K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
+      </div>
+      <div class="phone-slide vg5" data-clip="4">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">BTS · SURFACES · 2024</div>
+          <div class="po-title">Surfaces tour BTS</div>
+          <div class="po-credits"><strong>Surfaces</strong><br>Cinematographer on the road</div>
+          <div class="po-music">Sunday Best — Surfaces</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">2.1M</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">58K</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">124K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
+      </div>
+      <div class="phone-slide vg6" data-clip="5">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">EDITS · VFX · 2023</div>
+          <div class="po-title">VFX comp walkthrough</div>
+          <div class="po-credits">The First Circle — practical-to-CG transition<br>VFX Supervisor</div>
+          <div class="po-music">Original sound — landbound</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">38K</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">890</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">1.2K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
+      </div>
+      <div class="phone-slide vg7" data-clip="6">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">MUSIC · POSNER · 2024</div>
+          <div class="po-title">Posner sneak</div>
+          <div class="po-credits"><strong>Mike Posner</strong><br>Promo session — 45 min, available light</div>
+          <div class="po-music">Cooler Than Me — Mike Posner</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">720K</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">19K</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">34K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
+      </div>
+      <div class="phone-slide vg3" data-clip="7">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">BTS · DRONE</div>
+          <div class="po-title">Drone over Topanga</div>
+          <div class="po-credits">Two Feet — Secrets shoot<br>DJI Inspire 3 · sunrise pass</div>
+          <div class="po-music">Original sound — landbound</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">2.4M</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">67K</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">142K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
+      </div>
+      <div class="phone-slide vg2" data-clip="8">
+        <div class="phone-play"></div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">EDITS · DP TALK</div>
+          <div class="po-title">Why I shoot anamorphic</div>
+          <div class="po-credits">Director / DP<br>Why the squeeze matters for music video</div>
+          <div class="po-music">Original sound — landbound</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">501K</span></div>
+          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">14K</span></div>
+          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">22K</span></div>
+          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+        </div>
+      </div>
     </div>
+    <div class="swipe-hint"><span>↑</span><span>↓</span></div>
   </div>
 
   <div class="shorts-rail">
@@ -371,19 +509,126 @@
 <div class="banner">WORK · YOUTUBE + SHORTS (nav linked)</div>
 
 <script>
+  // ============= WORK / YouTube — click sidebar to swap player =============
+  const VIDEOS = [
+    { palette: 'frame', title: 'CHILDSTAR: Final Act', sub: '<strong>Grace VanderWaal</strong> · Music Video · 2025 · 4.2M views', chips: [['Director','amber'],['Executive Producer','amber'],['VFX',''],['Editor','']], credits: [['Artist','<strong>Grace VanderWaal</strong>'],['Label','Sony / RCA'],['Released','June 2025'],['Crew','Landbound — Jacob Boehme (Dir/EP)'],['Tools','Arri Alexa · Resolve · After Effects · Unreal Engine']], dur: '04:12' },
+    { palette: 'g2', title: 'Bleed', sub: 'Music Video · 2025 · 1.8M views', chips: [['Director','amber'],['Editor','amber']], credits: [['Artist','—'],['Released','2025'],['Crew','Landbound — Director, Editor'],['Tools','Arri Mini LF · Resolve · After Effects']], dur: '03:24' },
+    { palette: 'g3', title: 'Secrets', sub: '<strong>Two Feet</strong> · Music Video · 2024 · 3.2M views', chips: [['Director','amber'],['DP','amber'],['Editor',''],['VFX','']], credits: [['Artist','<strong>Two Feet</strong>'],['Released','2024'],['Crew','Landbound — Dir/DP/Ed/VFX'],['Tools','Arri Mini LF · Resolve · Nuke']], dur: '03:48' },
+    { palette: 'g4', title: 'The First Circle', sub: 'Feature · 2023 · 250 VFX shots supervised', chips: [['VFX Supervisor','amber']], credits: [['Format','Feature · 94 min'],['Released','2023'],['Crew','Landbound — VFX Sup'],['Shots','250+ shots'],['Tools','Nuke · After Effects · Blender · Unreal']], dur: '94:00' },
+    { palette: 'g5', title: 'Allison Hagendorf Show S4', sub: 'Series · 2025-26 · ACTIVE', chips: [['Director','amber'],['Editor','amber']], credits: [['Format','Talk-format series'],['Released','2025-26'],['Crew','Landbound — Dir + Ed'],['Tools','Sony FX9 · Resolve · After Effects']], dur: 'SERIES' },
+    { palette: 'g6', title: 'Forgive & Forget', sub: 'Short Film · 2022 · SCREAMFEST Selection', chips: [['Director','amber'],['Writer',''],['Editor',''],['DP',''],['VFX Sup','']], credits: [['Festival','SCREAMFEST · 2022'],['Format','Short — 12 min'],['Crew','Landbound — Dir/Wr/Ed/DP/VFX'],['Tools','Blackmagic · Resolve · After Effects']], dur: '12:00' },
+    { palette: 'g7', title: 'Super Bowl Spot', sub: 'Commercial · 2024 · 5-state air', chips: [['Director','amber']], credits: [['Air','5-state Super Bowl rotation'],['Released','2024'],['Crew','Landbound — Director'],['Tools','Arri Alexa Mini · Resolve']], dur: '00:30' },
+    { palette: 'g8', title: 'Dreams', sub: '<strong>Surfaces</strong> · Music Video · 2023', chips: [['DP','amber']], credits: [['Artist','<strong>Surfaces</strong>'],['Released','2023'],['Crew','Landbound — Cinematographer'],['Tools','Arri Alexa · Anamorphic']], dur: '03:10' }
+  ];
+
+  const recs = document.querySelectorAll('.rec');
+  const frameEl = document.querySelector('.player .frame');
+  const titleEl = document.querySelector('.meta .title');
+  const subEl = document.querySelector('.meta .sub');
+  const actionsEl = document.querySelector('.meta .actions');
+  const creditsEl = document.querySelector('.credits');
+  const durEl = document.querySelector('.player .ctrl .row span');
+
+  recs.forEach((rec, i) => {
+    rec.addEventListener('click', () => {
+      const v = VIDEOS[i];
+      if (!v) return;
+      recs.forEach(r => r.classList.remove('active'));
+      rec.classList.add('active');
+      // Update player gradient — toggle to the matching thumb class
+      frameEl.className = 'frame ' + (v.palette === 'frame' ? '' : v.palette);
+      titleEl.innerHTML = v.title;
+      subEl.innerHTML = v.sub;
+      actionsEl.innerHTML = v.chips.map(([t, cls]) => `<span class="chip ${cls}">${t}</span>`).join('');
+      creditsEl.innerHTML = v.credits.map(([k, val]) => `<div class="row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('');
+      durEl.textContent = `01:34 / ${v.dur}`;
+      // Smooth scroll player into view (optional)
+      document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Make .player .frame respect dynamic palette class (mirror .g1..g8 gradients)
+  const styles = document.createElement('style');
+  styles.textContent = `
+    .player .frame.g1 { background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); opacity: 0.55; }
+    .player .frame.g2 { background: linear-gradient(160deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); opacity: 0.55; }
+    .player .frame.g3 { background: linear-gradient(45deg, #0a0806 0%, #2a1810 50%, #a82828 100%); opacity: 0.55; }
+    .player .frame.g4 { background: linear-gradient(180deg, #1f2a18 0%, #4a6a2a 60%, #c5e060 100%); opacity: 0.55; }
+    .player .frame.g5 { background: linear-gradient(120deg, #100808 0%, #3a1410 60%, var(--amber) 100%); opacity: 0.55; }
+    .player .frame.g6 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); opacity: 0.55; }
+    .player .frame.g7 { background: linear-gradient(180deg, #2a2018 0%, #b08040 100%); opacity: 0.55; }
+    .player .frame.g8 { background: linear-gradient(200deg, #1a0a0a 0%, #5a2a10 50%, #ff5f57 100%); opacity: 0.55; }
+  `;
+  document.head.appendChild(styles);
+
+  // ============= SHORTS — TikTok-style scroll =============
   function openShorts() { document.getElementById('shorts').classList.add('open'); }
   function closeShorts() {
     document.getElementById('shorts').classList.remove('open');
-    // Clear the hash so refresh doesn't reopen
     if (window.location.hash === '#shorts') {
       history.replaceState(null, '', window.location.pathname);
     }
   }
-  // ESC to close shorts
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeShorts();
+
+  const phoneScroll = document.getElementById('phoneScroll');
+  const slides = document.querySelectorAll('.phone-slide');
+  const srItems = document.querySelectorAll('.sr-item');
+
+  // Click sidebar item → scroll phone to that slide
+  srItems.forEach((item, i) => {
+    item.addEventListener('click', () => {
+      const slide = slides[i];
+      if (slide && phoneScroll) {
+        phoneScroll.scrollTo({ top: slide.offsetTop, behavior: 'smooth' });
+      }
+    });
   });
-  // Auto-open shorts if URL hash is #shorts (deep link from home page)
+
+  // IntersectionObserver — sync active sidebar item with visible slide
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          const idx = parseInt(entry.target.dataset.clip);
+          srItems.forEach(it => it.classList.remove('active'));
+          if (srItems[idx]) {
+            srItems[idx].classList.add('active');
+            srItems[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      });
+    }, { root: phoneScroll, threshold: [0.5] });
+    slides.forEach(s => io.observe(s));
+  }
+
+  // Keyboard: arrows to navigate slides when shorts open
+  document.addEventListener('keydown', (e) => {
+    const shortsOpen = document.getElementById('shorts').classList.contains('open');
+    if (!shortsOpen) return;
+    if (e.key === 'Escape') closeShorts();
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const current = Array.from(slides).findIndex(s => {
+        const rect = s.getBoundingClientRect();
+        const phoneRect = phoneScroll.getBoundingClientRect();
+        return Math.abs(rect.top - phoneRect.top) < 50;
+      });
+      const next = slides[Math.min(current + 1, slides.length - 1)];
+      if (next) phoneScroll.scrollTo({ top: next.offsetTop, behavior: 'smooth' });
+    }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const current = Array.from(slides).findIndex(s => {
+        const rect = s.getBoundingClientRect();
+        const phoneRect = phoneScroll.getBoundingClientRect();
+        return Math.abs(rect.top - phoneRect.top) < 50;
+      });
+      const prev = slides[Math.max(current - 1, 0)];
+      if (prev) phoneScroll.scrollTo({ top: prev.offsetTop, behavior: 'smooth' });
+    }
+  });
+
+  // Deep link
   if (window.location.hash === '#shorts') {
     openShorts();
   }
