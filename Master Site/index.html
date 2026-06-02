@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>jacobboehme.com — Home v12</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #12100c; --bg-2: #1a1612; --bg-3: #221c16;
+    --line: #2d251c; --line-2: #1f1a14;
+    --ink: #f1e6cd; --ink-2: #c7b893; --ink-3: #8a7a5e; --ink-4: #5d4f3a;
+    --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
+  }
+
+  body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.5; mix-blend-mode: overlay; }
+  body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%); }
+  a { color: inherit; text-decoration: none; }
+
+  .nav { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg-2); border-right: 1px solid var(--line); padding: 24px 0; z-index: 20; display: flex; flex-direction: column; }
+  .nav-brand { padding: 0 22px 22px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
+  .nav-brand .logo { font-size: 15px; font-weight: 900; letter-spacing: 0.04em; color: var(--amber); }
+  .nav-brand .tag { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: 6px; }
+  .nav-items { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; font-size: 12px; color: var(--ink-2); cursor: pointer; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--ink); }
+  .nav-item.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .nav-socials { margin: 22px 14px 0; padding: 16px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 8px; }
+  .nav-socials-h { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 10px; }
+  .nav-soc { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+  .nav-soc:not(:last-child) { border-bottom: 1px solid var(--line-2); }
+  .nav-soc-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); color: #000; }
+  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); color: #fff; }
+  .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
+  .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
+  .nav-soc-info { flex: 1; min-width: 0; }
+  .nav-soc-h { font-size: 11px; color: var(--ink); font-weight: 700; line-height: 1.1; }
+  .nav-soc-m { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 1px; }
+  .nav-bottom { margin-top: auto; padding: 20px 22px 0; font-size: 10px; color: var(--ink-4); line-height: 1.6; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .nav-bottom .status { display: flex; align-items: center; gap: 6px; color: var(--leaf); margin-bottom: 4px; }
+  .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  .main { margin-left: 220px; padding: 32px 40px 60px; max-width: 1400px; position: relative; z-index: 2; }
+
+  /* ============= SHARED HERO PANEL ============= */
+  .hero-card { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 36px; }
+  .hero-bar { padding: 11px 18px; background: var(--bg-3); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; font-size: 11px; min-height: 42px; }
+  .hero-bar .badge-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(140,175,58,0.12); border: 1px solid rgba(140,175,58,0.4); color: var(--leaf); border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .hero-bar .badge-status .d { width: 5px; height: 5px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+
+  /* Internal split — Jacob | Connect */
+  .hero-split { display: grid; grid-template-columns: 1.55fr 1px 1fr; transition: grid-template-columns .3s ease; }
+  .hero-divider { background: var(--line-2); }
+  .hero-left { padding: 22px 24px; }
+  .hero-right { padding: 28px 24px; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+
+  /* When expanded: Jacob takes full width, Connect + divider hide */
+  .hero-card.open .hero-split { grid-template-columns: 1fr 0 0; }
+  .hero-card.open .hero-divider,
+  .hero-card.open .hero-right { display: none; }
+
+  /* JACOB SIDE */
+  .char-head { display: flex; gap: 18px; align-items: center; }
+  .avatar { width: 88px; height: 112px; border-radius: 6px; background: linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%); border: 1px solid var(--line); flex-shrink: 0; position: relative; overflow: hidden; }
+  .avatar::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 4px, rgba(255,255,255,0.02) 4px 5px); }
+  .avatar::after { content: '▢'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-size: 22px; color: var(--ink-4); }
+  .id-block { flex: 1; min-width: 0; }
+  .id-block .name { font-size: 34px; font-weight: 900; letter-spacing: -0.025em; color: var(--ink); line-height: 1; margin-bottom: 10px; }
+  .id-block .tagline { font-size: 13px; color: var(--ink-2); margin-bottom: 12px; font-family: Georgia, 'Times New Roman', serif; font-style: italic; }
+  .id-block .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .id-block .pill { padding: 4px 10px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.28); color: var(--amber); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; border-radius: 100px; }
+
+  /* UNIFIED STATS BAR — 45M+ + 4 social stats */
+  .stats-bar {
+    margin-top: 18px;
+    display: flex;
+    align-items: stretch;
+    border-top: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .stat-big {
+    padding: 12px 18px 12px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    flex: 0 0 auto;
+    border-right: 1px solid var(--line-2);
+  }
+  .stat-big .num { font-size: 28px; font-weight: 900; color: var(--ink); letter-spacing: -0.02em; line-height: 1; font-family: 'SF Mono', Menlo, monospace; }
+  .stat-big .num .plus { color: var(--amber); }
+  .stat-big .lbl { font-size: 9px; color: var(--amber); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; }
+  .stat-small { padding: 12px 14px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1; cursor: pointer; transition: background .15s; border-right: 1px solid var(--line-2); }
+  .stat-small:last-child { border-right: none; }
+  .stat-small:hover { background: rgba(245,176,66,0.04); }
+  .stat-small .top { display: flex; align-items: center; gap: 6px; }
+  .stat-small .ic { width: 14px; height: 14px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; flex-shrink: 0; }
+  .stat-small .ic.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); color: #000; }
+  .stat-small .ic.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); color: #fff; }
+  .stat-small .ic.imdb { background: #f5c518; color: #000; font-size: 7px; }
+  .stat-small .ic.aw { background: rgba(140,175,58,0.2); color: var(--leaf); }
+  .stat-small .k { font-size: 9px; color: var(--ink-4); letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; }
+  .stat-small .v { font-size: 16px; font-weight: 900; color: var(--ink); letter-spacing: -0.01em; font-family: 'SF Mono', Menlo, monospace; line-height: 1; }
+
+  /* Latest Drop */
+  .latest-drop { margin-top: 18px; padding: 0; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; cursor: pointer; transition: all .15s; display: grid; grid-template-columns: 200px 1fr; }
+  .latest-drop:hover { border-color: var(--amber); transform: translateY(-1px); }
+  .ld-thumb { aspect-ratio: 16/9; background: linear-gradient(135deg, #2a1f15 0%, #5b3018 30%, #c97f2e 70%, #f5b042 100%); position: relative; overflow: hidden; }
+  .ld-thumb::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 40%, rgba(245,176,66,0.3) 0%, transparent 60%); }
+  .ld-thumb::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); }
+  .ld-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; z-index: 2; }
+  .ld-play::after { content: ''; width: 0; height: 0; border-left: 13px solid var(--bg); border-top: 8px solid transparent; border-bottom: 8px solid transparent; margin-left: 3px; }
+  .ld-dur { position: absolute; right: 8px; bottom: 8px; padding: 2px 6px; background: rgba(0,0,0,0.8); color: #fff; font-family: 'SF Mono', Menlo, monospace; font-size: 9px; font-weight: 700; border-radius: 3px; z-index: 2; letter-spacing: 0.04em; }
+  .ld-pulse { position: absolute; top: 8px; left: 8px; padding: 3px 8px; background: rgba(232,88,154,0.92); color: #fff; font-family: 'SF Mono', Menlo, monospace; font-size: 8px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 100px; z-index: 2; display: inline-flex; align-items: center; gap: 5px; }
+  .ld-pulse::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #fff; animation: pulse 1.5s infinite; }
+  .ld-info { padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+  .ld-lbl { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 2px; }
+  .ld-title { font-size: 16px; color: var(--ink); font-weight: 900; line-height: 1.15; margin-bottom: 3px; letter-spacing: -0.01em; }
+  .ld-meta { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; line-height: 1.5; }
+  .ld-meta strong { color: var(--ink-2); }
+  .ld-stats { display: flex; gap: 10px; margin-top: 6px; font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .ld-stats strong { color: var(--amber); }
+
+  /* Expand button — secondary now (outline, not solid) */
+  .expand-toggle {
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: transparent;
+    border: 1px solid rgba(245,176,66,0.4);
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+    color: #fff;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    font-family: 'SF Mono', Menlo, monospace;
+    text-transform: uppercase;
+    font-weight: 800;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .expand-toggle:hover { background: rgba(245,176,66,0.08); border-color: var(--amber); color: var(--amber); }
+  .expand-toggle .arr { transition: transform .2s; }
+  .hero-card.open .expand-toggle .arr { transform: rotate(180deg); }
+  .hero-card.open .expand-toggle .lbl-closed { display: none; }
+  .expand-toggle .lbl-open { display: none; }
+  .hero-card.open .expand-toggle .lbl-open { display: inline; }
+
+  .expanded { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+  .hero-card.open .expanded { max-height: 2000px; }
+  .expanded-inner { padding-top: 22px; margin-top: 22px; border-top: 1px solid var(--line-2); }
+
+  .section { margin-bottom: 24px; }
+  .section:last-child { margin-bottom: 0; }
+  .section-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line-2); }
+  .section-head .label { font-size: 12px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
+  .section-head .count { margin-left: auto; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; }
+
+  .skills { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .skill { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px; padding: 12px 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: all .15s; }
+  .skill:hover { background: rgba(245,176,66,0.05); border-color: var(--amber); }
+  .skill .nm { font-size: 12px; color: var(--ink); font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+  .skill .yr { font-size: 12px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-weight: 700; letter-spacing: 0.04em; }
+  .equip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .equip-chip { padding: 10px 14px; background: var(--bg-3); border: 1px solid var(--line-2); border-radius: 6px; font-size: 11px; color: var(--ink); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-align: center; font-weight: 700; }
+  .badges-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ribbon-badge { padding: 8px 14px; background: rgba(245,176,66,0.07); border: 1px solid rgba(245,176,66,0.28); color: var(--amber); font-size: 11px; font-weight: 800; letter-spacing: 0.1em; font-family: 'SF Mono', Menlo, monospace; border-radius: 100px; }
+
+  /* CONNECT side */
+  .connect-h { font-size: 11px; color: var(--ink-3); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 2px; }
+  .connect-hello { font-size: 24px; color: var(--ink); font-weight: 800; line-height: 1.2; letter-spacing: -0.015em; }
+  .connect-sub { font-size: 12px; color: var(--ink-3); font-style: italic; font-family: Georgia, 'Times New Roman', serif; line-height: 1.5; margin-bottom: 4px; }
+
+  .connect-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 18px; border-radius: 8px; cursor: pointer; transition: all .15s; font-weight: 800; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .connect-btn.primary { background: var(--amber); color: var(--bg); border: 1px solid var(--amber); }
+  .connect-btn.primary:hover { background: #ffc555; transform: translateY(-1px); }
+  .connect-btn.secondary { background: transparent; color: var(--amber); border: 1px solid rgba(245,176,66,0.4); }
+  .connect-btn.secondary:hover { background: rgba(245,176,66,0.08); border-color: var(--amber); }
+  .connect-btn .ic { font-size: 14px; }
+  .connect-link { display: block; text-align: center; color: var(--ink-3); font-size: 11px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; padding: 6px; cursor: pointer; transition: color .15s; margin-top: 4px; }
+  .connect-link:hover { color: var(--amber); }
+
+  /* SHORTS */
+  .page-section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+  .page-section-head .label { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
+  .page-section-head .label::before { content: '— '; color: var(--amber); }
+  .section-sub { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--ink-4); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); font-style: italic; }
+  .section-sub a { color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; font-style: normal; }
+  .shorts-strip { display: flex; gap: 10px; overflow-x: auto; padding-top: 6px; padding-bottom: 8px; margin-bottom: 36px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .shorts-strip::-webkit-scrollbar { height: 6px; }
+  .shorts-strip::-webkit-scrollbar-track { background: transparent; }
+  .shorts-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .short { flex: 0 0 180px; aspect-ratio: 9/16; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--line); transition: transform .15s, border-color .15s; }
+  .short:hover { transform: translateY(-3px); border-color: var(--rose); }
+  .short-frames { position: absolute; inset: 0; }
+  .short-frame { position: absolute; inset: 0; opacity: 0; animation: cycle 12s infinite; }
+  .short-frame:nth-child(1) { animation-delay: 0s; }
+  .short-frame:nth-child(2) { animation-delay: 3s; }
+  .short-frame:nth-child(3) { animation-delay: 6s; }
+  .short-frame:nth-child(4) { animation-delay: 9s; }
+  @keyframes cycle { 0%, 22% { opacity: 1; } 25%, 100% { opacity: 0; } }
+  .short-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); z-index: 2; }
+  .short-meta { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 3; }
+  .short-meta .views { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; background: rgba(0,0,0,0.6); border-radius: 100px; font-size: 9px; color: #fff; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; margin-bottom: 5px; backdrop-filter: blur(4px); }
+  .short-meta .cap { font-size: 11px; color: #fff; font-weight: 700; line-height: 1.25; }
+  .short-tag { position: absolute; top: 10px; left: 10px; z-index: 3; padding: 3px 8px; background: rgba(232,88,154,0.85); color: #fff; font-size: 8px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; text-transform: uppercase; border-radius: 100px; backdrop-filter: blur(4px); }
+  .short-cta { flex: 0 0 180px; aspect-ratio: 9/16; border-radius: 10px; border: 1px dashed var(--rose); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--rose); cursor: pointer; padding: 20px; text-align: center; }
+  .short-cta:hover { background: rgba(232,88,154,0.05); }
+  .short-cta .arr { font-size: 24px; }
+  .short-cta .t { font-size: 13px; font-weight: 800; letter-spacing: 0.04em; }
+  .short-cta .m { font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; }
+  .vg1 { background: linear-gradient(180deg, #1a0a10 0%, #501838 70%, #e8589a 100%); }
+  .vg2 { background: linear-gradient(160deg, #0a0a18 0%, #2a2a4a 50%, #8a8acf 100%); }
+  .vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, #f5b042 100%); }
+  .vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
+  .vg5 { background: linear-gradient(200deg, #1a0a0a 0%, #5a2a10 50%, #c4533a 100%); }
+  .vg6 { background: linear-gradient(180deg, #0a0806 0%, #1a2a18 60%, #8caf3a 100%); }
+  .vg7 { background: linear-gradient(135deg, #100808 0%, #3a1410 60%, #f5b042 100%); }
+
+  /* FEATURED */
+  .feat-grid { display: grid; grid-template-columns: 1.6fr 1fr; grid-template-rows: 260px 200px 200px; gap: 12px; margin-bottom: 40px; }
+  .feat { position: relative; overflow: hidden; border-radius: 8px; cursor: pointer; border: 1px solid var(--line); display: block; }
+  .feat-1 { grid-column: 1 / 2; grid-row: 1 / 4; }
+  .feat-bg { position: absolute; inset: 0; }
+  .feat-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.92) 100%); z-index: 2; }
+  .feat-cap { position: absolute; left: 18px; right: 18px; bottom: 16px; z-index: 3; }
+  .feat-cap .tag { font-size: 9px; color: var(--amber); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; display: block; }
+  .feat-cap .t { font-size: 19px; font-weight: 900; color: #fff; line-height: 1.1; }
+  .feat-1 .feat-cap .t { font-size: 36px; }
+  .feat-cap .m { font-size: 10px; color: #d4c8ad; margin-top: 4px; }
+  .feat .play-pill { position: absolute; top: 14px; right: 14px; padding: 5px 11px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.18); font-size: 9px; color: #fff; letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; border-radius: 100px; opacity: 0; transition: opacity .2s; z-index: 4; backdrop-filter: blur(8px); }
+  .feat:hover .play-pill { opacity: 1; }
+  .feat-1 .feat-stamp { position: absolute; top: 18px; left: 18px; z-index: 4; padding: 4px 10px; border: 1px solid var(--amber); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); border-radius: 3px; }
+  .feat-bg-1 { background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, #f5b042 100%); }
+  .feat-bg-2 { background: linear-gradient(160deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); }
+  .feat-bg-3 { background: linear-gradient(45deg, #0a0806 0%, #2a1810 50%, #c4533a 100%); }
+  .feat-bg-5 { background: linear-gradient(180deg, #1f2a18 0%, #4a6a2a 60%, #c5e060 100%); }
+
+  /* TOUR POSTER */
+  .worked-section { margin-top: 30px; margin-bottom: 40px; }
+  .poster { background: #1d1812; border: 3px double var(--amber); border-radius: 4px; padding: 40px 36px 28px; position: relative; overflow: hidden; box-shadow: 0 0 0 8px var(--bg), 0 0 0 9px var(--line); }
+  .poster::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle, rgba(245,176,66,0.16) 0.6px, transparent 1px); background-size: 4px 4px; opacity: 0.5; mix-blend-mode: screen; }
+  .poster::after { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.7; mix-blend-mode: overlay; }
+  .poster > * { position: relative; z-index: 2; }
+  .poster-label { font-size: 10px; color: var(--amber); letter-spacing: 0.38em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; text-align: center; margin-bottom: 32px; display: flex; align-items: center; gap: 14px; justify-content: center; }
+  .poster-label .line { flex: 0 0 60px; height: 1px; background: var(--amber); opacity: 0.5; }
+  .poster-row { text-align: center; line-height: 1; margin-bottom: 18px; }
+  .poster-row:last-of-type { margin-bottom: 0; }
+  .poster-name { font-weight: 900; letter-spacing: -0.025em; color: var(--ink); display: inline-block; transition: color .15s; cursor: pointer; }
+  .poster-name:hover { color: var(--amber); }
+  .poster-name.headliner { font-size: 78px; }
+  .poster-name.big { font-size: 48px; margin: 0 24px; }
+  .poster-name.med { font-size: 32px; margin: 0 20px; }
+  .poster-name.sm { font-size: 18px; margin: 0 14px; }
+  .poster-name.alt { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 700; }
+  .poster-name.dim { color: var(--ink-2); }
+  .poster-foot { margin-top: 28px; padding-top: 18px; border-top: 1px solid rgba(245,176,66,0.25); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-3); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .poster-foot a { color: var(--amber); font-weight: 800; }
+
+  .footer { margin-top: 40px; padding-top: 26px; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
+  .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
+  .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="logo">JACOB BOEHME</div>
+    <div class="tag">LANDBOUND · LA</div>
+  </div>
+  <div class="nav-items">
+    <a class="nav-item active" href="index.html">Home</a>
+    <a class="nav-item" href="work.html">Work</a>
+    <a class="nav-item" href="photo.html">Photo</a>
+    <a class="nav-item" href="vfx-ai.html">VFX &amp; AI</a>
+    <a class="nav-item" href="hire.html">Hire</a>
+  </div>
+  <div class="nav-socials">
+    <div class="nav-socials-h">Follow</div>
+    <div class="nav-soc"><div class="nav-soc-icon tt">d</div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon ig">○</div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 11K</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon li">in</div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></div>
+  </div>
+  <div class="nav-bottom">
+    <div class="status"><div class="dot"></div> Available · Sept</div>
+    <div>Los Angeles, CA</div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- SHARED HERO PANEL -->
+  <div class="hero-card" id="heroCard">
+    <div class="hero-bar">
+      <span class="badge-status"><span class="d"></span>Accepting Work · Sept</span>
+    </div>
+
+    <div class="hero-split">
+
+      <!-- JACOB SIDE -->
+      <div class="hero-left">
+        <div class="char-head">
+          <div class="avatar"></div>
+          <div class="id-block">
+            <div class="name">Jacob Boehme</div>
+            <div class="tagline">Director · VFX Editor · DP — Los Angeles</div>
+            <div class="pills">
+              <span class="pill">DIRECTION</span>
+              <span class="pill">EDITING</span>
+              <span class="pill">VFX</span>
+              <span class="pill">DP</span>
+              <span class="pill">AI/VFX</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unified stats bar: 45M+ + 4 social stats -->
+        <div class="stats-bar">
+          <div class="stat-big">
+            <div class="num">45M<span class="plus">+</span></div>
+            <div class="lbl">Total Views</div>
+          </div>
+          <div class="stat-small">
+            <div class="top"><span class="ic tt">d</span><span class="k">TikTok</span></div>
+            <div class="v">100K</div>
+          </div>
+          <div class="stat-small">
+            <div class="top"><span class="ic ig">○</span><span class="k">Instagram</span></div>
+            <div class="v">11K</div>
+          </div>
+          <div class="stat-small">
+            <div class="top"><span class="ic imdb">i</span><span class="k">IMDb</span></div>
+            <div class="v">24</div>
+          </div>
+          <div class="stat-small">
+            <div class="top"><span class="ic aw">★</span><span class="k">Awards</span></div>
+            <div class="v">3×</div>
+          </div>
+        </div>
+
+        <div class="latest-drop">
+          <div class="ld-thumb">
+            <div class="ld-pulse">New</div>
+            <div class="ld-play"></div>
+            <div class="ld-dur">04:12</div>
+          </div>
+          <div class="ld-info">
+            <div class="ld-lbl">★ Latest Drop</div>
+            <div class="ld-title">CHILDSTAR: Final Act</div>
+            <div class="ld-meta"><strong>Grace VanderWaal</strong> · Director + EP</div>
+            <div class="ld-stats">
+              <span><strong>4.2M</strong> views</span>
+              <span>·</span>
+              <span>2 weeks ago</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="expand-toggle" onclick="document.getElementById('heroCard').classList.toggle('open')">
+          <span class="lbl-closed">See the full breakdown</span>
+          <span class="lbl-open">Collapse</span>
+          <span class="arr">▼</span>
+        </button>
+
+        <div class="expanded">
+          <div class="expanded-inner">
+            <div class="section">
+              <div class="section-head"><span class="label">Skills</span><span class="count">years experience</span></div>
+              <div class="skills">
+                <div class="skill"><span class="nm">DIRECTION</span><span class="yr">10 YR</span></div>
+                <div class="skill"><span class="nm">EDITING</span><span class="yr">10 YR</span></div>
+                <div class="skill"><span class="nm">VFX</span><span class="yr">8 YR</span></div>
+                <div class="skill"><span class="nm">CINEMATOGRAPHY</span><span class="yr">8 YR</span></div>
+                <div class="skill"><span class="nm">PRODUCING</span><span class="yr">8 YR</span></div>
+                <div class="skill"><span class="nm">AI / AI-VFX</span><span class="yr">3 YR</span></div>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-head"><span class="label">Equipped</span><span class="count">9 tools</span></div>
+              <div class="equip-grid">
+                <div class="equip-chip">DAVINCI</div>
+                <div class="equip-chip">PREMIERE</div>
+                <div class="equip-chip">AFTER EFX</div>
+                <div class="equip-chip">BLENDER</div>
+                <div class="equip-chip">UNREAL</div>
+                <div class="equip-chip">NUKE</div>
+                <div class="equip-chip">MIDJOURNEY</div>
+                <div class="equip-chip">KLING</div>
+                <div class="equip-chip">ARRI</div>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-head"><span class="label">Achievements</span><span class="count">7</span></div>
+              <div class="badges-grid">
+                <span class="ribbon-badge">3× ADDY</span>
+                <span class="ribbon-badge">SCREAMFEST</span>
+                <span class="ribbon-badge">CHINESE THEATRE</span>
+                <span class="ribbon-badge">100K TIKTOK</span>
+                <span class="ribbon-badge">45M+ VIEWS</span>
+                <span class="ribbon-badge">TIKTOK PARTNER</span>
+                <span class="ribbon-badge">SUPER BOWL · 5-STATE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIVIDER -->
+      <div class="hero-divider"></div>
+
+      <!-- CONNECT SIDE -->
+      <div class="hero-right">
+        <div class="connect-h">— Connect</div>
+        <div class="connect-hello">Working on something?</div>
+        <div class="connect-sub">Music videos, commercials, VFX, AI/VFX workflows. Sept open.</div>
+
+        <a href="mailto:jacob.t.boehme@gmail.com" class="connect-btn primary">
+          <span class="ic">✉</span> Send an Email →
+        </a>
+
+        <a href="#" class="connect-btn secondary">
+          <span class="ic">▤</span> Project Inquiry →
+        </a>
+
+        <a href="#" class="connect-link">or book a call →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SHORTS -->
+  <div class="page-section-head"><span class="label">Verticals · @landbound</span></div>
+  <div class="section-sub">
+    <span>Short-form work — 47 clips, 45M+ views.</span>
+    <a href="work.html#shorts">OPEN SHORTS FEED →</a>
+  </div>
+  <div class="shorts-strip">
+    <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg1"></div><div class="short-frame vg2"></div><div class="short-frame vg3"></div><div class="short-frame vg4"></div></div><div class="short-overlay"></div><span class="short-tag">142K</span><div class="short-meta"><div class="views">▶ 142K</div><div class="cap">CHILDSTAR BTS — Day 3</div></div></a>
+    <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg2"></div><div class="short-frame vg3"></div><div class="short-frame vg5"></div><div class="short-frame vg1"></div></div><div class="short-overlay"></div><span class="short-tag">2.1M</span><div class="short-meta"><div class="views">▶ 2.1M</div><div class="cap">Surfaces tour BTS</div></div></a>
+    <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg3"></div><div class="short-frame vg4"></div><div class="short-frame vg6"></div><div class="short-frame vg7"></div></div><div class="short-overlay"></div><span class="short-tag">1.8M</span><div class="short-meta"><div class="views">▶ 1.8M</div><div class="cap">Two Feet — vertical cut</div></div></a>
+    <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg4"></div><div class="short-frame vg5"></div><div class="short-frame vg1"></div><div class="short-frame vg2"></div></div><div class="short-overlay"></div><span class="short-tag">2.4M</span><div class="short-meta"><div class="views">▶ 2.4M</div><div class="cap">Drone over Topanga</div></div></a>
+    <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg5"></div><div class="short-frame vg6"></div><div class="short-frame vg2"></div><div class="short-frame vg3"></div></div><div class="short-overlay"></div><span class="short-tag">720K</span><div class="short-meta"><div class="views">▶ 720K</div><div class="cap">Posner sneak</div></div></a>
+    <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg6"></div><div class="short-frame vg7"></div><div class="short-frame vg3"></div><div class="short-frame vg1"></div></div><div class="short-overlay"></div><span class="short-tag">412K</span><div class="short-meta"><div class="views">▶ 412K</div><div class="cap">Edit timeline reveal</div></div></a>
+    <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg7"></div><div class="short-frame vg2"></div><div class="short-frame vg4"></div><div class="short-frame vg5"></div></div><div class="short-overlay"></div><span class="short-tag">501K</span><div class="short-meta"><div class="views">▶ 501K</div><div class="cap">Why I shoot anamorphic</div></div></a>
+    <a class="short-cta" href="work.html#shorts"><span class="arr">↗</span><span class="t">Open Shorts Feed</span><span class="m">47 clips</span></a>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="page-section-head"><span class="label">Featured Work</span></div>
+  <div class="section-sub"><span>Hand-picked. Full filmography in <em>Work</em>.</span><a href="work.html">VIEW ALL 24 →</a></div>
+  <div class="feat-grid">
+    <a class="feat feat-1" href="work.html"><div class="feat-bg feat-bg-1"></div><div class="feat-overlay"></div><span class="feat-stamp">★ Featured</span><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + EP · 2025 · 4.2M VIEWS</span><div class="t">CHILDSTAR: Final Act</div><div class="m">Grace VanderWaal · Music Video</div></div></a>
+    <a class="feat" href="work.html"><div class="feat-bg feat-bg-2"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + DP + ED + VFX · 2024</span><div class="t">Secrets</div><div class="m">Two Feet</div></div></a>
+    <a class="feat" href="work.html"><div class="feat-bg feat-bg-3"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR · SCREAMFEST · 2022</span><div class="t">Forgive &amp; Forget</div><div class="m">Short Film</div></div></a>
+    <a class="feat" href="work.html"><div class="feat-bg feat-bg-5"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">FEATURE · 2023 · 250 VFX SHOTS</span><div class="t">The First Circle</div><div class="m">VFX Supervisor</div></div></a>
+  </div>
+
+  <!-- TOUR POSTER -->
+  <div class="worked-section">
+    <div class="poster">
+      <div class="poster-label"><span class="line"></span>Worked With<span class="line"></span></div>
+      <div class="poster-row"><span class="poster-name headliner">SURFACES</span></div>
+      <div class="poster-row">
+        <span class="poster-name big alt">Two Feet</span>
+        <span class="poster-name big">MIKE POSNER</span>
+      </div>
+      <div class="poster-row">
+        <span class="poster-name med">GRACE VANDERWAAL</span>
+        <span class="poster-name med alt">Gym Class Heroes</span>
+      </div>
+      <div class="poster-row">
+        <span class="poster-name sm dim">SONY / RCA</span>
+        <span class="poster-name sm dim alt">Raw Material</span>
+        <span class="poster-name sm dim">Allison Hagendorf</span>
+        <span class="poster-name sm dim alt">SCREAMFEST</span>
+        <span class="poster-name sm dim">TikTok Partner</span>
+      </div>
+      <div class="poster-foot">
+        <span>24 credits · 100+ projects</span>
+        <a href="#">Full client list →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="clapper">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h18M3 8v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8M3 8l3-5h12l3 5M9 3L7 8M15 3l-2 5"/></svg>
+      © 2026 Landbound
+    </span>
+    <span>Los Angeles</span>
+  </div>
+
+</main>
+
+<div class="banner">HOME v12 · SHARED PANEL + STATS BACK + NAV FIXED</div>
+</body>
+</html>

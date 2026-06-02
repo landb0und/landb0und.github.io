@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>jacobboehme.com — Photo</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #12100c; --bg-2: #1a1612; --bg-3: #221c16;
+    --line: #2d251c; --line-2: #1f1a14;
+    --ink: #f1e6cd; --ink-2: #c7b893; --ink-3: #8a7a5e; --ink-4: #5d4f3a;
+    --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
+  }
+  body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.5; mix-blend-mode: overlay; }
+  body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%); }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  .nav { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg-2); border-right: 1px solid var(--line); padding: 24px 0; z-index: 20; display: flex; flex-direction: column; }
+  .nav-brand { padding: 0 22px 22px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
+  .nav-brand .logo { font-size: 15px; font-weight: 900; letter-spacing: 0.04em; color: var(--amber); }
+  .nav-brand .tag { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: 6px; }
+  .nav-items { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; font-size: 12px; color: var(--ink-2); cursor: pointer; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--ink); }
+  .nav-item.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .nav-socials { margin: 22px 14px 0; padding: 16px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 8px; }
+  .nav-socials-h { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 10px; }
+  .nav-soc { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+  .nav-soc:not(:last-child) { border-bottom: 1px solid var(--line-2); }
+  .nav-soc-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); color: #000; }
+  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); color: #fff; }
+  .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
+  .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
+  .nav-soc-info { flex: 1; min-width: 0; }
+  .nav-soc-h { font-size: 11px; color: var(--ink); font-weight: 700; line-height: 1.1; }
+  .nav-soc-m { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 1px; }
+  .nav-bottom { margin-top: auto; padding: 20px 22px 0; font-size: 10px; color: var(--ink-4); line-height: 1.6; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .nav-bottom .status { display: flex; align-items: center; gap: 6px; color: var(--leaf); margin-bottom: 4px; }
+  .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  .main { margin-left: 220px; padding: 40px 40px 60px; max-width: 1400px; position: relative; z-index: 2; }
+
+  /* Grid view (default) */
+  .view-grid { display: block; }
+  .view-feed { display: none; }
+  body.feed-mode .view-grid { display: none; }
+  body.feed-mode .view-feed { display: block; }
+
+  .page-hero { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--line-2); }
+  .page-hero h1 { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; color: var(--ink); line-height: 0.95; margin-bottom: 12px; }
+  .page-hero .lede { font-size: 14px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; max-width: 520px; }
+  .page-hero .meta { font-size: 10px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; text-align: right; }
+  .page-hero .meta strong { color: var(--amber); font-weight: 800; }
+
+  /* ============= CAROUSEL HERO (auto-cycling) ============= */
+  .carousel-h { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+  .carousel-h .num { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; }
+  .carousel-h .lbl { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
+  .carousel-h .auto { margin-left: auto; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.16em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; }
+  .carousel-h .auto::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--amber); animation: pulse 1.8s infinite; }
+
+  .carousel { position: relative; aspect-ratio: 21/9; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 36px; cursor: pointer; }
+  .carousel-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .8s ease; }
+  .carousel-slide.active { opacity: 1; }
+  .carousel-bg { position: absolute; inset: 0; }
+  .carousel-bg::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.015) 3px 4px); }
+  .carousel-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); z-index: 2; }
+  .carousel-stamp { position: absolute; top: 16px; left: 16px; z-index: 3; padding: 5px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--amber); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; border-radius: 3px; backdrop-filter: blur(6px); }
+  .carousel-cap { position: absolute; left: 26px; right: 26px; bottom: 26px; z-index: 3; }
+  .carousel-cap .tag { font-size: 10px; color: var(--amber); letter-spacing: 0.2em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 6px; display: block; }
+  .carousel-cap .t { font-size: 36px; font-weight: 900; color: #fff; line-height: 1.05; letter-spacing: -0.015em; max-width: 70%; }
+  .carousel-cap .m { font-size: 12px; color: #d4c8ad; margin-top: 6px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  /* Dots */
+  .carousel-dots { position: absolute; bottom: 22px; right: 26px; z-index: 4; display: flex; gap: 6px; }
+  .dot { width: 24px; height: 3px; background: rgba(255,255,255,0.25); border-radius: 2px; cursor: pointer; transition: background .15s; }
+  .dot.active { background: var(--amber); }
+  /* Arrows */
+  .carousel-arr { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 4; backdrop-filter: blur(6px); transition: all .15s; opacity: 0; }
+  .carousel:hover .carousel-arr { opacity: 1; }
+  .carousel-arr:hover { background: rgba(0,0,0,0.8); border-color: var(--amber); }
+  .carousel-arr.prev { left: 16px; }
+  .carousel-arr.next { right: 16px; }
+
+  /* CATEGORY TABS — IG profile style */
+  .tabs { display: flex; gap: 4px; margin-bottom: 22px; border-bottom: 1px solid var(--line-2); overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .tabs::-webkit-scrollbar { height: 4px; }
+  .tabs::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .tab { padding: 14px 18px; color: var(--ink-3); font-size: 11px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; cursor: pointer; transition: color .15s; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--ink); border-bottom-color: var(--amber); }
+  .tab .count { color: var(--ink-4); margin-left: 6px; font-weight: 600; }
+  .tab.active .count { color: var(--amber); }
+
+  .photo-grid { columns: 4; column-gap: 12px; }
+  @media (max-width: 1300px) { .photo-grid { columns: 3; } }
+  @media (max-width: 900px) { .photo-grid { columns: 2; } }
+  @media (max-width: 600px) { .photo-grid { columns: 1; } }
+
+  .photo { break-inside: avoid; margin-bottom: 12px; position: relative; overflow: hidden; border-radius: 6px; cursor: pointer; border: 1px solid var(--line); transition: all .15s; }
+  .photo:hover { transform: translateY(-2px); border-color: var(--amber); }
+  .photo-frame { position: relative; width: 100%; overflow: hidden; }
+  .photo-frame::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.015) 3px 4px); pointer-events: none; z-index: 2; }
+  .ar-43 { aspect-ratio: 4/3; } .ar-34 { aspect-ratio: 3/4; } .ar-11 { aspect-ratio: 1/1; } .ar-32 { aspect-ratio: 3/2; } .ar-23 { aspect-ratio: 2/3; } .ar-169 { aspect-ratio: 16/9; } .ar-916 { aspect-ratio: 9/16; }
+  .p1 { background: linear-gradient(160deg, #2a1f15 0%, #6b3a1a 60%, #f5b042 100%); }
+  .p2 { background: linear-gradient(200deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); }
+  .p3 { background: linear-gradient(45deg, #0a0806 0%, #3a1418 60%, #e8589a 100%); }
+  .p4 { background: linear-gradient(180deg, #1f2a18 0%, #4a6a2a 70%, #c5e060 100%); }
+  .p5 { background: linear-gradient(135deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
+  .p6 { background: linear-gradient(220deg, #2a1810 0%, #5a2a10 50%, #c4533a 100%); }
+  .p7 { background: linear-gradient(180deg, #2a2018 0%, #6b3a1a 100%); }
+  .p8 { background: linear-gradient(120deg, #050505 0%, #1a1410 80%, #2d251c 100%); }
+  .p9 { background: linear-gradient(180deg, #0a0a18 0%, #2a2a4a 60%, #8a8acf 100%); }
+  .p10 { background: linear-gradient(45deg, #1a1410 0%, #501838 60%, #e8589a 100%); }
+  .p11 { background: linear-gradient(180deg, #1a0a0a 0%, #3a1410 50%, #f5b042 100%); }
+  .p12 { background: linear-gradient(160deg, #0a0806 0%, #2a1810 60%, #b08040 100%); }
+  .p13 { background: linear-gradient(180deg, #1a1418 0%, #2a1f3a 60%, #6a4a8a 100%); }
+  .p14 { background: linear-gradient(200deg, #050505 0%, #1a2a18 60%, #8caf3a 100%); }
+  .p15 { background: linear-gradient(180deg, #2a1f15 0%, #c97f2e 100%); }
+  .p16 { background: linear-gradient(45deg, #1a0a18 0%, #4a1830 60%, #c97f8e 100%); }
+  .p17 { background: linear-gradient(180deg, #0a0a18 0%, #1a1f3a 70%, #4a7aa8 100%); }
+  .p18 { background: linear-gradient(135deg, #1a1410 0%, #3a2a18 100%); }
+
+  .photo-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.85) 100%); opacity: 0; transition: opacity .2s; z-index: 3; }
+  .photo:hover .photo-overlay { opacity: 1; }
+  .photo-cap { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 4; opacity: 0; transition: opacity .2s; }
+  .photo:hover .photo-cap { opacity: 1; }
+  .photo-cap .tag { font-size: 9px; color: var(--amber); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; display: block; }
+  .photo-cap .t { font-size: 13px; color: #fff; font-weight: 800; line-height: 1.2; }
+  .photo-cap .m { font-size: 10px; color: #d4c8ad; margin-top: 2px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .photo-corner { position: absolute; top: 10px; right: 10px; z-index: 3; padding: 3px 8px; background: rgba(0,0,0,0.7); color: var(--amber); font-size: 8px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; text-transform: uppercase; border-radius: 100px; backdrop-filter: blur(4px); opacity: 0.85; }
+
+  /* ============= IG FEED VIEW (takeover) ============= */
+  .view-feed { padding-top: 8px; }
+  .feed-back { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--ink-2); font-size: 11px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; border-radius: 100px; cursor: pointer; transition: all .15s; margin-bottom: 18px; }
+  .feed-back:hover { color: var(--amber); border-color: var(--amber); }
+
+  /* Stories row (clients) */
+  .stories { display: flex; gap: 16px; overflow-x: auto; padding: 6px 2px 14px; margin-bottom: 22px; border-bottom: 1px solid var(--line-2); scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .stories::-webkit-scrollbar { height: 4px; }
+  .stories::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .story { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex-shrink: 0; width: 72px; }
+  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); transition: transform .15s; }
+  .story:hover .story-ring { transform: scale(1.05); }
+  .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .story-avatar { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; }
+  .story-name { font-size: 11px; color: var(--ink-2); font-weight: 600; text-align: center; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .story-ring.viewed { background: var(--line); }
+  /* Client palettes */
+  .sa-1 { background: linear-gradient(135deg, #d4a44c, #6b3a1a); }
+  .sa-2 { background: linear-gradient(135deg, #1a2a3a, #4a7aa8); }
+  .sa-3 { background: linear-gradient(135deg, #4a1838, #c084fc); }
+  .sa-4 { background: linear-gradient(135deg, #8caf3a, #1f2a18); }
+  .sa-5 { background: linear-gradient(135deg, #c4533a, #2a1810); }
+  .sa-6 { background: linear-gradient(135deg, #f5b042, #501838); }
+  .sa-7 { background: linear-gradient(135deg, #4a6a2a, #c5e060); }
+  .sa-8 { background: linear-gradient(135deg, #1a1418, #6a4a8a); }
+  .sa-9 { background: linear-gradient(135deg, #2a2018, #b08040); }
+  .sa-10 { background: linear-gradient(135deg, #1a0a10, #e8589a); }
+
+  /* Feed layout */
+  .feed-layout { display: grid; grid-template-columns: 1fr 320px; gap: 60px; align-items: start; }
+
+  .feed-posts { display: flex; flex-direction: column; gap: 22px; max-width: 540px; }
+  .post { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .post-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+  .post-avatar { width: 32px; height: 32px; border-radius: 50%; padding: 1.5px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); flex-shrink: 0; }
+  .post-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 1.5px; display: flex; }
+  .post-avatar-img { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, var(--amber), var(--rose)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; color: #fff; }
+  .post-head-info { flex: 1; min-width: 0; }
+  .post-head-name { font-size: 13px; color: var(--ink); font-weight: 800; }
+  .post-head-loc { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 1px; }
+  .post-head-menu { color: var(--ink-3); font-size: 18px; cursor: pointer; padding: 0 6px; }
+
+  .post-image { position: relative; aspect-ratio: 4/5; background: var(--bg-2); overflow: hidden; }
+  .post-image::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.015) 3px 4px); pointer-events: none; }
+
+  .post-actions { display: flex; align-items: center; padding: 12px 14px 4px; gap: 14px; }
+  .post-actions .icn { font-size: 22px; color: var(--ink); cursor: pointer; transition: color .15s; }
+  .post-actions .icn:hover { color: var(--amber); }
+  .post-actions .icn.heart { color: var(--ink); }
+  .post-actions .icn.save { margin-left: auto; }
+
+  .post-likes { padding: 0 14px; font-size: 13px; color: var(--ink); font-weight: 700; }
+  .post-likes strong { color: var(--ink); }
+
+  .post-caption { padding: 8px 14px; font-size: 13px; color: var(--ink); line-height: 1.4; }
+  .post-caption .nm { font-weight: 800; margin-right: 6px; }
+
+  .post-meta { padding: 4px 14px 14px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; display: flex; gap: 14px; }
+  .post-meta span strong { color: var(--ink-3); font-weight: 700; }
+  .post-meta .view-comments { color: var(--ink-3); cursor: pointer; }
+  .post-meta .view-comments:hover { color: var(--amber); }
+
+  /* Right rail */
+  .feed-rail { position: sticky; top: 30px; display: flex; flex-direction: column; gap: 20px; }
+  .rail-profile { display: flex; align-items: center; gap: 12px; padding: 4px 4px 16px; border-bottom: 1px solid var(--line-2); }
+  .rail-avatar { width: 56px; height: 56px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); flex-shrink: 0; }
+  .rail-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, var(--amber), var(--rose)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 18px; }
+  .rail-prof-info { flex: 1; min-width: 0; }
+  .rail-handle { font-size: 14px; color: var(--ink); font-weight: 800; }
+  .rail-name { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 2px; }
+  .rail-switch { font-size: 11px; color: var(--amber); font-weight: 800; cursor: pointer; letter-spacing: 0.06em; }
+
+  .rail-h { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; }
+  .rail-h-title { font-size: 12px; color: var(--ink-3); font-weight: 700; letter-spacing: 0.04em; }
+  .rail-h-see { font-size: 11px; color: var(--ink); font-weight: 800; cursor: pointer; }
+
+  .rail-cats { display: flex; flex-direction: column; gap: 10px; padding: 4px; }
+  .rail-cat { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background .15s; padding: 6px; border-radius: 8px; margin: -6px; }
+  .rail-cat:hover { background: rgba(255,255,255,0.03); }
+  .rail-cat-hash { width: 42px; height: 42px; border-radius: 8px; flex-shrink: 0; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.25); display: flex; align-items: center; justify-content: center; color: var(--amber); font-weight: 900; font-size: 20px; font-family: 'SF Mono', Menlo, monospace; }
+  .rail-cat-info { flex: 1; min-width: 0; }
+  .rail-cat-name { font-size: 13px; color: var(--ink); font-weight: 700; line-height: 1.2; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.02em; }
+  .rail-cat-sub { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 2px; }
+  .rail-cat-action { font-size: 11px; color: var(--amber); font-weight: 800; cursor: pointer; letter-spacing: 0.06em; }
+
+  .rail-footer { padding: 16px 4px 4px; border-top: 1px solid var(--line-2); font-size: 10px; color: var(--ink-4); letter-spacing: 0.08em; line-height: 1.8; font-family: 'SF Mono', Menlo, monospace; }
+  .rail-footer span::after { content: ' · '; color: var(--ink-4); }
+  .rail-footer span:last-child::after { content: ''; }
+  .rail-copy { margin-top: 12px; font-size: 9px; color: var(--ink-4); letter-spacing: 0.14em; text-transform: uppercase; }
+
+  .footer { margin-top: 50px; padding-top: 26px; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
+  .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
+
+  .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="logo">JACOB BOEHME</div>
+    <div class="tag">LANDBOUND · LA</div>
+  </div>
+  <div class="nav-items">
+    <a class="nav-item" href="index.html">Home</a>
+    <a class="nav-item" href="work.html">Work</a>
+    <a class="nav-item active" href="photo.html">Photo</a>
+    <a class="nav-item" href="vfx-ai.html">VFX &amp; AI</a>
+    <a class="nav-item" href="hire.html">Hire</a>
+  </div>
+  <div class="nav-socials">
+    <div class="nav-socials-h">Follow</div>
+    <div class="nav-soc"><div class="nav-soc-icon tt">d</div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon ig">○</div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 11K</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon li">in</div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></div>
+  </div>
+  <div class="nav-bottom">
+    <div class="status"><div class="dot"></div> Available · Sept</div>
+    <div>Los Angeles, CA</div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ============= GRID VIEW (default) ============= -->
+  <div class="view-grid">
+
+    <div class="page-hero">
+      <div>
+        <h1>Photo</h1>
+        <div class="lede">Stills from sets, editorial, and personal frames. Shot on Arri, Blackmagic, 35mm, and phone.</div>
+      </div>
+      <div class="meta">
+        <strong>247</strong> frames<br>
+        2018 — present
+      </div>
+    </div>
+
+    <!-- CLIENTS STORIES -->
+    <div class="stories" style="margin-bottom: 4px;">
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-1">GV</div></div></div><div class="story-name">Grace V.</div></div>
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-2">2F</div></div></div><div class="story-name">Two Feet</div></div>
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-3">MP</div></div></div><div class="story-name">M. Posner</div></div>
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-4">GCH</div></div></div><div class="story-name">Gym Class H.</div></div>
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-5">SF</div></div></div><div class="story-name">Surfaces</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-6">AH</div></div></div><div class="story-name">Hagendorf</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-7">RM</div></div></div><div class="story-name">Raw Material</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-8">SR</div></div></div><div class="story-name">Sony/RCA</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-9">SF</div></div></div><div class="story-name">SCREAMFEST</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-10">TT</div></div></div><div class="story-name">TikTok</div></div>
+    </div>
+
+    <!-- TABS — IG profile style -->
+    <div class="tabs">
+      <span class="tab active">All <span class="count">247</span></span>
+      <span class="tab">Editorial <span class="count">62</span></span>
+      <span class="tab">BTS <span class="count">98</span></span>
+      <span class="tab">Music <span class="count">41</span></span>
+      <span class="tab">Client <span class="count">38</span></span>
+      <span class="tab">Commercial <span class="count">29</span></span>
+      <span class="tab">Live Event <span class="count">22</span></span>
+      <span class="tab">Personal <span class="count">34</span></span>
+      <span class="tab">35mm Film <span class="count">12</span></span>
+    </div>
+
+    <!-- MASONRY -->
+    <div class="photo-grid">
+      <div class="photo" data-photo="3"><div class="photo-frame ar-34 p2"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">EDITORIAL</span><div class="t">Two Feet — press</div><div class="m">Phase One · LA studio</div></div></div>
+      <div class="photo" data-photo="4"><div class="photo-frame ar-43 p4"></div><div class="photo-overlay"></div><span class="photo-corner">2023</span><div class="photo-cap"><span class="tag">PERSONAL</span><div class="t">Topanga Canyon</div><div class="m">35mm Portra 400</div></div></div>
+      <div class="photo" data-photo="5"><div class="photo-frame ar-23 p5"></div><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">EDITORIAL</span><div class="t">Hagendorf S4 cast</div><div class="m">Studio · LA</div></div></div>
+      <div class="photo" data-photo="6"><div class="photo-frame ar-34 p6"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">BTS · SECRETS</span><div class="t">Two Feet · sunset block</div><div class="m">Anamorphic</div></div></div>
+      <div class="photo" data-photo="7"><div class="photo-frame ar-916 p7"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">35MM FILM</span><div class="t">LA street</div><div class="m">Leica M6 · HP5</div></div></div>
+      <div class="photo" data-photo="8"><div class="photo-frame ar-43 p8"></div><div class="photo-overlay"></div><span class="photo-corner">2023</span><div class="photo-cap"><span class="tag">PERSONAL</span><div class="t">Mojave</div><div class="m">Phase One IQ4</div></div></div>
+      <div class="photo" data-photo="9"><div class="photo-frame ar-34 p9"></div><div class="photo-overlay"></div><span class="photo-corner">2023</span><div class="photo-cap"><span class="tag">BTS · FIRST CIRCLE</span><div class="t">Lighting setup</div><div class="m">Phase 02</div></div></div>
+      <div class="photo" data-photo="10"><div class="photo-frame ar-23 p10"></div><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">MUSIC · BTS</span><div class="t">Bleed video set</div><div class="m">Arri Mini LF</div></div></div>
+      <div class="photo" data-photo="11"><div class="photo-frame ar-43 p11"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">CLIENT</span><div class="t">Mike Posner — promo</div><div class="m">Sony A7S</div></div></div>
+      <div class="photo" data-photo="12"><div class="photo-frame ar-11 p12"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">PERSONAL</span><div class="t">Joshua Tree</div><div class="m">35mm Ektar</div></div></div>
+      <div class="photo" data-photo="13"><div class="photo-frame ar-32 p13"></div><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">BTS · CHILDSTAR</span><div class="t">Wardrobe test</div><div class="m">Polaroid Now</div></div></div>
+      <div class="photo" data-photo="14"><div class="photo-frame ar-34 p14"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">CLIENT</span><div class="t">Gym Class Heroes</div><div class="m">Editorial portrait</div></div></div>
+      <div class="photo" data-photo="15"><div class="photo-frame ar-916 p15"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">PERSONAL</span><div class="t">Echo Park, golden hour</div><div class="m">iPhone 15 Pro</div></div></div>
+      <div class="photo" data-photo="16"><div class="photo-frame ar-43 p16"></div><div class="photo-overlay"></div><span class="photo-corner">2023</span><div class="photo-cap"><span class="tag">MUSIC · BTS</span><div class="t">Dreams — Surfaces</div><div class="m">Anamorphic stills</div></div></div>
+      <div class="photo" data-photo="17"><div class="photo-frame ar-23 p17"></div><div class="photo-overlay"></div><span class="photo-corner">2022</span><div class="photo-cap"><span class="tag">35MM FILM</span><div class="t">Topanga night</div><div class="m">Leica M6 · Cinestill</div></div></div>
+      <div class="photo" data-photo="18"><div class="photo-frame ar-11 p18"></div><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">BTS · HAGENDORF</span><div class="t">Studio rig</div><div class="m">Phone</div></div></div>
+      <div class="photo" data-photo="19"><div class="photo-frame ar-43 p3"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">EDITORIAL</span><div class="t">Allison Hagendorf</div><div class="m">Promo · LA</div></div></div>
+      <div class="photo" data-photo="20"><div class="photo-frame ar-34 p7"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">PERSONAL</span><div class="t">Big Sur</div><div class="m">Mamiya 7</div></div></div>
+      <div class="photo" data-photo="21"><div class="photo-frame ar-32 p5"></div><div class="photo-overlay"></div><span class="photo-corner">2023</span><div class="photo-cap"><span class="tag">LIVE EVENT</span><div class="t">Two Feet rehearsal</div><div class="m">Stills</div></div></div>
+      <div class="photo" data-photo="22"><div class="photo-frame ar-23 p9"></div><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">COMMERCIAL</span><div class="t">Super Bowl spot — stills</div><div class="m">5-state air</div></div></div>
+    </div>
+
+    <div class="footer">
+      <span class="clapper">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h18M3 8v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8M3 8l3-5h12l3 5M9 3L7 8M15 3l-2 5"/></svg>
+        © 2026 Landbound
+      </span>
+      <span>Los Angeles</span>
+    </div>
+
+  </div>
+
+  <!-- ============= IG FEED VIEW (takeover on click) ============= -->
+  <div class="view-feed">
+
+    <button class="feed-back" onclick="exitFeed()">← Back to Grid</button>
+
+    <!-- Stories: Clients -->
+    <div class="stories" id="stories">
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-1">GV</div></div></div><div class="story-name">Grace V.</div></div>
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-2">2F</div></div></div><div class="story-name">Two Feet</div></div>
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-3">MP</div></div></div><div class="story-name">M. Posner</div></div>
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-4">GCH</div></div></div><div class="story-name">Gym Class H.</div></div>
+      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-5">SF</div></div></div><div class="story-name">Surfaces</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-6">AH</div></div></div><div class="story-name">Hagendorf</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-7">RM</div></div></div><div class="story-name">Raw Material</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-8">SR</div></div></div><div class="story-name">Sony/RCA</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-9">SF</div></div></div><div class="story-name">SCREAMFEST</div></div>
+      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-10">TT</div></div></div><div class="story-name">TikTok</div></div>
+    </div>
+
+    <div class="feed-layout">
+
+      <!-- POSTS -->
+      <div class="feed-posts" id="feedPosts">
+        <!-- Posts injected by JS -->
+      </div>
+
+      <!-- RIGHT RAIL -->
+      <div class="feed-rail">
+        <div class="rail-profile">
+          <div class="rail-avatar"><div class="rail-avatar-inner">JB</div></div>
+          <div class="rail-prof-info">
+            <div class="rail-handle">landbound</div>
+            <div class="rail-name">JT · Director · LA</div>
+          </div>
+          <span class="rail-switch">Switch</span>
+        </div>
+
+        <div class="rail-h">
+          <span class="rail-h-title">Filter by type</span>
+          <span class="rail-h-see">See all</span>
+        </div>
+
+        <div class="rail-cats">
+          <div class="rail-cat">
+            <div class="rail-cat-hash">#</div>
+            <div class="rail-cat-info">
+              <div class="rail-cat-name">#editorial</div>
+              <div class="rail-cat-sub">62 frames</div>
+            </div>
+            <span class="rail-cat-action">Filter</span>
+          </div>
+          <div class="rail-cat">
+            <div class="rail-cat-hash">#</div>
+            <div class="rail-cat-info">
+              <div class="rail-cat-name">#bts</div>
+              <div class="rail-cat-sub">98 frames</div>
+            </div>
+            <span class="rail-cat-action">Filter</span>
+          </div>
+          <div class="rail-cat">
+            <div class="rail-cat-hash">#</div>
+            <div class="rail-cat-info">
+              <div class="rail-cat-name">#music</div>
+              <div class="rail-cat-sub">41 frames</div>
+            </div>
+            <span class="rail-cat-action">Filter</span>
+          </div>
+          <div class="rail-cat">
+            <div class="rail-cat-hash">#</div>
+            <div class="rail-cat-info">
+              <div class="rail-cat-name">#client</div>
+              <div class="rail-cat-sub">38 frames</div>
+            </div>
+            <span class="rail-cat-action">Filter</span>
+          </div>
+          <div class="rail-cat">
+            <div class="rail-cat-hash">#</div>
+            <div class="rail-cat-info">
+              <div class="rail-cat-name">#commercial</div>
+              <div class="rail-cat-sub">29 frames</div>
+            </div>
+            <span class="rail-cat-action">Filter</span>
+          </div>
+          <div class="rail-cat">
+            <div class="rail-cat-hash">#</div>
+            <div class="rail-cat-info">
+              <div class="rail-cat-name">#liveevent</div>
+              <div class="rail-cat-sub">22 frames</div>
+            </div>
+            <span class="rail-cat-action">Filter</span>
+          </div>
+          <div class="rail-cat">
+            <div class="rail-cat-hash">#</div>
+            <div class="rail-cat-info">
+              <div class="rail-cat-name">#personal</div>
+              <div class="rail-cat-sub">34 frames</div>
+            </div>
+            <span class="rail-cat-action">Filter</span>
+          </div>
+          <div class="rail-cat">
+            <div class="rail-cat-hash">#</div>
+            <div class="rail-cat-info">
+              <div class="rail-cat-name">#35mmfilm</div>
+              <div class="rail-cat-sub">12 frames</div>
+            </div>
+            <span class="rail-cat-action">Filter</span>
+          </div>
+        </div>
+
+        <div class="rail-footer">
+          <div>
+            <span>About</span><span>Help</span><span>Hire</span><span>Reel</span><span>Verticals</span>
+          </div>
+          <div class="rail-copy">© 2026 LANDBOUND</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<div class="banner">PHOTO · CAROUSEL + IG FEED MODE</div>
+
+<script>
+  // ============= PHOTO DATA =============
+  const PHOTOS = [
+    { palette: 'p1', tag: 'EDITORIAL · CHILDSTAR', title: 'Grace VanderWaal — CHILDSTAR cover', caption: '@gracevanderwaal — Director + EP on CHILDSTAR: Final Act. Cover frame from day three. Three sittings, twelve looks, this was take one.', camera: 'Phase One IQ4', location: 'LA Studio', year: '2025', project: 'CHILDSTAR: Final Act', likes: '1,284' },
+    { palette: 'p3', tag: 'MUSIC · BTS', title: 'Two Feet — Secrets, sunset block', caption: '@twofeetmusic — Director / DP / Editor on Secrets. Sunset block, day 2. Whole crew got the magic-hour religion.', camera: 'Arri Mini LF · Anamorphic', location: 'Topanga', year: '2024', project: 'Secrets', likes: '892' },
+    { palette: 'p9', tag: 'PERSONAL · 35MM', title: 'Topanga Night', caption: 'Personal. Topanga Canyon at midnight. Hand-braced long exposure on Cinestill 800T.', camera: 'Leica M6', location: 'Topanga Canyon', year: '2024', project: 'Personal Work', likes: '341' },
+    { palette: 'p2', tag: 'EDITORIAL', title: 'Two Feet — press portrait', caption: '@twofeetmusic — Press portrait for the sophomore record cycle. One light, available bounce.', camera: 'Phase One', location: 'LA studio', year: '2024', project: 'Two Feet press', likes: '512' },
+    { palette: 'p4', tag: 'PERSONAL', title: 'Topanga Canyon', caption: 'Personal. A weekend of nothing but film. No agenda, no client. Portra 400 on 35mm.', camera: '35mm Portra 400', location: 'Topanga', year: '2023', project: 'Personal Work', likes: '267' },
+    { palette: 'p5', tag: 'EDITORIAL', title: 'Hagendorf S4 cast promo', caption: '@allisonhagendorf — Director + Editor for the Allison Hagendorf Show S4. Cast promo block.', camera: 'Sony FX9', location: 'LA Studio', year: '2025', project: 'Hagendorf S4', likes: '748' },
+    { palette: 'p6', tag: 'BTS · SECRETS', title: 'Two Feet · Secrets — sunset rig', caption: '@twofeetmusic — BTS from Secrets. Setting up the anamorphic for the sunset scene. Sky cooperated.', camera: 'Arri Mini LF', location: 'Topanga', year: '2024', project: 'Secrets', likes: '423' },
+    { palette: 'p7', tag: '35MM FILM', title: 'LA street', caption: 'Personal. Walking home after a long edit session. Leica M6 on HP5.', camera: 'Leica M6 · HP5', location: 'Echo Park', year: '2024', project: 'Personal Work', likes: '189' },
+    { palette: 'p8', tag: 'PERSONAL', title: 'Mojave', caption: 'Personal. Phase One in the desert. No power, no internet. Best week of the year.', camera: 'Phase One IQ4', location: 'Mojave Desert', year: '2023', project: 'Personal Work', likes: '634' },
+    { palette: 'p9', tag: 'BTS · FIRST CIRCLE', title: 'The First Circle — practicals', caption: 'VFX Supervisor on The First Circle. BTS — practicals for the interrogation scene. Tight space, lots of nets.', camera: 'Phase One', location: 'On location', year: '2023', project: 'The First Circle', likes: '301' },
+    { palette: 'p10', tag: 'MUSIC · BTS', title: 'Bleed — underwater rig', caption: 'Director + Editor on Bleed. BTS — practical underwater-illusion setup. No CG.', camera: 'Arri Mini LF', location: 'LA Sound Stage', year: '2025', project: 'Bleed', likes: '578' },
+    { palette: 'p11', tag: 'CLIENT · PROMO', title: 'Mike Posner — promo', caption: '@mikeposner — Promo session for the new record. 45 minutes, available light, one lens.', camera: 'Sony A7S', location: 'LA', year: '2024', project: 'Posner promo', likes: '892' },
+    { palette: 'p12', tag: 'PERSONAL', title: 'Joshua Tree', caption: 'Personal. A roll of Ektar 100 in golden hour. Color was already there.', camera: '35mm Ektar 100', location: 'Joshua Tree', year: '2024', project: 'Personal Work', likes: '412' },
+    { palette: 'p13', tag: 'BTS · CHILDSTAR', title: 'CHILDSTAR — wardrobe test', caption: '@gracevanderwaal — Wardrobe test for CHILDSTAR. Polaroid Now, old habit, still useful.', camera: 'Polaroid Now', location: 'LA Studio', year: '2025', project: 'CHILDSTAR', likes: '256' },
+    { palette: 'p14', tag: 'CLIENT · PROMO', title: 'Gym Class Heroes — reunion', caption: '@gymclassheroes — Promo session for the reunion record. Phase One in studio.', camera: 'Phase One', location: 'LA Studio', year: '2024', project: 'GCH reunion', likes: '703' },
+    { palette: 'p15', tag: 'PERSONAL', title: 'Echo Park, golden hour', caption: 'Personal. Echo Park at golden hour. iPhone 15 Pro, no edits.', camera: 'iPhone 15 Pro', location: 'Echo Park', year: '2024', project: 'Personal Work', likes: '198' },
+    { palette: 'p16', tag: 'MUSIC · BTS', title: 'Dreams — Surfaces, set', caption: '@surfaces — Cinematographer on Dreams. BTS from set. Arri Alexa anamorphic.', camera: 'Arri Alexa', location: 'LA', year: '2023', project: 'Dreams — Surfaces', likes: '521' },
+    { palette: 'p17', tag: '35MM FILM', title: 'Topanga night', caption: 'Personal. Topanga at night on Cinestill. Long exposure, slight blur, intentional.', camera: 'Leica M6 · Cinestill', location: 'Topanga', year: '2022', project: 'Personal Work', likes: '167' },
+    { palette: 'p18', tag: 'BTS · HAGENDORF', title: 'Hagendorf S4 — studio rig', caption: '@allisonhagendorf — BTS, S4 studio rig before tape rolled.', camera: 'iPhone', location: 'LA Studio', year: '2025', project: 'Hagendorf S4', likes: '142' },
+    { palette: 'p3', tag: 'EDITORIAL', title: 'Allison Hagendorf — promo', caption: '@allisonhagendorf — Promo portrait for the S4 launch.', camera: 'Sony FX9', location: 'LA', year: '2024', project: 'Hagendorf S4 promo', likes: '589' },
+    { palette: 'p7', tag: 'PERSONAL', title: 'Big Sur', caption: 'Personal. Big Sur on a Mamiya 7. Took 40 minutes to compose. Worth it.', camera: 'Mamiya 7', location: 'Big Sur', year: '2024', project: 'Personal Work', likes: '378' },
+    { palette: 'p5', tag: 'LIVE EVENT', title: 'Two Feet — rehearsal stills', caption: '@twofeetmusic — Pre-tour rehearsal stills. Stills only, no video.', camera: 'Sony A7S', location: 'LA Rehearsal', year: '2023', project: 'Two Feet tour', likes: '294' },
+    { palette: 'p9', tag: 'COMMERCIAL', title: 'Super Bowl spot — production stills', caption: 'Director on the Super Bowl spot (5-state air). Production stills from the shoot.', camera: 'Phase One', location: 'LA', year: '2025', project: 'Super Bowl Spot', likes: '927' }
+  ];
+
+  // ============= IG FEED MODE =============
+  function enterFeed(startIdx) {
+    document.body.classList.add('feed-mode');
+    window.scrollTo(0, 0);
+    renderFeed(startIdx);
+  }
+  function exitFeed() {
+    document.body.classList.remove('feed-mode');
+    window.scrollTo(0, 0);
+  }
+  function renderFeed(startIdx) {
+    const container = document.getElementById('feedPosts');
+    // Reorder so startIdx is first, then rest in original order
+    const reordered = [...PHOTOS.slice(startIdx), ...PHOTOS.slice(0, startIdx)];
+    container.innerHTML = reordered.map((p, i) => `
+      <div class="post">
+        <div class="post-head">
+          <div class="post-avatar"><div class="post-avatar-inner"><div class="post-avatar-img">JB</div></div></div>
+          <div class="post-head-info">
+            <div class="post-head-name">landbound</div>
+            <div class="post-head-loc">${p.location} · ${p.year}</div>
+          </div>
+          <span class="post-head-menu">⋯</span>
+        </div>
+        <div class="post-image ${p.palette}"></div>
+        <div class="post-actions">
+          <span class="icn heart">♡</span>
+          <span class="icn">💬</span>
+          <span class="icn">↗</span>
+          <span class="icn save">⌐</span>
+        </div>
+        <div class="post-likes"><strong>${p.likes}</strong> likes</div>
+        <div class="post-caption"><span class="nm">landbound</span> ${p.caption}</div>
+        <div class="post-meta">
+          <span>${p.tag}</span>
+          <span class="view-comments">View all comments</span>
+          <span><strong>${p.camera}</strong></span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Wire grid photos → open feed at that photo
+  document.querySelectorAll('.photo[data-photo]').forEach(el => {
+    el.addEventListener('click', () => {
+      enterFeed(parseInt(el.dataset.photo));
+    });
+  });
+
+  // ESC exits feed
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.body.classList.contains('feed-mode')) {
+      exitFeed();
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>jacobboehme.com — Hire</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #12100c; --bg-2: #1a1612; --bg-3: #221c16;
+    --line: #2d251c; --line-2: #1f1a14;
+    --ink: #f1e6cd; --ink-2: #c7b893; --ink-3: #8a7a5e; --ink-4: #5d4f3a;
+    --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
+  }
+  body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.5; mix-blend-mode: overlay; }
+  body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%); }
+  a { color: inherit; text-decoration: none; }
+  input, textarea, select, button { font-family: inherit; }
+
+  /* NAV (shared) */
+  .nav { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg-2); border-right: 1px solid var(--line); padding: 24px 0; z-index: 20; display: flex; flex-direction: column; }
+  .nav-brand { padding: 0 22px 22px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
+  .nav-brand .logo { font-size: 15px; font-weight: 900; letter-spacing: 0.04em; color: var(--amber); }
+  .nav-brand .tag { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: 6px; }
+  .nav-items { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; font-size: 12px; color: var(--ink-2); cursor: pointer; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--ink); }
+  .nav-item.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .nav-socials { margin: 22px 14px 0; padding: 16px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 8px; }
+  .nav-socials-h { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 10px; }
+  .nav-soc { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+  .nav-soc:not(:last-child) { border-bottom: 1px solid var(--line-2); }
+  .nav-soc-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); color: #000; }
+  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); color: #fff; }
+  .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
+  .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
+  .nav-soc-info { flex: 1; min-width: 0; }
+  .nav-soc-h { font-size: 11px; color: var(--ink); font-weight: 700; line-height: 1.1; }
+  .nav-soc-m { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 1px; }
+  .nav-bottom { margin-top: auto; padding: 20px 22px 0; font-size: 10px; color: var(--ink-4); line-height: 1.6; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .nav-bottom .status { display: flex; align-items: center; gap: 6px; color: var(--leaf); margin-bottom: 4px; }
+  .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  .main { margin-left: 220px; padding: 40px 40px 60px; max-width: 1300px; position: relative; z-index: 2; }
+
+  /* Page hero */
+  .page-hero { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 36px; padding-bottom: 26px; border-bottom: 1px solid var(--line-2); }
+  .page-hero h1 { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; color: var(--ink); line-height: 0.95; margin-bottom: 12px; }
+  .page-hero .lede { font-size: 15px; color: var(--ink-2); font-family: Georgia, 'Times New Roman', serif; font-style: italic; line-height: 1.5; max-width: 520px; }
+  .page-hero .status-stack { text-align: right; }
+  .page-hero .badge-status { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: rgba(140,175,58,0.12); border: 1px solid rgba(140,175,58,0.4); color: var(--leaf); border-radius: 100px; font-size: 10px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 8px; }
+  .page-hero .badge-status .d { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  .page-hero .meta { font-size: 10px; color: var(--ink-4); letter-spacing: 0.2em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+
+  /* Section style */
+  .section { margin-bottom: 48px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
+  .section-head .num { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; }
+  .section-head .label { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
+  .section-head .hint { margin-left: auto; font-size: 11px; color: var(--ink-4); font-family: Georgia, serif; font-style: italic; }
+
+  /* Services grid */
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .service { padding: 22px 20px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; transition: all .15s; cursor: pointer; }
+  .service:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .service .ic { font-size: 22px; color: var(--amber); margin-bottom: 12px; line-height: 1; }
+  .service .nm { font-size: 14px; font-weight: 900; color: var(--ink); letter-spacing: -0.005em; margin-bottom: 6px; }
+  .service .desc { font-size: 12px; color: var(--ink-3); line-height: 1.55; font-family: Georgia, serif; }
+  .service .tag { display: inline-block; margin-top: 12px; padding: 3px 10px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.25); color: var(--amber); font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; border-radius: 100px; }
+
+  /* Scope examples table */
+  .scope { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .scope-row { display: grid; grid-template-columns: 200px 1fr 140px; gap: 16px; padding: 18px 22px; border-bottom: 1px solid var(--line-2); align-items: center; transition: background .15s; }
+  .scope-row:last-child { border-bottom: none; }
+  .scope-row:hover { background: rgba(245,176,66,0.03); }
+  .scope-row .type { font-size: 13px; font-weight: 800; color: var(--ink); letter-spacing: 0.02em; }
+  .scope-row .desc { font-size: 12px; color: var(--ink-3); line-height: 1.5; font-family: Georgia, serif; }
+  .scope-row .timing { font-size: 10px; color: var(--amber); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; text-align: right; }
+
+  /* Process steps */
+  .process { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; position: relative; }
+  .step { padding: 22px 18px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; position: relative; }
+  .step .n { position: absolute; top: -10px; left: 16px; padding: 3px 10px; background: var(--bg); border: 1px solid var(--amber); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 10px; letter-spacing: 0.18em; font-weight: 800; border-radius: 100px; }
+  .step .title { font-size: 14px; font-weight: 900; color: var(--ink); margin-top: 8px; margin-bottom: 8px; letter-spacing: -0.005em; }
+  .step .body { font-size: 11px; color: var(--ink-3); line-height: 1.55; font-family: Georgia, serif; }
+
+  /* Contact split: form left, direct right */
+  .contact-split { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
+
+  /* Form */
+  .form-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 26px 28px; }
+  .form-card h3 { font-size: 18px; font-weight: 900; color: var(--ink); margin-bottom: 4px; letter-spacing: -0.01em; }
+  .form-card .form-sub { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; margin-bottom: 22px; line-height: 1.5; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field label { font-size: 10px; color: var(--amber); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; }
+  .field input, .field select, .field textarea { padding: 12px 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: var(--ink); font-size: 13px; transition: border-color .15s; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--amber); }
+  .field textarea { resize: vertical; min-height: 100px; font-family: inherit; line-height: 1.5; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .submit-btn { width: 100%; padding: 16px; background: var(--amber); color: var(--bg); border: none; border-radius: 6px; font-weight: 800; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: all .15s; font-family: 'SF Mono', Menlo, monospace; margin-top: 4px; }
+  .submit-btn:hover { background: #ffc555; transform: translateY(-1px); }
+
+  /* Direct contact card */
+  .direct-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 26px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .direct-card h3 { font-size: 16px; font-weight: 900; color: var(--ink); letter-spacing: -0.005em; }
+  .direct-card .sub { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; margin-bottom: 6px; }
+  .direct-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.3); border-radius: 6px; cursor: pointer; transition: all .15s; }
+  .direct-btn:hover { background: rgba(245,176,66,0.14); border-color: var(--amber); }
+  .direct-btn .ic { width: 28px; height: 28px; border-radius: 50%; background: var(--amber); color: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; flex-shrink: 0; }
+  .direct-btn .label { font-size: 9px; color: var(--ink-4); letter-spacing: 0.2em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; margin-bottom: 2px; }
+  .direct-btn .val { font-size: 13px; color: var(--ink); font-weight: 700; }
+  .reps { padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 6px; }
+  .reps .h { font-size: 10px; color: var(--amber); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 6px; }
+  .reps .v { font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+
+  /* Tour poster (matches home) */
+  .poster { background: #1d1812; border: 3px double var(--amber); border-radius: 4px; padding: 32px 36px 22px; position: relative; overflow: hidden; box-shadow: 0 0 0 8px var(--bg), 0 0 0 9px var(--line); margin-bottom: 48px; }
+  .poster::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle, rgba(245,176,66,0.16) 0.6px, transparent 1px); background-size: 4px 4px; opacity: 0.5; mix-blend-mode: screen; }
+  .poster::after { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.7; mix-blend-mode: overlay; }
+  .poster > * { position: relative; z-index: 2; }
+  .poster-label { font-size: 10px; color: var(--amber); letter-spacing: 0.38em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; text-align: center; margin-bottom: 26px; display: flex; align-items: center; gap: 14px; justify-content: center; }
+  .poster-label .line { flex: 0 0 60px; height: 1px; background: var(--amber); opacity: 0.5; }
+  .poster-row { text-align: center; line-height: 1; margin-bottom: 16px; }
+  .poster-row:last-of-type { margin-bottom: 0; }
+  .poster-name { font-weight: 900; letter-spacing: -0.025em; color: var(--ink); display: inline-block; transition: color .15s; cursor: pointer; }
+  .poster-name:hover { color: var(--amber); }
+  .poster-name.headliner { font-size: 64px; }
+  .poster-name.big { font-size: 40px; margin: 0 22px; }
+  .poster-name.med { font-size: 26px; margin: 0 18px; }
+  .poster-name.sm { font-size: 16px; margin: 0 12px; }
+  .poster-name.alt { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 700; }
+  .poster-name.dim { color: var(--ink-2); }
+  .poster-foot { margin-top: 22px; padding-top: 14px; border-top: 1px solid rgba(245,176,66,0.25); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-3); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .poster-foot a { color: var(--amber); font-weight: 800; }
+
+  .footer { margin-top: 50px; padding-top: 26px; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
+  .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
+
+  .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="logo">JACOB BOEHME</div>
+    <div class="tag">LANDBOUND · LA</div>
+  </div>
+  <div class="nav-items">
+    <a class="nav-item" href="index.html">Home</a>
+    <a class="nav-item" href="work.html">Work</a>
+    <a class="nav-item" href="photo.html">Photo</a>
+    <a class="nav-item" href="vfx-ai.html">VFX &amp; AI</a>
+    <a class="nav-item active" href="hire.html">Hire</a>
+  </div>
+  <div class="nav-socials">
+    <div class="nav-socials-h">Follow</div>
+    <div class="nav-soc"><div class="nav-soc-icon tt">d</div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon ig">○</div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 11K</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon li">in</div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></div>
+    <div class="nav-soc"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></div>
+  </div>
+  <div class="nav-bottom">
+    <div class="status"><div class="dot"></div> Available · Sept</div>
+    <div>Los Angeles, CA</div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div>
+      <h1>Let's make something.</h1>
+      <div class="lede">Music videos, commercials, VFX supervision, edit work, AI/VFX pipelines. Tell me what you've got.</div>
+    </div>
+    <div class="status-stack">
+      <div class="badge-status"><span class="d"></span>Accepting Work · Sept</div>
+      <div class="meta">Reply within 24 hours</div>
+    </div>
+  </div>
+
+  <!-- POSTER — Recent Collaborators -->
+  <div class="poster">
+    <div class="poster-label"><span class="line"></span>Recent Collaborators<span class="line"></span></div>
+    <div class="poster-row"><span class="poster-name headliner">SURFACES</span></div>
+    <div class="poster-row">
+      <span class="poster-name big alt">Two Feet</span>
+      <span class="poster-name big">MIKE POSNER</span>
+    </div>
+    <div class="poster-row">
+      <span class="poster-name med">GRACE VANDERWAAL</span>
+      <span class="poster-name med alt">Gym Class Heroes</span>
+    </div>
+    <div class="poster-row">
+      <span class="poster-name sm dim">SONY / RCA</span>
+      <span class="poster-name sm dim alt">Raw Material</span>
+      <span class="poster-name sm dim">Allison Hagendorf</span>
+      <span class="poster-name sm dim alt">SCREAMFEST</span>
+      <span class="poster-name sm dim">TikTok Partner</span>
+    </div>
+    <div class="poster-foot">
+      <span>24 credits · 100+ projects</span>
+      <a href="#">Full client list →</a>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">01.</span>
+      <span class="label">What I Do</span>
+      <span class="hint">Often hired for combinations</span>
+    </div>
+    <div class="services">
+      <div class="service">
+        <div class="ic">◆</div>
+        <div class="nm">Direction</div>
+        <div class="desc">Concept, treatment, on-set. Music videos, commercial spots, short-form.</div>
+        <div class="tag">10 YR</div>
+      </div>
+      <div class="service">
+        <div class="ic">✦</div>
+        <div class="nm">VFX Supervision</div>
+        <div class="desc">Shot planning, comp work, breakdowns. Features up to 250+ shots.</div>
+        <div class="tag">8 YR</div>
+      </div>
+      <div class="service">
+        <div class="ic">▣</div>
+        <div class="nm">Editing</div>
+        <div class="desc">Music video, commercial, short form. Resolve + Premiere fluent.</div>
+        <div class="tag">10 YR</div>
+      </div>
+      <div class="service">
+        <div class="ic">▤</div>
+        <div class="nm">Cinematography</div>
+        <div class="desc">DP work for music videos and shorts. Arri + Blackmagic native.</div>
+        <div class="tag">8 YR</div>
+      </div>
+      <div class="service">
+        <div class="ic">⌬</div>
+        <div class="nm">AI / AI-VFX</div>
+        <div class="desc">Midjourney, Kling, custom comp pipelines. Where AI meets craft.</div>
+        <div class="tag">3 YR</div>
+      </div>
+      <div class="service">
+        <div class="ic">▦</div>
+        <div class="nm">Producing</div>
+        <div class="desc">Soup-to-nuts for music video and short-form. EP credits available.</div>
+        <div class="tag">8 YR</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCOPE -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">02.</span>
+      <span class="label">Typical Scope</span>
+      <span class="hint">Reach out for anything not listed</span>
+    </div>
+    <div class="scope">
+      <div class="scope-row">
+        <div class="type">Retainer</div>
+        <div class="desc">Ongoing content for artist or brand. Monthly volume, flat rate.</div>
+        <div class="timing">Monthly</div>
+      </div>
+      <div class="scope-row">
+        <div class="type">Music Video</div>
+        <div class="desc">Full direction, on-set, edit, color, VFX. Or any combination.</div>
+        <div class="timing">3 — 6 weeks</div>
+      </div>
+      <div class="scope-row">
+        <div class="type">Commercial / Brand Spot</div>
+        <div class="desc">Concept through delivery. AI workflows available for compressed timelines.</div>
+        <div class="timing">2 — 4 weeks</div>
+      </div>
+      <div class="scope-row">
+        <div class="type">VFX Supervision</div>
+        <div class="desc">Project supervision, shot planning, comp delivery. Feature or short.</div>
+        <div class="timing">By project</div>
+      </div>
+      <div class="scope-row">
+        <div class="type">Edit Only</div>
+        <div class="desc">Music video, commercial, or short-form. Resolve or Premiere.</div>
+        <div class="timing">1 — 3 weeks</div>
+      </div>
+      <div class="scope-row">
+        <div class="type">Verticals / Short-Form</div>
+        <div class="desc">TikTok, IG Reels, YouTube Shorts. Brand or artist campaigns.</div>
+        <div class="timing">1 — 2 weeks</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROCESS -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">03.</span>
+      <span class="label">How It Works</span>
+    </div>
+    <div class="process">
+      <div class="step">
+        <span class="n">01</span>
+        <div class="title">Inquiry</div>
+        <div class="body">Drop a note with the project, timeline, and rough scope. Reply within 24 hours.</div>
+      </div>
+      <div class="step">
+        <span class="n">02</span>
+        <div class="title">Scope Call</div>
+        <div class="body">15 — 30 min to align on creative, deliverables, and budget. Free.</div>
+      </div>
+      <div class="step">
+        <span class="n">03</span>
+        <div class="title">Proposal</div>
+        <div class="body">Treatment + line items + timeline + price. No surprises after sign-off.</div>
+      </div>
+      <div class="step">
+        <span class="n">04</span>
+        <div class="title">Execute</div>
+        <div class="body">Pre-pro → production → post → delivery. Tight comms, no ghosting.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">04.</span>
+      <span class="label">Get In Touch</span>
+    </div>
+    <div class="contact-split">
+
+      <!-- FORM -->
+      <div class="form-card">
+        <h3>Project Inquiry</h3>
+        <div class="form-sub">The more you share, the faster I can come back with a real answer.</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Your name">
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="you@company.com">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="type">Project Type</label>
+            <select id="type">
+              <option>Music Video</option>
+              <option>Commercial / Brand</option>
+              <option>VFX Supervision</option>
+              <option>Edit Only</option>
+              <option>Verticals / Short-Form</option>
+              <option>Retainer</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="timeline">Timeline</label>
+            <select id="timeline">
+              <option>ASAP (under 2 weeks)</option>
+              <option>This month</option>
+              <option>Next month</option>
+              <option>3+ months out</option>
+              <option>Flexible / TBD</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="budget">Budget Range <span style="color:var(--ink-4); font-weight:400; letter-spacing:0.06em; text-transform:none;">(optional)</span></label>
+          <select id="budget">
+            <option>Tell me what's possible</option>
+            <option>Under $2K</option>
+            <option>$2K — $5K</option>
+            <option>$5K — $15K</option>
+            <option>$15K — $50K</option>
+            <option>$50K — $150K</option>
+            <option>$150K+</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="message">Tell me about it</label>
+          <textarea id="message" placeholder="Artist, brand, concept, references — whatever you've got."></textarea>
+        </div>
+
+        <button class="submit-btn">Send Inquiry →</button>
+      </div>
+
+      <!-- DIRECT -->
+      <div class="direct-card">
+        <h3>Or skip the form.</h3>
+        <div class="sub">If you'd rather just email or jump on a call.</div>
+
+        <a href="mailto:jacob.t.boehme@gmail.com" class="direct-btn">
+          <div class="ic">@</div>
+          <div>
+            <div class="label">Email</div>
+            <div class="val">jacob.t.boehme@gmail.com</div>
+          </div>
+        </a>
+
+        <a href="#" class="direct-btn">
+          <div class="ic">📅</div>
+          <div>
+            <div class="label">Calendar</div>
+            <div class="val">Book a call →</div>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="clapper">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h18M3 8v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8M3 8l3-5h12l3 5M9 3L7 8M15 3l-2 5"/></svg>
+      © 2026 Landbound
+    </span>
+    <span>Los Angeles</span>
+  </div>
+
+</main>
+
+<div class="banner">HIRE PAGE</div>
+</body>
+</html>
