@@ -543,7 +543,7 @@
       creditsEl.innerHTML = v.credits.map(([k, val]) => `<div class="row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('');
       durEl.textContent = `01:34 / ${v.dur}`;
       // Smooth scroll player into view (optional)
-      document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // scroll left intentionally — let user stay where they are
     });
   });
 
@@ -579,7 +579,7 @@
     item.addEventListener('click', () => {
       const slide = slides[i];
       if (slide && phoneScroll) {
-        phoneScroll.scrollTo({ top: slide.offsetTop, behavior: 'smooth' });
+        phoneScroll.scrollTop = slide.offsetTop;
       }
     });
   });
@@ -593,7 +593,6 @@
           srItems.forEach(it => it.classList.remove('active'));
           if (srItems[idx]) {
             srItems[idx].classList.add('active');
-            srItems[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }
         }
       });
@@ -614,7 +613,7 @@
         return Math.abs(rect.top - phoneRect.top) < 50;
       });
       const next = slides[Math.min(current + 1, slides.length - 1)];
-      if (next) phoneScroll.scrollTo({ top: next.offsetTop, behavior: 'smooth' });
+      if (next) phoneScroll.scrollTop = next.offsetTop;
     }
     if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
       e.preventDefault();
@@ -624,7 +623,7 @@
         return Math.abs(rect.top - phoneRect.top) < 50;
       });
       const prev = slides[Math.max(current - 1, 0)];
-      if (prev) phoneScroll.scrollTo({ top: prev.offsetTop, behavior: 'smooth' });
+      if (prev) phoneScroll.scrollTop = prev.offsetTop;
     }
   });
 
