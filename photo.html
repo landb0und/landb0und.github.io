@@ -45,7 +45,7 @@
   .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
   @keyframes pulse { 50% { opacity: 0.3; } }
 
-  .main { margin-left: 220px; padding: 40px 40px 60px; max-width: 1400px; position: relative; z-index: 2; }
+  .main { margin-left: 220px; padding: 32px 28px 60px; max-width: 1400px; position: relative; z-index: 2; }
 
   /* Grid view (default) */
   .view-grid { display: block; }
@@ -137,8 +137,8 @@
   .photo-corner { position: absolute; top: 10px; right: 10px; z-index: 3; padding: 3px 8px; background: rgba(0,0,0,0.7); color: var(--amber); font-size: 8px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; text-transform: uppercase; border-radius: 100px; backdrop-filter: blur(4px); opacity: 0.85; }
 
   /* ============= IG FEED VIEW (takeover) ============= */
-  .view-feed { padding-top: 8px; }
-  .feed-back { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--ink-2); font-size: 11px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; border-radius: 100px; cursor: pointer; transition: all .15s; margin-bottom: 18px; }
+  .view-feed { padding-top: 52px; }
+  .feed-back { position: fixed; top: 24px; left: 248px; z-index: 30; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(18,16,12,0.92); border: 1px solid var(--line); color: var(--ink-2); font-size: 11px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; border-radius: 100px; cursor: pointer; transition: all .15s; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
   .feed-back:hover { color: var(--amber); border-color: var(--amber); }
 
   /* Stories row (clients) */
@@ -165,7 +165,7 @@
   .sa-10 { background: linear-gradient(135deg, #1a0a10, #e8589a); }
 
   /* Feed layout */
-  .feed-layout { display: grid; grid-template-columns: 1fr 320px; gap: 60px; align-items: start; }
+  .feed-layout { display: grid; grid-template-columns: 1fr 320px; gap: 28px; align-items: start; }
 
   .feed-posts { display: flex; flex-direction: column; gap: 22px; max-width: 540px; }
   .post { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
@@ -371,7 +371,7 @@
             <div class="rail-handle">landbound</div>
             <div class="rail-name">JT · Director · LA</div>
           </div>
-          <span class="rail-switch">Switch</span>
+          
         </div>
 
         <div class="rail-h">
@@ -519,7 +519,7 @@
           <span class="icn heart">♡</span>
           <span class="icn">💬</span>
           <span class="icn">↗</span>
-          <span class="icn save">⌐</span>
+          
         </div>
         <div class="post-likes"><strong>${p.likes}</strong> likes</div>
         <div class="post-caption"><span class="nm">landbound</span> ${p.caption}</div>

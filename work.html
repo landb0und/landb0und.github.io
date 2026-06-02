@@ -312,9 +312,9 @@
           </div>
         </div>
         <div class="vc-info">
-          <div class="vc-tag">★ Verticals Feed</div>
-          <div class="vc-title">@landbound</div>
-          <div class="vc-meta">100K · 45M+ views</div>
+          <div class="vc-tag">★ Vertical Feed</div>
+          <div class="vc-title">Verticals</div>
+          <div class="vc-meta">47 clips · 45M+ views</div>
           <div class="vc-cta">Open shorts feed →</div>
         </div>
       </div>
@@ -564,6 +564,13 @@
   // ============= SHORTS — TikTok-style scroll =============
   function openShorts() { document.getElementById('shorts').classList.add('open'); }
   function closeShorts() {
+    // If came from home (referrer is index.html) and hash is #shorts → return home
+    const cameFromHome = window.location.hash === '#shorts' &&
+                         (document.referrer.endsWith('/') || document.referrer.includes('index.html'));
+    if (cameFromHome) {
+      window.location.href = 'index.html';
+      return;
+    }
     document.getElementById('shorts').classList.remove('open');
     if (window.location.hash === '#shorts') {
       history.replaceState(null, '', window.location.pathname);
