@@ -342,19 +342,8 @@
 
     <button class="feed-back" onclick="exitFeed()">← Back to Grid</button>
 
-    <!-- Stories: Clients -->
-    <div class="stories" id="stories">
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-1">GV</div></div></div><div class="story-name">Grace V.</div></div>
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-2">2F</div></div></div><div class="story-name">Two Feet</div></div>
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-3">MP</div></div></div><div class="story-name">M. Posner</div></div>
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-4">GCH</div></div></div><div class="story-name">Gym Class H.</div></div>
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-5">SF</div></div></div><div class="story-name">Surfaces</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-6">AH</div></div></div><div class="story-name">Hagendorf</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-7">RM</div></div></div><div class="story-name">Raw Material</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-8">SR</div></div></div><div class="story-name">Sony/RCA</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-9">SF</div></div></div><div class="story-name">SCREAMFEST</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-10">TT</div></div></div><div class="story-name">TikTok</div></div>
-    </div>
+    <!-- Stories: Clients (rendered from data.js) -->
+    <div class="stories" id="feedStories"></div>
 
     <div class="feed-layout">
 
@@ -561,6 +550,7 @@
     }).join('');
   }
   renderStories('photoStories');
+  renderStories('feedStories');
 
   // Default: open Photo in IG feed view (use ?grid=1 to start on grid)
   const startOnGrid = /[?&]grid=1/.test(window.location.search);
