@@ -15,7 +15,7 @@ window.CLIENTS = [
     palette: 'sa-1',
     thumb: null,
     media: [
-      { type: 'video', embedId: 'wCQzcM3Z_bo', title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'] }
+      { type: 'video', embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'] }
     ]
   },
   {
@@ -28,8 +28,8 @@ window.CLIENTS = [
     palette: 'sa-2',
     thumb: null,
     media: [
-      { type: 'video', embedId: 'fyLpZL-HOxg', title: 'Bleed', year: '2025', tags: ['Director','Editor'] },
-      { type: 'video', embedId: '_FYMFKdyPOo', title: 'Secrets', year: '2024', tags: ['Director','DP','Editor','VFX'] }
+      { type: 'video', embedId: '9e6f327c-1d83-4545-b88c-3193d7dd4274', bunny: true, title: 'Bleed', year: '2025', tags: ['Director','Editor'] },
+      { type: 'video', embedId: 'b58d5348-c997-4338-8a9d-f83302bf948a', bunny: true, title: 'Secrets', year: '2024', tags: ['Director','DP','Editor','VFX'] }
     ]
   },
   {
@@ -90,11 +90,13 @@ window.CLIENTS = [
     name: 'Surfaces',
     short: 'Surfaces',
     handle: '@surfaces',
-    role: 'Cinematographer',
-    blurb: 'Dreams — Arri Alexa anamorphic music video.',
+    role: 'Director · DP · Editor',
+    blurb: "Call Me When You're Home — lyric video. Dreams — anamorphic music video.",
     palette: 'sa-5',
     thumb: null,
-    media: []
+    media: [
+      { type: 'video', embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", year: '2024', tags: ['Director','DP','Editor'] }
+    ]
   },
   {
     id: 'allison-hagendorf',
@@ -170,10 +172,15 @@ window.CLIENTS = [
 // thumbnail, then first photo, then null (so story circles show initials).
 window.clientThumb = function(c) {
   if (c.thumb) return c.thumb;
-  const firstVid = c.media.find(m => m.type === 'video');
-  if (firstVid) return 'https://img.youtube.com/vi/' + firstVid.embedId + '/maxresdefault.jpg';
+  // Prefer a photo (we have its URL) over a video (Bunny thumbnails need a hashed CDN host we don't know yet).
   const firstPhoto = c.media.find(m => m.type === 'photo');
   if (firstPhoto) return firstPhoto.src;
+  const firstVid = c.media.find(m => m.type === 'video');
+  if (firstVid) {
+    // Bunny thumb hostname is library-specific; until we know it, fall back to null and show initials.
+    if (firstVid.bunny) return null;
+    return 'https://img.youtube.com/vi/' + firstVid.embedId + '/maxresdefault.jpg';
+  }
   return null;
 };
 

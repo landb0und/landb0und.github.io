@@ -269,7 +269,11 @@
       let badge = '';
       let vicon = '';
       if (m.type === 'video') {
-        tileImg = `https://img.youtube.com/vi/${m.embedId}/maxresdefault.jpg`;
+        if (m.bunny) {
+          tileImg = '';
+        } else {
+          tileImg = `https://img.youtube.com/vi/${m.embedId}/maxresdefault.jpg`;
+        }
         badge = `<span class="tile-badge">VIDEO</span>`;
         vicon = `<span class="tile-vidicon">▶</span>`;
       } else {
@@ -279,8 +283,8 @@
       // Find the index in the master media list to pass to open
       const masterIdx = currentClient.media.indexOf(m);
       return `
-        <div class="tile" onclick="openLightbox(${masterIdx})">
-          <img src="${tileImg}" alt="${m.title || ''}" loading="lazy">
+        <div class="tile" onclick="openLightbox(${masterIdx})" ${tileImg ? '' : 'style="background:linear-gradient(135deg,#2a1f15 0%,#6b3a1a 50%,#f5b042 100%);"'}>
+          ${tileImg ? `<img src="${tileImg}" alt="${m.title || ''}" loading="lazy">` : '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:32px;">▶</div>'}
           ${badge}
           ${vicon}
           <div class="tile-overlay">
@@ -310,7 +314,9 @@
 
     let mediaHTML;
     if (m.type === 'video') {
-      mediaHTML = `<iframe src="https://www.youtube.com/embed/${m.embedId}?rel=0&modestbranding=1&autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+      mediaHTML = m.bunny
+        ? `<iframe src="https://iframe.mediadelivery.net/embed/675985/${m.embedId}?autoplay=true&preload=true&responsive=true" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+        : `<iframe src="https://www.youtube.com/embed/${m.embedId}?rel=0&modestbranding=1&autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     } else {
       mediaHTML = `<img src="${m.src}" alt="${m.title}">`;
     }
