@@ -52,6 +52,27 @@
   .section-h { font-size: 13px; letter-spacing: 0.26em; color: var(--ink); text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
   .section-h::before { content: '— '; color: var(--amber); }
   .section-sub { font-size: 12px; color: var(--ink-4); margin-bottom: 20px; font-style: italic; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
+  /* Stories (IG-style client rail) */
+  .stories { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 2px 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line-2); scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .stories::-webkit-scrollbar { height: 4px; }
+  .stories::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .story { flex: 0 0 76px; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; }
+  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); transition: transform .15s; }
+  .story:hover .story-ring { transform: scale(1.05); }
+  .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .story-avatar { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 15px; }
+  .sa-1 { background: linear-gradient(135deg, #f5b042, #e8589a); }
+  .sa-2 { background: linear-gradient(135deg, #6b3a1a, #c084fc); }
+  .sa-3 { background: linear-gradient(135deg, #4a1838, #f5b042); }
+  .sa-4 { background: linear-gradient(135deg, #2a4a18, #6fbd5f); }
+  .sa-5 { background: linear-gradient(135deg, #f5b042, #c4533a); }
+  .sa-6 { background: linear-gradient(135deg, #2a1f15, #f5b042); }
+  .sa-7 { background: linear-gradient(135deg, #1f2a18, #6fbd5f); }
+  .sa-8 { background: linear-gradient(135deg, #5a2a10, #c4533a); }
+  .sa-9 { background: linear-gradient(135deg, #6b3a1a, #c0aa70); }
+  .sa-10 { background: linear-gradient(135deg, #1a0a18, #e8589a); }
+  .story-name { font-size: 10px; color: var(--ink-2); font-weight: 700; text-align: center; max-width: 76px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 
   /* Filter bar — search-input-aesthetic */
   .filter-bar { display: flex; align-items: center; gap: 14px; padding: 10px 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 22px; transition: border-color .15s; }
@@ -111,12 +132,16 @@
   .vc-meta { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; }
   .vc-cta { font-size: 10px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; margin-top: 4px; }
 
-  .vc-frame { position: absolute; inset: 0; opacity: 0; animation: cycle 12s infinite; }
-  .vc-frame:nth-child(1) { animation-delay: 0s; }
-  .vc-frame:nth-child(2) { animation-delay: 3s; }
-  .vc-frame:nth-child(3) { animation-delay: 6s; }
-  .vc-frame:nth-child(4) { animation-delay: 9s; }
-  @keyframes cycle { 0%, 22% { opacity: 1; } 25%, 100% { opacity: 0; } }
+  .vc-frame { position: absolute; inset: 0; opacity: 1; animation: vcSwipeY 8s infinite; will-change: transform; }
+  .vc-frame:nth-child(1) { animation-delay: 0s; z-index: 2; }
+  .vc-frame:nth-child(2) { animation-delay: 4s; z-index: 1; }
+  @keyframes vcSwipeY {
+    0%   { transform: translateY(0%); }
+    45%  { transform: translateY(0%); }
+    50%  { transform: translateY(-100%); }
+    95%  { transform: translateY(-100%); }
+    100% { transform: translateY(-200%); }
+  }
   .vc-thumb::after { content: '▶'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 18px; z-index: 2; text-shadow: 0 2px 6px rgba(0,0,0,0.5); }
   .vc-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
   .vc-tag { font-size: 9px; color: var(--rose); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; }
@@ -273,8 +298,8 @@
     <span>YouTube + Shorts</span>
   </div>
 
-  <div class="section-h">All Work</div>
-  <div class="section-sub">Pick a thumbnail to play. Verticals open as a shorts feed.</div>
+  <!-- CLIENT STORIES (IG-style, rendered from data.js) -->
+  <div class="stories" id="workStories" style="margin-bottom: 20px;"></div>
 
   <div class="filter-bar">
     <div class="filter-label">
