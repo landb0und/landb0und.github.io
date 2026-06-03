@@ -53,10 +53,17 @@
   .section-h::before { content: '— '; color: var(--amber); }
   .section-sub { font-size: 12px; color: var(--ink-4); margin-bottom: 20px; font-style: italic; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
 
-  /* Filter pills */
-  .filter-strip { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
-  .pill { padding: 5px 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); color: var(--ink-2); font-size: 10px; letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; border-radius: 100px; cursor: pointer; font-weight: 700; }
-  .pill:hover, .pill.active { background: rgba(245,176,66,0.1); border-color: var(--amber); color: var(--amber); }
+  /* Filter bar — search-input-aesthetic */
+  .filter-bar { display: flex; align-items: center; gap: 14px; padding: 10px 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 22px; transition: border-color .15s; }
+  .filter-bar:hover { border-color: var(--ink-4); }
+  .filter-label { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-4); font-size: 10px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; padding-right: 14px; border-right: 1px solid var(--line); flex-shrink: 0; }
+  .filter-label svg { width: 12px; height: 12px; color: var(--ink-3); }
+  .filter-opts { display: flex; align-items: center; flex: 1; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+  .filter-opts::-webkit-scrollbar { display: none; }
+  .opt { padding: 6px 14px; color: var(--ink-2); font-size: 11px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; cursor: pointer; border-radius: 6px; transition: all .15s; white-space: nowrap; }
+  .opt:hover { background: rgba(255,255,255,0.04); color: var(--ink); }
+  .opt.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .opt-sep { width: 1px; height: 12px; background: var(--line-2); margin: 0 2px; flex-shrink: 0; }
 
   /* YT layout */
   .yt { display: grid; grid-template-columns: 1fr 340px; gap: 22px; }
@@ -257,13 +264,24 @@
   <div class="section-h">All Work</div>
   <div class="section-sub">Pick a thumbnail to play. Verticals open as a shorts feed.</div>
 
-  <div class="filter-strip">
-    <span class="pill active">All</span>
-    <span class="pill">Direction</span>
-    <span class="pill">VFX</span>
-    <span class="pill">Editing</span>
-    <span class="pill">DP</span>
-    <span class="pill">Commercial</span>
+  <div class="filter-bar">
+    <div class="filter-label">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm3 5h12v2H6v-2zm4 5h4v2h-4v-2z"/></svg>
+      Filter
+    </div>
+    <div class="filter-opts">
+      <span class="opt active">All</span>
+      <span class="opt-sep"></span>
+      <span class="opt">Direction</span>
+      <span class="opt-sep"></span>
+      <span class="opt">VFX</span>
+      <span class="opt-sep"></span>
+      <span class="opt">Editing</span>
+      <span class="opt-sep"></span>
+      <span class="opt">DP</span>
+      <span class="opt-sep"></span>
+      <span class="opt">Commercial</span>
+    </div>
   </div>
 
   <div class="yt">
