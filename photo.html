@@ -172,7 +172,7 @@
   .post-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
   .post-avatar { width: 32px; height: 32px; border-radius: 50%; padding: 1.5px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); flex-shrink: 0; }
   .post-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 1.5px; display: flex; }
-  .post-avatar-img { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, var(--amber), var(--rose)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; color: #fff; }
+  .post-avatar-img { width: 100%; height: 100%; border-radius: 50%; background: url('headshot.jpg') center/cover no-repeat var(--bg-3); }
   .post-head-info { flex: 1; min-width: 0; }
   .post-head-name { font-size: 13px; color: var(--ink); font-weight: 800; }
   .post-head-loc { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 1px; }
@@ -202,7 +202,7 @@
   .feed-rail { position: sticky; top: 30px; display: flex; flex-direction: column; gap: 20px; }
   .rail-profile { display: flex; align-items: center; gap: 12px; padding: 4px 4px 16px; border-bottom: 1px solid var(--line-2); }
   .rail-avatar { width: 56px; height: 56px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); flex-shrink: 0; }
-  .rail-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, var(--amber), var(--rose)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 18px; }
+  .rail-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: url('headshot.jpg') center/cover no-repeat var(--bg-3); }
   .rail-prof-info { flex: 1; min-width: 0; }
   .rail-handle { font-size: 14px; color: var(--ink); font-weight: 800; }
   .rail-name { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 2px; }
@@ -366,7 +366,7 @@
       <!-- RIGHT RAIL -->
       <div class="feed-rail">
         <div class="rail-profile">
-          <div class="rail-avatar"><div class="rail-avatar-inner">JB</div></div>
+          <div class="rail-avatar"><div class="rail-avatar-inner"></div></div>
           <div class="rail-prof-info">
             <div class="rail-handle">landbound</div>
             <div class="rail-name">JT · Director · LA</div>
@@ -502,7 +502,7 @@
     container.innerHTML = reordered.map((p, i) => `
       <div class="post">
         <div class="post-head">
-          <div class="post-avatar"><div class="post-avatar-inner"><div class="post-avatar-img">JB</div></div></div>
+          <div class="post-avatar"><div class="post-avatar-inner"><div class="post-avatar-img"></div></div></div>
           <div class="post-head-info">
             <div class="post-head-name">landbound</div>
             <div class="post-head-loc">${p.location} · ${p.year}</div>
