@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Client — Landbound</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg: #0a0806; --bg-2: #14100c; --bg-3: #1a1410;
+    --ink: #e8ddc5; --ink-2: #c9b88f; --ink-3: #968266; --ink-4: #5a4d3a;
+    --amber: #f5b042; --rose: #e8589a; --leaf: #6fbd5f;
+    --line: rgba(245,176,66,0.14); --line-2: rgba(245,176,66,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: -apple-system, system-ui, sans-serif; min-height: 100%; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,0.012) 2px 3px); }
+
+  .frame { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+
+  /* LEFT NAV (matches other pages) */
+  .nav { padding: 30px 24px; border-right: 1px solid var(--line); position: sticky; top: 0; height: 100vh; }
+  .nav-logo { font-size: 14px; font-weight: 900; letter-spacing: 0.12em; color: var(--ink); margin-bottom: 4px; }
+  .nav-sub { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 38px; }
+  .nav-items { display: flex; flex-direction: column; gap: 4px; }
+  .nav-item { padding: 10px 14px; font-size: 12px; letter-spacing: 0.18em; color: var(--ink-3); font-weight: 800; cursor: pointer; border-radius: 6px; transition: all .15s; text-decoration: none; display: block; }
+  .nav-item:hover { color: var(--ink); background: var(--bg-2); }
+  .nav-item.active { background: var(--bg-2); color: var(--amber); }
+  .nav-foot { position: absolute; bottom: 30px; left: 24px; right: 24px; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .nav-foot .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); margin-right: 6px; vertical-align: middle; }
+
+  /* MAIN */
+  .main { padding: 32px 56px 80px; max-width: 1100px; }
+
+  .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0.18em; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; font-weight: 700; padding: 8px 14px; border: 1px solid var(--line); border-radius: 100px; text-decoration: none; transition: all .15s; margin-bottom: 28px; }
+  .back-btn:hover { color: var(--amber); border-color: var(--amber); }
+
+  /* HERO */
+  .hero { padding-bottom: 28px; border-bottom: 1px solid var(--line-2); margin-bottom: 36px; display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: end; }
+  .hero-avatar { width: 110px; height: 110px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); }
+  .hero-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 3px; }
+  .hero-avatar-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 28px; letter-spacing: 0.02em; }
+  .sa-1 { background: linear-gradient(135deg, #f5b042, #e8589a); }
+  .sa-2 { background: linear-gradient(135deg, #6b3a1a, #c084fc); }
+  .sa-3 { background: linear-gradient(135deg, #4a1838, #f5b042); }
+  .sa-4 { background: linear-gradient(135deg, #2a4a18, #6fbd5f); }
+  .sa-5 { background: linear-gradient(135deg, #f5b042, #c4533a); }
+  .sa-6 { background: linear-gradient(135deg, #2a1f15, #f5b042); }
+  .sa-7 { background: linear-gradient(135deg, #1f2a18, #6fbd5f); }
+  .sa-8 { background: linear-gradient(135deg, #5a2a10, #c4533a); }
+  .sa-9 { background: linear-gradient(135deg, #6b3a1a, #c0aa70); }
+  .sa-10 { background: linear-gradient(135deg, #1a0a18, #e8589a); }
+
+  .hero-info h1 { font-size: 48px; font-weight: 900; letter-spacing: -0.02em; line-height: 1; margin-bottom: 10px; }
+  .hero-handle { font-size: 12px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .hero-roles { display: flex; gap: 6px; flex-wrap: wrap; }
+  .role-chip { padding: 4px 10px; border-radius: 100px; background: rgba(245,176,66,0.1); color: var(--amber); font-size: 10px; font-weight: 800; letter-spacing: 0.14em; border: 1px solid rgba(245,176,66,0.25); }
+  .hero-meta { text-align: right; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; }
+  .hero-meta strong { color: var(--amber); display: block; font-size: 22px; letter-spacing: -0.01em; margin-bottom: 4px; }
+
+  .hero-blurb { grid-column: 1 / -1; color: var(--ink-2); font-style: italic; font-family: Georgia, serif; font-size: 14px; line-height: 1.6; max-width: 720px; margin-top: 4px; }
+
+  /* MEDIA SECTION */
+  .sec-label { font-size: 10px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
+
+  .media-list { display: flex; flex-direction: column; gap: 36px; }
+
+  .media-card { display: grid; grid-template-columns: 1fr; gap: 14px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 18px; transition: border-color .15s; }
+  .media-card:hover { border-color: rgba(245,176,66,0.3); }
+
+  .media-frame { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #000; }
+  .media-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .media-frame.photo { aspect-ratio: auto; max-height: 720px; display: flex; align-items: center; justify-content: center; }
+  .media-frame.photo img { display: block; max-width: 100%; max-height: 720px; width: auto; height: auto; }
+
+  .media-meta { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 4px; }
+  .media-meta-l { flex: 1; min-width: 0; }
+  .media-title { font-size: 20px; font-weight: 900; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 4px; }
+  .media-sub { font-size: 11px; color: var(--ink-3); letter-spacing: 0.08em; font-family: 'SF Mono', Menlo, monospace; }
+  .media-tags { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+  .media-tag { padding: 3px 9px; background: rgba(245,176,66,0.08); color: var(--amber); font-size: 9px; letter-spacing: 0.16em; font-weight: 800; border-radius: 100px; border: 1px solid rgba(245,176,66,0.2); }
+
+  /* EMPTY STATE */
+  .empty { padding: 60px 40px; text-align: center; background: var(--bg-2); border: 1px dashed var(--line); border-radius: 10px; color: var(--ink-3); }
+  .empty .t { font-size: 14px; color: var(--ink-2); margin-bottom: 6px; font-weight: 700; }
+  .empty .m { font-size: 11px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+
+  /* OTHER CLIENTS */
+  .other-clients { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--line-2); }
+  .other-strip { display: flex; gap: 14px; overflow-x: auto; padding: 4px 2px 14px; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .other-strip::-webkit-scrollbar { height: 4px; }
+  .other-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .oc { flex: 0 0 76px; scroll-snap-align: start; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; }
+  .oc-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); transition: transform .15s; }
+  .oc:hover .oc-ring { transform: scale(1.05); }
+  .oc-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; }
+  .oc-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 15px; }
+  .oc-name { font-size: 10px; color: var(--ink-2); font-weight: 700; text-align: center; max-width: 76px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* NOT FOUND */
+  .notfound { padding: 80px 40px; text-align: center; }
+  .notfound h2 { font-size: 32px; margin-bottom: 12px; }
+  .notfound p { color: var(--ink-3); margin-bottom: 22px; }
+  .notfound a { color: var(--amber); text-decoration: none; font-weight: 800; letter-spacing: 0.12em; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <nav class="nav">
+    <div class="nav-logo">JACOB BOEHME</div>
+    <div class="nav-sub">LANDBOUND · LA</div>
+    <div class="nav-items">
+      <a href="index.html" class="nav-item">HOME</a>
+      <a href="work.html" class="nav-item">WORK</a>
+      <a href="photo.html" class="nav-item">PHOTO</a>
+      <a href="vfx-ai.html" class="nav-item">VFX &amp; AI</a>
+      <a href="hire.html" class="nav-item">HIRE</a>
+    </div>
+    <div class="nav-foot"><span class="dot"></span>Available · Sept<br><span style="color: var(--ink-4);">Los Angeles, CA</span></div>
+  </nav>
+
+  <main class="main" id="main">
+    <!-- rendered by JS -->
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script>
+  function getQueryId() {
+    const m = window.location.search.match(/[?&]id=([^&]+)/);
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  function renderClient(c) {
+    const thumb = window.clientThumb(c);
+    const initials = window.clientInitials(c);
+    const roleChips = c.role.split(' · ').map(r => `<span class="role-chip">${r}</span>`).join('');
+    const avatarBg = thumb
+      ? `style="background-image: url('${thumb}');"`
+      : '';
+    const avatarLabel = thumb ? '' : initials;
+
+    const videoCount = c.media.filter(m => m.type === 'video').length;
+    const photoCount = c.media.filter(m => m.type === 'photo').length;
+    const counts = [];
+    if (videoCount) counts.push(`<strong>${videoCount}</strong> video${videoCount>1?'s':''}`);
+    if (photoCount) counts.push(`<strong>${photoCount}</strong> photo${photoCount>1?'s':''}`);
+    const countLine = counts.length ? counts.join(' · ') : '<strong>—</strong> Work in progress';
+
+    const mediaHTML = c.media.length === 0
+      ? `<div class="empty"><div class="t">Project gallery coming online.</div><div class="m">Stills and links from this collaboration will land here next.</div></div>`
+      : c.media.map(m => {
+          if (m.type === 'video') {
+            const tagsHTML = (m.tags || []).map(t => `<span class="media-tag">${t}</span>`).join('');
+            return `
+              <div class="media-card">
+                <div class="media-frame">
+                  <iframe src="https://www.youtube.com/embed/${m.embedId}?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${m.title}"></iframe>
+                </div>
+                <div class="media-meta">
+                  <div class="media-meta-l">
+                    <div class="media-title">${m.title}</div>
+                    <div class="media-sub">${c.handle} · ${m.year}</div>
+                  </div>
+                  <div class="media-tags">${tagsHTML}</div>
+                </div>
+              </div>`;
+          } else {
+            return `
+              <div class="media-card">
+                <div class="media-frame photo">
+                  <img src="${m.src}" alt="${m.title}" loading="lazy">
+                </div>
+                <div class="media-meta">
+                  <div class="media-meta-l">
+                    <div class="media-title">${m.title}</div>
+                    <div class="media-sub">${c.handle} · ${m.year}</div>
+                  </div>
+                </div>
+              </div>`;
+          }
+        }).join('');
+
+    const others = window.CLIENTS.filter(x => x.id !== c.id).slice(0, 14);
+    const othersHTML = others.map(o => {
+      const ot = window.clientThumb(o);
+      const oavatar = ot
+        ? `style="background-image: url('${ot}');"`
+        : `class="oc-img ${o.palette}"`;
+      const olabel = ot ? '' : window.clientInitials(o);
+      return `
+        <a class="oc" href="client.html?id=${o.id}">
+          <div class="oc-ring"><div class="oc-inner"><div class="oc-img ${ot ? '' : o.palette}" ${ot ? `style="background-image: url('${ot}');"` : ''}>${olabel}</div></div></div>
+          <div class="oc-name">${o.short}</div>
+        </a>`;
+    }).join('');
+
+    document.title = `${c.name} — Landbound`;
+    document.getElementById('main').innerHTML = `
+      <a href="javascript:history.length>1?history.back():window.location.href='work.html'" class="back-btn">← BACK</a>
+
+      <div class="hero">
+        <div class="hero-avatar"><div class="hero-avatar-inner"><div class="hero-avatar-img ${thumb ? '' : c.palette}" ${avatarBg}>${avatarLabel}</div></div></div>
+        <div class="hero-info">
+          <h1>${c.name}</h1>
+          <div class="hero-handle">${c.handle}</div>
+          <div class="hero-roles">${roleChips}</div>
+        </div>
+        <div class="hero-meta"><strong>${c.media.length || '—'}</strong>PROJECTS</div>
+        <div class="hero-blurb">${c.blurb}</div>
+      </div>
+
+      <div class="sec-label">// WORK · ${countLine}</div>
+      <div class="media-list">${mediaHTML}</div>
+
+      <div class="other-clients">
+        <div class="sec-label">// OTHER CLIENTS</div>
+        <div class="other-strip">${othersHTML}</div>
+      </div>
+    `;
+  }
+
+  function renderNotFound() {
+    document.getElementById('main').innerHTML = `
+      <div class="notfound">
+        <h2>Client not found</h2>
+        <p>That client ID doesn't match any in the system yet.</p>
+        <a href="work.html">← Back to Work</a>
+      </div>`;
+  }
+
+  const id = getQueryId();
+  const c = id ? window.clientById(id) : null;
+  if (c) renderClient(c); else renderNotFound();
+</script>
+</body>
+</html>

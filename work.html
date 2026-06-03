@@ -101,7 +101,16 @@
   .verticals-card { display: flex; gap: 12px; padding: 12px; background: linear-gradient(135deg, rgba(232,88,154,0.12) 0%, rgba(245,176,66,0.08) 100%); border: 1px solid rgba(232,88,154,0.35); border-radius: 8px; margin-bottom: 18px; cursor: pointer; transition: all .15s; position: relative; }
   .verticals-card:hover { border-color: var(--rose); transform: translateY(-1px); }
   .vc-thumb { width: 70px; aspect-ratio: 9/16; border-radius: 6px; flex-shrink: 0; position: relative; overflow: hidden; }
-  .vc-frames { position: absolute; inset: 0; }
+  .vc-frames { position: absolute; inset: 0; overflow: hidden; }
+  .vc-thumb { flex: 0 0 90px; aspect-ratio: 9/16; border-radius: 6px; overflow: hidden; position: relative; }
+  .vc-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.65) 100%); z-index: 2; }
+  .vc-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; z-index: 3; opacity: 0.85; }
+  .vc-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .vc-tag { font-size: 9px; color: var(--rose); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; }
+  .vc-title { font-size: 18px; color: var(--ink); font-weight: 900; letter-spacing: -0.01em; }
+  .vc-meta { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; }
+  .vc-cta { font-size: 10px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; margin-top: 4px; }
+
   .vc-frame { position: absolute; inset: 0; opacity: 0; animation: cycle 12s infinite; }
   .vc-frame:nth-child(1) { animation-delay: 0s; }
   .vc-frame:nth-child(2) { animation-delay: 3s; }
@@ -314,20 +323,20 @@
 
     <div class="side">
       <!-- Verticals card with auto-cycling thumbnail -->
-      <div class="verticals-card" onclick="openShorts()">
-        <div class="vc-thumb">
+      <div class="verticals-card" onclick="openShorts(0)">
+        <div class="vc-thumb" style="position:relative; overflow:hidden;">
           <div class="vc-frames">
-            <div class="vc-frame vg1"></div>
-            <div class="vc-frame vg2"></div>
-            <div class="vc-frame vg3"></div>
-            <div class="vc-frame vg4"></div>
+            <div class="vc-frame" style="background:#000;"><img src="https://img.youtube.com/vi/kqwrvXnA0UE/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"></div>
+            <div class="vc-frame" style="background:#000;"><img src="https://img.youtube.com/vi/pWpCBBaPX_Q/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"></div>
           </div>
+          <div class="vc-overlay"></div>
+          <div class="vc-play">▶</div>
         </div>
         <div class="vc-info">
-          <div class="vc-tag">★ Vertical Feed</div>
+          <div class="vc-tag">+ VERTICAL FEED</div>
           <div class="vc-title">Verticals</div>
           <div class="vc-meta">47 clips · 45M+ views</div>
-          <div class="vc-cta">Open shorts feed →</div>
+          <div class="vc-cta">OPEN SHORTS FEED →</div>
         </div>
       </div>
 
@@ -497,6 +506,7 @@
 <button class="toggle-btn" onclick="openShorts()">↗ Open Shorts</button>
 <div class="banner">WORK · YOUTUBE + SHORTS (nav linked)</div>
 
+<script src="data.js"></script>
 <script>
   // ============= WORK / YouTube — click sidebar to swap player =============
   const VIDEOS = [
@@ -661,12 +671,60 @@
       const parts = h.split('/');
       const idx = parts.length > 1 ? parseInt(parts[1]) : 0;
       openShorts(isNaN(idx) ? 0 : idx);
+    } else if (h.startsWith('#video/')) {
+      // Deep-link from home Featured tiles — swap mainPlayer to the requested embedId
+      const embedId = h.split('/')[1];
+      if (embedId) {
+        const mp = document.getElementById('mainPlayer');
+        if (mp) {
+          mp.src = `https://www.youtube.com/embed/${embedId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1`;
+          // Sync sidebar Up Next + meta to the matching VIDEOS entry
+          const v = VIDEOS.find(x => x.embedId === embedId);
+          if (v) {
+            const recs = document.querySelectorAll('.rec');
+            recs.forEach((rec, i) => {
+              const vid = VIDEOS[i];
+              if (vid && vid.embedId === embedId) {
+                rec.classList.add('active');
+              } else {
+                rec.classList.remove('active');
+              }
+            });
+            const titleEl = document.querySelector('.meta .title');
+            const subEl = document.querySelector('.meta .sub');
+            const actionsEl = document.querySelector('.meta .actions');
+            const creditsEl = document.querySelector('.credits');
+            if (titleEl) titleEl.innerHTML = v.title;
+            if (subEl) subEl.innerHTML = v.sub;
+            if (actionsEl) actionsEl.innerHTML = v.chips.map(([t,cls]) => `<span class="chip ${cls}">${t}</span>`).join('');
+            if (creditsEl) creditsEl.innerHTML = v.credits.map(([k,val]) => `<div class="row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('');
+          }
+        }
+      }
     }
   }
   // Run on initial load AND when hash changes (within-page navigation)
   handleHash();
   window.addEventListener('hashchange', handleHash);
 
+
+  // ============= CLIENT STORIES (renders from data.js CLIENTS) =============
+  function renderStories(containerId) {
+    const c = document.getElementById(containerId);
+    if (!c || !window.CLIENTS) return;
+    c.innerHTML = window.CLIENTS.map(cl => {
+      const t = window.clientThumb(cl);
+      const initials = window.clientInitials(cl);
+      const bgStyle = t ? `style="background-image: url('${t}');"` : '';
+      const label = t ? '' : initials;
+      return `
+        <a class="story" href="client.html?id=${cl.id}">
+          <div class="story-ring"><div class="story-inner"><div class="story-avatar ${t ? '' : cl.palette}" ${bgStyle}>${label}</div></div></div>
+          <div class="story-name">${cl.short}</div>
+        </a>`;
+    }).join('');
+  }
+  renderStories('workStories');
 </script>
 </body>
 </html>

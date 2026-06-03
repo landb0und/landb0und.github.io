@@ -202,13 +202,10 @@
   .shorts-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
   .short { flex: 0 0 180px; aspect-ratio: 9/16; scroll-snap-align: start; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--line); transition: transform .15s, border-color .15s; }
   .short:hover { transform: translateY(-3px); border-color: var(--rose); }
-  .short-frames { position: absolute; inset: 0; }
-  .short-frame { position: absolute; inset: 0; opacity: 0; animation: cycle 12s infinite; }
-  .short-frame:nth-child(1) { animation-delay: 0s; }
-  .short-frame:nth-child(2) { animation-delay: 3s; }
-  .short-frame:nth-child(3) { animation-delay: 6s; }
-  .short-frame:nth-child(4) { animation-delay: 9s; }
-  @keyframes cycle { 0%, 22% { opacity: 1; } 25%, 100% { opacity: 0; } }
+  .short-frames { position: absolute; inset: 0; overflow: hidden; }
+  .short-frame { position: absolute; inset: 0; opacity: 1; }
+  /* Only first frame visible — placeholder cards just show one gradient, no cycling */
+  .short-frame:nth-child(n+2) { display: none; }
   .short-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); z-index: 2; }
   .short-meta { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 3; }
   .short-meta .views { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; background: rgba(0,0,0,0.6); border-radius: 100px; font-size: 9px; color: #fff; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; margin-bottom: 5px; backdrop-filter: blur(4px); }
@@ -447,8 +444,8 @@
     <a href="work.html#shorts">OPEN SHORTS FEED →</a>
   </div>
   <div class="shorts-strip">
-    <a class="short" href="work.html#shorts/0" style="background:#000;"><img src="https://img.youtube.com/vi/kqwrvXnA0UE/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"><div class="short-overlay"></div><span class="short-tag">YT</span><div class="short-meta"><div class="views">▶ Play</div><div class="cap">Vertical 1</div></div></a>
-    <a class="short" href="work.html#shorts/1" style="background:#000;"><img src="https://img.youtube.com/vi/pWpCBBaPX_Q/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"><div class="short-overlay"></div><span class="short-tag">YT</span><div class="short-meta"><div class="views">▶ Play</div><div class="cap">Vertical 2</div></div></a>
+    <a class="short" href="work.html#shorts/0" style="background:#000;"><iframe src="https://www.youtube.com/embed/kqwrvXnA0UE?autoplay=1&mute=1&loop=1&playlist=kqwrvXnA0UE&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3" allow="autoplay; encrypted-media" style="position:absolute; inset:0; width:100%; height:100%; border:0; pointer-events:none;" tabindex="-1"></iframe><div class="short-overlay"></div><span class="short-tag">YT</span><div class="short-meta"><div class="views">▶ Play</div><div class="cap">Vertical 1</div></div></a>
+    <a class="short" href="work.html#shorts/1" style="background:#000;"><iframe src="https://www.youtube.com/embed/pWpCBBaPX_Q?autoplay=1&mute=1&loop=1&playlist=pWpCBBaPX_Q&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3" allow="autoplay; encrypted-media" style="position:absolute; inset:0; width:100%; height:100%; border:0; pointer-events:none;" tabindex="-1"></iframe><div class="short-overlay"></div><span class="short-tag">YT</span><div class="short-meta"><div class="views">▶ Play</div><div class="cap">Vertical 2</div></div></a>
     <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg3"></div><div class="short-frame vg4"></div><div class="short-frame vg6"></div><div class="short-frame vg7"></div></div><div class="short-overlay"></div><span class="short-tag">1.8M</span><div class="short-meta"><div class="views">▶ 1.8M</div><div class="cap">Two Feet — vertical cut</div></div></a>
     <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg4"></div><div class="short-frame vg5"></div><div class="short-frame vg1"></div><div class="short-frame vg2"></div></div><div class="short-overlay"></div><span class="short-tag">2.4M</span><div class="short-meta"><div class="views">▶ 2.4M</div><div class="cap">Drone over Topanga</div></div></a>
     <a class="short" href="work.html#shorts"><div class="short-frames"><div class="short-frame vg5"></div><div class="short-frame vg6"></div><div class="short-frame vg2"></div><div class="short-frame vg3"></div></div><div class="short-overlay"></div><span class="short-tag">720K</span><div class="short-meta"><div class="views">▶ 720K</div><div class="cap">Posner sneak</div></div></a>
@@ -461,9 +458,9 @@
   <div class="page-section-head"><span class="label">Featured Work</span></div>
   <div class="section-sub"><span>Hand-picked. Full filmography in <em>Work</em>.</span><a href="work.html">VIEW ALL 24 →</a></div>
   <div class="feat-grid">
-    <a class="feat feat-1" href="work.html"><div class="feat-bg feat-bg-1"><img src="https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="feat-stamp">★ Featured</span><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + EP · 2025 · 4.2M VIEWS</span><div class="t">CHILDSTAR: Final Act</div><div class="m">Grace VanderWaal · Music Video</div></div></a>
-    <a class="feat" href="work.html"><div class="feat-bg feat-bg-2"><img src="https://img.youtube.com/vi/_FYMFKdyPOo/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + DP + ED + VFX · 2024</span><div class="t">Secrets</div><div class="m">Two Feet</div></div></a>
-    <a class="feat" href="work.html"><div class="feat-bg feat-bg-3"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR · SCREAMFEST · 2022</span><div class="t">Forgive &amp; Forget</div><div class="m">Short Film</div></div></a>
+    <a class="feat feat-1" href="work.html#video/wCQzcM3Z_bo"><div class="feat-bg feat-bg-1"><img src="https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="feat-stamp">★ Featured</span><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + EP · 2025 · 4.2M VIEWS</span><div class="t">CHILDSTAR: Final Act</div><div class="m">Grace VanderWaal · Music Video</div></div></a>
+    <a class="feat" href="work.html#video/_FYMFKdyPOo"><div class="feat-bg feat-bg-2"><img src="https://img.youtube.com/vi/_FYMFKdyPOo/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + DP + ED + VFX · 2024</span><div class="t">Secrets</div><div class="m">Christian Gates</div></div></a>
+    <a class="feat" href="work.html#video/oD42T1md068"><div class="feat-bg feat-bg-3" style="background:#000;"><img src="https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR · SCREAMFEST · 2022</span><div class="t">Forgive &amp; Forget</div><div class="m">Short Film</div></div></a>
     <a class="feat" href="work.html"><div class="feat-bg feat-bg-5"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">FEATURE · 2023 · 250 VFX SHOTS</span><div class="t">The First Circle</div><div class="m">VFX Supervisor</div></div></a>
   </div>
 
@@ -471,21 +468,21 @@
   <div class="worked-section">
     <div class="poster">
       <div class="poster-label"><span class="line"></span>Worked With<span class="line"></span></div>
-      <div class="poster-row"><span class="poster-name headliner">SURFACES</span></div>
+      <div class="poster-row"><a class="poster-name headliner" href="client.html?id=surfaces" style="text-decoration:none;">SURFACES</a></div>
       <div class="poster-row">
-        <span class="poster-name big alt">Two Feet</span>
-        <span class="poster-name big">MIKE POSNER</span>
+        <a class="poster-name big alt" href="client.html?id=two-feet" style="text-decoration:none;">Two Feet</a>
+        <a class="poster-name big" href="client.html?id=mike-posner" style="text-decoration:none;">MIKE POSNER</a>
       </div>
       <div class="poster-row">
-        <span class="poster-name med">GRACE VANDERWAAL</span>
-        <span class="poster-name med alt">Gym Class Heroes</span>
+        <a class="poster-name med" href="client.html?id=grace-vanderwaal" style="text-decoration:none;">GRACE VANDERWAAL</a>
+        <a class="poster-name med alt" href="client.html?id=gym-class-heroes" style="text-decoration:none;">Gym Class Heroes</a>
       </div>
       <div class="poster-row">
-        <span class="poster-name sm dim">SONY / RCA</span>
-        <span class="poster-name sm dim alt">Raw Material</span>
-        <span class="poster-name sm dim">Allison Hagendorf</span>
-        <span class="poster-name sm dim alt">SCREAMFEST</span>
-        <span class="poster-name sm dim">TikTok Partner</span>
+        <a class="poster-name sm dim" href="client.html?id=sony-rca" style="text-decoration:none;">SONY / RCA</a>
+        <a class="poster-name sm dim alt" href="client.html?id=raw-material" style="text-decoration:none;">Raw Material</a>
+        <a class="poster-name sm dim" href="client.html?id=allison-hagendorf" style="text-decoration:none;">Allison Hagendorf</a>
+        <a class="poster-name sm dim alt" href="client.html?id=screamfest" style="text-decoration:none;">SCREAMFEST</a>
+        <a class="poster-name sm dim" href="client.html?id=tiktok" style="text-decoration:none;">TikTok Partner</a>
       </div>
       <div class="poster-foot">
         <span>24 credits · 100+ projects</span>

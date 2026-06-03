@@ -146,11 +146,11 @@
   .stories { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 8px; scroll-behavior: smooth; padding: 6px 2px 18px; margin-bottom: 32px; border-bottom: 1px solid var(--line-2); scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   .stories::-webkit-scrollbar { height: 4px; }
   .stories::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
-  .story { display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start; cursor: pointer; flex-shrink: 0; width: 72px; }
+  .story { display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start; cursor: pointer; flex-shrink: 0; width: 72px; text-decoration: none; }
   .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); transition: transform .15s; }
   .story:hover .story-ring { transform: scale(1.05); }
   .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .story-avatar { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; }
+  .story-avatar { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; background-size: cover; background-position: center; }
   .story-name { font-size: 11px; color: var(--ink-2); font-weight: 600; text-align: center; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .story-ring.viewed { background: var(--line); }
   /* Client palettes */
@@ -280,19 +280,8 @@
       </div>
     </div>
 
-    <!-- CLIENTS STORIES -->
-    <div class="stories" style="margin-bottom: 4px;">
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-1">GV</div></div></div><div class="story-name">Grace V.</div></div>
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-2">2F</div></div></div><div class="story-name">Two Feet</div></div>
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-3">MP</div></div></div><div class="story-name">M. Posner</div></div>
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-4">GCH</div></div></div><div class="story-name">Gym Class H.</div></div>
-      <div class="story"><div class="story-ring"><div class="story-inner"><div class="story-avatar sa-5">SF</div></div></div><div class="story-name">Surfaces</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-6">AH</div></div></div><div class="story-name">Hagendorf</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-7">RM</div></div></div><div class="story-name">Raw Material</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-8">SR</div></div></div><div class="story-name">Sony/RCA</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-9">SF</div></div></div><div class="story-name">SCREAMFEST</div></div>
-      <div class="story"><div class="story-ring viewed"><div class="story-inner"><div class="story-avatar sa-10">TT</div></div></div><div class="story-name">TikTok</div></div>
-    </div>
+    <!-- CLIENTS STORIES (rendered from data.js) -->
+    <div class="stories" id="photoStories" style="margin-bottom: 4px;"></div>
 
     <!-- TABS — IG profile style -->
     <div class="tabs">
@@ -468,6 +457,7 @@
 
 <div class="banner">PHOTO · CAROUSEL + IG FEED MODE</div>
 
+<script src="data.js"></script>
 <script>
   // ============= PHOTO DATA =============
   const PHOTOS = [
@@ -553,6 +543,30 @@
       exitFeed();
     }
   });
+
+  // Render stories from shared CLIENTS data
+  function renderStories(containerId) {
+    const c = document.getElementById(containerId);
+    if (!c || !window.CLIENTS) return;
+    c.innerHTML = window.CLIENTS.map(cl => {
+      const t = window.clientThumb(cl);
+      const initials = window.clientInitials(cl);
+      const bgStyle = t ? `style="background-image: url('${t}');"` : '';
+      const label = t ? '' : initials;
+      return `
+        <a class="story" href="client.html?id=${cl.id}" style="text-decoration:none;">
+          <div class="story-ring"><div class="story-inner"><div class="story-avatar ${t ? '' : cl.palette}" ${bgStyle}>${label}</div></div></div>
+          <div class="story-name">${cl.short}</div>
+        </a>`;
+    }).join('');
+  }
+  renderStories('photoStories');
+
+  // Default: open Photo in IG feed view (use ?grid=1 to start on grid)
+  const startOnGrid = /[?&]grid=1/.test(window.location.search);
+  if (!startOnGrid) {
+    enterFeed(0);
+  }
 </script>
 
 </body>
