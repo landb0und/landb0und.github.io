@@ -120,7 +120,8 @@
   .rec:hover { background: rgba(255,255,255,0.03); }
   .rec.active { display: none; }
   .rec-thumb { aspect-ratio: 16/9; border-radius: 4px; position: relative; overflow: hidden; }
-  .rec-thumb::after { content: ''; position: absolute; right: 4px; bottom: 4px; padding: 1px 5px; background: rgba(0,0,0,0.85); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: #fff; border-radius: 2px; }
+  .rec-thumb { position: relative; }
+  .rec-thumb::after { content: ''; position: absolute; right: 4px; bottom: 4px; padding: 1px 5px; background: rgba(0,0,0,0.85); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: #fff; border-radius: 2px; z-index: 2; }
   .rec-thumb[data-dur]::after { content: attr(data-dur); }
   .rec-info { padding-top: 2px; }
   .rec-title { font-size: 12px; color: var(--ink); font-weight: 700; line-height: 1.25; margin-bottom: 3px; }
@@ -200,6 +201,7 @@
   .phone { overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .phone::-webkit-scrollbar { display: none; }
   .phone-slide { position: relative; width: 100%; height: 100%; flex-shrink: 0; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; }
+  .phone-slide iframe.phone-video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1; }
   .phone-slide.vg1 { background: linear-gradient(180deg, #1a0a10 0%, #501838 70%, var(--rose) 100%); }
   .phone-slide.vg2 { background: linear-gradient(160deg, #0a0a18 0%, #2a2a4a 50%, #8a8acf 100%); }
   .phone-slide.vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
@@ -331,10 +333,10 @@
 
       <div class="side-h">Up Next</div>
       <div class="recs">
-        <div class="rec active"><div class="rec-thumb g1" data-dur="02:14"></div><div class="rec-info"><div class="rec-title">Director's Reel</div><div class="rec-meta">Landbound · Sizzle · 2025</div></div></div>
-        <div class="rec"><div class="rec-thumb g3" data-dur="04:12"></div><div class="rec-info"><div class="rec-title">CHILDSTAR: Final Act</div><div class="rec-meta">Grace VanderWaal · DIR + EP · 2025</div></div></div>
-        <div class="rec"><div class="rec-thumb g2" data-dur="03:24"></div><div class="rec-info"><div class="rec-title">Bleed</div><div class="rec-meta">Christian Gates · DIR + ED · 2025</div></div></div>
-        <div class="rec"><div class="rec-thumb g3" data-dur="03:48"></div><div class="rec-info"><div class="rec-title">Secrets</div><div class="rec-meta">Christian Gates · DIR/DP/ED/VFX · 2024</div></div></div>
+        <div class="rec active"><div class="rec-thumb" data-dur="02:14" style="background:#000; overflow:hidden;"><img src="https://img.youtube.com/vi/3QqZXVnWFDE/maxresdefault.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">Director's Reel</div><div class="rec-meta">Landbound · Sizzle · 2025</div></div></div>
+        <div class="rec"><div class="rec-thumb" data-dur="04:12" style="background:#000; overflow:hidden;"><img src="https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">CHILDSTAR: Final Act</div><div class="rec-meta">Grace VanderWaal · DIR + EP · 2025</div></div></div>
+        <div class="rec"><div class="rec-thumb" data-dur="03:24" style="background:#000; overflow:hidden;"><img src="https://img.youtube.com/vi/fyLpZL-HOxg/maxresdefault.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">Bleed</div><div class="rec-meta">Christian Gates · DIR + ED · 2025</div></div></div>
+        <div class="rec"><div class="rec-thumb" data-dur="03:48" style="background:#000; overflow:hidden;"><img src="https://img.youtube.com/vi/_FYMFKdyPOo/maxresdefault.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">Secrets</div><div class="rec-meta">Christian Gates · DIR/DP/ED/VFX · 2024</div></div></div>
         <div class="rec"><div class="rec-thumb g4" data-dur="94:00"></div><div class="rec-info"><div class="rec-title">The First Circle</div><div class="rec-meta">Feature · VFX Sup · 250 shots · 2023</div></div></div>
         <div class="rec"><div class="rec-thumb g5" data-dur="SERIES"></div><div class="rec-info"><div class="rec-title">Allison Hagendorf Show S4</div><div class="rec-meta">DIR + ED · 2025-26 · ACTIVE</div></div></div>
         <div class="rec"><div class="rec-thumb g6" data-dur="12:00"></div><div class="rec-info"><div class="rec-title">Forgive &amp; Forget</div><div class="rec-meta">DIR · SCREAMFEST · 2022</div></div></div>
@@ -361,35 +363,11 @@
 
   <div class="shorts-stage">
     <div class="phone" id="phoneScroll">
-      <div class="phone-slide vg1" data-clip="0">
-        <div class="phone-play"></div>
-        <div class="phone-overlay">
-          <div class="po-credit-tag">BTS · CHILDSTAR · 2025</div>
-          <div class="po-title">Day 3 — The hardest shot</div>
-          <div class="po-credits"><strong>Grace VanderWaal</strong> — "CHILDSTAR: Final Act"<br>Director · Executive Producer · 3 operators, one take</div>
-          <div class="po-music">Original sound — Grace VanderWaal</div>
-        </div>
-        <div class="phone-actions">
-          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">142K</span></div>
-          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">3.2K</span></div>
-          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">8.1K</span></div>
-          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
-        </div>
+      <div class="phone-slide" data-clip="0" style="background:#000;">
+        <iframe class="phone-video" src="https://www.youtube.com/embed/kqwrvXnA0UE?rel=0&modestbranding=1&playsinline=1" title="Vertical 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
-      <div class="phone-slide vg2" data-clip="1">
-        <div class="phone-play"></div>
-        <div class="phone-overlay">
-          <div class="po-credit-tag">BTS · LIGHTING</div>
-          <div class="po-title">How I lit the bedroom scene</div>
-          <div class="po-credits">Cinematographer<br>One key, one bounce, one practical</div>
-          <div class="po-music">Original sound — landbound</div>
-        </div>
-        <div class="phone-actions">
-          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">87K</span></div>
-          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">1.4K</span></div>
-          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">2.1K</span></div>
-          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
-        </div>
+      <div class="phone-slide" data-clip="1" style="background:#000;">
+        <iframe class="phone-video" src="https://www.youtube.com/embed/pWpCBBaPX_Q?rel=0&modestbranding=1&playsinline=1" title="Vertical 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="phone-slide vg3" data-clip="2">
         <div class="phone-play"></div>
@@ -503,8 +481,8 @@
   <div class="shorts-rail">
     <div class="sr-h">// VERTICAL FEED — 47 CLIPS</div>
     <div class="sr-list">
-      <div class="sr-item active"><div class="sr-thumb sr-thumb-1"></div><div class="sr-info"><div class="sr-title">CHILDSTAR BTS — Day 3</div><div class="sr-meta">BTS · DIR + EP · 142K</div></div></div>
-      <div class="sr-item"><div class="sr-thumb sr-thumb-2"></div><div class="sr-info"><div class="sr-title">How I lit the bedroom scene</div><div class="sr-meta">BTS · DP · 87K</div></div></div>
+      <div class="sr-item active"><div class="sr-thumb" style="background:#000; overflow:hidden;"><img src="https://img.youtube.com/vi/kqwrvXnA0UE/maxresdefault.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></div><div class="sr-info"><div class="sr-title">Vertical 1</div><div class="sr-meta">YouTube Short</div></div></div>
+      <div class="sr-item"><div class="sr-thumb" style="background:#000; overflow:hidden;"><img src="https://img.youtube.com/vi/pWpCBBaPX_Q/maxresdefault.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></div><div class="sr-info"><div class="sr-title">Vertical 2</div><div class="sr-meta">YouTube Short</div></div></div>
       <div class="sr-item"><div class="sr-thumb sr-thumb-3"></div><div class="sr-info"><div class="sr-title">Two Feet — vertical cut</div><div class="sr-meta">MUSIC · DIR · 1.8M</div></div></div>
       <div class="sr-item"><div class="sr-thumb sr-thumb-4"></div><div class="sr-info"><div class="sr-title">Edit timeline reveal</div><div class="sr-meta">EDITS · 412K</div></div></div>
       <div class="sr-item"><div class="sr-thumb sr-thumb-5"></div><div class="sr-info"><div class="sr-title">Surfaces tour BTS</div><div class="sr-meta">BTS · DP · 2.1M</div></div></div>
