@@ -117,7 +117,7 @@
   .recs { display: flex; flex-direction: column; gap: 10px; }
   .rec { display: grid; grid-template-columns: 120px 1fr; gap: 10px; cursor: pointer; padding: 4px; border-radius: 6px; transition: background .15s; }
   .rec:hover { background: rgba(255,255,255,0.03); }
-  .rec.active { background: rgba(245,176,66,0.08); }
+  .rec.active { display: none; }
   .rec-thumb { aspect-ratio: 16/9; border-radius: 4px; position: relative; overflow: hidden; }
   .rec-thumb::after { content: ''; position: absolute; right: 4px; bottom: 4px; padding: 1px 5px; background: rgba(0,0,0,0.85); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: #fff; border-radius: 2px; }
   .rec-thumb[data-dur]::after { content: attr(data-dur); }
