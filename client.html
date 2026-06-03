@@ -17,7 +17,7 @@
 
   .frame { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
 
-  /* LEFT NAV (matches other pages) */
+  /* LEFT NAV */
   .nav { padding: 30px 24px; border-right: 1px solid var(--line); position: sticky; top: 0; height: 100vh; }
   .nav-logo { font-size: 14px; font-weight: 900; letter-spacing: 0.12em; color: var(--ink); margin-bottom: 4px; }
   .nav-sub { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 38px; }
@@ -28,17 +28,16 @@
   .nav-foot { position: absolute; bottom: 30px; left: 24px; right: 24px; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
   .nav-foot .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); margin-right: 6px; vertical-align: middle; }
 
-  /* MAIN */
-  .main { padding: 32px 56px 80px; max-width: 1100px; }
+  .main { padding: 32px 56px 80px; max-width: 1080px; }
 
-  .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0.18em; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; font-weight: 700; padding: 8px 14px; border: 1px solid var(--line); border-radius: 100px; text-decoration: none; transition: all .15s; margin-bottom: 28px; }
-  .back-btn:hover { color: var(--amber); border-color: var(--amber); }
+  .back-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.16em; color: #0a0806; background: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-weight: 900; padding: 9px 16px; border: none; border-radius: 100px; text-decoration: none; transition: all .15s; margin-bottom: 32px; box-shadow: 0 4px 14px rgba(245,176,66,0.4); }
+  .back-btn:hover { background: #fff5d8; transform: translateY(-1px); }
 
-  /* HERO */
-  .hero { padding-bottom: 28px; border-bottom: 1px solid var(--line-2); margin-bottom: 36px; display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: end; }
-  .hero-avatar { width: 110px; height: 110px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); }
-  .hero-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 3px; }
-  .hero-avatar-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 28px; letter-spacing: 0.02em; }
+  /* IG-STYLE PROFILE HEADER */
+  .profile-head { display: grid; grid-template-columns: 180px 1fr; gap: 56px; align-items: center; padding-bottom: 32px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
+  .ph-avatar { width: 168px; height: 168px; border-radius: 50%; padding: 4px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); }
+  .ph-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 4px; }
+  .ph-avatar-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 42px; letter-spacing: 0.02em; }
   .sa-1 { background: linear-gradient(135deg, #f5b042, #e8589a); }
   .sa-2 { background: linear-gradient(135deg, #6b3a1a, #c084fc); }
   .sa-3 { background: linear-gradient(135deg, #4a1838, #f5b042); }
@@ -50,53 +49,79 @@
   .sa-9 { background: linear-gradient(135deg, #6b3a1a, #c0aa70); }
   .sa-10 { background: linear-gradient(135deg, #1a0a18, #e8589a); }
 
-  .hero-info h1 { font-size: 48px; font-weight: 900; letter-spacing: -0.02em; line-height: 1; margin-bottom: 10px; }
-  .hero-handle { font-size: 12px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; margin-bottom: 14px; }
-  .hero-roles { display: flex; gap: 6px; flex-wrap: wrap; }
-  .role-chip { padding: 4px 10px; border-radius: 100px; background: rgba(245,176,66,0.1); color: var(--amber); font-size: 10px; font-weight: 800; letter-spacing: 0.14em; border: 1px solid rgba(245,176,66,0.25); }
-  .hero-meta { text-align: right; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; }
-  .hero-meta strong { color: var(--amber); display: block; font-size: 22px; letter-spacing: -0.01em; margin-bottom: 4px; }
+  /* IG-style profile info column */
+  .ph-info { display: flex; flex-direction: column; gap: 18px; }
+  .ph-row1 { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .ph-handle { font-size: 24px; font-weight: 400; color: var(--ink); letter-spacing: -0.01em; }
+  .ph-cta { padding: 8px 18px; background: var(--amber); color: #0a0806; font-size: 11px; letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; font-weight: 900; border-radius: 8px; text-decoration: none; text-transform: uppercase; }
+  .ph-cta.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 7px 17px; }
+  .ph-cta:hover { background: #fff5d8; }
+  .ph-cta.ghost:hover { color: var(--amber); border-color: var(--amber); background: transparent; }
+  .ph-row2 { display: flex; gap: 32px; }
+  .ph-stat { display: flex; gap: 6px; align-items: baseline; font-size: 14px; color: var(--ink-2); }
+  .ph-stat strong { color: var(--ink); font-weight: 800; font-size: 15px; }
+  .ph-name { font-size: 15px; font-weight: 800; color: var(--ink); }
+  .ph-role { font-size: 11px; color: var(--amber); letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; text-transform: uppercase; margin-top: 4px; }
+  .ph-blurb { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; max-width: 560px; margin-top: 6px; }
+  .ph-credit { font-size: 11px; color: var(--ink-3); margin-top: 4px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
+  .ph-credit a { color: var(--amber); text-decoration: none; font-weight: 700; }
 
-  .hero-blurb { grid-column: 1 / -1; color: var(--ink-2); font-style: italic; font-family: Georgia, serif; font-size: 14px; line-height: 1.6; max-width: 720px; margin-top: 4px; }
+  /* TABS */
+  .tabs { display: flex; gap: 36px; border-top: 1px solid var(--line-2); padding-top: 12px; margin-top: 8px; justify-content: center; }
+  .tab { padding: 14px 0; font-size: 11px; letter-spacing: 0.22em; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; font-weight: 800; cursor: pointer; text-transform: uppercase; border-top: 2px solid transparent; margin-top: -1px; }
+  .tab.active { color: var(--ink); border-top-color: var(--ink); }
+  .tab .ct { color: var(--ink-4); margin-left: 6px; font-weight: 600; }
 
-  /* MEDIA SECTION */
-  .sec-label { font-size: 10px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
+  /* GRID */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 18px; }
+  .tile { position: relative; aspect-ratio: 1/1; background: var(--bg-2); overflow: hidden; cursor: pointer; }
+  .tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+  .tile:hover img { transform: scale(1.04); }
+  .tile-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); opacity: 0; transition: opacity .15s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+  .tile:hover .tile-overlay { opacity: 1; }
+  .tile-overlay .ico { font-size: 22px; color: #fff; }
+  .tile-overlay .lab { font-size: 11px; color: #fff; letter-spacing: 0.12em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; }
+  .tile-badge { position: absolute; top: 8px; right: 8px; padding: 3px 8px; background: rgba(0,0,0,0.7); color: var(--amber); font-size: 9px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; }
+  .tile-vidicon { position: absolute; top: 8px; left: 8px; color: #fff; font-size: 14px; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+  .tile.empty { background: var(--bg-2); border: 1px dashed var(--line); display: flex; align-items: center; justify-content: center; cursor: default; color: var(--ink-4); font-size: 32px; font-family: 'SF Mono', Menlo, monospace; }
+  .tile.empty:hover img { transform: none; }
 
-  .media-list { display: flex; flex-direction: column; gap: 36px; }
+  .empty-msg { padding: 60px 40px; text-align: center; background: var(--bg-2); border: 1px dashed var(--line); border-radius: 10px; color: var(--ink-3); margin-top: 18px; }
+  .empty-msg .t { font-size: 14px; color: var(--ink-2); margin-bottom: 6px; font-weight: 700; }
+  .empty-msg .m { font-size: 11px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
 
-  .media-card { display: grid; grid-template-columns: 1fr; gap: 14px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 18px; transition: border-color .15s; }
-  .media-card:hover { border-color: rgba(245,176,66,0.3); }
+  /* LIGHTBOX MODAL */
+  .lb { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(10px); }
+  .lb.open { display: flex; }
+  .lb-inner { max-width: 1100px; width: 100%; max-height: 92vh; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: grid; grid-template-columns: 1.4fr 360px; }
+  .lb-media { background: #000; display: flex; align-items: center; justify-content: center; min-height: 480px; max-height: 92vh; }
+  .lb-media img { max-width: 100%; max-height: 92vh; object-fit: contain; display: block; }
+  .lb-media iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
+  .lb-side { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .lb-head { display: flex; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--line-2); }
+  .lb-avatar { width: 36px; height: 36px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
+  .lb-author { font-size: 13px; font-weight: 800; color: var(--ink); }
+  .lb-sub { font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .lb-title { font-size: 20px; font-weight: 900; color: var(--ink); letter-spacing: -0.01em; }
+  .lb-credit { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; font-family: 'SF Mono', Menlo, monospace; padding: 12px; background: var(--bg); border-radius: 6px; border-left: 2px solid var(--amber); }
+  .lb-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: auto; }
+  .lb-tag { padding: 3px 9px; background: rgba(245,176,66,0.1); color: var(--amber); font-size: 9px; letter-spacing: 0.16em; font-weight: 800; border-radius: 100px; border: 1px solid rgba(245,176,66,0.25); }
+  .lb-close { position: absolute; top: 22px; right: 22px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; border: none; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .lb-close:hover { background: rgba(255,255,255,0.2); }
 
-  .media-frame { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: #000; }
-  .media-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-  .media-frame.photo { aspect-ratio: auto; max-height: 720px; display: flex; align-items: center; justify-content: center; }
-  .media-frame.photo img { display: block; max-width: 100%; max-height: 720px; width: auto; height: auto; }
-
-  .media-meta { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 4px; }
-  .media-meta-l { flex: 1; min-width: 0; }
-  .media-title { font-size: 20px; font-weight: 900; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 4px; }
-  .media-sub { font-size: 11px; color: var(--ink-3); letter-spacing: 0.08em; font-family: 'SF Mono', Menlo, monospace; }
-  .media-tags { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
-  .media-tag { padding: 3px 9px; background: rgba(245,176,66,0.08); color: var(--amber); font-size: 9px; letter-spacing: 0.16em; font-weight: 800; border-radius: 100px; border: 1px solid rgba(245,176,66,0.2); }
-
-  /* EMPTY STATE */
-  .empty { padding: 60px 40px; text-align: center; background: var(--bg-2); border: 1px dashed var(--line); border-radius: 10px; color: var(--ink-3); }
-  .empty .t { font-size: 14px; color: var(--ink-2); margin-bottom: 6px; font-weight: 700; }
-  .empty .m { font-size: 11px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
-
-  /* OTHER CLIENTS */
-  .other-clients { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--line-2); }
+  /* OTHER CLIENTS RAIL */
+  .other-clients { margin-top: 60px; padding-top: 32px; border-top: 1px solid var(--line-2); }
+  .sec-label { font-size: 10px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; margin-bottom: 18px; text-align: center; }
   .other-strip { display: flex; gap: 14px; overflow-x: auto; padding: 4px 2px 14px; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   .other-strip::-webkit-scrollbar { height: 4px; }
   .other-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
-  .oc { flex: 0 0 76px; scroll-snap-align: start; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; }
-  .oc-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); transition: transform .15s; }
+  .oc { flex: 0 0 84px; scroll-snap-align: start; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; }
+  .oc-ring { width: 72px; height: 72px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); transition: transform .15s; }
   .oc:hover .oc-ring { transform: scale(1.05); }
   .oc-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; }
-  .oc-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 15px; }
-  .oc-name { font-size: 10px; color: var(--ink-2); font-weight: 700; text-align: center; max-width: 76px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .oc-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; }
+  .oc-name { font-size: 11px; color: var(--ink-2); font-weight: 700; text-align: center; max-width: 84px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* NOT FOUND */
   .notfound { padding: 80px 40px; text-align: center; }
   .notfound h2 { font-size: 32px; margin-bottom: 12px; }
   .notfound p { color: var(--ink-3); margin-bottom: 22px; }
@@ -118,9 +143,13 @@
     <div class="nav-foot"><span class="dot"></span>Available · Sept<br><span style="color: var(--ink-4);">Los Angeles, CA</span></div>
   </nav>
 
-  <main class="main" id="main">
-    <!-- rendered by JS -->
-  </main>
+  <main class="main" id="main"><!-- rendered by JS --></main>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <div class="lb-inner" id="lbInner"></div>
 </div>
 
 <script src="data.js"></script>
@@ -130,62 +159,162 @@
     return m ? decodeURIComponent(m[1]) : null;
   }
 
+  let currentClient = null;
+  let currentTab = 'all';
+
   function renderClient(c) {
+    currentClient = c;
     const thumb = window.clientThumb(c);
     const initials = window.clientInitials(c);
-    const roleChips = c.role.split(' · ').map(r => `<span class="role-chip">${r}</span>`).join('');
-    const avatarBg = thumb
-      ? `style="background-image: url('${thumb}');"`
-      : '';
+    const avatarBg = thumb ? `style="background-image: url('${thumb}');"` : '';
     const avatarLabel = thumb ? '' : initials;
-
     const videoCount = c.media.filter(m => m.type === 'video').length;
     const photoCount = c.media.filter(m => m.type === 'photo').length;
-    const counts = [];
-    if (videoCount) counts.push(`<strong>${videoCount}</strong> video${videoCount>1?'s':''}`);
-    if (photoCount) counts.push(`<strong>${photoCount}</strong> photo${photoCount>1?'s':''}`);
-    const countLine = counts.length ? counts.join(' · ') : '<strong>—</strong> Work in progress';
+    const totalCount = c.media.length;
 
-    const mediaHTML = c.media.length === 0
-      ? `<div class="empty"><div class="t">Project gallery coming online.</div><div class="m">Stills and links from this collaboration will land here next.</div></div>`
-      : c.media.map(m => {
-          if (m.type === 'video') {
-            const tagsHTML = (m.tags || []).map(t => `<span class="media-tag">${t}</span>`).join('');
-            return `
-              <div class="media-card">
-                <div class="media-frame">
-                  <iframe src="https://www.youtube.com/embed/${m.embedId}?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${m.title}"></iframe>
-                </div>
-                <div class="media-meta">
-                  <div class="media-meta-l">
-                    <div class="media-title">${m.title}</div>
-                    <div class="media-sub">${c.handle} · ${m.year}</div>
-                  </div>
-                  <div class="media-tags">${tagsHTML}</div>
-                </div>
-              </div>`;
-          } else {
-            return `
-              <div class="media-card">
-                <div class="media-frame photo">
-                  <img src="${m.src}" alt="${m.title}" loading="lazy">
-                </div>
-                <div class="media-meta">
-                  <div class="media-meta-l">
-                    <div class="media-title">${m.title}</div>
-                    <div class="media-sub">${c.handle} · ${m.year}</div>
-                  </div>
-                </div>
-              </div>`;
-          }
-        }).join('');
+    document.title = `${c.name} (@${(c.handle||'').replace('@','')}) — Landbound`;
 
-    const others = window.CLIENTS.filter(x => x.id !== c.id).slice(0, 14);
-    const othersHTML = others.map(o => {
+    const handleClean = (c.handle || '').replace('@','');
+    const ctaCol = c.handle && c.handle.startsWith('@')
+      ? `<a href="https://instagram.com/${handleClean}" target="_blank" rel="noopener" class="ph-cta">Visit IG ↗</a>`
+      : '';
+
+    document.getElementById('main').innerHTML = `
+      <a href="javascript:history.length>1?history.back():window.location.href='work.html'" class="back-btn">← BACK</a>
+
+      <div class="profile-head">
+        <div class="ph-avatar"><div class="ph-avatar-inner"><div class="ph-avatar-img ${thumb ? '' : c.palette}" ${avatarBg}>${avatarLabel}</div></div></div>
+        <div class="ph-info">
+          <div class="ph-row1">
+            <div class="ph-handle">${c.handle && c.handle.startsWith('@') ? c.handle : c.name.toLowerCase().replace(/\\s+/g, '')}</div>
+            ${ctaCol}
+            <a href="mailto:hello@landbound.co?subject=${encodeURIComponent('Project — '+c.name)}" class="ph-cta ghost">Hire Landbound →</a>
+          </div>
+          <div class="ph-row2">
+            <div class="ph-stat"><strong>${totalCount}</strong> posts</div>
+            <div class="ph-stat"><strong>${videoCount}</strong> videos</div>
+            <div class="ph-stat"><strong>${photoCount}</strong> photos</div>
+          </div>
+          <div>
+            <div class="ph-name">${c.name}</div>
+            <div class="ph-role">${c.role}</div>
+            <div class="ph-blurb">${c.blurb}</div>
+            <div class="ph-credit">Shot by <a href="index.html">Jacob Boehme (@landbound)</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab ${currentTab==='all'?'active':''}" onclick="setTab('all')">▦ Posts <span class="ct">${totalCount}</span></div>
+        <div class="tab ${currentTab==='video'?'active':''}" onclick="setTab('video')">▶ Videos <span class="ct">${videoCount}</span></div>
+        <div class="tab ${currentTab==='photo'?'active':''}" onclick="setTab('photo')">▢ Photos <span class="ct">${photoCount}</span></div>
+      </div>
+
+      <div id="gridMount"></div>
+
+      <div class="other-clients">
+        <div class="sec-label">// SUGGESTED FOR YOU</div>
+        <div class="other-strip" id="otherStrip"></div>
+      </div>
+    `;
+    renderGrid();
+    renderOtherStrip();
+  }
+
+  function renderGrid() {
+    if (!currentClient) return;
+    const mount = document.getElementById('gridMount');
+    let items = currentClient.media;
+    if (currentTab === 'video') items = items.filter(m => m.type === 'video');
+    if (currentTab === 'photo') items = items.filter(m => m.type === 'photo');
+
+    if (items.length === 0) {
+      mount.innerHTML = `
+        <div class="empty-msg">
+          <div class="t">${currentClient.name} — gallery coming online.</div>
+          <div class="m">Posts from this collaboration will appear here as projects ship.</div>
+        </div>`;
+      return;
+    }
+
+    mount.innerHTML = `<div class="grid">${items.map((m, idx) => {
+      // Get a thumb for the tile
+      let tileImg = '';
+      let badge = '';
+      let vicon = '';
+      if (m.type === 'video') {
+        tileImg = `https://img.youtube.com/vi/${m.embedId}/maxresdefault.jpg`;
+        badge = `<span class="tile-badge">VIDEO</span>`;
+        vicon = `<span class="tile-vidicon">▶</span>`;
+      } else {
+        tileImg = m.src;
+        badge = `<span class="tile-badge">PHOTO</span>`;
+      }
+      // Find the index in the master media list to pass to open
+      const masterIdx = currentClient.media.indexOf(m);
+      return `
+        <div class="tile" onclick="openLightbox(${masterIdx})">
+          <img src="${tileImg}" alt="${m.title || ''}" loading="lazy">
+          ${badge}
+          ${vicon}
+          <div class="tile-overlay">
+            <span class="ico">${m.type==='video'?'▶':'⤢'}</span>
+            <span class="lab">${m.type==='video'?'Play':'View'}</span>
+          </div>
+        </div>`;
+    }).join('')}</div>`;
+  }
+
+  function setTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const i = tab==='all'?0:tab==='video'?1:2;
+    const tabs = document.querySelectorAll('.tab');
+    if (tabs[i]) tabs[i].classList.add('active');
+    renderGrid();
+  }
+
+  function openLightbox(idx) {
+    if (!currentClient || !currentClient.media[idx]) return;
+    const m = currentClient.media[idx];
+    const c = currentClient;
+    const cThumb = window.clientThumb(c);
+    const avatarBg = cThumb ? `background-image: url('${cThumb}');` : '';
+    const tagsHTML = (m.tags||[]).map(t => `<span class="lb-tag">${t}</span>`).join('');
+
+    let mediaHTML;
+    if (m.type === 'video') {
+      mediaHTML = `<iframe src="https://www.youtube.com/embed/${m.embedId}?rel=0&modestbranding=1&autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    } else {
+      mediaHTML = `<img src="${m.src}" alt="${m.title}">`;
+    }
+
+    document.getElementById('lbInner').innerHTML = `
+      <div class="lb-media">${mediaHTML}</div>
+      <div class="lb-side">
+        <div class="lb-head">
+          <div class="lb-avatar" style="${avatarBg}"></div>
+          <div>
+            <div class="lb-author">${c.handle && c.handle.startsWith('@') ? c.handle : c.name}</div>
+            <div class="lb-sub">${m.year}</div>
+          </div>
+        </div>
+        <div class="lb-title">${m.title}</div>
+        <div class="lb-credit">📷 Shot by <strong>Jacob Boehme</strong> (@landbound)<br><span style="color: var(--ink-3); font-size: 11px;">Landbound — ${c.role}</span></div>
+        ${tagsHTML ? `<div class="lb-tags">${tagsHTML}</div>` : ''}
+      </div>`;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.getElementById('lbInner').innerHTML = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  function renderOtherStrip() {
+    const others = window.CLIENTS.filter(x => x.id !== currentClient.id).slice(0, 14);
+    document.getElementById('otherStrip').innerHTML = others.map(o => {
       const ot = window.clientThumb(o);
-      const oavatar = ot
-        ? `style="background-image: url('${ot}');"`
-        : `class="oc-img ${o.palette}"`;
       const olabel = ot ? '' : window.clientInitials(o);
       return `
         <a class="oc" href="client.html?id=${o.id}">
@@ -193,30 +322,6 @@
           <div class="oc-name">${o.short}</div>
         </a>`;
     }).join('');
-
-    document.title = `${c.name} — Landbound`;
-    document.getElementById('main').innerHTML = `
-      <a href="javascript:history.length>1?history.back():window.location.href='work.html'" class="back-btn">← BACK</a>
-
-      <div class="hero">
-        <div class="hero-avatar"><div class="hero-avatar-inner"><div class="hero-avatar-img ${thumb ? '' : c.palette}" ${avatarBg}>${avatarLabel}</div></div></div>
-        <div class="hero-info">
-          <h1>${c.name}</h1>
-          <div class="hero-handle">${c.handle}</div>
-          <div class="hero-roles">${roleChips}</div>
-        </div>
-        <div class="hero-meta"><strong>${c.media.length || '—'}</strong>PROJECTS</div>
-        <div class="hero-blurb">${c.blurb}</div>
-      </div>
-
-      <div class="sec-label">// WORK · ${countLine}</div>
-      <div class="media-list">${mediaHTML}</div>
-
-      <div class="other-clients">
-        <div class="sec-label">// OTHER CLIENTS</div>
-        <div class="other-strip">${othersHTML}</div>
-      </div>
-    `;
   }
 
   function renderNotFound() {
