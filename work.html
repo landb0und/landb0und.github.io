@@ -290,7 +290,7 @@
   <div class="yt">
     <div class="main">
       <div class="player">
-        <iframe id="mainPlayer" src="https://www.youtube.com/embed/3QqZXVnWFDE?rel=0&modestbranding=1" title="Director's Reel" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="mainPlayer" src="https://www.youtube.com/embed/3QqZXVnWFDE?rel=0&modestbranding=1&enablejsapi=1" title="Director's Reel" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
 
       <div class="meta">
@@ -364,10 +364,10 @@
   <div class="shorts-stage">
     <div class="phone" id="phoneScroll">
       <div class="phone-slide" data-clip="0" style="background:#000;">
-        <iframe class="phone-video" src="https://www.youtube.com/embed/kqwrvXnA0UE?rel=0&modestbranding=1&playsinline=1" title="Vertical 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="phone-video-0" class="phone-video" src="https://www.youtube.com/embed/kqwrvXnA0UE?rel=0&modestbranding=1&playsinline=1&enablejsapi=1&mute=1" title="Vertical 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="phone-slide" data-clip="1" style="background:#000;">
-        <iframe class="phone-video" src="https://www.youtube.com/embed/pWpCBBaPX_Q?rel=0&modestbranding=1&playsinline=1" title="Vertical 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="phone-video-1" class="phone-video" src="https://www.youtube.com/embed/pWpCBBaPX_Q?rel=0&modestbranding=1&playsinline=1&enablejsapi=1&mute=1" title="Vertical 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="phone-slide vg3" data-clip="2">
         <div class="phone-play"></div>
@@ -506,7 +506,7 @@
     { embedId: '_FYMFKdyPOo', title: 'Secrets', sub: '<strong>Christian Gates</strong> · Music Video · 2024', chips: [['Director','amber'],['DP','amber'],['Editor',''],['VFX','']], credits: [['Artist','<strong>Christian Gates</strong>'],['Released','2024'],['Crew','Landbound — Dir/DP/Ed/VFX'],['Tools','Arri Mini LF · Resolve · Nuke']], dur: '03:48' },
     { palette: 'g4', title: 'The First Circle', sub: 'Feature · 2023 · 250 VFX shots supervised', chips: [['VFX Supervisor','amber']], credits: [['Format','Feature · 94 min'],['Released','2023'],['Crew','Landbound — VFX Sup'],['Shots','250+ shots'],['Tools','Nuke · After Effects · Blender · Unreal']], dur: '94:00' },
     { palette: 'g5', title: 'Allison Hagendorf Show S4', sub: 'Series · 2025-26 · ACTIVE', chips: [['Director','amber'],['Editor','amber']], credits: [['Format','Talk-format series'],['Released','2025-26'],['Crew','Landbound — Dir + Ed'],['Tools','Sony FX9 · Resolve · After Effects']], dur: 'SERIES' },
-    { palette: 'g6', title: 'Forgive & Forget', sub: 'Short Film · 2022 · SCREAMFEST Selection', chips: [['Director','amber'],['Writer',''],['Editor',''],['DP',''],['VFX Sup','']], credits: [['Festival','SCREAMFEST · 2022'],['Format','Short — 12 min'],['Crew','Landbound — Dir/Wr/Ed/DP/VFX'],['Tools','Blackmagic · Resolve · After Effects']], dur: '12:00' },
+    { embedId: 'oD42T1md068', title: 'Forgive & Forget', sub: 'Short Film · 2022 · SCREAMFEST Selection', chips: [['Director','amber'],['Writer',''],['Editor',''],['DP',''],['VFX Sup','']], credits: [['Festival','SCREAMFEST · 2022'],['Format','Short — 12 min'],['Crew','Landbound — Dir/Wr/Ed/DP/VFX'],['Tools','Blackmagic · Resolve · After Effects']], dur: '12:00' },
     { palette: 'g7', title: 'Super Bowl Spot', sub: 'Commercial · 2024 · 5-state air', chips: [['Director','amber']], credits: [['Air','5-state Super Bowl rotation'],['Released','2024'],['Crew','Landbound — Director'],['Tools','Arri Alexa Mini · Resolve']], dur: '00:30' },
     { palette: 'g8', title: 'Dreams', sub: '<strong>Surfaces</strong> · Music Video · 2023', chips: [['DP','amber']], credits: [['Artist','<strong>Surfaces</strong>'],['Released','2023'],['Crew','Landbound — Cinematographer'],['Tools','Arri Alexa · Anamorphic']], dur: '03:10' }
   ];
@@ -517,21 +517,25 @@
   const actionsEl = document.querySelector('.meta .actions');
   const creditsEl = document.querySelector('.credits');
   
+  const mainPlayer = document.getElementById('mainPlayer');
+
   recs.forEach((rec, i) => {
     rec.addEventListener('click', () => {
       const v = VIDEOS[i];
       if (!v) return;
       recs.forEach(r => r.classList.remove('active'));
       rec.classList.add('active');
-      // Update player gradient — toggle to the matching thumb class
-      frameEl.className = 'frame ' + (v.palette === 'frame' ? '' : v.palette);
+      // Swap iframe src to the new YouTube video (if embedId present)
+      if (v.embedId && mainPlayer) {
+        mainPlayer.src = `https://www.youtube.com/embed/${v.embedId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1`;
+        mainPlayer.title = v.title;
+      }
       titleEl.innerHTML = v.title;
       subEl.innerHTML = v.sub;
       actionsEl.innerHTML = v.chips.map(([t, cls]) => `<span class="chip ${cls}">${t}</span>`).join('');
       creditsEl.innerHTML = v.credits.map(([k, val]) => `<div class="row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('');
-      durEl.textContent = `01:34 / ${v.dur}`;
-      // Smooth scroll player into view (optional)
-      // scroll left intentionally — let user stay where they are
+      // Scroll player into view so user sees the swap happen
+      document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   });
 
@@ -550,7 +554,23 @@
   document.head.appendChild(styles);
 
   // ============= SHORTS — TikTok-style scroll =============
-  function openShorts() { document.getElementById('shorts').classList.add('open'); }
+  function openShorts(slideIdx) {
+    document.getElementById('shorts').classList.add('open');
+    // Scroll to specified slide (default 0)
+    setTimeout(() => {
+      const targetIdx = (typeof slideIdx === 'number') ? slideIdx : 0;
+      const targetSlide = document.querySelectorAll('.phone-slide')[targetIdx];
+      const scroller = document.getElementById('phoneScroll');
+      if (targetSlide && scroller) {
+        scroller.scrollTop = targetSlide.offsetTop;
+        // Trigger autoplay on the target slide's iframe
+        const iframe = targetSlide.querySelector('iframe.phone-video');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage(JSON.stringify({event:'command', func: 'playVideo', args: []}), '*');
+        }
+      }
+    }, 100);
+  }
   function closeShorts() {
     // If came from home (referrer is index.html) and hash is #shorts → return home
     const cameFromHome = window.location.hash === '#shorts' &&
@@ -580,18 +600,25 @@
   });
 
   // IntersectionObserver — sync active sidebar item with visible slide
+  // AND auto-play YouTube iframe videos when they enter view, pause when they leave
+  function postToFrame(iframe, func) {
+    if (!iframe || !iframe.contentWindow) return;
+    iframe.contentWindow.postMessage(JSON.stringify({event:'command', func: func, args: []}), '*');
+  }
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        const idx = parseInt(entry.target.dataset.clip);
+        const iframe = entry.target.querySelector('iframe.phone-video');
         if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-          const idx = parseInt(entry.target.dataset.clip);
           srItems.forEach(it => it.classList.remove('active'));
-          if (srItems[idx]) {
-            srItems[idx].classList.add('active');
-          }
+          if (srItems[idx]) srItems[idx].classList.add('active');
+          if (iframe) postToFrame(iframe, 'playVideo');
+        } else if (entry.intersectionRatio < 0.3) {
+          if (iframe) postToFrame(iframe, 'pauseVideo');
         }
       });
-    }, { root: phoneScroll, threshold: [0.5] });
+    }, { root: phoneScroll, threshold: [0.3, 0.5] });
     slides.forEach(s => io.observe(s));
   }
 
@@ -626,6 +653,20 @@
   if (window.location.hash === '#shorts') {
     openShorts();
   }
+
+  // Hash routing — #shorts opens shorts view, #shorts/N opens at slide N
+  function handleHash() {
+    const h = window.location.hash;
+    if (h.startsWith('#shorts')) {
+      const parts = h.split('/');
+      const idx = parts.length > 1 ? parseInt(parts[1]) : 0;
+      openShorts(isNaN(idx) ? 0 : idx);
+    }
+  }
+  // Run on initial load AND when hash changes (within-page navigation)
+  handleHash();
+  window.addEventListener('hashchange', handleHash);
+
 </script>
 </body>
 </html>

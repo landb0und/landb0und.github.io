@@ -106,6 +106,7 @@
   .photo { break-inside: avoid; margin-bottom: 12px; position: relative; overflow: hidden; border-radius: 6px; cursor: pointer; border: 1px solid var(--line); transition: all .15s; }
   .photo:hover { transform: translateY(-2px); border-color: var(--amber); }
   .photo-frame { position: relative; width: 100%; overflow: hidden; }
+  .photo-img { display: block; width: 100%; height: auto; }
   .photo-frame::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.015) 3px 4px); pointer-events: none; z-index: 2; }
   .ar-43 { aspect-ratio: 4/3; } .ar-34 { aspect-ratio: 3/4; } .ar-11 { aspect-ratio: 1/1; } .ar-32 { aspect-ratio: 3/2; } .ar-23 { aspect-ratio: 2/3; } .ar-169 { aspect-ratio: 16/9; } .ar-916 { aspect-ratio: 9/16; }
   .p1 { background: linear-gradient(160deg, #2a1f15 0%, #6b3a1a 60%, #f5b042 100%); }
@@ -178,8 +179,11 @@
   .post-head-loc { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 1px; }
   .post-head-menu { color: var(--ink-3); font-size: 18px; cursor: pointer; padding: 0 6px; }
 
-  .post-image { position: relative; aspect-ratio: 4/5; overflow: hidden; }
+  .post-image { position: relative; overflow: hidden; aspect-ratio: 4/5; }
   .post-image::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.015) 3px 4px); pointer-events: none; }
+  /* Real-image posts: natural aspect, IG-style cap (4/5 portrait, 1.91/1 landscape) */
+  .post-image-real { aspect-ratio: auto; max-height: 750px; display: flex; align-items: center; justify-content: center; background: #000; }
+  .post-image-real img { display: block; width: 100%; height: auto; max-height: 750px; object-fit: contain; }
 
   .post-actions { display: flex; align-items: center; padding: 12px 14px 4px; gap: 14px; }
   .post-actions .icn { font-size: 22px; color: var(--ink); cursor: pointer; transition: color .15s; }
@@ -305,7 +309,14 @@
 
     <!-- MASONRY -->
     <div class="photo-grid">
-      <div class="photo" data-photo="3"><div class="photo-frame ar-34 p2"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">EDITORIAL</span><div class="t">Two Feet — press</div><div class="m">Phase One · LA studio</div></div></div>
+      <div class="photo" data-photo="0"><img class="photo-img" src="photos/commercial/Aporro.jpg" alt="Aporro" loading="lazy"><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">COMMERCIAL · APORRO</span><div class="t">Aporro — campaign</div><div class="m">Phase One · LA Studio</div></div></div>
+      <div class="photo" data-photo="1"><img class="photo-img" src="photos/commercial/Aporro-2.jpg" alt="Aporro" loading="lazy"><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">COMMERCIAL · APORRO</span><div class="t">Aporro — alt frame</div><div class="m">Phase One · LA Studio</div></div></div>
+      <div class="photo" data-photo="5"><img class="photo-img" src="photos/commercial/Max-Frost-1.png" alt="Max Frost" loading="lazy"><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">COMMERCIAL · MAX FROST</span><div class="t">Max Frost — press portrait</div><div class="m">Phase One · LA</div></div></div>
+      <div class="photo" data-photo="2"><img class="photo-img" src="photos/commercial/Aporro-3.jpg" alt="Aporro" loading="lazy"><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">COMMERCIAL · APORRO</span><div class="t">Aporro — frame 03</div><div class="m">Phase One · LA Studio</div></div></div>
+      <div class="photo" data-photo="3"><img class="photo-img" src="photos/commercial/Aporro-4.png" alt="Aporro" loading="lazy"><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">COMMERCIAL · APORRO</span><div class="t">Aporro — frame 04</div><div class="m">Phase One · LA Studio</div></div></div>
+      <div class="photo" data-photo="6"><img class="photo-img" src="photos/commercial/Max-Frost-2.jpeg" alt="Max Frost" loading="lazy"><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">COMMERCIAL · MAX FROST</span><div class="t">Max Frost — alt frame</div><div class="m">Phase One · LA</div></div></div>
+      <div class="photo" data-photo="4"><img class="photo-img" src="photos/commercial/Aporro-5.png" alt="Aporro" loading="lazy"><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">COMMERCIAL · APORRO</span><div class="t">Aporro — frame 05</div><div class="m">Phase One · LA Studio</div></div></div>
+      <div class="photo" data-photo="10"><div class="photo-frame ar-34 p2"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">EDITORIAL</span><div class="t">Two Feet — press</div><div class="m">Phase One · LA studio</div></div></div>
       <div class="photo" data-photo="4"><div class="photo-frame ar-43 p4"></div><div class="photo-overlay"></div><span class="photo-corner">2023</span><div class="photo-cap"><span class="tag">PERSONAL</span><div class="t">Topanga Canyon</div><div class="m">35mm Portra 400</div></div></div>
       <div class="photo" data-photo="5"><div class="photo-frame ar-23 p5"></div><div class="photo-overlay"></div><span class="photo-corner">2025</span><div class="photo-cap"><span class="tag">EDITORIAL</span><div class="t">Hagendorf S4 cast</div><div class="m">Studio · LA</div></div></div>
       <div class="photo" data-photo="6"><div class="photo-frame ar-34 p6"></div><div class="photo-overlay"></div><span class="photo-corner">2024</span><div class="photo-cap"><span class="tag">BTS · SECRETS</span><div class="t">Two Feet · sunset block</div><div class="m">Anamorphic</div></div></div>
@@ -460,13 +471,13 @@
 <script>
   // ============= PHOTO DATA =============
   const PHOTOS = [
-    { palette: 'p1', tag: 'EDITORIAL · CHILDSTAR', title: 'Grace VanderWaal — CHILDSTAR cover', caption: '@gracevanderwaal — Director + EP on CHILDSTAR: Final Act. Cover frame from day three. Three sittings, twelve looks, this was take one.', camera: 'Phase One IQ4', location: 'LA Studio', year: '2025', project: 'CHILDSTAR: Final Act', likes: '1,284' },
-    { palette: 'p3', tag: 'MUSIC · BTS', title: 'Two Feet — Secrets, sunset block', caption: '@twofeetmusic — Director / DP / Editor on Secrets. Sunset block, day 2. Whole crew got the magic-hour religion.', camera: 'Arri Mini LF · Anamorphic', location: 'Topanga', year: '2024', project: 'Secrets', likes: '892' },
-    { palette: 'p9', tag: 'PERSONAL · 35MM', title: 'Topanga Night', caption: 'Personal. Topanga Canyon at midnight. Hand-braced long exposure on Cinestill 800T.', camera: 'Leica M6', location: 'Topanga Canyon', year: '2024', project: 'Personal Work', likes: '341' },
-    { palette: 'p2', tag: 'EDITORIAL', title: 'Two Feet — press portrait', caption: '@twofeetmusic — Press portrait for the sophomore record cycle. One light, available bounce.', camera: 'Phase One', location: 'LA studio', year: '2024', project: 'Two Feet press', likes: '512' },
-    { palette: 'p4', tag: 'PERSONAL', title: 'Topanga Canyon', caption: 'Personal. A weekend of nothing but film. No agenda, no client. Portra 400 on 35mm.', camera: '35mm Portra 400', location: 'Topanga', year: '2023', project: 'Personal Work', likes: '267' },
-    { palette: 'p5', tag: 'EDITORIAL', title: 'Hagendorf S4 cast promo', caption: '@allisonhagendorf — Director + Editor for the Allison Hagendorf Show S4. Cast promo block.', camera: 'Sony FX9', location: 'LA Studio', year: '2025', project: 'Hagendorf S4', likes: '748' },
-    { palette: 'p6', tag: 'BTS · SECRETS', title: 'Two Feet · Secrets — sunset rig', caption: '@twofeetmusic — BTS from Secrets. Setting up the anamorphic for the sunset scene. Sky cooperated.', camera: 'Arri Mini LF', location: 'Topanga', year: '2024', project: 'Secrets', likes: '423' },
+    { src: 'photos/commercial/Aporro.jpg', palette: 'p1', tag: 'COMMERCIAL · APORRO', title: 'Aporro — campaign frame', caption: '@aporro — Commercial campaign for Aporro. Studio lighting, deep contrast, jewelry product hero.', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '1,418' },
+    { src: 'photos/commercial/Aporro-2.jpg', palette: 'p3', tag: 'COMMERCIAL · APORRO', title: 'Aporro — alt frame', caption: '@aporro — Alternate lighting setup, same talent. Pulled the key tighter to feature the chain.', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '987' },
+    { src: 'photos/commercial/Aporro-3.jpg', palette: 'p9', tag: 'COMMERCIAL · APORRO', title: 'Aporro — campaign frame 03', caption: '@aporro — Wider angle, full talent. Aporro brand piece centered, hard rim from a 4x4.', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '742' },
+    { src: 'photos/commercial/Aporro-4.png', palette: 'p2', tag: 'COMMERCIAL · APORRO', title: 'Aporro — campaign frame 04', caption: '@aporro — Tightened on the wrist piece. Practical motivated, soft fill.', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '654' },
+    { src: 'photos/commercial/Aporro-5.png', palette: 'p4', tag: 'COMMERCIAL · APORRO', title: 'Aporro — campaign frame 05', caption: '@aporro — Final look from the campaign. Lower angle, pushed contrast in post.', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '821' },
+    { src: 'photos/commercial/Max-Frost-1.png', palette: 'p5', tag: 'COMMERCIAL · MAX FROST', title: 'Max Frost — press portrait', caption: '@maxfrostmusic — Commercial portrait session with Max Frost. Music, mood, single source soft.', camera: 'Phase One', location: 'LA', year: '2025', project: 'Max Frost press', likes: '1,103' },
+    { src: 'photos/commercial/Max-Frost-2.jpeg', palette: 'p6', tag: 'COMMERCIAL · MAX FROST', title: 'Max Frost — alt frame', caption: '@maxfrostmusic — Alt take from the same setup. Same eyeline, looser composition.', camera: 'Phase One', location: 'LA', year: '2025', project: 'Max Frost press', likes: '876' },
     { palette: 'p7', tag: '35MM FILM', title: 'LA street', caption: 'Personal. Walking home after a long edit session. Leica M6 on HP5.', camera: 'Leica M6 · HP5', location: 'Echo Park', year: '2024', project: 'Personal Work', likes: '189' },
     { palette: 'p8', tag: 'PERSONAL', title: 'Mojave', caption: 'Personal. Phase One in the desert. No power, no internet. Best week of the year.', camera: 'Phase One IQ4', location: 'Mojave Desert', year: '2023', project: 'Personal Work', likes: '634' },
     { palette: 'p9', tag: 'BTS · FIRST CIRCLE', title: 'The First Circle — practicals', caption: 'VFX Supervisor on The First Circle. BTS — practicals for the interrogation scene. Tight space, lots of nets.', camera: 'Phase One', location: 'On location', year: '2023', project: 'The First Circle', likes: '301' },
@@ -509,7 +520,9 @@
           </div>
           <span class="post-head-menu">⋯</span>
         </div>
-        <div class="post-image ${p.palette}"></div>
+        ${p.src
+          ? `<div class="post-image post-image-real"><img src="${p.src}" alt="${p.title || ''}" loading="lazy"></div>`
+          : `<div class="post-image ${p.palette}"></div>`}
         <div class="post-actions">
           <span class="icn heart">♡</span>
           <span class="icn">💬</span>
