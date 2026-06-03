@@ -69,6 +69,7 @@
   .yt { display: grid; grid-template-columns: 1fr 340px; gap: 22px; }
 
   .player { background: #000; aspect-ratio: 16/9; border: 1px solid var(--line); border-radius: 8px; position: relative; overflow: hidden; }
+  .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 5; }
   .player::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(245,176,66,0.22) 0%, transparent 65%); }
   .player::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.025) 3px 4px); pointer-events: none; }
   .player .frame { position: absolute; inset: 0; background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); opacity: 0.55; }
@@ -287,34 +288,25 @@
   <div class="yt">
     <div class="main">
       <div class="player">
-        <div class="frame"></div>
-        <div class="play"></div>
-        <div class="ctrl">
-          <div class="bar"><div class="fill"></div></div>
-          <div class="row">
-            <span>01:34 / 04:12</span>
-            <div class="icons"><span>HD</span><span>⚙</span><span>⤢</span></div>
-          </div>
-        </div>
+        <iframe id="mainPlayer" src="https://www.youtube.com/embed/3QqZXVnWFDE?rel=0&modestbranding=1" title="Director's Reel" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
 
       <div class="meta">
-        <div class="title">CHILDSTAR: Final Act</div>
-        <div class="sub"><strong>Grace VanderWaal</strong> · Music Video · 2025 · 4.2M views</div>
+        <div class="title">Director's Reel</div>
+        <div class="sub"><strong>Landbound</strong> · Sizzle Reel · 2025</div>
         <div class="actions">
           <span class="chip amber">Director</span>
-          <span class="chip amber">Executive Producer</span>
           <span class="chip">VFX</span>
           <span class="chip">Editor</span>
+          <span class="chip">DP</span>
         </div>
       </div>
 
       <div class="credits">
-        <div class="row"><span class="k">Artist</span><span class="v"><strong>Grace VanderWaal</strong></span></div>
-        <div class="row"><span class="k">Label</span><span class="v">Sony / RCA</span></div>
-        <div class="row"><span class="k">Released</span><span class="v">June 2025</span></div>
-        <div class="row"><span class="k">Crew</span><span class="v">Landbound — Jacob Boehme (Dir/EP)</span></div>
-        <div class="row"><span class="k">Tools</span><span class="v">Arri Alexa · Resolve · After Effects · Unreal Engine</span></div>
+        <div class="row"><span class="k">Format</span><span class="v">Director sizzle</span></div>
+        <div class="row"><span class="k">Year</span><span class="v">2025</span></div>
+        <div class="row"><span class="k">Crew</span><span class="v">Landbound — Jacob Boehme</span></div>
+        <div class="row"><span class="k">Featured</span><span class="v">CHILDSTAR · Secrets · Bleed · First Circle</span></div>
       </div>
     </div>
 
@@ -339,7 +331,7 @@
 
       <div class="side-h">Up Next</div>
       <div class="recs">
-        <div class="rec active"><div class="rec-thumb g1" data-dur="04:12"></div><div class="rec-info"><div class="rec-title">CHILDSTAR: Final Act</div><div class="rec-meta">Grace VanderWaal · DIR + EP · 2025</div></div></div>
+        <div class="rec active"><div class="rec-thumb g1" data-dur="02:14"></div><div class="rec-info"><div class="rec-title">Director's Reel</div><div class="rec-meta">Landbound · Sizzle · 2025</div></div></div>
         <div class="rec"><div class="rec-thumb g2" data-dur="03:24"></div><div class="rec-info"><div class="rec-title">Bleed</div><div class="rec-meta">Music video · DIR + ED · 2025</div></div></div>
         <div class="rec"><div class="rec-thumb g3" data-dur="03:48"></div><div class="rec-info"><div class="rec-title">Secrets</div><div class="rec-meta">Two Feet · DIR/DP/ED/VFX · 2024</div></div></div>
         <div class="rec"><div class="rec-thumb g4" data-dur="94:00"></div><div class="rec-info"><div class="rec-title">The First Circle</div><div class="rec-meta">Feature · VFX Sup · 250 shots · 2023</div></div></div>
@@ -529,7 +521,7 @@
 <script>
   // ============= WORK / YouTube — click sidebar to swap player =============
   const VIDEOS = [
-    { palette: 'frame', title: 'CHILDSTAR: Final Act', sub: '<strong>Grace VanderWaal</strong> · Music Video · 2025 · 4.2M views', chips: [['Director','amber'],['Executive Producer','amber'],['VFX',''],['Editor','']], credits: [['Artist','<strong>Grace VanderWaal</strong>'],['Label','Sony / RCA'],['Released','June 2025'],['Crew','Landbound — Jacob Boehme (Dir/EP)'],['Tools','Arri Alexa · Resolve · After Effects · Unreal Engine']], dur: '04:12' },
+    { embedId: '3QqZXVnWFDE', title: "Director's Reel", sub: '<strong>Landbound</strong> · Sizzle Reel · 2025', chips: [['Director','amber'],['VFX',''],['Editor',''],['DP','']], credits: [['Format','Director sizzle'],['Year','2025'],['Crew','Landbound — Jacob Boehme'],['Featured','CHILDSTAR · Secrets · Bleed · First Circle']], dur: '02:14' },
     { palette: 'g2', title: 'Bleed', sub: 'Music Video · 2025 · 1.8M views', chips: [['Director','amber'],['Editor','amber']], credits: [['Artist','—'],['Released','2025'],['Crew','Landbound — Director, Editor'],['Tools','Arri Mini LF · Resolve · After Effects']], dur: '03:24' },
     { palette: 'g3', title: 'Secrets', sub: '<strong>Two Feet</strong> · Music Video · 2024 · 3.2M views', chips: [['Director','amber'],['DP','amber'],['Editor',''],['VFX','']], credits: [['Artist','<strong>Two Feet</strong>'],['Released','2024'],['Crew','Landbound — Dir/DP/Ed/VFX'],['Tools','Arri Mini LF · Resolve · Nuke']], dur: '03:48' },
     { palette: 'g4', title: 'The First Circle', sub: 'Feature · 2023 · 250 VFX shots supervised', chips: [['VFX Supervisor','amber']], credits: [['Format','Feature · 94 min'],['Released','2023'],['Crew','Landbound — VFX Sup'],['Shots','250+ shots'],['Tools','Nuke · After Effects · Blender · Unreal']], dur: '94:00' },
@@ -540,13 +532,11 @@
   ];
 
   const recs = document.querySelectorAll('.rec');
-  const frameEl = document.querySelector('.player .frame');
-  const titleEl = document.querySelector('.meta .title');
+    const titleEl = document.querySelector('.meta .title');
   const subEl = document.querySelector('.meta .sub');
   const actionsEl = document.querySelector('.meta .actions');
   const creditsEl = document.querySelector('.credits');
-  const durEl = document.querySelector('.player .ctrl .row span');
-
+  
   recs.forEach((rec, i) => {
     rec.addEventListener('click', () => {
       const v = VIDEOS[i];
