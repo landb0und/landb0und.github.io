@@ -150,8 +150,26 @@
   .stories::-webkit-scrollbar { height: 4px; }
   .stories::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
   .story { display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start; cursor: pointer; flex-shrink: 0; width: 72px; text-decoration: none; }
-  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); transition: transform .15s; }
-  .story:hover .story-ring { transform: scale(1.05); }
+  /* Story ring uses a rotating conic gradient via ::before. The pseudo
+     rotates while the avatar inside stays still. Each row offset by nth-child
+     so the sweep is phase-staggered, not all-at-once. Quiet life, not flashy. */
+  .story-ring {
+    width: 64px; height: 64px; border-radius: 50%; padding: 2px;
+    position: relative; transition: transform .15s; isolation: isolate;
+  }
+  .story-ring::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
+    animation: ringSpin 14s linear infinite; z-index: -1;
+  }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -4s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -8s; }
+  .story:hover .story-ring { transform: scale(1.06); }
+  .story:hover .story-ring::before { animation-duration: 4s; }
+  @keyframes ringSpin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .story-ring::before { animation: none; }
+  }
   .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .story-avatar { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; background-size: cover; background-position: center; }
   .story-name { font-size: 11px; color: var(--ink-2); font-weight: 600; text-align: center; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -179,7 +197,11 @@
   .post-avatar-img { width: 100%; height: 100%; border-radius: 50%; background: url('headshot.jpg') center/cover no-repeat var(--bg-3); }
   .post-head-info { flex: 1; min-width: 0; }
   .post-head-name { font-size: 13px; color: var(--ink); font-weight: 800; }
-  .post-head-loc { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 1px; }
+  .post-head-loc { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 1px; display: flex; align-items: center; gap: 8px; }
+  .post-co-author { color: var(--ink-2); font-weight: 700; text-decoration: none; }
+  .post-co-author:hover { color: var(--amber); }
+  .post-with { color: var(--ink-4); font-weight: 400; font-style: italic; margin: 0 2px; }
+  .post-collab-pill { display: inline-block; padding: 2px 7px; background: rgba(232,88,154,0.14); color: var(--rose); font-size: 8px; font-weight: 800; letter-spacing: 0.2em; border-radius: 100px; }
   .post-head-menu { color: var(--ink-3); font-size: 18px; cursor: pointer; padding: 0 6px; }
 
   .post-image { position: relative; overflow: hidden; aspect-ratio: 4/5; }
@@ -291,17 +313,14 @@
     <!-- CLIENTS STORIES (rendered from data.js) -->
     <div class="stories" id="photoStories" style="margin-bottom: 4px;"></div>
 
-    <!-- TABS — IG profile style -->
-    <div class="tabs">
-      <span class="tab active">All <span class="count">247</span></span>
-      <span class="tab">Editorial <span class="count">62</span></span>
-      <span class="tab">BTS <span class="count">98</span></span>
-      <span class="tab">Music <span class="count">41</span></span>
-      <span class="tab">Client <span class="count">38</span></span>
-      <span class="tab">Commercial <span class="count">29</span></span>
-      <span class="tab">Live Event <span class="count">22</span></span>
-      <span class="tab">Personal <span class="count">34</span></span>
-      <span class="tab">35mm Film <span class="count">12</span></span>
+    <!-- TABS — filter by derived category, counts auto-update from PHOTOS -->
+    <div class="tabs" id="photoTabs">
+      <span class="tab active" data-cat="all">All <span class="count" data-cat-count="all">0</span></span>
+      <span class="tab" data-cat="music">Music <span class="count" data-cat-count="music">0</span></span>
+      <span class="tab" data-cat="commercial">Commercial <span class="count" data-cat-count="commercial">0</span></span>
+      <span class="tab" data-cat="bts">BTS <span class="count" data-cat-count="bts">0</span></span>
+      <span class="tab" data-cat="editorial">Editorial <span class="count" data-cat-count="editorial">0</span></span>
+      <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
     </div>
 
     <!-- MASONRY -->
@@ -326,6 +345,16 @@
     <!-- Grid View toggle — sticky below stories, above posts -->
     <div class="feed-back-wrap">
       <button class="feed-back" onclick="exitFeed()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>GRID VIEW</button>
+    </div>
+
+    <!-- Category filter — mirrors the grid-view tabs, same source of truth -->
+    <div class="tabs" id="feedTabs" style="margin-bottom: 18px;">
+      <span class="tab active" data-cat="all">All <span class="count" data-cat-count="all">0</span></span>
+      <span class="tab" data-cat="music">Music <span class="count" data-cat-count="music">0</span></span>
+      <span class="tab" data-cat="commercial">Commercial <span class="count" data-cat-count="commercial">0</span></span>
+      <span class="tab" data-cat="bts">BTS <span class="count" data-cat-count="bts">0</span></span>
+      <span class="tab" data-cat="editorial">Editorial <span class="count" data-cat-count="editorial">0</span></span>
+      <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
     </div>
 
     <div class="feed-layout">
@@ -434,30 +463,73 @@
   // ============= PHOTO DATA =============
   const PHOTOS = (function() {
     // Build a unified photo feed from window.CLIENTS (data.js).
-    // Every client's photo media becomes a feed post automatically — add a photo
-    // to a client in data.js and it appears on this Photo tab without touching photo.html.
+    // Deduplicate by src — when two clients share the same photo (Surfaces +
+    // Mike Posner, etc.), it appears ONCE with both clients credited as joint
+    // authors. Per-client profiles still show their own copy.
     if (!window.CLIENTS) return [];
-    const out = [];
+    const bySrc = new Map();
     window.CLIENTS.forEach(c => {
       const photos = (c.media || []).filter(m => m.type === 'photo');
-      photos.forEach((p, i) => {
-        const handleClean = (c.handle || '').replace('@','').toLowerCase();
+      photos.forEach((p) => {
+        if (!p.src) return;
+        if (!bySrc.has(p.src)) {
+          bySrc.set(p.src, {
+            src: p.src,
+            authors: [], // collect all clients who share this image
+            title: p.title || c.name,
+            camera: p.camera || 'Phase One',
+            location: p.location || '',
+            year: p.year || '2024',
+            tags: p.tags || [],
+            likes: p.likes || (Math.floor(Math.random() * 800 + 200) + '')
+          });
+        }
+        const entry = bySrc.get(p.src);
         const handleDisplay = c.handle && c.handle.startsWith('@') ? c.handle : '@' + (c.id || '').replace(/-/g,'');
-        out.push({
-          src: p.src,
-          client: c.id,
-          clientName: c.name,
-          clientHandle: handleDisplay,
-          tag: ((c.role || '').toUpperCase() + ' · ' + c.name.toUpperCase()).slice(0, 60),
-          title: p.title || c.name,
-          caption: 'Photography by Jacob Boehme (@landbound) · ' + (p.location || c.name) + ' · ' + (p.year || ''),
-          camera: p.camera || 'Phase One',
-          location: p.location || '',
-          year: p.year || '2024',
-          project: p.title || (c.name + ' — selects'),
-          likes: p.likes || (Math.floor(Math.random() * 800 + 200) + '')
-        });
+        entry.authors.push({ id: c.id, name: c.name, short: c.short || c.name, handle: handleDisplay, role: c.role, palette: c.palette });
       });
+    });
+    // Derive filter categories per photo from the clients involved and any
+    // explicit tags on the photo. Used by the IG/grid filter pills.
+    function deriveCategories(authors, photoTags) {
+      const cats = new Set();
+      const tagLow = (photoTags || []).map(t => String(t).toLowerCase());
+      if (tagLow.includes('bts')) cats.add('bts');
+      if (tagLow.includes('editorial')) cats.add('editorial');
+      authors.forEach(a => {
+        if (a.id === 'landbound') cats.add('personal');
+        if (['aporro','max-frost'].includes(a.id)) cats.add('commercial');
+        const client = window.clientById ? window.clientById(a.id) : null;
+        const hasVideo = client && (client.media || []).some(m => m.type === 'video');
+        if (hasVideo && a.id !== 'landbound') cats.add('music');
+      });
+      return Array.from(cats);
+    }
+
+    const out = Array.from(bySrc.values()).map(entry => {
+      // Primary author = first client to surface this photo. Used for the post-head
+      // avatar. Co-authors append to the post-caption.
+      const primary = entry.authors[0];
+      const coNames = entry.authors.slice(1).map(a => a.handle).join(' & ');
+      const tagBase = entry.authors.map(a => a.name.toUpperCase()).join(' x ');
+      return {
+        src: entry.src,
+        client: primary.id,
+        clientName: primary.name,
+        clientHandle: primary.handle,
+        authors: entry.authors,
+        coAuthorsLine: coNames,
+        categories: deriveCategories(entry.authors, entry.tags),
+        tag: ((entry.authors.length > 1 ? 'COLLAB · ' : '') + tagBase).slice(0, 70),
+        title: entry.title,
+        caption: 'Photography by Jacob Boehme (@landbound) · ' + (entry.location || primary.name) + ' · ' + entry.year,
+        camera: entry.camera,
+        location: entry.location,
+        year: entry.year,
+        tags: entry.tags,
+        project: entry.title,
+        likes: entry.likes
+      };
     });
     // Fisher-Yates shuffle so feed + grid aren't grouped by client. Same shuffle
     // is used by both renderFeed and renderGrid so clicking a tile opens the
@@ -483,26 +555,56 @@
     // the first batch of visible tiles has settled.
     settleAndShowGrid();
   }
+  // Category filter state. 'all' shows everything; otherwise we filter by
+  // PHOTOS[].categories matching the selected pill. Same filter applies to
+  // both renderFeed and renderGrid so the two views stay in sync.
+  let currentCategory = 'all';
+  function filteredPhotos() {
+    if (currentCategory === 'all') return PHOTOS;
+    return PHOTOS.filter(p => (p.categories || []).includes(currentCategory));
+  }
+  function updateCounts() {
+    const cats = ['all','music','commercial','bts','editorial','personal'];
+    cats.forEach(cat => {
+      const n = cat === 'all' ? PHOTOS.length : PHOTOS.filter(p => (p.categories || []).includes(cat)).length;
+      document.querySelectorAll('[data-cat-count="' + cat + '"]').forEach(el => { el.textContent = n; });
+    });
+  }
+
   function renderFeed(startIdx) {
     const container = document.getElementById('feedPosts');
+    const photos = filteredPhotos();
+    if (!photos.length) {
+      container.innerHTML = '<div style="padding: 60px 20px; text-align: center; color: var(--ink-3); font-size: 13px;">No photos in this category yet.</div>';
+      return;
+    }
+    const safeStart = Math.min(startIdx || 0, photos.length - 1);
     // Reorder so startIdx is first, then rest in original order
-    const reordered = [...PHOTOS.slice(startIdx), ...PHOTOS.slice(0, startIdx)];
+    const reordered = [...photos.slice(safeStart), ...photos.slice(0, safeStart)];
     container.innerHTML = reordered.map((p, i) => {
-      // Resolve client. Each photo is posted "by" the client. Jacob is the photographer (credit).
+      // Resolve client. Each photo is posted "by" the client (or jointly by a
+      // few clients when it's a collab — see PHOTOS dedupe builder above).
       const c = (p.client && window.clientById) ? window.clientById(p.client) : null;
-      const author = c ? c : { id: 'landbound', name: 'landbound', short: 'landbound', handle: '@landbound', palette: 'sa-1' };
+      const author = c ? c : { id: 'landbound', name: 'Landbound', short: 'Landbound', handle: '@landbound', palette: 'sa-1' };
       const authorThumb = c ? (window.clientThumb ? window.clientThumb(c) : null) : 'headshot.jpg';
-      const authorName = author.id === 'landbound' ? 'landbound' : (author.handle || author.short).replace('@','');
+      const authorName = (author.handle || author.short || author.name).replace('@','');
       const avatarStyle = authorThumb ? `style="background-image: url('${authorThumb}');"` : '';
       const avatarLabel = authorThumb ? '' : (window.clientInitials ? window.clientInitials(author) : 'JB');
-      const profileLink = author.id === 'landbound' ? '#' : `client.html?id=${author.id}`;
+      const profileLink = `client.html?id=${author.id}`;
+      // Co-author chips: if this photo is shared by multiple clients, render the
+      // others as small linked handles next to the primary author.
+      const others = (p.authors || []).slice(1);
+      const coAuthorsLinks = others.map(a =>
+        `<a href="client.html?id=${a.id}" class="post-co-author">${a.handle}</a>`
+      ).join('');
+      const collabFlag = others.length ? '<span class="post-collab-pill">COLLAB</span>' : '';
       return `
       <div class="post">
         <div class="post-head">
           <a href="${profileLink}" class="post-avatar" style="text-decoration:none;"><div class="post-avatar-inner"><div class="post-avatar-img ${authorThumb ? '' : author.palette}" ${avatarStyle}>${avatarLabel}</div></div></a>
           <div class="post-head-info">
-            <a class="post-head-name" href="${profileLink}" style="color:inherit; text-decoration:none;">${authorName}</a>
-            <div class="post-head-loc">${p.location} · ${p.year}</div>
+            <span><a class="post-head-name" href="${profileLink}" style="color:inherit; text-decoration:none;">${authorName}</a>${others.length ? ' <span class="post-with">with</span> ' + coAuthorsLinks : ''}</span>
+            <div class="post-head-loc">${p.location} · ${p.year}${collabFlag}</div>
           </div>
           <span class="post-head-menu">⋯</span>
         </div>
@@ -527,12 +629,20 @@
 
   // Wire grid photos → open feed at that photo
   
-  // Build grid tiles dynamically from PHOTOS
+  // Build grid tiles dynamically from filtered PHOTOS. data-photo holds the
+  // index INTO THE FILTERED LIST so clicks on tiles open the feed at the
+  // matching item — same filter applies on both views.
   function renderGrid() {
     const grid = document.getElementById('photoGrid');
     if (!grid) return;
     grid.classList.remove('ready');
-    grid.innerHTML = PHOTOS.map((p, i) => `
+    const photos = filteredPhotos();
+    if (!photos.length) {
+      grid.innerHTML = '<div style="padding: 60px 20px; text-align: center; color: var(--ink-3); font-size: 13px; grid-column: 1 / -1;">No photos in this category yet.</div>';
+      grid.classList.add('ready');
+      return;
+    }
+    grid.innerHTML = photos.map((p, i) => `
       <div class="photo" data-photo="${i}">
         <img class="photo-img" src="${p.src}" alt="${p.title || ''}" loading="lazy">
         <div class="photo-overlay"></div>
@@ -544,6 +654,31 @@
         </div>
       </div>
     `).join('');
+  }
+
+  // Wire category tab pills (both grid + feed copies) to filter both views.
+  function wireCategoryTabs() {
+    const allTabs = document.querySelectorAll('#photoTabs .tab, #feedTabs .tab');
+    allTabs.forEach(t => {
+      t.addEventListener('click', () => {
+        const cat = t.dataset.cat || 'all';
+        currentCategory = cat;
+        // Mirror active state on both tab rows
+        allTabs.forEach(o => o.classList.toggle('active', o.dataset.cat === cat));
+        // Re-render both views; tile-click handlers rewire on each grid render
+        renderGrid();
+        renderFeed(0);
+        wireGridClicks();
+        settleAndShowGrid();
+      });
+    });
+  }
+  function wireGridClicks() {
+    document.querySelectorAll('.photo[data-photo]').forEach(el => {
+      el.addEventListener('click', () => {
+        enterFeed(parseInt(el.dataset.photo));
+      });
+    });
   }
 
   // Wait for the first batch of images to settle, then reveal the grid.
@@ -575,12 +710,9 @@
 
   renderGrid();
   settleAndShowGrid();
-
-  document.querySelectorAll('.photo[data-photo]').forEach(el => {
-    el.addEventListener('click', () => {
-      enterFeed(parseInt(el.dataset.photo));
-    });
-  });
+  wireGridClicks();
+  updateCounts();
+  wireCategoryTabs();
 
   // ESC exits feed
   document.addEventListener('keydown', (e) => {

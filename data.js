@@ -196,6 +196,19 @@ window.CLIENTS = [
     media: []
   },
   {
+    id: 'landbound',
+    name: 'Landbound',
+    short: 'Landbound',
+    handle: '@landbound',
+    role: 'Director · DP · Editor · VFX · Photographer',
+    blurb: 'My own work — sizzle, TikTok edits, BTS, and personal projects under the Landbound banner.',
+    palette: 'sa-1',
+    thumb: 'headshot.jpg',
+    media: [
+      { type: 'video', embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true, title: "Director's Reel", year: '2025', tags: ['Director','VFX','Editor','DP'] }
+    ]
+  },
+  {
     id: 'chloe-star',
     name: 'Chloe Star',
     short: 'Chloe S.',
@@ -422,7 +435,7 @@ window.VERTICALS = [
     id: 'landbound-w-color-phone',
     guid: '27445ba3-d8a3-45f7-b833-0e049e6274c9',
     title: 'Phone color pass',
-    client: 'tiktok',
+    client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
     role: 'Director · DP · Editor · VFX',
@@ -434,7 +447,7 @@ window.VERTICALS = [
     id: 'landbound-tiktok-mp4',
     guid: '9284b2d3-3ea3-4cb4-be22-3b2f6dd5c778',
     title: 'Untitled (TikTok)',
-    client: 'tiktok',
+    client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
     role: 'Director · DP · Editor · VFX',
@@ -530,7 +543,7 @@ window.VERTICALS = [
     id: 'landbound-oaky',
     guid: 'f8cf0b2b-02fc-4e45-8430-c3c234e1a5ea',
     title: 'oaky oaky oaky',
-    client: 'tiktok',
+    client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
     role: 'Director · DP · Editor · VFX',
@@ -542,7 +555,7 @@ window.VERTICALS = [
     id: 'landbound-tiktok-with-lut',
     guid: '62c948a3-9548-4261-a408-8eadc51071bf',
     title: 'LUT pass',
-    client: 'tiktok',
+    client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
     role: 'Director · DP · Editor · VFX',
@@ -597,3 +610,22 @@ window.verticalEmbed = function(v, opts) {
   params.push('responsive=true');
   return 'https://iframe.mediadelivery.net/embed/' + window.BUNNY.LIB + '/' + v.guid + '?' + params.join('&');
 };
+
+// Auto-sync: every VERTICALS entry shows up in its client's media[]. Skip if
+// the same embedId is already there. Fixes Stunt Fall missing from Chloe Star
+// and future-proofs every vertical → client profile linkage.
+(function syncVerticalsIntoClients() {
+  if (!window.VERTICALS || !window.CLIENTS) return;
+  window.VERTICALS.forEach(v => {
+    const c = window.clientById(v.client);
+    if (!c) return;
+    if (!c.media) c.media = [];
+    const already = c.media.find(m => m.embedId === v.guid);
+    if (already) return;
+    c.media.unshift({
+      type: 'video', embedId: v.guid, bunny: true,
+      title: v.title, year: (v.tag.match(/\d{4}/) || [''])[0],
+      tags: (v.role || '').split(' · ').concat(['Vertical'])
+    });
+  });
+})();

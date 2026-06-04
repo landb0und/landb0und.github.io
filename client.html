@@ -199,21 +199,11 @@
   let currentClient = null;
   let currentTab = 'all';
 
-  // Fisher-Yates shuffle (non-mutating)
-  function shuffleArr(arr) {
-    const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
   function renderClient(c) {
     currentClient = c;
-    // Build a randomized display order. Lightbox + grid both use this so arrow
-    // navigation follows visual order. Original c.media is untouched.
-    currentClient.displayMedia = shuffleArr(c.media || []);
+    // Client profile uses the canonical order from data.js (no shuffle).
+    // Photo IG feed + grid are the shuffled views; the artist's own page is curated.
+    currentClient.displayMedia = (c.media || []).slice();
     const thumb = window.clientThumb(c);
     const initials = window.clientInitials(c);
     const avatarBg = thumb ? `style="background-image: url('${thumb}');"` : '';
@@ -358,6 +348,22 @@
     const nextBtn = showNav ? `<button class="lb-nav lb-nav-next" onclick="lightboxNav(1); event.stopPropagation();" aria-label="Next">›</button>` : '';
     const posIndicator = showNav ? `<div class="lb-pos">${idx+1} / ${total}</div>` : '';
 
+    // Tight type label derived from tags — replaces the verbose "Shot by Jacob..." block.
+    // The page already has the // LANDBOUND CREDIT panel at the top, so credit doesn't
+    // need to be repeated here. Lightbox is just: title, type, year, tags.
+    const tagsArr = m.tags || [];
+    let typeLabel = '';
+    if (m.type === 'photo') typeLabel = 'Photography';
+    else if (m.type === 'video') {
+      if (tagsArr.includes('Vertical')) typeLabel = 'Short-form · Vertical';
+      else if (tagsArr.includes('Performance')) typeLabel = 'Performance video';
+      else if (tagsArr.some(t => t.startsWith('VFX Sup'))) typeLabel = 'VFX supervision';
+      else if (tagsArr.includes('BTS')) typeLabel = 'Behind the scenes';
+      else if (tagsArr.includes('Writer')) typeLabel = 'Short film';
+      else typeLabel = 'Music video';
+    }
+    const subLine = [typeLabel, m.year].filter(Boolean).join(' · ');
+
     document.getElementById('lbInner').innerHTML = `
       <div class="lb-media">${mediaHTML}${prevBtn}${nextBtn}${posIndicator}</div>
       <div class="lb-side">
@@ -365,11 +371,10 @@
           <div class="lb-avatar" style="${avatarBg}"></div>
           <div>
             <div class="lb-author">${c.handle && c.handle.startsWith('@') ? c.handle : c.name}</div>
-            <div class="lb-sub">${m.year}</div>
+            <div class="lb-sub">${subLine}</div>
           </div>
         </div>
         <div class="lb-title">${m.title}</div>
-        <div class="lb-credit">📷 Shot by <strong>Jacob Boehme</strong> (@landbound)<br><span style="color: var(--ink-3); font-size: 11px;">Landbound — ${c.role}</span></div>
         ${tagsHTML ? `<div class="lb-tags">${tagsHTML}</div>` : ''}
       </div>`;
     document.getElementById('lightbox').classList.add('open');
