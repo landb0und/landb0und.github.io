@@ -459,20 +459,11 @@
     </div>
 
     <div class="side">
-      <!-- Verticals card with auto-cycling thumbnail -->
+      <!-- Verticals card with auto-cycling thumbnail (lazy + first 5s preview) -->
       <div class="verticals-card" onclick="openShorts(0)">
         <div class="vc-thumb" style="position:relative; overflow:hidden;">
-          <div class="vc-frames">
-            <div class="vc-frame" style="background:#000;">
-              <video autoplay muted loop playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;">
-                <source src="https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/play_480p.mp4" type="video/mp4">
-              </video>
-            </div>
-            <div class="vc-frame" style="background:#000;">
-              <video autoplay muted loop playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;">
-                <source src="https://vz-5dfccea4-b84.b-cdn.net/5e9277e4-debc-4491-bc5b-8fbbf8f56921/play_480p.mp4" type="video/mp4">
-              </video>
-            </div>
+          <div class="vc-frames" id="vcFrames">
+            <!-- vc-frames rendered by JS — uses #t=0,5 media fragment for first-5s preview only -->
           </div>
           <div class="vc-overlay"></div>
           <div class="vc-play">▶</div>
@@ -486,18 +477,7 @@
       </div>
 
       <div class="side-h">Up Next</div>
-      <div class="recs">
-        <div class="rec active" data-filters="direction vfx editing dp"><div class="rec-thumb" data-dur="02:14" style="background:#000; overflow:hidden;"><img src="https://vz-5dfccea4-b84.b-cdn.net/e0374508-213f-47a2-ae0d-dd50d9df695d/thumbnail.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">Director's Reel</div><div class="rec-meta">Landbound · Sizzle · 2025</div></div></div>
-        <div class="rec" data-filters="direction vfx editing"><div class="rec-thumb" data-dur="04:12" style="background:#000; overflow:hidden;"><img src="https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">CHILDSTAR: Final Act</div><div class="rec-meta">Grace VanderWaal · DIR + EP · 2025</div></div></div>
-        <div class="rec" data-filters="direction editing"><div class="rec-thumb" data-dur="03:24" style="background:#000; overflow:hidden;"><img src="https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/thumbnail.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">Bleed</div><div class="rec-meta">Christian Gates · DIR + ED · 2025</div></div></div>
-        <div class="rec" data-filters="direction dp editing vfx"><div class="rec-thumb" data-dur="03:48" style="background:#000; overflow:hidden;"><img src="https://vz-5dfccea4-b84.b-cdn.net/b58d5348-c997-4338-8a9d-f83302bf948a/thumbnail.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">Secrets</div><div class="rec-meta">Christian Gates · DIR/DP/ED/VFX · 2024</div></div></div>
-        <div class="rec" data-filters="vfx"><div class="rec-thumb g4" data-dur="94:00"></div><div class="rec-info"><div class="rec-title">The First Circle</div><div class="rec-meta">Feature · VFX Sup · 250 shots · 2023</div></div></div>
-        <div class="rec" data-filters="direction editing"><div class="rec-thumb g5" data-dur="SERIES"></div><div class="rec-info"><div class="rec-title">Allison Hagendorf Show S4</div><div class="rec-meta">DIR + ED · 2025-26 · ACTIVE</div></div></div>
-        <div class="rec" data-filters="direction editing dp vfx"><div class="rec-thumb g6" data-dur="12:00"></div><div class="rec-info"><div class="rec-title">Forgive &amp; Forget</div><div class="rec-meta">DIR · SCREAMFEST · 2022</div></div></div>
-        <div class="rec" data-filters="direction commercial"><div class="rec-thumb g7" data-dur="00:30"></div><div class="rec-info"><div class="rec-title">Super Bowl Spot</div><div class="rec-meta">DIR · 5-state air · 2024</div></div></div>
-        <div class="rec" data-filters="dp"><div class="rec-thumb g8" data-dur="03:10"></div><div class="rec-info"><div class="rec-title">Dreams</div><div class="rec-meta">Surfaces · DP · 2023</div></div></div>
-        <div class="rec" data-filters="direction dp editing vfx"><div class="rec-thumb" data-dur="03:58" style="background:#000; overflow:hidden;"><img src="https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div><div class="rec-info"><div class="rec-title">Call Me When You're Home</div><div class="rec-meta">Surfaces · DIR/DP/ED/VFX · 2024</div></div></div>
-      </div>
+      <div class="recs" id="recsMount"><!-- .rec items rendered by renderRecs() from VIDEOS --></div>
     </div>
   </div>
 </div>
@@ -534,19 +514,76 @@
 
 <script src="data.js"></script>
 <script>
-  // ============= WORK / YouTube — click sidebar to swap player =============
-  const VIDEOS = [
-    { embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true, title: "Director's Reel", sub: '<strong>Landbound</strong> · Sizzle Reel · 2025', chips: [['Director','amber'],['VFX',''],['Editor',''],['DP','']], credits: [['Format','Director sizzle'],['Year','2025'],['Crew','Landbound — Jacob Boehme'],['Featured','CHILDSTAR · Secrets · Bleed · First Circle']], dur: '02:14' },
-    { embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', sub: '<strong>Grace VanderWaal</strong> · Music Video · 2025', chips: [['Director','amber'],['Executive Producer','amber'],['VFX',''],['Editor','']], credits: [['Artist','<strong>Grace VanderWaal</strong>'],['Label','Sony / RCA'],['Released','2025'],['Crew','Landbound — Dir + EP'],['Tools','Arri Alexa · Resolve · After Effects']], dur: '04:12' },
-    { embedId: '9e6f327c-1d83-4545-b88c-3193d7dd4274', bunny: true, title: 'Bleed', sub: '<strong>Christian Gates</strong> · Music Video · 2025', chips: [['Director','amber'],['Editor','amber']], credits: [['Artist','<strong>Christian Gates</strong>'],['Released','2025'],['Crew','Landbound — Director, Editor'],['Tools','Arri Mini LF · Resolve · After Effects']], dur: '03:24' },
-    { embedId: 'b58d5348-c997-4338-8a9d-f83302bf948a', bunny: true, title: 'Secrets', sub: '<strong>Christian Gates</strong> · Music Video · 2024', chips: [['Director','amber'],['DP','amber'],['Editor',''],['VFX','']], credits: [['Artist','<strong>Christian Gates</strong>'],['Released','2024'],['Crew','Landbound — Dir/DP/Ed/VFX'],['Tools','Arri Mini LF · Resolve · Nuke']], dur: '03:48' },
-    { palette: 'g4', title: 'The First Circle', sub: 'Feature · 2023 · 250 VFX shots supervised', chips: [['VFX Supervisor','amber']], credits: [['Format','Feature · 94 min'],['Released','2023'],['Crew','Landbound — VFX Sup'],['Shots','250+ shots'],['Tools','Nuke · After Effects · Blender · Unreal']], dur: '94:00' },
-    { palette: 'g5', title: 'Allison Hagendorf Show S4', sub: 'Series · 2025-26 · ACTIVE', chips: [['Director','amber'],['Editor','amber']], credits: [['Format','Talk-format series'],['Released','2025-26'],['Crew','Landbound — Dir + Ed'],['Tools','Sony FX9 · Resolve · After Effects']], dur: 'SERIES' },
-    { embedId: 'oD42T1md068', title: 'Forgive & Forget', sub: 'Short Film · 2022 · SCREAMFEST Selection', chips: [['Director','amber'],['Writer',''],['Editor',''],['DP',''],['VFX Sup','']], credits: [['Festival','SCREAMFEST · 2022'],['Format','Short — 12 min'],['Crew','Landbound — Dir/Wr/Ed/DP/VFX'],['Tools','Blackmagic · Resolve · After Effects']], dur: '12:00' },
-    { palette: 'g7', title: 'Super Bowl Spot', sub: 'Commercial · 2024 · 5-state air', chips: [['Director','amber']], credits: [['Air','5-state Super Bowl rotation'],['Released','2024'],['Crew','Landbound — Director'],['Tools','Arri Alexa Mini · Resolve']], dur: '00:30' },
-    { palette: 'g8', title: 'Dreams', sub: '<strong>Surfaces</strong> · Music Video · 2023', chips: [['DP','amber']], credits: [['Artist','<strong>Surfaces</strong>'],['Released','2023'],['Crew','Landbound — Cinematographer'],['Tools','Arri Alexa · Anamorphic']], dur: '03:10' },
-    { embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", sub: '<strong>Surfaces</strong> · Music Video · 2024', chips: [['Director','amber'],['DP','amber'],['Editor',''],['VFX','']], credits: [['Artist','<strong>Surfaces</strong>'],['Released','2024'],['Crew','Landbound — Dir/DP/Ed/VFX'],['Tools','Arri Alexa · Resolve · Nuke']], dur: '03:58' }
-  ];
+  // ============= WORK / YouTube — VIDEOS auto-populated from CLIENTS =============
+  // Auto-pulls horizontal (non-Vertical-tagged) video media from each client in
+  // data.js, prepended by Director's Reel and followed by in-progress placeholders.
+  // Add a video to a client's media[] in data.js → it shows up here automatically.
+  const VIDEOS = (function() {
+    const out = [];
+    // Director's Reel — Landbound's own sizzle, not in any client
+    out.push({
+      embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true,
+      title: "Director's Reel",
+      sub: '<strong>Landbound</strong> · Sizzle Reel · 2025',
+      chips: [['Director','amber'],['VFX',''],['Editor',''],['DP','']],
+      credits: [['Format','Director sizzle'],['Year','2025'],['Crew','Landbound — Jacob Boehme'],['Featured','CHILDSTAR · Secrets · Bleed · First Circle']],
+      dur: '02:14', filters: 'direction vfx editing dp',
+      meta: 'Landbound · Sizzle · 2025'
+    });
+    // Pull horizontal videos out of every client. Verticals are excluded — they
+    // already live in the shorts feed.
+    if (window.CLIENTS) {
+      window.CLIENTS.forEach(c => {
+        (c.media || []).filter(m => {
+          if (m.type !== 'video') return false;
+          const tags = m.tags || [];
+          return !tags.includes('Vertical');
+        }).forEach(m => {
+          const tags = m.tags || [];
+          out.push({
+            embedId: m.embedId, bunny: !!m.bunny,
+            title: m.title,
+            sub: m.sub || ('<strong>' + c.name + '</strong> · Music Video · ' + (m.year || '')),
+            chips: tags.map((t, i) => [t, i < 2 ? 'amber' : '']),
+            credits: [
+              ['Artist', '<strong>' + c.name + '</strong>'],
+              ['Released', m.year || ''],
+              ['Crew', 'Landbound — ' + tags.slice(0, 4).join('/')]
+            ],
+            dur: m.dur || '',
+            filters: tags.map(t => t.toLowerCase().replace(/[^a-z]/g, '')).join(' '),
+            meta: (c.short || c.name) + ' · ' + tags.slice(0, 4).map(t => t.toUpperCase()).join(' + ') + ' · ' + (m.year || '')
+          });
+        });
+      });
+    }
+    // In-progress / non-Bunny placeholders kept at the bottom
+    out.push(
+      { palette: 'g4', title: 'The First Circle', sub: 'Feature · 2023 · 250 VFX shots supervised', chips: [['VFX Supervisor','amber']], credits: [['Format','Feature · 94 min'],['Released','2023'],['Crew','Landbound — VFX Sup'],['Shots','250+ shots'],['Tools','Nuke · After Effects · Blender · Unreal']], dur: '94:00', filters: 'vfx', meta: 'Feature · VFX Sup · 250 shots · 2023' },
+      { palette: 'g5', title: 'Allison Hagendorf Show S4', sub: 'Series · 2025-26 · ACTIVE', chips: [['Director','amber'],['Editor','amber']], credits: [['Format','Talk-format series'],['Released','2025-26'],['Crew','Landbound — Dir + Ed'],['Tools','Sony FX9 · Resolve · After Effects']], dur: 'SERIES', filters: 'direction editing', meta: 'DIR + ED · 2025-26 · ACTIVE' },
+      { palette: 'g7', title: 'Super Bowl Spot', sub: 'Commercial · 2024 · 5-state air', chips: [['Director','amber']], credits: [['Air','5-state Super Bowl rotation'],['Released','2024'],['Crew','Landbound — Director'],['Tools','Arri Alexa Mini · Resolve']], dur: '00:30', filters: 'direction commercial', meta: 'DIR · 5-state air · 2024' },
+      { palette: 'g8', title: 'Dreams', sub: '<strong>Surfaces</strong> · Music Video · 2023', chips: [['DP','amber']], credits: [['Artist','<strong>Surfaces</strong>'],['Released','2023'],['Crew','Landbound — Cinematographer'],['Tools','Arri Alexa · Anamorphic']], dur: '03:10', filters: 'dp', meta: 'Surfaces · DP · 2023' }
+    );
+    return out;
+  })();
+
+  // Render the .recs sidebar from VIDEOS
+  function renderRecs() {
+    const mount = document.getElementById('recsMount');
+    if (!mount) return;
+    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+    const ver = (window.BUNNY && window.BUNNY.THUMB_VER) || 1;
+    mount.innerHTML = VIDEOS.map((v, i) => {
+      const thumb = (v.embedId && v.bunny) ? ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg?v=' + ver)
+                  : (v.embedId && !v.bunny) ? ('https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg')
+                  : null;
+      const thumbHTML = thumb
+        ? '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + thumb + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>'
+        : '<div class="rec-thumb ' + (v.palette || '') + '" data-dur="' + (v.dur || '') + '"></div>';
+      return '<div class="rec' + (i === 0 ? ' active' : '') + '" data-filters="' + (v.filters || '') + '">' + thumbHTML + '<div class="rec-info"><div class="rec-title">' + v.title + '</div><div class="rec-meta">' + (v.meta || '') + '</div></div></div>';
+    }).join('');
+  }
+  renderRecs();
 
   const recs = document.querySelectorAll('.rec');
     const titleEl = document.querySelector('.meta .title');
@@ -999,29 +1036,57 @@
   })();
 
 
-  // ============= VC-CARD SMOOTH SLIDE TRANSITION =============
+  // ============= VC-CARD: rotate through ALL verticals, first 5s each =============
+  // Renders 2 vc-frame slots (the cycle animates between them) and rotates the
+  // source through every entry in window.VERTICALS. Uses #t=0,5 media fragment
+  // so the browser only fetches the first 5 seconds of each clip — much lighter
+  // than the prior "preload entire MP4" pattern.
   (function() {
-    const card = document.querySelector('.verticals-card');
-    if (!card) return;
-    const frames = card.querySelectorAll('.vc-frame');
-    if (frames.length < 2) return;
-    // Ensure initial state (CSS sets it, but enforce via JS for safety)
+    const mount = document.getElementById('vcFrames');
+    if (!mount || !window.VERTICALS || window.VERTICALS.length === 0) return;
+    const verts = window.VERTICALS;
+    const CDN = window.BUNNY.CDN;
+    mount.innerHTML = `
+      <div class="vc-frame" style="background:#000;">
+        <video class="vc-video" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+      </div>
+      <div class="vc-frame" style="background:#000;">
+        <video class="vc-video" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+      </div>
+    `;
+    const frames = mount.querySelectorAll('.vc-frame');
+    const vids = mount.querySelectorAll('.vc-video');
+    function applyVert(vidEl, vIdx) {
+      const v = verts[vIdx % verts.length];
+      vidEl.poster = window.verticalThumb(v);
+      vidEl.src = window.verticalMp4Preview(v, '480p');
+      vidEl.load();
+      vidEl.play().catch(() => {});
+    }
+    // Initial: frame 0 visible with VERTICALS[0], frame 1 below with VERTICALS[1]
+    let visibleIdx = 0;  // which vert is in frame 0
+    let hiddenIdx = 1;   // which vert is in frame 1
+    let currentFrame = 0; // 0 or 1 — which frame is currently visible
+    applyVert(vids[0], visibleIdx);
+    applyVert(vids[1], hiddenIdx);
     frames[0].style.transform = 'translateY(0%)';
     frames[1].style.transform = 'translateY(100%)';
-    let current = 0;
-    const DURATION = 480; // ms — smooth but snappy
+    const DURATION = 480;
     setInterval(() => {
-      const next = (current + 1) % frames.length;
-      // Slide both simultaneously — current up, next in from below
-      frames[current].style.transition = `transform ${DURATION}ms cubic-bezier(0.4,0,0.2,1)`;
-      frames[next].style.transition    = `transform ${DURATION}ms cubic-bezier(0.4,0,0.2,1)`;
-      frames[current].style.transform  = 'translateY(-100%)';
-      frames[next].style.transform     = 'translateY(0%)';
+      const nextFrame = (currentFrame + 1) % 2;
+      // Animate: current frame up out, next frame slides up into view
+      frames[currentFrame].style.transition = `transform ${DURATION}ms cubic-bezier(0.4,0,0.2,1)`;
+      frames[nextFrame].style.transition    = `transform ${DURATION}ms cubic-bezier(0.4,0,0.2,1)`;
+      frames[currentFrame].style.transform  = 'translateY(-100%)';
+      frames[nextFrame].style.transform     = 'translateY(0%)';
       setTimeout(() => {
-        // Instantly reposition current frame below (hidden), ready for next cycle
-        frames[current].style.transition = 'none';
-        frames[current].style.transform  = 'translateY(100%)';
-        current = next;
+        // Reposition hidden frame below, swap its source to the NEXT vert in line
+        frames[currentFrame].style.transition = 'none';
+        frames[currentFrame].style.transform  = 'translateY(100%)';
+        const nextVertIdx = (Math.max(visibleIdx, hiddenIdx) + 1) % verts.length;
+        applyVert(vids[currentFrame], nextVertIdx);
+        if (currentFrame === 0) visibleIdx = nextVertIdx; else hiddenIdx = nextVertIdx;
+        currentFrame = nextFrame;
       }, DURATION + 30);
     }, 5000);
   })();

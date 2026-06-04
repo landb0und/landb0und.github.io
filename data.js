@@ -110,6 +110,7 @@ window.CLIENTS = [
     thumb: null,
     media: [
       { type: 'video', embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", year: '2024', tags: ['Director','DP','Editor','VFX'] },
+      { type: 'video', embedId: '6b38b59e-aedd-4208-a1fc-ff85adb30021', bunny: true, title: 'Blame It All On Me', sub: '<strong>Surfaces x Mike Posner</strong> · Performance · 2025', year: '2025', tags: ['Director','DP','Editor'] },
       { type: 'video', embedId: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5', bunny: true, title: "Call Me When You're Home — Vertical cut", year: '2024', tags: ['Director','DP','Editor','VFX','Vertical'] },
       { type: 'photo', src: 'photos/clients/surfaces-posner-1.jpg', title: 'Surfaces x Posner — 1', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/surfaces-posner-2.jpg', title: 'Surfaces x Posner — 2', year: '2024', tags: ['Photographer'] },
@@ -137,10 +138,11 @@ window.CLIENTS = [
     short: 'Two Feet',
     handle: '@twofeetmusic',
     role: 'Director · DP · Editor · Photographer',
-    blurb: 'Press portraits, tour stills, behind-the-scenes work.',
+    blurb: 'Performance video + press portraits, tour stills, behind-the-scenes work.',
     palette: 'sa-2',
     thumb: null,
     media: [
+      { type: 'video', embedId: '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3', bunny: true, title: 'Bby', sub: '<strong>Two Feet</strong> · Performance · 2025', year: '2025', tags: ['Director','DP','Editor'] },
       { type: 'photo', src: 'photos/clients/two-feet-1.jpg', title: 'Press portrait — 1', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/two-feet-2.jpg', title: 'Press portrait — 2', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/two-feet-3.jpg', title: 'Press portrait — 3', year: '2024', tags: ['Photographer'] },
@@ -320,7 +322,8 @@ window.CLIENTS = [
     palette: 'sa-10',
     thumb: null,
     media: [
-      { type: 'video', embedId: 'e183de5b-77e6-432a-ad2b-764062367acc', bunny: true, title: 'Canvas', year: '2025', tags: ['Director','Editor','Vertical'] }
+      { type: 'video', embedId: 'e183de5b-77e6-432a-ad2b-764062367acc', bunny: true, title: 'Canvas', year: '2025', tags: ['Director','Editor','Vertical'] },
+      { type: 'video', embedId: 'ae99920a-46b4-4765-9c3b-408a23eb8508', bunny: true, title: 'Canvas — alt cut', year: '2025', tags: ['Director','Editor','Vertical'] }
     ]
   },
   {
@@ -333,7 +336,8 @@ window.CLIENTS = [
     palette: 'sa-5',
     thumb: null,
     media: [
-      { type: 'video', embedId: '6f8f2d98-78dc-49d6-8576-9f6138d5e53f', bunny: true, title: 'Natalie Jane — vertical', year: '2025', tags: ['Director','DP','Editor','Vertical'] }
+      { type: 'video', embedId: '6f8f2d98-78dc-49d6-8576-9f6138d5e53f', bunny: true, title: 'Natalie Jane — vertical 1', year: '2025', tags: ['Director','DP','Editor','Vertical'] },
+      { type: 'video', embedId: '39fe2dc1-70f2-4826-8337-407a593292ef', bunny: true, title: 'Natalie Jane — vertical 2', year: '2025', tags: ['Director','DP','Editor','Vertical'] }
     ]
   },
   {
@@ -363,18 +367,24 @@ window.clientThumb = function(c) {
   if (firstPhoto) return firstPhoto.src;
   const firstVid = c.media.find(m => m.type === 'video');
   if (firstVid) {
-    if (firstVid.bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + firstVid.embedId + '/thumbnail.jpg';
+    if (firstVid.bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + firstVid.embedId + '/thumbnail.jpg?v=' + (window.BUNNY && window.BUNNY.THUMB_VER || 1);
     return 'https://img.youtube.com/vi/' + firstVid.embedId + '/maxresdefault.jpg';
   }
   return null;
 };
 
-// Bunny config — exported so other files can build thumbnail/embed URLs
-window.BUNNY = { LIB: '675985', CDN: 'vz-5dfccea4-b84.b-cdn.net' };
+// Bunny config — exported so other files can build thumbnail/embed URLs.
+// THUMB_VER is a global cache-buster: bump this number to force every browser
+// to re-fetch all Bunny thumbnails (use when you update a thumb in the Bunny
+// dashboard and the old image is still showing).
+window.BUNNY = { LIB: '675985', CDN: 'vz-5dfccea4-b84.b-cdn.net', THUMB_VER: 3 };
+window.bunnyThumb = function(guid) {
+  return 'https://vz-5dfccea4-b84.b-cdn.net/' + guid + '/thumbnail.jpg?v=' + window.BUNNY.THUMB_VER;
+};
 window.mediaThumb = function(m) {
   if (m.type === 'photo') return m.src;
   if (m.type === 'video') {
-    if (m.bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + m.embedId + '/thumbnail.jpg';
+    if (m.bunny) return window.bunnyThumb(m.embedId);
     return 'https://img.youtube.com/vi/' + m.embedId + '/maxresdefault.jpg';
   }
   return null;
@@ -406,6 +416,30 @@ window.VERTICALS = [
     music: '@chloestar',
     label: 'Stunt Fall',
     caption: 'BTS · Chloe Star'
+  },
+  {
+    id: 'landbound-w-color-phone',
+    guid: '27445ba3-d8a3-45f7-b833-0e049e6274c9',
+    title: 'W COLOR for phone',
+    client: 'tiktok',
+    type: 'edits',
+    tag: 'EDITS · LANDBOUND · 2025',
+    role: 'Director · DP · Editor · VFX',
+    music: '@landbound',
+    label: 'W COLOR',
+    caption: '@landbound · vertical edit'
+  },
+  {
+    id: 'landbound-tiktok-mp4',
+    guid: '9284b2d3-3ea3-4cb4-be22-3b2f6dd5c778',
+    title: 'FOR TIKTOK',
+    client: 'tiktok',
+    type: 'edits',
+    tag: 'EDITS · LANDBOUND · 2025',
+    role: 'Director · DP · Editor · VFX',
+    music: '@landbound',
+    label: 'TIKTOK',
+    caption: '@landbound · vertical edit'
   },
   {
     id: 'bahari-better-than-us-1',
@@ -492,36 +526,53 @@ window.VERTICALS = [
     caption: '@landbound · vertical edit'
   },
   {
-    id: 'landbound-tiktok-mp4',
-    guid: '9284b2d3-3ea3-4cb4-be22-3b2f6dd5c778',
-    title: 'FOR TIKTOK',
+    id: 'landbound-tiktok-with-lut',
+    guid: '62c948a3-9548-4261-a408-8eadc51071bf',
+    title: 'tiktok w/ lut',
     client: 'tiktok',
     type: 'edits',
     tag: 'EDITS · LANDBOUND · 2025',
     role: 'Director · DP · Editor · VFX',
     music: '@landbound',
-    label: 'TIKTOK',
+    label: 'w/ lut',
     caption: '@landbound · vertical edit'
   },
   {
-    id: 'landbound-w-color-phone',
-    guid: '27445ba3-d8a3-45f7-b833-0e049e6274c9',
-    title: 'W COLOR for phone',
-    client: 'tiktok',
-    type: 'edits',
-    tag: 'EDITS · LANDBOUND · 2025',
-    role: 'Director · DP · Editor · VFX',
-    music: '@landbound',
-    label: 'W COLOR',
-    caption: '@landbound · vertical edit'
+    id: 'claudia-canvas-2',
+    guid: 'ae99920a-46b4-4765-9c3b-408a23eb8508',
+    title: 'Canvas — alt cut',
+    client: 'claudia-valentina',
+    type: 'music',
+    tag: 'MUSIC · CLAUDIA VALENTINA · 2025',
+    role: 'Director · Editor',
+    music: '@claudia_valentina__ — Canvas',
+    label: 'Canvas 2',
+    caption: 'Claudia Valentina · alt cut'
+  },
+  {
+    id: 'natalie-jane-vertical-2',
+    guid: '39fe2dc1-70f2-4826-8337-407a593292ef',
+    title: 'Natalie Jane — 2',
+    client: 'natalie-jane',
+    type: 'music',
+    tag: 'MUSIC · NATALIE JANE · 2025',
+    role: 'Director · DP · Editor',
+    music: '@nataliejane',
+    label: 'Natalie Jane 2',
+    caption: 'Natalie Jane · vertical 2'
   }
 ];
 
 window.verticalThumb = function(v) {
-  return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/thumbnail.jpg';
+  return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/thumbnail.jpg?v=' + window.BUNNY.THUMB_VER;
 };
 window.verticalMp4 = function(v, quality) {
   return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/play_' + (quality || '480p') + '.mp4';
+};
+// Short preview clip — first 5 seconds only via HTML5 media fragment.
+// Browser issues byte-range requests for just that segment, much smaller payload.
+window.verticalMp4Preview = function(v, quality) {
+  return window.verticalMp4(v, quality) + '#t=0,5';
 };
 window.verticalEmbed = function(v, opts) {
   opts = opts || {};

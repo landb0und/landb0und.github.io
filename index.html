@@ -353,7 +353,7 @@
 
         <a class="latest-drop" href="work.html#video/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8" style="text-decoration:none;">
           <div class="ld-thumb">
-            <img src="https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg" alt="CHILDSTAR: Final Act" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;">
+            <img src="https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg?v=3" alt="CHILDSTAR: Final Act" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;">
             <div class="ld-play" style="z-index:3;"></div>
             <span class="ld-dur" style="z-index:3;">4:12</span>
             <span class="ld-pulse" style="z-index:3;">FEATURED</span>
@@ -462,8 +462,8 @@
   <div class="page-section-head"><span class="label">Featured Work</span></div>
   <div class="section-sub"><span>Hand-picked. Full filmography in <em>Work</em>.</span><a href="work.html">VIEW ALL 24 →</a></div>
   <div class="feat-grid">
-    <a class="feat feat-1" href="work.html#video/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8"><div class="feat-bg feat-bg-1"><img src="https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="feat-stamp">★ Featured</span><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + EP · 2025 · 4.2M VIEWS</span><div class="t">CHILDSTAR: Final Act</div><div class="m">Grace VanderWaal · Music Video</div></div></a>
-    <a class="feat" href="work.html#video/b58d5348-c997-4338-8a9d-f83302bf948a"><div class="feat-bg feat-bg-2"><img src="https://vz-5dfccea4-b84.b-cdn.net/b58d5348-c997-4338-8a9d-f83302bf948a/thumbnail.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + DP + ED + VFX · 2024</span><div class="t">Secrets</div><div class="m">Christian Gates</div></div></a>
+    <a class="feat feat-1" href="work.html#video/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8"><div class="feat-bg feat-bg-1"><img src="https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg?v=3" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="feat-stamp">★ Featured</span><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + EP · 2025 · 4.2M VIEWS</span><div class="t">CHILDSTAR: Final Act</div><div class="m">Grace VanderWaal · Music Video</div></div></a>
+    <a class="feat" href="work.html#video/b58d5348-c997-4338-8a9d-f83302bf948a"><div class="feat-bg feat-bg-2"><img src="https://vz-5dfccea4-b84.b-cdn.net/b58d5348-c997-4338-8a9d-f83302bf948a/thumbnail.jpg?v=3" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + DP + ED + VFX · 2024</span><div class="t">Secrets</div><div class="m">Christian Gates</div></div></a>
     <a class="feat" href="work.html#video/oD42T1md068"><div class="feat-bg feat-bg-3" style="background:#000;"><img src="https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR · SCREAMFEST · 2022</span><div class="t">Forgive &amp; Forget</div><div class="m">Short Film</div></div></a>
     <a class="feat" href="work.html"><div class="feat-bg feat-bg-5"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">FEATURE · 2023 · 250 VFX SHOTS</span><div class="t">The First Circle</div><div class="m">VFX Supervisor</div></div></a>
   </div>
@@ -520,7 +520,7 @@
     if (!container || !window.VERTICALS || !window.BUNNY) return;
     container.innerHTML = window.VERTICALS.map((v, i) => `
       <a class="short" href="work.html#shorts/${i}" style="background:#000;">
-        <video data-vsrc="${window.verticalMp4(v)}" poster="${window.verticalThumb(v)}" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+        <video data-vsrc="${window.verticalMp4Preview(v)}" poster="${window.verticalThumb(v)}" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
         <div class="short-overlay"></div>
         <span class="short-tag">▶</span>
         <div class="short-meta">
