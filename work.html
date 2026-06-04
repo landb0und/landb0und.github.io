@@ -167,36 +167,75 @@
   /* ============= SHORTS OVERLAY ============= */
   .shorts { position: fixed; inset: 0; background: #000; z-index: 100; display: none; }
   .shorts.open { display: flex; }
-  .shorts-topbar { position: absolute; top: 0; left: 0; right: 0; padding: 16px 22px; display: flex; align-items: center; gap: 18px; z-index: 10; background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%); }
-  .shorts-back { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 100px; color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; cursor: pointer; backdrop-filter: blur(8px); transition: background .15s; }
-  .shorts-back:hover { background: rgba(255,255,255,0.18); }
+  .shorts-topbar {
+    position: absolute; top: 0; left: 0; right: 0;
+    padding: 18px 22px 48px;
+    display: flex; align-items: center; gap: 14px;
+    z-index: 10;
+    /* Strong gradient so topbar is always legible over video */
+    background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    pointer-events: none; /* allow clicks through to video except on child elements */
+  }
+  .shorts-topbar > * { pointer-events: auto; }
+  .shorts-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px;
+    background: rgba(0,0,0,0.6);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 100px;
+    color: #fff;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+    font-family: 'SF Mono', Menlo, monospace;
+    cursor: pointer;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .shorts-back:hover { background: rgba(245,176,66,0.25); border-color: var(--amber); color: var(--amber); }
 
-  /* Category tabs — replaces Following/For You */
-  .cat-tabs { display: flex; gap: 6px; }
-  .cat-tab { padding: 8px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); font-size: 10px; font-weight: 700; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; border-radius: 100px; cursor: pointer; backdrop-filter: blur(8px); }
-  .cat-tab:hover { background: rgba(255,255,255,0.12); color: #fff; }
-  .cat-tab.active { background: #fff; color: #000; border-color: #fff; }
+  /* Category tabs */
+  .cat-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cat-tab {
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.55);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.92);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    font-family: 'SF Mono', Menlo, monospace;
+    text-transform: uppercase;
+    border-radius: 100px;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all .15s;
+  }
+  .cat-tab:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.6); color: #fff; }
+  .cat-tab.active { background: var(--amber); color: #000; border-color: var(--amber); }
   .shorts-x { margin-left: auto; color: #fff; font-size: 22px; cursor: pointer; padding: 6px 10px; border-radius: 50%; transition: background .15s; }
-  .shorts-x:hover { background: rgba(255,255,255,0.1); }
+  .shorts-x:hover { background: rgba(255,255,255,0.15); }
 
-  .shorts-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 20px 20px; }
-  /* Phone: scroll container that allows prev/next peek */
+  /* Full-screen TikTok layout — stage fills remaining width, phone fills full height */
+  .shorts-stage { flex: 1; display: flex; align-items: stretch; justify-content: center; padding: 0; }
   .phone {
-    width: 360px;
-    height: 640px;
-    max-height: 88vh;
-    border-radius: 24px;
-    position: relative;
+    /* Full viewport height, 9:16 aspect ratio width */
+    height: 100dvh;
+    width: calc(100dvh * 9 / 16);
+    max-width: 100%;
+    /* No phone frame — edge to edge */
+    border-radius: 0;
+    box-shadow: none;
+    mask-image: none;
+    -webkit-mask-image: none;
+    background: #000;
+    /* Scroll */
     overflow-y: scroll;
     overflow-x: hidden;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.08);
-    background: #000;
-    /* Gradient mask — fades prev/next peek zones */
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0px, rgba(0,0,0,0.5) 28px, black 52px, black calc(100% - 52px), rgba(0,0,0,0.5) calc(100% - 28px), transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0px, rgba(0,0,0,0.5) 28px, black 52px, black calc(100% - 52px), rgba(0,0,0,0.5) calc(100% - 28px), transparent 100%);
+    position: relative;
   }
   .phone::-webkit-scrollbar { display: none; }
 
@@ -241,18 +280,18 @@
   .toggle-btn { position: fixed; bottom: 60px; right: 14px; padding: 10px 16px; background: var(--rose); border: none; color: var(--bg); font-weight: 800; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 100px; cursor: pointer; font-family: 'SF Mono', Menlo, monospace; z-index: 49; }
 
 
-  /* TikTok-style scrollable phone with peek-next-prev */
+  /* Each slide = full viewport height, snaps to top */
   .phone-slide {
     position: relative;
     width: 100%;
-    height: 554px; /* slightly less than phone 640px → 43px peek at top + bottom */
-    min-height: 554px;
+    height: 100dvh;
+    min-height: 100dvh;
     flex-shrink: 0;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
     scroll-snap-stop: always;
     overflow: hidden;
-    border-radius: 16px;
-    margin: 5px 0;
+    border-radius: 0;
+    margin: 0;
   }
   .phone-slide iframe.phone-video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1; }
   .phone-slide.vg1 { background: linear-gradient(180deg, #1a0a10 0%, #501838 70%, var(--rose) 100%); }
@@ -1044,7 +1083,7 @@
             hideOverlayFor(slide);
           }
         });
-      }, { root: phoneScroll, threshold: [0.3, 0.6] });
+      }, { root: phoneScroll, threshold: [0.4, 0.7] });
       slidesAll.forEach(s => io.observe(s));
     }
   })();
