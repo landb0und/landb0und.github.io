@@ -110,7 +110,7 @@ window.CLIENTS = [
     thumb: null,
     media: [
       { type: 'video', embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", year: '2024', tags: ['Director','DP','Editor','VFX'] },
-      { type: 'video', embedId: '6b38b59e-aedd-4208-a1fc-ff85adb30021', bunny: true, title: 'Blame It All On Me', sub: '<strong>Surfaces x Mike Posner</strong> · Performance · 2025', year: '2025', tags: ['Director','DP','Editor'] },
+      { type: 'video', embedId: '6b38b59e-aedd-4208-a1fc-ff85adb30021', bunny: true, title: 'Blame It All On Me', sub: '<strong>Surfaces x Mike Posner</strong> · Performance · 2025', year: '2025', tags: ['Director','DP','Editor','Vertical'] },
       { type: 'video', embedId: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5', bunny: true, title: "Call Me When You're Home — Vertical cut", year: '2024', tags: ['Director','DP','Editor','VFX','Vertical'] },
       { type: 'photo', src: 'photos/clients/surfaces-posner-1.jpg', title: 'Surfaces x Posner — 1', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/surfaces-posner-2.jpg', title: 'Surfaces x Posner — 2', year: '2024', tags: ['Photographer'] },
@@ -465,6 +465,18 @@ window.VERTICALS = [
     music: '@surfaces — Call Me When You\'re Home',
     label: 'CMWYH',
     caption: 'Surfaces · vertical'
+  },
+  {
+    id: 'biaom-surfaces-posner',
+    guid: '6b38b59e-aedd-4208-a1fc-ff85adb30021',
+    title: 'Blame It All On Me',
+    client: 'surfaces',
+    type: 'music',
+    tag: 'Surfaces x Mike Posner · 2025',
+    role: 'Director · DP · Editor',
+    music: '@surfaces x @mikeposner — Blame It All On Me',
+    label: 'BIAOM',
+    caption: 'Surfaces x Posner · performance'
   },
   {
     id: 'grace-high-social',
