@@ -518,9 +518,11 @@
   function renderVerticalsStrip() {
     const container = document.getElementById('verticalsStrip');
     if (!container || !window.VERTICALS || !window.BUNNY) return;
-    container.innerHTML = window.VERTICALS.map((v, i) => `
-      <a class="short" href="work.html#shorts/${i}" style="background:#000;">
-        <video data-vsrc="${window.verticalMp4(v)}" poster="${window.verticalThumb(v)}" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+    container.innerHTML = window.VERTICALS.map((v, i) => {
+      const thumb = window.verticalThumb(v);
+      return `
+      <a class="short" href="work.html#shorts/${i}" style="background: url('${thumb}') center/cover #000;">
+        <video data-vsrc="${window.verticalMp4(v)}" poster="${thumb}" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; opacity:0; transition:opacity .3s;"></video>
         <div class="short-overlay"></div>
         <span class="short-tag">▶</span>
         <div class="short-meta">
@@ -528,16 +530,15 @@
           <div class="cap">${v.label || v.title}</div>
         </div>
       </a>
-    `).join('');
+    `;
+    }).join('');
     // Lazy autoplay: only load + play videos when they enter the viewport.
     // Loading 10 MP4s simultaneously froze the renderer; this defers the
     // network hit until each tile is actually visible.
-    // Also manually loops the #t=0,5 media-fragment range — the loop attribute
-    // doesn't respect time fragments.
-    function attachPreviewLoop(v) {
-      v.ontimeupdate = function() {
-        if (v.currentTime >= 4.9) v.currentTime = 0;
-      };
+    // Fade the video in once it can play — until then the parent's bg-image
+    // thumbnail is what the user sees (works around Safari's strict autoplay).
+    function attachFadeIn(v) {
+      v.addEventListener('canplay', () => { v.style.opacity = '1'; }, { once: true });
     }
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
@@ -546,8 +547,8 @@
           if (e.isIntersecting) {
             if (!v.src) {
               v.src = v.dataset.vsrc;
+              attachFadeIn(v);
               v.load();
-              attachPreviewLoop(v);
             }
             v.play().catch(() => {});
           } else {
@@ -557,7 +558,7 @@
       }, { threshold: 0.25 });
       container.querySelectorAll('video[data-vsrc]').forEach(v => io.observe(v));
     } else {
-      container.querySelectorAll('video[data-vsrc]').forEach(v => { v.src = v.dataset.vsrc; attachPreviewLoop(v); v.play().catch(() => {}); });
+      container.querySelectorAll('video[data-vsrc]').forEach(v => { v.src = v.dataset.vsrc; attachFadeIn(v); v.play().catch(() => {}); });
     }
   }
   renderVerticalsStrip();
