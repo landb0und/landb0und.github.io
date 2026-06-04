@@ -165,7 +165,8 @@
   .g8 { background: linear-gradient(200deg, #1a0a0a 0%, #5a2a10 50%, #ff5f57 100%); }
 
   /* ============= SHORTS OVERLAY ============= */
-  .shorts { position: fixed; inset: 0; background: #000; z-index: 100; display: none; }
+  /* z-index above body::after vignette (999) so pills + content aren't dimmed */
+  .shorts { position: fixed; inset: 0; background: #000; z-index: 1001; display: none; }
   .shorts.open { display: flex; }
   .shorts-topbar {
     position: absolute; top: 0; left: 0; right: 0;
@@ -1020,10 +1021,14 @@
               if (muteBtn) updateMuteIcon(muteBtn, vid);
             }
             showOverlayFor(slide, true);
-            // Sync sidebar
+            // Sync sidebar + auto-scroll the rail so the active item stays in view
+            // as the user swipes through phone-slides.
             document.querySelectorAll('.sr-item').forEach(it => it.classList.remove('active'));
             const sr = document.querySelectorAll('.sr-item')[parseInt(idx)];
-            if (sr) sr.classList.add('active');
+            if (sr) {
+              sr.classList.add('active');
+              sr.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
           } else {
             // Less than half visible → pause immediately
             if (vid && vid.tagName === 'VIDEO') vid.pause();
@@ -1059,14 +1064,9 @@
     function applyVert(vidEl, vIdx) {
       const v = verts[vIdx % verts.length];
       vidEl.poster = window.verticalThumb(v);
-      vidEl.src = window.verticalMp4Preview(v, '480p');
+      vidEl.src = window.verticalMp4(v, '480p');
       vidEl.load();
       vidEl.play().catch(() => {});
-      // Manual loop — browser's `loop` attribute doesn't respect the #t=0,5
-      // media fragment, so reset currentTime when we hit the end of the range.
-      vidEl.ontimeupdate = function() {
-        if (vidEl.currentTime >= 4.9) vidEl.currentTime = 0;
-      };
     }
     // Initial: frame 0 visible with VERTICALS[0], frame 1 below with VERTICALS[1]
     let visibleIdx = 0;  // which vert is in frame 0

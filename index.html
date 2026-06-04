@@ -520,7 +520,7 @@
     if (!container || !window.VERTICALS || !window.BUNNY) return;
     container.innerHTML = window.VERTICALS.map((v, i) => `
       <a class="short" href="work.html#shorts/${i}" style="background:#000;">
-        <video data-vsrc="${window.verticalMp4Preview(v)}" poster="${window.verticalThumb(v)}" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+        <video data-vsrc="${window.verticalMp4(v)}" poster="${window.verticalThumb(v)}" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
         <div class="short-overlay"></div>
         <span class="short-tag">▶</span>
         <div class="short-meta">
