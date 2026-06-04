@@ -36,7 +36,7 @@ window.CLIENTS = [
     id: 'aporro',
     name: 'Aporro',
     short: 'Aporro',
-    handle: '@aporro',
+    handle: '@aporrobrand',
     role: 'Director · Photographer',
     blurb: 'Commercial campaign — jewelry product hero photography.',
     palette: 'sa-7',
@@ -172,14 +172,23 @@ window.CLIENTS = [
 // thumbnail, then first photo, then null (so story circles show initials).
 window.clientThumb = function(c) {
   if (c.thumb) return c.thumb;
-  // Prefer a photo (we have its URL) over a video (Bunny thumbnails need a hashed CDN host we don't know yet).
   const firstPhoto = c.media.find(m => m.type === 'photo');
   if (firstPhoto) return firstPhoto.src;
   const firstVid = c.media.find(m => m.type === 'video');
   if (firstVid) {
-    // Bunny thumb hostname is library-specific; until we know it, fall back to null and show initials.
-    if (firstVid.bunny) return null;
+    if (firstVid.bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + firstVid.embedId + '/thumbnail.jpg';
     return 'https://img.youtube.com/vi/' + firstVid.embedId + '/maxresdefault.jpg';
+  }
+  return null;
+};
+
+// Bunny config — exported so other files can build thumbnail/embed URLs
+window.BUNNY = { LIB: '675985', CDN: 'vz-5dfccea4-b84.b-cdn.net' };
+window.mediaThumb = function(m) {
+  if (m.type === 'photo') return m.src;
+  if (m.type === 'video') {
+    if (m.bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + m.embedId + '/thumbnail.jpg';
+    return 'https://img.youtube.com/vi/' + m.embedId + '/maxresdefault.jpg';
   }
   return null;
 };
