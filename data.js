@@ -73,14 +73,14 @@ window.CLIENTS = [
     palette: 'sa-3',
     thumb: null,
     media: [
-      { type: 'photo', src: 'photos/clients/mike-posner/mike-posner-solo-1.jpg', title: 'Promo session', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-1.jpg', title: 'Surfaces x Posner — 1', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-2.jpg', title: 'Surfaces x Posner — 2', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-3.jpg', title: 'Surfaces x Posner — 3', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-4.jpg', title: 'Surfaces x Posner — 4', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-5.jpg', title: 'Surfaces x Posner — 5', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-6.jpg', title: 'Surfaces x Posner — 6', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-7.jpg', title: 'Surfaces x Posner — 7', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients/mike-posner-1.jpg', title: 'Promo session', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-1.jpg', title: 'Surfaces x Posner — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-2.jpg', title: 'Surfaces x Posner — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-3.jpg', title: 'Surfaces x Posner — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-4.jpg', title: 'Surfaces x Posner — 4', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-5.jpg', title: 'Surfaces x Posner — 5', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-6.jpg', title: 'Surfaces x Posner — 6', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-7.jpg', title: 'Surfaces x Posner — 7', year: '2024', tags: ['Photographer'] }
     ]
   },
   {
@@ -93,9 +93,9 @@ window.CLIENTS = [
     palette: 'sa-4',
     thumb: null,
     media: [
-      { type: 'photo', src: 'photos/clients/gym-class-heroes/gym-class-heroes-1.jpg', title: 'Studio session — 1', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/gym-class-heroes/gym-class-heroes-2.jpg', title: 'Studio session — 2', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/gym-class-heroes/gym-class-heroes-3.jpg', title: 'Studio session — 3', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients/gym-class-heroes-1.jpg', title: 'Studio session — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/gym-class-heroes-2.jpg', title: 'Studio session — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/gym-class-heroes-3.jpg', title: 'Studio session — 3', year: '2024', tags: ['Photographer'] }
     ]
   },
   {
@@ -110,13 +110,13 @@ window.CLIENTS = [
     media: [
       { type: 'video', embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", year: '2024', tags: ['Director','DP','Editor','VFX'] },
       { type: 'video', embedId: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5', bunny: true, title: "Call Me When You're Home — Vertical cut", year: '2024', tags: ['Director','DP','Editor','VFX','Vertical'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-1.jpg', title: 'Surfaces x Posner — 1', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-2.jpg', title: 'Surfaces x Posner — 2', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-3.jpg', title: 'Surfaces x Posner — 3', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-4.jpg', title: 'Surfaces x Posner — 4', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-5.jpg', title: 'Surfaces x Posner — 5', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-6.jpg', title: 'Surfaces x Posner — 6', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-7.jpg', title: 'Surfaces x Posner — 7', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients/surfaces-posner-1.jpg', title: 'Surfaces x Posner — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-2.jpg', title: 'Surfaces x Posner — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-3.jpg', title: 'Surfaces x Posner — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-4.jpg', title: 'Surfaces x Posner — 4', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-5.jpg', title: 'Surfaces x Posner — 5', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-6.jpg', title: 'Surfaces x Posner — 6', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-posner-7.jpg', title: 'Surfaces x Posner — 7', year: '2024', tags: ['Photographer'] }
     ]
   },
   {
@@ -135,11 +135,16 @@ window.CLIENTS = [
     name: 'Two Feet',
     short: 'Two Feet',
     handle: '@twofeetmusic',
-    role: 'Director · DP · Editor',
+    role: 'Director · DP · Editor · Photographer',
     blurb: 'Press portraits, tour stills, behind-the-scenes work.',
     palette: 'sa-2',
     thumb: null,
-    media: []
+    media: [
+      { type: 'photo', src: 'photos/clients/two-feet-1.jpg', title: 'Press portrait — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/two-feet-2.jpg', title: 'Press portrait — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/two-feet-3.jpg', title: 'Press portrait — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/two-feet-4.jpg', title: 'Press portrait — 4', year: '2024', tags: ['Photographer'] }
+    ]
   },
   {
     id: 'nyc-cinematography-awards',
@@ -219,8 +224,7 @@ window.CLIENTS = [
     palette: 'sa-2',
     thumb: null,
     media: [
-      { type: 'photo', src: 'photos/clients/saint-motel/saint-motel-1.jpeg', title: 'Press portrait — 1', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/saint-motel/saint-motel-2.jpeg', title: 'Press portrait — 2', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients/saint-motel-1.jpeg', title: 'Press portrait', year: '2024', tags: ['Photographer'] }
     ]
   },
   {
@@ -233,7 +237,7 @@ window.CLIENTS = [
     palette: 'sa-4',
     thumb: null,
     media: [
-      { type: 'photo', src: 'photos/clients/the-mowglis/the-mowglis-1.jpeg', title: 'Band session', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients/the-mowglis-1.jpeg', title: 'Band session', year: '2024', tags: ['Photographer'] }
     ]
   },
   {
@@ -257,9 +261,9 @@ window.CLIENTS = [
     palette: 'sa-6',
     thumb: null,
     media: [
-      { type: 'photo', src: 'photos/clients/allen-stone/allen-stone-1.jpeg', title: 'Promo — 1', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/allen-stone/allen-stone-2.jpeg', title: 'Promo — 2', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/allen-stone/allen-stone-3.jpeg', title: 'Promo — 3', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients/allen-stone-1.jpeg', title: 'Promo — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/allen-stone-2.jpeg', title: 'Promo — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/allen-stone-3.jpeg', title: 'Promo — 3', year: '2024', tags: ['Photographer'] }
     ]
   },
   {
@@ -272,7 +276,24 @@ window.CLIENTS = [
     palette: 'sa-7',
     thumb: null,
     media: [
-      { type: 'photo', src: 'photos/clients/magic-giant/magic-giant-1.jpeg', title: 'Press portrait', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients/magic-giant-1.jpeg', title: 'Press portrait', year: '2024', tags: ['Photographer'] }
+    ]
+  },
+  {
+    id: 'no-love-middle-child',
+    name: 'No Love For The Middle Child',
+    short: 'No Love',
+    handle: '@nolovemiddlechild',
+    role: 'Photographer',
+    blurb: 'Press and promo photography.',
+    palette: 'sa-9',
+    thumb: null,
+    media: [
+      { type: 'photo', src: 'photos/clients/no-love-1.jpg', title: 'Session — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/no-love-2.jpg', title: 'Session — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/no-love-3.jpg', title: 'Session — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/no-love-4.jpg', title: 'Session — 4', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/no-love-5.jpg', title: 'Session — 5', year: '2024', tags: ['Photographer'] }
     ]
   },
   {
@@ -285,11 +306,11 @@ window.CLIENTS = [
     palette: 'sa-8',
     thumb: null,
     media: [
-      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-1.jpeg', title: 'Promo — 1', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-2.jpeg', title: 'Promo — 2', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-3.jpeg', title: 'Promo — 3', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-4.jpeg', title: 'Promo — 4', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-5.jpeg', title: 'Promo — 5', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients/scotty-sire-1.jpeg', title: 'Promo — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/scotty-sire-2.jpeg', title: 'Promo — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/scotty-sire-3.jpeg', title: 'Promo — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/scotty-sire-4.jpeg', title: 'Promo — 4', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/scotty-sire-5.jpeg', title: 'Promo — 5', year: '2024', tags: ['Photographer'] }
     ]
   }
 ];
