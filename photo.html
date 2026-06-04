@@ -98,7 +98,8 @@
   .tab .count { color: var(--ink-4); margin-left: 6px; font-weight: 600; }
   .tab.active .count { color: var(--amber); }
 
-  .photo-grid { columns: 4; column-gap: 12px; }
+  .photo-grid { columns: 4; column-gap: 12px; opacity: 0; }
+  .photo-grid.ready { opacity: 1; transition: opacity .35s ease-out; }
   @media (max-width: 1300px) { .photo-grid { columns: 3; } }
   @media (max-width: 900px) { .photo-grid { columns: 2; } }
   @media (max-width: 600px) { .photo-grid { columns: 1; } }
@@ -470,6 +471,10 @@
   function exitFeed() {
     document.body.classList.remove('feed-mode');
     window.scrollTo(0, 0);
+    // Hide grid during the column-layout reflow (lazy images reshuffle into columns
+    // as they load — this caused the "glitches for a second" flash). Fade in once
+    // the first batch of visible tiles has settled.
+    settleAndShowGrid();
   }
   function renderFeed(startIdx) {
     const container = document.getElementById('feedPosts');
@@ -518,6 +523,7 @@
   function renderGrid() {
     const grid = document.getElementById('photoGrid');
     if (!grid) return;
+    grid.classList.remove('ready');
     grid.innerHTML = PHOTOS.map((p, i) => `
       <div class="photo" data-photo="${i}">
         <img class="photo-img" src="${p.src}" alt="${p.title || ''}" loading="lazy">
@@ -531,7 +537,36 @@
       </div>
     `).join('');
   }
+
+  // Wait for the first batch of images to settle, then reveal the grid.
+  // CSS multi-column layout reflows as image heights resolve; hiding the
+  // grid behind opacity until that settles eliminates the visible reshuffle.
+  function settleAndShowGrid() {
+    const grid = document.getElementById('photoGrid');
+    if (!grid) return;
+    grid.classList.remove('ready');
+    const imgs = Array.from(grid.querySelectorAll('img'));
+    const target = Math.min(imgs.length, 8); // first ~2 columns worth
+    if (target === 0) { grid.classList.add('ready'); return; }
+    let settled = 0;
+    const tick = () => {
+      if (++settled >= target) {
+        requestAnimationFrame(() => requestAnimationFrame(() => grid.classList.add('ready')));
+      }
+    };
+    imgs.slice(0, target).forEach(img => {
+      if (img.complete && img.naturalHeight > 0) tick();
+      else {
+        img.addEventListener('load', tick, { once: true });
+        img.addEventListener('error', tick, { once: true });
+      }
+    });
+    // Safety fallback so the grid never stays invisible
+    setTimeout(() => grid.classList.add('ready'), 1500);
+  }
+
   renderGrid();
+  settleAndShowGrid();
 
   document.querySelectorAll('.photo[data-photo]').forEach(el => {
     el.addEventListener('click', () => {
