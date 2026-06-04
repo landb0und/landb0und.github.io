@@ -204,3 +204,59 @@ window.clientInitials = function(c) {
   if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
   return c.name.slice(0,2).toUpperCase();
 };
+
+// VERTICALS — single source of truth for short-form work
+// Add a new vertical here → it auto-appears in: home strip, Work shorts feed,
+// and on the linked client's profile page.
+window.VERTICALS = [
+  {
+    id: 'final-bts',
+    guid: 'e155dcd4-733a-489c-9d89-3417e3333cfe',
+    title: 'Final BTS',
+    client: null,
+    tag: 'BTS · 2024 · LANDBOUND',
+    role: 'Behind the scenes',
+    music: '@landbound',
+    label: 'Final BTS',
+    caption: 'BTS · vertical cut'
+  },
+  {
+    id: 'look-5',
+    guid: '5e9277e4-debc-4491-bc5b-8fbbf8f56921',
+    title: 'Look 5',
+    client: null,
+    tag: 'EDIT · 2024 · LANDBOUND',
+    role: 'Vertical edit',
+    music: '@landbound',
+    label: 'Look 5',
+    caption: 'Edit · vertical cut'
+  },
+  {
+    id: 'cmwyh-vertical',
+    guid: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5',
+    title: "Call Me When You're Home",
+    client: 'surfaces',
+    tag: 'MUSIC · SURFACES · 2024',
+    role: 'Director · DP · Editor',
+    music: '@surfaces — original sound',
+    label: 'CMWYH',
+    caption: 'Surfaces · vertical'
+  }
+];
+
+window.verticalThumb = function(v) {
+  return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/thumbnail.jpg';
+};
+window.verticalMp4 = function(v, quality) {
+  return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/play_' + (quality || '480p') + '.mp4';
+};
+window.verticalEmbed = function(v, opts) {
+  opts = opts || {};
+  const params = [];
+  params.push('autoplay=' + (opts.autoplay ? 'true' : 'false'));
+  params.push('loop=' + (opts.loop ? 'true' : 'false'));
+  params.push('muted=' + (opts.muted ? 'true' : 'false'));
+  params.push('preload=true');
+  params.push('responsive=true');
+  return 'https://iframe.mediadelivery.net/embed/' + window.BUNNY.LIB + '/' + v.guid + '?' + params.join('&');
+};
