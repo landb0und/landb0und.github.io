@@ -170,12 +170,13 @@
   .shorts.open { display: flex; }
   .shorts-topbar {
     position: absolute; top: 0; left: 0; right: 0;
-    padding: 18px 22px 48px;
+    padding: 18px 22px;
     display: flex; align-items: center; gap: 14px;
     z-index: 10;
-    /* Strong gradient so topbar is always legible over video */
-    background: linear-gradient(180deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-    pointer-events: none; /* allow clicks through to video except on child elements */
+    /* No gradient — was darkening the pills + top of every video. The Back button
+       has its own amber bg so it stays legible without the overlay. */
+    background: transparent;
+    pointer-events: none;
   }
   .shorts-topbar > * { pointer-events: auto; }
   .shorts-back {
