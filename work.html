@@ -1070,7 +1070,7 @@
         : '<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>';
     }
 
-    // IntersectionObserver — auto-play/pause, overlay, sidebar sync
+    // IntersectionObserver — auto-play/pause at 50% threshold, mute state preserved
     if ('IntersectionObserver' in window) {
       const phoneScroll = document.getElementById('phoneScroll');
       const io = new IntersectionObserver((entries) => {
@@ -1078,12 +1078,13 @@
           const slide = entry.target;
           const idx = slide.dataset.clip;
           const vid = slide.querySelector('.phone-video');
-          if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+
+          if (entry.intersectionRatio >= 0.5) {
+            // More than half visible → play, apply current mute state
             if (vid && vid.tagName === 'VIDEO') {
-              vid.muted = globalMuted; // respect global mute state on enter
+              vid.muted = globalMuted;
               vid.play().catch(() => {});
               updatePlayIcon(slide, vid);
-              // update mute icon to match current state
               const muteBtn = slide.querySelector('.phone-ctl[data-action="mute"]');
               if (muteBtn) updateMuteIcon(muteBtn, vid);
             }
@@ -1092,12 +1093,13 @@
             document.querySelectorAll('.sr-item').forEach(it => it.classList.remove('active'));
             const sr = document.querySelectorAll('.sr-item')[parseInt(idx)];
             if (sr) sr.classList.add('active');
-          } else if (entry.intersectionRatio < 0.3) {
+          } else {
+            // Less than half visible → pause immediately
             if (vid && vid.tagName === 'VIDEO') vid.pause();
             hideOverlayFor(slide);
           }
         });
-      }, { root: phoneScroll, threshold: [0.4, 0.7] });
+      }, { root: phoneScroll, threshold: [0.5] });
       slidesAll.forEach(s => io.observe(s));
     }
   })();
