@@ -67,12 +67,12 @@
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
-    animation: storyRingSpin 5s linear infinite; z-index: -1;
+    animation: storyRingSpin 3s linear infinite; z-index: -1;
   }
-  .story:nth-child(3n) .story-ring::before { animation-delay: -1.7s; }
-  .story:nth-child(3n+1) .story-ring::before { animation-delay: -3.3s; }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -1s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -2s; }
   .story:hover .story-ring { transform: scale(1.06); }
-  .story:hover .story-ring::before { animation-duration: 2s; }
+  .story:hover .story-ring::before { animation-duration: 1.2s; }
   @keyframes storyRingSpin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) {
     .story-ring::before { animation: none; }
@@ -714,8 +714,8 @@
       // IntersectionObserver below when the slide enters view. Loading 10 MP4s
       // up-front froze the renderer.
       return `
-      <div class="phone-slide" data-clip="${i}" data-type="${v.type || ''}" style="background:#000;">
-        <video id="phone-video-${i}" class="phone-video" data-bunny-guid="${v.guid}" data-vsrc="${mp4}" poster="${thumb}" loop muted playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"></video>
+      <div class="phone-slide" data-clip="${i}" data-type="${v.type || ''}" style="background: #000 url('${thumb}') center/cover no-repeat;">
+        <video id="phone-video-${i}" class="phone-video" data-bunny-guid="${v.guid}" data-vsrc="${mp4}" poster="${thumb}" loop muted playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:transparent; z-index:1;"></video>
         <button class="phone-tap" data-slide-idx="${i}" aria-label="Toggle play/pause"></button>
         <div class="phone-controls">
           <button class="phone-ctl" data-action="mute" data-slide-idx="${i}" aria-label="Toggle mute">${muteIcon}</button>
@@ -759,20 +759,25 @@
   // ============= SHORTS — TikTok-style scroll =============
   function openShorts(slideIdx) {
     document.getElementById('shorts').classList.add('open');
-    // Scroll to specified slide (default 0)
+    // Reset rail-scroll guard so the first IO firing actually scrolls the rail
+    window.__lastActiveSrIdx = -1;
+    // Scroll to target slide and explicitly start the video. We use <video>
+    // elements, not iframes — dead postMessage code removed.
     setTimeout(() => {
       const targetIdx = (typeof slideIdx === 'number') ? slideIdx : 0;
       const targetSlide = document.querySelectorAll('.phone-slide')[targetIdx];
       const scroller = document.getElementById('phoneScroll');
-      if (targetSlide && scroller) {
-        scroller.scrollTop = targetSlide.offsetTop;
-        // Trigger autoplay on the target slide's iframe
-        const iframe = targetSlide.querySelector('iframe.phone-video');
-        if (iframe && iframe.contentWindow) {
-          iframe.contentWindow.postMessage(JSON.stringify({event:'command', func: 'playVideo', args: []}), '*');
-        }
+      if (!targetSlide || !scroller) return;
+      // Hard-jump (no smooth) — first navigation should land instantly, the
+      // IntersectionObserver does the rest from there.
+      scroller.scrollTo({ top: targetSlide.offsetTop, behavior: 'auto' });
+      const vid = targetSlide.querySelector('video.phone-video');
+      if (vid && !vid.src && vid.dataset.vsrc) {
+        vid.src = vid.dataset.vsrc;
+        vid.load();
       }
-    }, 100);
+      if (vid) vid.play().catch(() => {});
+    }, 80);
   }
   function closeShorts() {
     // If came from home (referrer is index.html) and hash is #shorts → return home
@@ -783,6 +788,8 @@
       return;
     }
     document.getElementById('shorts').classList.remove('open');
+    // Pause every video so they stop chewing bandwidth in the background
+    document.querySelectorAll('video.phone-video').forEach(v => { try { v.pause(); } catch (_) {} });
     if (window.location.hash === '#shorts') {
       history.replaceState(null, '', window.location.pathname);
     }
@@ -1068,13 +1075,27 @@
               if (muteBtn) updateMuteIcon(muteBtn, vid);
             }
             showOverlayFor(slide, true);
-            // Sync sidebar + auto-scroll the rail so the active item stays in view
-            // as the user swipes through phone-slides.
-            document.querySelectorAll('.sr-item').forEach(it => it.classList.remove('active'));
-            const sr = document.querySelectorAll('.sr-item')[parseInt(idx)];
-            if (sr) {
-              sr.classList.add('active');
-              sr.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            // Sync sidebar + auto-scroll the rail so the active item stays in view.
+            // GUARDED on lastActiveSrIdx — without this, the IO fires for every
+            // slide it intersects during fast scrolling and queues smooth-scroll
+            // calls, sending the rail flying through every item at once.
+            const idxNum = parseInt(idx);
+            if (window.__lastActiveSrIdx !== idxNum) {
+              window.__lastActiveSrIdx = idxNum;
+              document.querySelectorAll('.sr-item').forEach(it => it.classList.remove('active'));
+              const sr = document.querySelectorAll('.sr-item')[idxNum];
+              if (sr) {
+                sr.classList.add('active');
+                // Only scroll if it's actually out of the rail's viewport
+                const rail = document.querySelector('.shorts-rail');
+                if (rail) {
+                  const sBox = sr.getBoundingClientRect();
+                  const rBox = rail.getBoundingClientRect();
+                  if (sBox.top < rBox.top || sBox.bottom > rBox.bottom) {
+                    sr.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                  }
+                }
+              }
             }
           } else {
             // Less than half visible → pause immediately

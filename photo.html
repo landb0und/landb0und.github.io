@@ -45,7 +45,7 @@
   .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
   @keyframes pulse { 50% { opacity: 0.3; } }
 
-  .main { margin-left: 220px; padding: 32px 28px 60px; max-width: 1400px; position: relative; z-index: 2; }
+  .main { margin-left: 220px; padding: 18px 28px 60px; max-width: 1400px; position: relative; z-index: 2; }
 
   /* Grid view (default) */
   .view-grid { display: block; }
@@ -53,7 +53,7 @@
   body.feed-mode .view-grid { display: none; }
   body.feed-mode .view-feed { display: block; }
 
-  .page-hero { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--line-2); }
+  .page-hero { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line-2); }
   .page-hero h1 { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; color: var(--ink); line-height: 0.95; margin-bottom: 12px; }
   .page-hero .lede { font-size: 14px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; max-width: 520px; }
   .page-hero .meta { font-size: 10px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; text-align: right; }
@@ -139,7 +139,7 @@
   .photo-corner { position: absolute; top: 10px; right: 10px; z-index: 3; padding: 3px 8px; background: rgba(0,0,0,0.7); color: var(--amber); font-size: 8px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; text-transform: uppercase; border-radius: 100px; backdrop-filter: blur(4px); opacity: 0.85; }
 
   /* ============= IG FEED VIEW (takeover) ============= */
-  .view-feed { padding-top: 64px; }
+  .view-feed { padding-top: 22px; }
   /* Grid View button — sticky below stories, stays visible while scrolling posts */
   .feed-back-wrap { position: sticky; top: 10px; z-index: 30; display: flex; justify-content: flex-start; margin-bottom: 24px; pointer-events: none; }
   .feed-back { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: var(--amber); border: none; color: #0a0806; font-size: 11px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 900; border-radius: 100px; cursor: pointer; transition: all .15s; box-shadow: 0 6px 20px rgba(245,176,66,0.45), 0 2px 8px rgba(0,0,0,0.4); }
@@ -160,12 +160,12 @@
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
-    animation: ringSpin 5s linear infinite; z-index: -1;
+    animation: ringSpin 3s linear infinite; z-index: -1;
   }
-  .story:nth-child(3n) .story-ring::before { animation-delay: -1.7s; }
-  .story:nth-child(3n+1) .story-ring::before { animation-delay: -3.3s; }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -1s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -2s; }
   .story:hover .story-ring { transform: scale(1.06); }
-  .story:hover .story-ring::before { animation-duration: 2s; }
+  .story:hover .story-ring::before { animation-duration: 1.2s; }
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) {
     .story-ring::before { animation: none; }
@@ -349,20 +349,6 @@
     <!-- Grid View toggle — sticky below stories, above posts -->
     <div class="feed-back-wrap">
       <button class="feed-back" onclick="exitFeed()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>GRID VIEW</button>
-    </div>
-
-    <!-- Category filter — mirrors the grid-view tabs, same source of truth -->
-    <div class="tabs" id="feedTabs" style="margin-bottom: 18px;">
-      <span class="tab active" data-cat="all">All <span class="count" data-cat-count="all">0</span></span>
-      <span class="tab" data-cat="music">Music <span class="count" data-cat-count="music">0</span></span>
-      <span class="tab" data-cat="commercial">Commercial <span class="count" data-cat-count="commercial">0</span></span>
-      <span class="tab" data-cat="collab">Collab <span class="count" data-cat-count="collab">0</span></span>
-      <span class="tab" data-cat="bts">BTS <span class="count" data-cat-count="bts">0</span></span>
-      <span class="tab" data-cat="editorial">Editorial <span class="count" data-cat-count="editorial">0</span></span>
-      <span class="tab" data-cat="live">Live <span class="count" data-cat-count="live">0</span></span>
-      <span class="tab" data-cat="film">35mm <span class="count" data-cat-count="film">0</span></span>
-      <span class="tab" data-cat="phone">Phone <span class="count" data-cat-count="phone">0</span></span>
-      <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
     </div>
 
     <div class="feed-layout">

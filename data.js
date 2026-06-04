@@ -480,18 +480,6 @@ window.VERTICALS = [
     caption: 'Surfaces · vertical'
   },
   {
-    id: 'biaom-surfaces-posner',
-    guid: '6b38b59e-aedd-4208-a1fc-ff85adb30021',
-    title: 'Blame It All On Me',
-    client: 'surfaces',
-    type: 'music',
-    tag: 'Surfaces x Mike Posner · 2025',
-    role: 'Director · DP · Editor',
-    music: '@surfaces x @mikeposner — Blame It All On Me',
-    label: 'BIAOM',
-    caption: 'Surfaces x Posner · performance'
-  },
-  {
     id: 'grace-high-social',
     guid: 'e8775058-272b-48b5-85a9-37410c6cbb25',
     title: 'HIGH SOCIAL',
@@ -538,6 +526,18 @@ window.VERTICALS = [
     music: '@nataliejane',
     label: 'Natalie Jane',
     caption: 'Natalie Jane · vertical'
+  },
+  {
+    id: 'biaom-surfaces-posner',
+    guid: '6b38b59e-aedd-4208-a1fc-ff85adb30021',
+    title: 'Blame It All On Me',
+    client: 'surfaces',
+    type: 'music',
+    tag: 'Surfaces x Mike Posner · 2025',
+    role: 'Director · DP · Editor',
+    music: '@surfaces x @mikeposner — Blame It All On Me',
+    label: 'BIAOM',
+    caption: 'Surfaces x Posner · performance'
   },
   {
     id: 'landbound-oaky',
