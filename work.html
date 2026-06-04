@@ -315,11 +315,6 @@
 
 <!-- ========== MAIN ========== -->
 <div class="main-page" id="main-view">
-  <div class="topbar">
-    <span>Work · 24 Projects</span>
-    <span>YouTube + Shorts</span>
-  </div>
-
   <!-- CLIENT STORIES (IG-style, rendered from data.js) -->
   <div class="stories" id="workStories" style="margin-bottom: 20px;"></div>
 
@@ -416,18 +411,18 @@
   <div class="shorts-topbar">
     <button class="shorts-back" onclick="closeShorts()">← Back to Work</button>
     <div class="cat-tabs">
-      <span class="cat-tab active">All</span>
-      <span class="cat-tab">BTS</span>
-      <span class="cat-tab">Music</span>
-      <span class="cat-tab">Commercial</span>
-      <span class="cat-tab">Edits</span>
+      <span class="cat-tab active" data-filter="all">All</span>
+      <span class="cat-tab" data-filter="bts">BTS</span>
+      <span class="cat-tab" data-filter="music">Music</span>
+      <span class="cat-tab" data-filter="commercial">Commercial</span>
+      <span class="cat-tab" data-filter="edits">Edits</span>
     </div>
     <span class="shorts-x" onclick="closeShorts()">✕</span>
   </div>
 
   <div class="shorts-stage">
     <div class="phone" id="phoneScroll">
-      <div class="phone-slide" data-clip="0" style="background:#000;">
+      <div class="phone-slide" data-clip="0" data-type="bts" style="background:#000;">
         <video id="phone-video-0" class="phone-video" data-bunny-guid="e155dcd4-733a-489c-9d89-3417e3333cfe" loop muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"><source src="https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/play_720p.mp4" type="video/mp4"></video>
         <button class="phone-tap" data-slide-idx="0" aria-label="Toggle play/pause"></button>
         <div class="phone-controls">
@@ -435,10 +430,10 @@
           <button class="phone-ctl primary" data-action="play" data-slide-idx="0" aria-label="Play/pause"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></button>
         </div>
         <div class="phone-overlay">
-          <div class="po-credit-tag">BTS · 2024 · LANDBOUND</div>
-          <div class="po-title">Final BTS</div>
-          <div class="po-credits"><strong>Landbound</strong><br>Behind the scenes · vertical cut</div>
-          <div class="po-music">@landbound</div>
+          <div class="po-credit-tag">BTS · CHLOE STAR · 2024</div>
+          <div class="po-title">Stunt Fall VFX — BTS</div>
+          <div class="po-credits"><strong>Chloe Star</strong><br>VFX · VFX Supervisor · Editor</div>
+          <div class="po-music">@chloestar</div>
         </div>
         <div class="phone-actions">
           <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">—</span></div>
@@ -447,7 +442,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide" data-clip="1" style="background:#000;">
+      <div class="phone-slide" data-clip="1" data-type="music" style="background:#000;">
         <video id="phone-video-1" class="phone-video" data-bunny-guid="5e9277e4-debc-4491-bc5b-8fbbf8f56921" loop muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"><source src="https://vz-5dfccea4-b84.b-cdn.net/5e9277e4-debc-4491-bc5b-8fbbf8f56921/play_720p.mp4" type="video/mp4"></video>
         <button class="phone-tap" data-slide-idx="1" aria-label="Toggle play/pause"></button>
         <div class="phone-controls">
@@ -455,10 +450,10 @@
           <button class="phone-ctl primary" data-action="play" data-slide-idx="1" aria-label="Play/pause"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></button>
         </div>
         <div class="phone-overlay">
-          <div class="po-credit-tag">EDIT · 2024 · LANDBOUND</div>
-          <div class="po-title">Look 5</div>
-          <div class="po-credits"><strong>Landbound</strong><br>Vertical cut</div>
-          <div class="po-music">@landbound</div>
+          <div class="po-credit-tag">MUSIC · BAHARI · 2024</div>
+          <div class="po-title">Better Than Us — 1</div>
+          <div class="po-credits"><strong>Bahari</strong><br>Director · DP</div>
+          <div class="po-music">@bahari — Better Than Us</div>
         </div>
         <div class="phone-actions">
           <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">—</span></div>
@@ -467,7 +462,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide" data-clip="2" style="background:#000;">
+      <div class="phone-slide" data-clip="2" data-type="music" style="background:#000;">
         <video id="phone-video-2" class="phone-video" data-bunny-guid="efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5" loop muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"><source src="https://vz-5dfccea4-b84.b-cdn.net/efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5/play_720p.mp4" type="video/mp4"></video>
         <button class="phone-tap" data-slide-idx="2" aria-label="Toggle play/pause"></button>
         <div class="phone-controls">
@@ -477,8 +472,8 @@
         <div class="phone-overlay">
           <div class="po-credit-tag">MUSIC · SURFACES · 2024</div>
           <div class="po-title">Call Me When You're Home</div>
-          <div class="po-credits"><strong>Surfaces</strong><br>Director · DP · Editor</div>
-          <div class="po-music">@surfaces — original sound</div>
+          <div class="po-credits"><strong>Surfaces</strong><br>Director · DP · Editor · VFX</div>
+          <div class="po-music">@surfaces — Call Me When You're Home</div>
         </div>
         <div class="phone-actions">
           <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">—</span></div>
@@ -487,7 +482,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide vg3" data-clip="3">
+      <div class="phone-slide vg3" data-clip="3" data-type="music">
         <div class="phone-play"></div>
         <div class="phone-overlay">
           <div class="po-credit-tag">MUSIC · TWO FEET · 2024</div>
@@ -502,7 +497,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide vg4" data-clip="4">
+      <div class="phone-slide vg4" data-clip="4" data-type="edits">
         <div class="phone-play"></div>
         <div class="phone-overlay">
           <div class="po-credit-tag">EDITS · 2024</div>
@@ -517,7 +512,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide vg5" data-clip="5">
+      <div class="phone-slide vg5" data-clip="5" data-type="bts">
         <div class="phone-play"></div>
         <div class="phone-overlay">
           <div class="po-credit-tag">BTS · SURFACES · 2024</div>
@@ -532,7 +527,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide vg6" data-clip="6">
+      <div class="phone-slide vg6" data-clip="6" data-type="edits">
         <div class="phone-play"></div>
         <div class="phone-overlay">
           <div class="po-credit-tag">EDITS · VFX · 2023</div>
@@ -547,7 +542,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide vg7" data-clip="7">
+      <div class="phone-slide vg7" data-clip="7" data-type="music">
         <div class="phone-play"></div>
         <div class="phone-overlay">
           <div class="po-credit-tag">MUSIC · POSNER · 2024</div>
@@ -562,7 +557,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide vg3" data-clip="8">
+      <div class="phone-slide vg3" data-clip="8" data-type="music">
         <div class="phone-play"></div>
         <div class="phone-overlay">
           <div class="po-credit-tag">BTS · DRONE</div>
@@ -577,7 +572,7 @@
           <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
         </div>
       </div>
-      <div class="phone-slide vg2" data-clip="9">
+      <div class="phone-slide vg2" data-clip="9" data-type="bts">
         <div class="phone-play"></div>
         <div class="phone-overlay">
           <div class="po-credit-tag">EDITS · DP TALK</div>
@@ -614,7 +609,6 @@
 </div>
 
 <button class="toggle-btn" onclick="openShorts()">↗ Open Shorts</button>
-<div class="banner">WORK · YOUTUBE + SHORTS (nav linked)</div>
 
 <script src="data.js"></script>
 <script>
@@ -973,6 +967,31 @@
       }, { root: phoneScroll, threshold: [0.3, 0.6] });
       slidesAll.forEach(s => io.observe(s));
     }
+  })();
+
+
+  // ============= SHORTS FILTER PILLS =============
+  (function() {
+    const catTabs = document.querySelectorAll('.cat-tab[data-filter]');
+    catTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const f = tab.dataset.filter;
+        catTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const allSlides = document.querySelectorAll('.phone-slide');
+        const allSrItems = document.querySelectorAll('.sr-item');
+        allSlides.forEach((slide, i) => {
+          const t = slide.dataset.type || '';
+          const matches = (f === 'all') || (t === f);
+          slide.style.display = matches ? '' : 'none';
+          if (allSrItems[i]) allSrItems[i].style.display = matches ? '' : 'none';
+        });
+        // Scroll first visible slide into view
+        const firstVisible = Array.from(allSlides).find(s => s.style.display !== 'none');
+        const scroller = document.getElementById('phoneScroll');
+        if (firstVisible && scroller) scroller.scrollTop = firstVisible.offsetTop;
+      });
+    });
   })();
 
 </script>

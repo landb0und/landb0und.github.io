@@ -90,13 +90,13 @@ window.CLIENTS = [
     name: 'Surfaces',
     short: 'Surfaces',
     handle: '@surfaces',
-    role: 'Director · DP · Editor',
-    blurb: "Call Me When You're Home — lyric video. Dreams — anamorphic music video.",
+    role: 'Director · DP · Editor · VFX',
+    blurb: "Call Me When You're Home — music video + vertical cut. VFX work across the project.",
     palette: 'sa-5',
     thumb: null,
     media: [
-      { type: 'video', embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", year: '2024', tags: ['Director','DP','Editor'] },
-      { type: 'video', embedId: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5', bunny: true, title: "Call Me When You're Home — Vertical cut", year: '2024', tags: ['Director','DP','Editor','Vertical'] }
+      { type: 'video', embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", year: '2024', tags: ['Director','DP','Editor','VFX'] },
+      { type: 'video', embedId: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5', bunny: true, title: "Call Me When You're Home — Vertical cut", year: '2024', tags: ['Director','DP','Editor','VFX','Vertical'] }
     ]
   },
   {
@@ -122,12 +122,12 @@ window.CLIENTS = [
     media: []
   },
   {
-    id: 'sony-rca',
-    name: 'Sony / RCA',
-    short: 'Sony/RCA',
-    handle: 'Label partner',
-    role: 'Director · DP',
-    blurb: 'Multiple artist projects through Sony / RCA.',
+    id: 'nyc-cinematography-awards',
+    name: 'NYC Cinematography Awards',
+    short: 'NYC Cinema',
+    handle: 'Award · 2024',
+    role: 'Cinematographer · Selection',
+    blurb: 'Selected work — NYC Cinematography Awards.',
     palette: 'sa-9',
     thumb: null,
     media: []
@@ -164,6 +164,61 @@ window.CLIENTS = [
     role: 'Creator partner',
     blurb: '100K+ followers, 45M+ views across short-form work.',
     palette: 'sa-10',
+    thumb: null,
+    media: []
+  },
+  {
+    id: 'chloe-star',
+    name: 'Chloe Star',
+    short: 'Chloe S.',
+    handle: '@chloestar',
+    role: 'VFX · VFX Supervisor · Editor',
+    blurb: 'Stunt-driven content — VFX supervision and finishing for high-impact shots.',
+    palette: 'sa-1',
+    thumb: null,
+    media: []
+  },
+  {
+    id: 'bahari',
+    name: 'Bahari',
+    short: 'Bahari',
+    handle: '@bahari',
+    role: 'Director · DP',
+    blurb: 'Music projects — direction and cinematography.',
+    palette: 'sa-3',
+    thumb: null,
+    media: []
+  },
+  {
+    id: 'saint-motel',
+    name: 'Saint Motel',
+    short: 'Saint Motel',
+    handle: '@saintmotel',
+    role: 'Director · DP',
+    blurb: 'Indie alt-rock — direction and cinematography.',
+    palette: 'sa-2',
+    thumb: null,
+    media: []
+  },
+  {
+    id: 'mowglis',
+    name: "The Mowgli's",
+    short: 'Mowgli\'s',
+    handle: '@themowglis',
+    role: 'Director · DP',
+    blurb: 'Indie band collaboration — direction and cinematography.',
+    palette: 'sa-4',
+    thumb: null,
+    media: []
+  },
+  {
+    id: 'young-rising-sons',
+    name: 'Young Rising Sons',
+    short: 'YRS',
+    handle: '@youngrisingsons',
+    role: 'Director · DP',
+    blurb: 'Alt-rock collaboration — direction and cinematography.',
+    palette: 'sa-5',
     thumb: null,
     media: []
   }
@@ -210,35 +265,38 @@ window.clientInitials = function(c) {
 // and on the linked client's profile page.
 window.VERTICALS = [
   {
-    id: 'final-bts',
+    id: 'stunt-fall-vfx-bts',
     guid: 'e155dcd4-733a-489c-9d89-3417e3333cfe',
-    title: 'Final BTS',
-    client: null,
-    tag: 'BTS · 2024 · LANDBOUND',
-    role: 'Behind the scenes',
-    music: '@landbound',
-    label: 'Final BTS',
-    caption: 'BTS · vertical cut'
+    title: 'Stunt Fall VFX — Behind The Scenes',
+    client: 'chloe-star',
+    type: 'bts',
+    tag: 'BTS · CHLOE STAR · 2024',
+    role: 'VFX · VFX Supervisor · Editor',
+    music: '@chloestar',
+    label: 'Stunt Fall',
+    caption: 'BTS · Chloe Star'
   },
   {
-    id: 'look-5',
+    id: 'bahari-better-than-us-1',
     guid: '5e9277e4-debc-4491-bc5b-8fbbf8f56921',
-    title: 'Look 5',
-    client: null,
-    tag: 'EDIT · 2024 · LANDBOUND',
-    role: 'Vertical edit',
-    music: '@landbound',
-    label: 'Look 5',
-    caption: 'Edit · vertical cut'
+    title: 'Better Than Us — 1',
+    client: 'bahari',
+    type: 'music',
+    tag: 'MUSIC · BAHARI · 2024',
+    role: 'Director · DP',
+    music: '@bahari — Better Than Us',
+    label: 'Better Than Us',
+    caption: 'Bahari · Better Than Us'
   },
   {
     id: 'cmwyh-vertical',
     guid: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5',
     title: "Call Me When You're Home",
     client: 'surfaces',
+    type: 'music',
     tag: 'MUSIC · SURFACES · 2024',
-    role: 'Director · DP · Editor',
-    music: '@surfaces — original sound',
+    role: 'Director · DP · Editor · VFX',
+    music: '@surfaces — Call Me When You\'re Home',
     label: 'CMWYH',
     caption: 'Surfaces · vertical'
   }
