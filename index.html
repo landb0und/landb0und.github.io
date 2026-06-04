@@ -128,17 +128,17 @@
   .ld-stats { display: flex; gap: 10px; margin-top: 6px; font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
   .ld-stats strong { color: var(--amber); }
 
-  /* Expand button — secondary now (outline, not solid) */
+  /* Expand button — primary CTA, matches Send Email button style */
   .expand-toggle {
     margin-top: 18px;
-    padding: 12px 14px;
-    background: transparent;
-    border: 1px solid rgba(245,176,66,0.4);
-    border-radius: 6px;
+    padding: 14px 18px;
+    background: var(--amber);
+    border: 1px solid var(--amber);
+    border-radius: 8px;
     width: 100%;
     cursor: pointer;
-    color: #fff;
-    font-size: 11px;
+    color: var(--bg);
+    font-size: 12px;
     letter-spacing: 0.18em;
     font-family: 'SF Mono', Menlo, monospace;
     text-transform: uppercase;
@@ -149,7 +149,7 @@
     justify-content: center;
     gap: 10px;
   }
-  .expand-toggle:hover { background: rgba(245,176,66,0.08); border-color: var(--amber); color: var(--amber); }
+  .expand-toggle:hover { background: #ffc555; transform: translateY(-1px); }
   .expand-toggle .arr { transition: transform .2s; }
   .hero-card.open .expand-toggle .arr { transform: rotate(180deg); }
   .hero-card.open .expand-toggle .lbl-closed { display: none; }
@@ -196,7 +196,10 @@
   .page-section-head .label::before { content: '— '; color: var(--amber); }
   .section-sub { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--ink-4); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); font-style: italic; }
   .section-sub a { color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; font-style: normal; }
-  .shorts-strip { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 16px; scroll-behavior: smooth; padding-top: 6px; padding-bottom: 8px; margin-bottom: 36px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  /* No scroll-snap or smooth-scroll: Firefox interpreted the IO video src
+     swaps as focus events and auto-scrolled the snap container all the way
+     to the last tile on load. Manual scrolling still works as expected. */
+  .shorts-strip { display: flex; gap: 10px; overflow-x: auto; padding-top: 6px; padding-bottom: 8px; margin-bottom: 36px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
   .shorts-strip::-webkit-scrollbar { height: 6px; }
   .shorts-strip::-webkit-scrollbar-track { background: transparent; }
   .shorts-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
