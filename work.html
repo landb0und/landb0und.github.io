@@ -572,9 +572,9 @@
     const mount = document.getElementById('recsMount');
     if (!mount) return;
     const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
-    const ver = (window.BUNNY && window.BUNNY.THUMB_VER) || 1;
     mount.innerHTML = VIDEOS.map((v, i) => {
-      const thumb = (v.embedId && v.bunny) ? ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg?v=' + ver)
+      // Bare URLs — Bunny token auth rejects query strings on older thumbs (see data.js).
+      const thumb = (v.embedId && v.bunny) ? ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg')
                   : (v.embedId && !v.bunny) ? ('https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg')
                   : null;
       const thumbHTML = thumb
