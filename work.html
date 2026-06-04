@@ -180,18 +180,18 @@
   .shorts-back {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 9px 18px;
-    background: rgba(0,0,0,0.6);
-    border: 1.5px solid rgba(255,255,255,0.5);
+    background: var(--amber);
+    border: none;
     border-radius: 100px;
-    color: #fff;
-    font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #0a0806;
+    font-size: 11px; font-weight: 900; letter-spacing: 0.18em; text-transform: uppercase;
     font-family: 'SF Mono', Menlo, monospace;
     cursor: pointer;
-    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 4px 16px rgba(245,176,66,0.5);
     transition: all .15s;
     flex-shrink: 0;
   }
-  .shorts-back:hover { background: rgba(245,176,66,0.25); border-color: var(--amber); color: var(--amber); }
+  .shorts-back:hover { background: #ffc555; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,176,66,0.65); }
 
   /* Category tabs */
   .cat-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -261,7 +261,11 @@
   .phone-progress .fill { position: absolute; left: 0; right: 0; top: 0; height: 32%; background: var(--rose); border-radius: 100px; }
   .swipe-hint { position: absolute; right: -56px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 16px; color: rgba(255,255,255,0.4); font-size: 24px; }
 
-  .shorts-rail { width: 320px; background: var(--bg); border-left: 1px solid var(--line); padding: 80px 20px 20px; overflow-y: auto; }
+  .shorts-rail { width: 300px; background: var(--bg); border-left: 1px solid var(--line); padding: 24px 18px 20px; overflow-y: auto; }
+  /* Override cat-tab colors for the dark rail context */
+  .shorts-rail .cat-tab { background: rgba(255,255,255,0.05); border-color: var(--line); color: var(--ink-3); }
+  .shorts-rail .cat-tab:hover { background: rgba(255,255,255,0.08); color: var(--ink); border-color: var(--ink-4); }
+  .shorts-rail .cat-tab.active { background: rgba(245,176,66,0.15); border-color: rgba(245,176,66,0.5); color: var(--amber); }
   .sr-h { font-size: 11px; color: var(--rose); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 14px; }
   .sr-list { display: flex; flex-direction: column; gap: 10px; }
   .sr-item { display: grid; grid-template-columns: 56px 1fr; gap: 10px; padding: 4px; border-radius: 6px; cursor: pointer; }
@@ -502,14 +506,6 @@
 <div class="shorts" id="shorts">
   <div class="shorts-topbar">
     <button class="shorts-back" onclick="closeShorts()">← Back to Work</button>
-    <div class="cat-tabs">
-      <span class="cat-tab active" data-filter="all">All</span>
-      <span class="cat-tab" data-filter="bts">BTS</span>
-      <span class="cat-tab" data-filter="music">Music</span>
-      <span class="cat-tab" data-filter="commercial">Commercial</span>
-      <span class="cat-tab" data-filter="edits">Edits</span>
-    </div>
-    <span class="shorts-x" onclick="closeShorts()">✕</span>
   </div>
 
   <div class="shorts-stage">
@@ -684,6 +680,13 @@
   </div>
 
   <div class="shorts-rail">
+    <div class="cat-tabs" style="margin-bottom:18px;">
+      <span class="cat-tab active" data-filter="all">All</span>
+      <span class="cat-tab" data-filter="bts">BTS</span>
+      <span class="cat-tab" data-filter="music">Music</span>
+      <span class="cat-tab" data-filter="commercial">Commercial</span>
+      <span class="cat-tab" data-filter="edits">Edits</span>
+    </div>
     <div class="sr-h">// VERTICAL FEED — 47 CLIPS</div>
     <div class="sr-list">
       <div class="sr-item active"><div class="sr-thumb" style="background:#000; overflow:hidden;"><img src="https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg" alt="" style="width:100%; height:100%; object-fit:cover;"></div><div class="sr-info"><div class="sr-title">Stunt Fall VFX — BTS</div><div class="sr-meta">BTS · CHLOE STAR · 2024</div></div></div>
@@ -902,6 +905,17 @@
   if (window.location.hash === '#shorts') {
     openShorts();
   }
+
+  // Forward scroll events from the stage black area to the phone scroller
+  document.querySelector('.shorts-stage').addEventListener('wheel', (e) => {
+    const phone = document.getElementById('phoneScroll');
+    if (!phone) return;
+    // Only forward if the event didn't originate inside the phone itself
+    if (!phone.contains(e.target)) {
+      e.preventDefault();
+      phone.scrollBy({ top: e.deltaY, behavior: 'auto' });
+    }
+  }, { passive: false });
 
   // Hash routing — #shorts opens shorts view, #shorts/N opens at slide N
   function handleHash() {
