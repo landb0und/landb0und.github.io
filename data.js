@@ -68,35 +68,55 @@ window.CLIENTS = [
     name: 'Mike Posner',
     short: 'Mike P.',
     handle: '@mikeposner',
-    role: 'Director',
-    blurb: 'Promo session for the new record. 45 minutes, one lens.',
+    role: 'Director · Photographer',
+    blurb: 'Promo session for the new record. 45 minutes, one lens. Also shot the Surfaces collab.',
     palette: 'sa-3',
     thumb: null,
-    media: []
+    media: [
+      { type: 'photo', src: 'photos/clients/mike-posner/mike-posner-solo-1.jpg', title: 'Promo session', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-1.jpg', title: 'Surfaces x Posner — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-2.jpg', title: 'Surfaces x Posner — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-3.jpg', title: 'Surfaces x Posner — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-4.jpg', title: 'Surfaces x Posner — 4', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-5.jpg', title: 'Surfaces x Posner — 5', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-6.jpg', title: 'Surfaces x Posner — 6', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-7.jpg', title: 'Surfaces x Posner — 7', year: '2024', tags: ['Photographer'] }
+    ]
   },
   {
     id: 'gym-class-heroes',
     name: 'Gym Class Heroes',
     short: 'Gym Class H.',
     handle: '@gymclassheroes',
-    role: 'Director',
+    role: 'Director · Photographer',
     blurb: 'Reunion record promo. Phase One in studio.',
     palette: 'sa-4',
     thumb: null,
-    media: []
+    media: [
+      { type: 'photo', src: 'photos/clients/gym-class-heroes/gym-class-heroes-1.jpg', title: 'Studio session — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/gym-class-heroes/gym-class-heroes-2.jpg', title: 'Studio session — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/gym-class-heroes/gym-class-heroes-3.jpg', title: 'Studio session — 3', year: '2024', tags: ['Photographer'] }
+    ]
   },
   {
     id: 'surfaces',
     name: 'Surfaces',
     short: 'Surfaces',
     handle: '@surfaces',
-    role: 'Director · DP · Editor · VFX',
-    blurb: "Call Me When You're Home — music video + vertical cut. VFX work across the project.",
+    role: 'Director · DP · Editor · VFX · Photographer',
+    blurb: "Call Me When You're Home — music video + vertical cut. VFX and stills across the project.",
     palette: 'sa-5',
     thumb: null,
     media: [
       { type: 'video', embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", year: '2024', tags: ['Director','DP','Editor','VFX'] },
-      { type: 'video', embedId: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5', bunny: true, title: "Call Me When You're Home — Vertical cut", year: '2024', tags: ['Director','DP','Editor','VFX','Vertical'] }
+      { type: 'video', embedId: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5', bunny: true, title: "Call Me When You're Home — Vertical cut", year: '2024', tags: ['Director','DP','Editor','VFX','Vertical'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-1.jpg', title: 'Surfaces x Posner — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-2.jpg', title: 'Surfaces x Posner — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-3.jpg', title: 'Surfaces x Posner — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-4.jpg', title: 'Surfaces x Posner — 4', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-5.jpg', title: 'Surfaces x Posner — 5', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-6.jpg', title: 'Surfaces x Posner — 6', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/surfaces-x-posner/surfaces-posner-7.jpg', title: 'Surfaces x Posner — 7', year: '2024', tags: ['Photographer'] }
     ]
   },
   {
@@ -194,22 +214,27 @@ window.CLIENTS = [
     name: 'Saint Motel',
     short: 'Saint Motel',
     handle: '@saintmotel',
-    role: 'Director · DP',
-    blurb: 'Indie alt-rock — direction and cinematography.',
+    role: 'Director · DP · Photographer',
+    blurb: 'Indie alt-rock — direction, cinematography, and press portraits.',
     palette: 'sa-2',
     thumb: null,
-    media: []
+    media: [
+      { type: 'photo', src: 'photos/clients/saint-motel/saint-motel-1.jpeg', title: 'Press portrait — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/saint-motel/saint-motel-2.jpeg', title: 'Press portrait — 2', year: '2024', tags: ['Photographer'] }
+    ]
   },
   {
     id: 'mowglis',
     name: "The Mowgli's",
-    short: 'Mowgli\'s',
+    short: "Mowgli's",
     handle: '@themowglis',
-    role: 'Director · DP',
-    blurb: 'Indie band collaboration — direction and cinematography.',
+    role: 'Director · DP · Photographer',
+    blurb: 'Indie band collaboration — direction, cinematography, and stills.',
     palette: 'sa-4',
     thumb: null,
-    media: []
+    media: [
+      { type: 'photo', src: 'photos/clients/the-mowglis/the-mowglis-1.jpeg', title: 'Band session', year: '2024', tags: ['Photographer'] }
+    ]
   },
   {
     id: 'young-rising-sons',
@@ -221,6 +246,51 @@ window.CLIENTS = [
     palette: 'sa-5',
     thumb: null,
     media: []
+  },
+  {
+    id: 'allen-stone',
+    name: 'Allen Stone',
+    short: 'Allen S.',
+    handle: '@allenstone',
+    role: 'Photographer',
+    blurb: 'Press and promo photography.',
+    palette: 'sa-6',
+    thumb: null,
+    media: [
+      { type: 'photo', src: 'photos/clients/allen-stone/allen-stone-1.jpeg', title: 'Promo — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/allen-stone/allen-stone-2.jpeg', title: 'Promo — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/allen-stone/allen-stone-3.jpeg', title: 'Promo — 3', year: '2024', tags: ['Photographer'] }
+    ]
+  },
+  {
+    id: 'magic-giant',
+    name: 'Magic Giant',
+    short: 'Magic Giant',
+    handle: '@magicgiant',
+    role: 'Photographer',
+    blurb: 'Press photography.',
+    palette: 'sa-7',
+    thumb: null,
+    media: [
+      { type: 'photo', src: 'photos/clients/magic-giant/magic-giant-1.jpeg', title: 'Press portrait', year: '2024', tags: ['Photographer'] }
+    ]
+  },
+  {
+    id: 'scotty-sire',
+    name: 'Scotty Sire',
+    short: 'Scotty S.',
+    handle: '@scottysire',
+    role: 'Photographer',
+    blurb: 'Promo and press photography.',
+    palette: 'sa-8',
+    thumb: null,
+    media: [
+      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-1.jpeg', title: 'Promo — 1', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-2.jpeg', title: 'Promo — 2', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-3.jpeg', title: 'Promo — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-4.jpeg', title: 'Promo — 4', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients/scotty-sire/scotty-sire-5.jpeg', title: 'Promo — 5', year: '2024', tags: ['Photographer'] }
+    ]
   }
 ];
 
