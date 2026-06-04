@@ -459,6 +459,13 @@
         });
       });
     });
+    // Fisher-Yates shuffle so feed + grid aren't grouped by client. Same shuffle
+    // is used by both renderFeed and renderGrid so clicking a tile opens the
+    // feed at the matching photo (data-photo index stays stable within session).
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
     return out;
   })();
 

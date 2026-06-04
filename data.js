@@ -15,7 +15,8 @@ window.CLIENTS = [
     palette: 'sa-1',
     thumb: null,
     media: [
-      { type: 'video', embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'] }
+      { type: 'video', embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'] },
+      { type: 'video', embedId: 'e8775058-272b-48b5-85a9-37410c6cbb25', bunny: true, title: 'HIGH SOCIAL', year: '2025', tags: ['Director','Editor','Vertical'] }
     ]
   },
   {
@@ -297,6 +298,45 @@ window.CLIENTS = [
     ]
   },
   {
+    id: 'dye',
+    name: 'DYE',
+    short: 'DYE',
+    handle: '@dye_empty',
+    role: 'Director · Editor',
+    blurb: 'Music video — direction and post.',
+    palette: 'sa-3',
+    thumb: null,
+    media: [
+      { type: 'video', embedId: '3e8cfa34-3f17-4321-a8fd-41438395e823', bunny: true, title: 'DX7', year: '2025', tags: ['Director','Editor','Vertical'] }
+    ]
+  },
+  {
+    id: 'claudia-valentina',
+    name: 'Claudia Valentina',
+    short: 'Claudia V.',
+    handle: '@claudia_valentina__',
+    role: 'Director · Editor',
+    blurb: 'Music video — direction and post.',
+    palette: 'sa-10',
+    thumb: null,
+    media: [
+      { type: 'video', embedId: 'e183de5b-77e6-432a-ad2b-764062367acc', bunny: true, title: 'Canvas', year: '2025', tags: ['Director','Editor','Vertical'] }
+    ]
+  },
+  {
+    id: 'natalie-jane',
+    name: 'Natalie Jane',
+    short: 'Natalie J.',
+    handle: '@nataliejane',
+    role: 'Director · DP · Editor',
+    blurb: 'Music video — direction, cinematography, post.',
+    palette: 'sa-5',
+    thumb: null,
+    media: [
+      { type: 'video', embedId: '6f8f2d98-78dc-49d6-8576-9f6138d5e53f', bunny: true, title: 'Natalie Jane — vertical', year: '2025', tags: ['Director','DP','Editor','Vertical'] }
+    ]
+  },
+  {
     id: 'scotty-sire',
     name: 'Scotty Sire',
     short: 'Scotty S.',
@@ -390,6 +430,90 @@ window.VERTICALS = [
     music: '@surfaces — Call Me When You\'re Home',
     label: 'CMWYH',
     caption: 'Surfaces · vertical'
+  },
+  {
+    id: 'grace-high-social',
+    guid: 'e8775058-272b-48b5-85a9-37410c6cbb25',
+    title: 'HIGH SOCIAL',
+    client: 'grace-vanderwaal',
+    type: 'music',
+    tag: 'MUSIC · GRACE VANDERWAAL · 2025',
+    role: 'Director · Editor',
+    music: '@gracevanderwaal — HIGH SOCIAL',
+    label: 'HIGH SOCIAL',
+    caption: 'Grace VanderWaal · vertical'
+  },
+  {
+    id: 'dye-dx7',
+    guid: '3e8cfa34-3f17-4321-a8fd-41438395e823',
+    title: 'DX7',
+    client: 'dye',
+    type: 'music',
+    tag: 'MUSIC · DYE · 2025',
+    role: 'Director · Editor',
+    music: '@dye_empty — DX7',
+    label: 'DX7',
+    caption: 'DYE · vertical'
+  },
+  {
+    id: 'claudia-canvas',
+    guid: 'e183de5b-77e6-432a-ad2b-764062367acc',
+    title: 'Canvas',
+    client: 'claudia-valentina',
+    type: 'music',
+    tag: 'MUSIC · CLAUDIA VALENTINA · 2025',
+    role: 'Director · Editor',
+    music: '@claudia_valentina__ — Canvas',
+    label: 'Canvas',
+    caption: 'Claudia Valentina · vertical'
+  },
+  {
+    id: 'natalie-jane-vertical',
+    guid: '6f8f2d98-78dc-49d6-8576-9f6138d5e53f',
+    title: 'Natalie Jane',
+    client: 'natalie-jane',
+    type: 'music',
+    tag: 'MUSIC · NATALIE JANE · 2025',
+    role: 'Director · DP · Editor',
+    music: '@nataliejane',
+    label: 'Natalie Jane',
+    caption: 'Natalie Jane · vertical'
+  },
+  {
+    id: 'landbound-oaky',
+    guid: 'f8cf0b2b-02fc-4e45-8430-c3c234e1a5ea',
+    title: 'oaky oaky oaky',
+    client: 'tiktok',
+    type: 'edits',
+    tag: 'EDITS · LANDBOUND · 2025',
+    role: 'Director · DP · Editor · VFX',
+    music: '@landbound',
+    label: 'oaky',
+    caption: '@landbound · vertical edit'
+  },
+  {
+    id: 'landbound-tiktok-mp4',
+    guid: '9284b2d3-3ea3-4cb4-be22-3b2f6dd5c778',
+    title: 'FOR TIKTOK',
+    client: 'tiktok',
+    type: 'edits',
+    tag: 'EDITS · LANDBOUND · 2025',
+    role: 'Director · DP · Editor · VFX',
+    music: '@landbound',
+    label: 'TIKTOK',
+    caption: '@landbound · vertical edit'
+  },
+  {
+    id: 'landbound-w-color-phone',
+    guid: '27445ba3-d8a3-45f7-b833-0e049e6274c9',
+    title: 'W COLOR for phone',
+    client: 'tiktok',
+    type: 'edits',
+    tag: 'EDITS · LANDBOUND · 2025',
+    role: 'Director · DP · Editor · VFX',
+    music: '@landbound',
+    label: 'W COLOR',
+    caption: '@landbound · vertical edit'
   }
 ];
 
