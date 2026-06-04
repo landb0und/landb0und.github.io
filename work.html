@@ -686,7 +686,7 @@
         <div class="phone-overlay">
           <div class="po-credit-tag">${v.tag || ''}</div>
           <div class="po-title">${v.title || ''}</div>
-          <div class="po-credits"><strong>${clientName}</strong><br>${v.role || ''}</div>
+          <div class="po-credits"><a href="client.html?id=${v.client}" style="color:inherit; text-decoration:none;"><strong>${clientName}</strong></a><br>${v.role || ''}</div>
           <div class="po-music">${v.music || ''}</div>
         </div>
         <div class="phone-actions">
@@ -1052,18 +1052,23 @@
     const verts = window.VERTICALS;
     const CDN = window.BUNNY.CDN;
     mount.innerHTML = `
-      <div class="vc-frame" style="background:#000;">
-        <video class="vc-video" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+      <div class="vc-frame" style="background:#000 center/cover no-repeat;">
+        <video class="vc-video" muted loop playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
       </div>
-      <div class="vc-frame" style="background:#000;">
-        <video class="vc-video" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+      <div class="vc-frame" style="background:#000 center/cover no-repeat;">
+        <video class="vc-video" muted loop playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
       </div>
     `;
     const frames = mount.querySelectorAll('.vc-frame');
     const vids = mount.querySelectorAll('.vc-video');
     function applyVert(vidEl, vIdx) {
       const v = verts[vIdx % verts.length];
-      vidEl.poster = window.verticalThumb(v);
+      const thumb = window.verticalThumb(v);
+      vidEl.poster = thumb;
+      // Also set the frame's background to the poster so during src swap there's
+      // still an image visible instead of a black void.
+      const frame = vidEl.parentElement;
+      if (frame) frame.style.backgroundImage = "url('" + thumb + "')";
       vidEl.src = window.verticalMp4(v, '480p');
       vidEl.load();
       vidEl.play().catch(() => {});
