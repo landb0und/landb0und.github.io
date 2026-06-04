@@ -633,9 +633,13 @@
       const c = window.clientById ? window.clientById(v.client) : null;
       const clientName = c ? c.name : (v.client || '');
       const mp4 = 'https://' + CDN + '/' + v.guid + '/play_720p.mp4';
+      const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+      // poster + data-vsrc + preload=none — actual MP4 is fetched lazily by the
+      // IntersectionObserver below when the slide enters view. Loading 10 MP4s
+      // up-front froze the renderer.
       return `
       <div class="phone-slide" data-clip="${i}" data-type="${v.type || ''}" style="background:#000;">
-        <video id="phone-video-${i}" class="phone-video" data-bunny-guid="${v.guid}" loop muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"><source src="${mp4}" type="video/mp4"></video>
+        <video id="phone-video-${i}" class="phone-video" data-bunny-guid="${v.guid}" data-vsrc="${mp4}" poster="${thumb}" loop muted playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"></video>
         <button class="phone-tap" data-slide-idx="${i}" aria-label="Toggle play/pause"></button>
         <div class="phone-controls">
           <button class="phone-ctl" data-action="mute" data-slide-idx="${i}" aria-label="Toggle mute">${muteIcon}</button>
@@ -966,8 +970,12 @@
           const vid = slide.querySelector('.phone-video');
 
           if (entry.intersectionRatio >= 0.5) {
-            // More than half visible → play, apply current mute state
+            // More than half visible → assign src (lazy), apply mute, play
             if (vid && vid.tagName === 'VIDEO') {
+              if (!vid.src && vid.dataset.vsrc) {
+                vid.src = vid.dataset.vsrc;
+                vid.load();
+              }
               vid.muted = globalMuted;
               vid.play().catch(() => {});
               updatePlayIcon(slide, vid);

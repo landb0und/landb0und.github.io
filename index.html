@@ -520,9 +520,7 @@
     if (!container || !window.VERTICALS || !window.BUNNY) return;
     container.innerHTML = window.VERTICALS.map((v, i) => `
       <a class="short" href="work.html#shorts/${i}" style="background:#000;">
-        <video autoplay muted loop playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;">
-          <source src="${window.verticalMp4(v)}" type="video/mp4">
-        </video>
+        <video data-vsrc="${window.verticalMp4(v)}" poster="${window.verticalThumb(v)}" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
         <div class="short-overlay"></div>
         <span class="short-tag">▶</span>
         <div class="short-meta">
@@ -531,6 +529,28 @@
         </div>
       </a>
     `).join('');
+    // Lazy autoplay: only load + play videos when they enter the viewport.
+    // Loading 10 MP4s simultaneously froze the renderer; this defers the
+    // network hit until each tile is actually visible.
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          const v = e.target;
+          if (e.isIntersecting) {
+            if (!v.src) {
+              v.src = v.dataset.vsrc;
+              v.load();
+            }
+            v.play().catch(() => {});
+          } else {
+            v.pause();
+          }
+        });
+      }, { threshold: 0.25 });
+      container.querySelectorAll('video[data-vsrc]').forEach(v => io.observe(v));
+    } else {
+      container.querySelectorAll('video[data-vsrc]').forEach(v => { v.src = v.dataset.vsrc; v.play().catch(() => {}); });
+    }
   }
   renderVerticalsStrip();
 </script>
