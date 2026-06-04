@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>All Clients — Landbound</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg: #0a0806; --bg-2: #14100c; --bg-3: #1a1410;
+    --ink: #e8ddc5; --ink-2: #c9b88f; --ink-3: #968266; --ink-4: #5a4d3a;
+    --amber: #f5b042; --rose: #e8589a; --leaf: #6fbd5f;
+    --line: rgba(245,176,66,0.14); --line-2: rgba(245,176,66,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: -apple-system, system-ui, sans-serif; min-height: 100%; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,0.012) 2px 3px); }
+
+  .nav { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg-2); border-right: 1px solid var(--line); padding: 24px 0; z-index: 20; display: flex; flex-direction: column; }
+  .nav-brand { padding: 0 22px 22px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
+  .nav-brand .logo { font-size: 15px; font-weight: 900; letter-spacing: 0.04em; color: var(--amber); }
+  .nav-brand .tag { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: 6px; }
+  .nav-items { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; font-size: 12px; color: var(--ink-2); cursor: pointer; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; text-decoration: none; }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--ink); }
+  .nav-item.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .nav-socials { margin: 22px 14px 0; padding: 16px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 8px; }
+  .nav-socials-h { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 10px; }
+  .nav-soc { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; text-decoration: none; }
+  .nav-soc:not(:last-child) { border-bottom: 1px solid var(--line-2); }
+  .nav-soc-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .nav-soc-icon svg { width: 16px; height: 16px; }
+  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); color: #000; }
+  .nav-soc-icon.tt svg { color: #000; }
+  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); color: #fff; }
+  .nav-soc-icon.ig svg { color: #fff; }
+  .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
+  .nav-soc-icon.li svg { color: #fff; }
+  .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
+  .nav-soc-info { flex: 1; min-width: 0; }
+  .nav-soc-h { font-size: 11px; color: var(--ink); font-weight: 700; line-height: 1.1; }
+  .nav-soc-m { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 1px; }
+  .nav-bottom { margin-top: auto; padding: 20px 22px 0; font-size: 10px; color: var(--ink-4); line-height: 1.6; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .nav-bottom .status { display: flex; align-items: center; gap: 6px; color: var(--leaf); margin-bottom: 4px; }
+  .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  .main { margin-left: 220px; padding: 32px 40px 60px; max-width: 1280px; position: relative; z-index: 2; }
+
+  /* Page head */
+  .ph { margin-bottom: 36px; padding-bottom: 22px; border-bottom: 1px solid var(--line-2); display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .ph-l h1 { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; line-height: 0.95; }
+  .ph-l p { font-size: 13px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; margin-top: 8px; max-width: 540px; }
+  .ph-r { font-size: 10px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; text-align: right; }
+  .ph-r strong { color: var(--amber); font-weight: 800; }
+
+  /* Grid */
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 800px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .card { background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 10px; padding: 18px; text-decoration: none; color: inherit; transition: all .15s; display: flex; flex-direction: column; gap: 14px; }
+  .card:hover { border-color: var(--amber); transform: translateY(-2px); background: var(--bg-3); }
+
+  .card-head { display: flex; gap: 12px; align-items: center; }
+  .av-ring { width: 56px; height: 56px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); flex-shrink: 0; }
+  .av-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; }
+  .av-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; }
+  .sa-1 { background: linear-gradient(135deg, #f5b042, #e8589a); }
+  .sa-2 { background: linear-gradient(135deg, #6b3a1a, #c084fc); }
+  .sa-3 { background: linear-gradient(135deg, #4a1838, #f5b042); }
+  .sa-4 { background: linear-gradient(135deg, #2a4a18, #6fbd5f); }
+  .sa-5 { background: linear-gradient(135deg, #f5b042, #c4533a); }
+  .sa-6 { background: linear-gradient(135deg, #2a1f15, #f5b042); }
+  .sa-7 { background: linear-gradient(135deg, #1f2a18, #6fbd5f); }
+  .sa-8 { background: linear-gradient(135deg, #5a2a10, #c4533a); }
+  .sa-9 { background: linear-gradient(135deg, #6b3a1a, #c0aa70); }
+  .sa-10 { background: linear-gradient(135deg, #1a0a18, #e8589a); }
+
+  .card-id { flex: 1; min-width: 0; }
+  .card-name { font-size: 14px; color: var(--ink); font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; }
+  .card-handle { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; margin-top: 3px; letter-spacing: 0.04em; }
+  .card-role { font-size: 11px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.4; }
+  .card-blurb { font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+  .card-meta { font-size: 9px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line-2); display: flex; gap: 14px; }
+  .card-meta strong { color: var(--ink-3); font-weight: 700; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="logo">JACOB BOEHME</div>
+    <div class="tag">LANDBOUND · LA</div>
+  </div>
+  <div class="nav-items">
+    <a class="nav-item" href="index.html">Home</a>
+    <a class="nav-item active" href="work.html">Work</a>
+    <a class="nav-item" href="photo.html">Photo</a>
+    <a class="nav-item" href="vfx-ai.html">VFX &amp; AI</a>
+    <a class="nav-item" href="hire.html">Hire</a>
+  </div>
+  <div class="nav-socials">
+    <div class="nav-socials-h">Follow</div>
+    <a class="nav-soc" href="https://www.tiktok.com/@landbound" target="_blank" rel="noopener"><div class="nav-soc-icon tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></a>
+    <a class="nav-soc" href="https://www.instagram.com/landbound" target="_blank" rel="noopener"><div class="nav-soc-icon ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 11K</div></div></a>
+    <a class="nav-soc" href="https://www.linkedin.com/in/jacobtboehme" target="_blank" rel="noopener"><div class="nav-soc-icon li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></a>
+    <a class="nav-soc" href="https://www.imdb.com/name/nm13209955/" target="_blank" rel="noopener"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></a>
+  </div>
+  <div class="nav-bottom">
+    <div class="status"><div class="dot"></div> Available Now</div>
+    <div>Los Angeles, CA</div>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="ph">
+    <div class="ph-l">
+      <h1>Clients</h1>
+      <p>Every artist, band, and brand Landbound has shipped work for.</p>
+    </div>
+    <div class="ph-r" id="ph-r"></div>
+  </div>
+  <div class="grid" id="clientGrid"></div>
+</main>
+
+<script src="data.js"></script>
+<script>
+  function render() {
+    const grid = document.getElementById('clientGrid');
+    const counter = document.getElementById('ph-r');
+    if (!grid || !window.CLIENTS) return;
+    const clients = window.CLIENTS;
+    counter.innerHTML = '<strong>' + clients.length + '</strong> clients<br>2022 — present';
+    grid.innerHTML = clients.map(c => {
+      const t = window.clientThumb(c);
+      const initials = window.clientInitials(c);
+      const avatarBg = t ? 'style="background-image: url(\'' + t + '\');"' : '';
+      const handle = c.handle || '';
+      const videoCount = (c.media || []).filter(m => m.type === 'video').length;
+      const photoCount = (c.media || []).filter(m => m.type === 'photo').length;
+      const stats = [];
+      if (videoCount) stats.push('<span><strong>' + videoCount + '</strong> ' + (videoCount === 1 ? 'video' : 'videos') + '</span>');
+      if (photoCount) stats.push('<span><strong>' + photoCount + '</strong> ' + (photoCount === 1 ? 'photo' : 'photos') + '</span>');
+      if (!stats.length) stats.push('<span>Coming soon</span>');
+      return ''
+        + '<a class="card" href="client.html?id=' + c.id + '">'
+        +   '<div class="card-head">'
+        +     '<div class="av-ring"><div class="av-inner"><div class="av-img ' + (t ? '' : c.palette) + '" ' + avatarBg + '>' + (t ? '' : initials) + '</div></div></div>'
+        +     '<div class="card-id"><div class="card-name">' + c.name + '</div><div class="card-handle">' + handle + '</div></div>'
+        +   '</div>'
+        +   '<div class="card-role">' + (c.role || '') + '</div>'
+        +   '<div class="card-blurb">' + (c.blurb || '') + '</div>'
+        +   '<div class="card-meta">' + stats.join('') + '</div>'
+        + '</a>';
+    }).join('');
+  }
+  render();
+</script>
+</body>
+</html>

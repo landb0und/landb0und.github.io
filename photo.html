@@ -589,11 +589,16 @@
     }
   });
 
-  // Render stories from shared CLIENTS data
+  // Render stories from shared CLIENTS data — first tile is "All clients" link
   function renderStories(containerId) {
     const c = document.getElementById(containerId);
     if (!c || !window.CLIENTS) return;
-    c.innerHTML = window.CLIENTS.map(cl => {
+    const allTile = `
+        <a class="story" href="clients.html" style="text-decoration:none;">
+          <div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, #f5b042, #e8589a, #c084fc); font-size: 18px;">All</div></div></div>
+          <div class="story-name">All clients</div>
+        </a>`;
+    const items = window.CLIENTS.map(cl => {
       const t = window.clientThumb(cl);
       const initials = window.clientInitials(cl);
       const bgStyle = t ? `style="background-image: url('${t}');"` : '';
@@ -604,6 +609,7 @@
           <div class="story-name">${cl.short}</div>
         </a>`;
     }).join('');
+    c.innerHTML = allTile + items;
   }
   renderStories('photoStories');
   renderStories('feedStories');

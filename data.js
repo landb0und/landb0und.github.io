@@ -58,7 +58,7 @@ window.CLIENTS = [
     role: 'Director · Photographer',
     blurb: 'Press portraits — single source soft, mood-forward.',
     palette: 'sa-8',
-    thumb: null,
+    thumb: 'photos/commercial/Max-Frost-2.jpeg',
     media: [
       { type: 'photo', src: 'photos/commercial/Max-Frost-1.png', title: 'Press portrait 01', year: '2025' },
       { type: 'photo', src: 'photos/commercial/Max-Frost-2.jpeg', title: 'Press portrait 02', year: '2025' }
