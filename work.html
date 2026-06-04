@@ -249,6 +249,28 @@
   .phone-slide .phone-actions,
   .phone-slide .phone-play,
   .phone-slide .phone-progress { z-index: 5; }
+  /* TikTok-style overlay system for verticals — opacity-fade controlled by JS via .show-overlay class */
+  .phone-slide .phone-overlay,
+  .phone-slide .phone-actions { opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+  .phone-slide.show-overlay .phone-overlay,
+  .phone-slide.show-overlay .phone-actions { opacity: 1; pointer-events: auto; }
+
+  /* Center play/pause/mute controls — TikTok-style cluster */
+  .phone-controls { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 6; display: flex; gap: 14px; align-items: center; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
+  .phone-slide.show-overlay .phone-controls { opacity: 1; pointer-events: auto; }
+  .phone-ctl { width: 56px; height: 56px; border-radius: 50%; background: rgba(0,0,0,0.55); border: 1.5px solid rgba(255,255,255,0.28); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all .15s; }
+  .phone-ctl:hover { background: rgba(0,0,0,0.78); border-color: var(--amber); color: var(--amber); transform: scale(1.06); }
+  .phone-ctl svg { width: 22px; height: 22px; pointer-events: none; }
+  .phone-ctl.primary { width: 72px; height: 72px; background: rgba(0,0,0,0.7); }
+  .phone-ctl.primary svg { width: 28px; height: 28px; }
+
+  /* Big tap target on the video itself — lets users click anywhere to toggle play/pause */
+  .phone-tap { position: absolute; inset: 0; z-index: 4; cursor: pointer; background: transparent; border: 0; }
+
+  /* Hide the default native video controls completely */
+  .phone-video::-webkit-media-controls { display: none !important; }
+  .phone-video::-webkit-media-controls-enclosure { display: none !important; }
+
 
   /* Active sidebar item */
   .sr-item.active { background: rgba(232,88,154,0.12); border-left: 2px solid var(--rose); padding-left: 8px; }
@@ -406,7 +428,12 @@
   <div class="shorts-stage">
     <div class="phone" id="phoneScroll">
       <div class="phone-slide" data-clip="0" style="background:#000;">
-        <iframe id="phone-video-0" class="phone-video" data-bunny-guid="e155dcd4-733a-489c-9d89-3417e3333cfe" src="https://iframe.mediadelivery.net/embed/675985/e155dcd4-733a-489c-9d89-3417e3333cfe?autoplay=false&loop=false&muted=true&preload=true&responsive=true" title="Vertical 1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        <video id="phone-video-0" class="phone-video" data-bunny-guid="e155dcd4-733a-489c-9d89-3417e3333cfe" loop muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"><source src="https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/play_720p.mp4" type="video/mp4"></video>
+        <button class="phone-tap" data-slide-idx="0" aria-label="Toggle play/pause"></button>
+        <div class="phone-controls">
+          <button class="phone-ctl" data-action="mute" data-slide-idx="0" aria-label="Toggle mute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></button>
+          <button class="phone-ctl primary" data-action="play" data-slide-idx="0" aria-label="Play/pause"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></button>
+        </div>
         <div class="phone-overlay">
           <div class="po-credit-tag">BTS · 2024 · LANDBOUND</div>
           <div class="po-title">Final BTS</div>
@@ -421,7 +448,12 @@
         </div>
       </div>
       <div class="phone-slide" data-clip="1" style="background:#000;">
-        <iframe id="phone-video-1" class="phone-video" data-bunny-guid="5e9277e4-debc-4491-bc5b-8fbbf8f56921" src="https://iframe.mediadelivery.net/embed/675985/5e9277e4-debc-4491-bc5b-8fbbf8f56921?autoplay=false&loop=false&muted=true&preload=true&responsive=true" title="Vertical 2" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        <video id="phone-video-1" class="phone-video" data-bunny-guid="5e9277e4-debc-4491-bc5b-8fbbf8f56921" loop muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"><source src="https://vz-5dfccea4-b84.b-cdn.net/5e9277e4-debc-4491-bc5b-8fbbf8f56921/play_720p.mp4" type="video/mp4"></video>
+        <button class="phone-tap" data-slide-idx="1" aria-label="Toggle play/pause"></button>
+        <div class="phone-controls">
+          <button class="phone-ctl" data-action="mute" data-slide-idx="1" aria-label="Toggle mute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></button>
+          <button class="phone-ctl primary" data-action="play" data-slide-idx="1" aria-label="Play/pause"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></button>
+        </div>
         <div class="phone-overlay">
           <div class="po-credit-tag">EDIT · 2024 · LANDBOUND</div>
           <div class="po-title">Look 5</div>
@@ -436,7 +468,12 @@
         </div>
       </div>
       <div class="phone-slide" data-clip="2" style="background:#000;">
-        <iframe id="phone-video-2" class="phone-video" data-bunny-guid="efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5" src="https://iframe.mediadelivery.net/embed/675985/efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5?autoplay=false&loop=false&muted=true&preload=true&responsive=true" title="Call Me When You're Home — Vertical" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        <video id="phone-video-2" class="phone-video" data-bunny-guid="efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5" loop muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; z-index:1;"><source src="https://vz-5dfccea4-b84.b-cdn.net/efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5/play_720p.mp4" type="video/mp4"></video>
+        <button class="phone-tap" data-slide-idx="2" aria-label="Toggle play/pause"></button>
+        <div class="phone-controls">
+          <button class="phone-ctl" data-action="mute" data-slide-idx="2" aria-label="Toggle mute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></button>
+          <button class="phone-ctl primary" data-action="play" data-slide-idx="2" aria-label="Play/pause"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg></button>
+        </div>
         <div class="phone-overlay">
           <div class="po-credit-tag">MUSIC · SURFACES · 2024</div>
           <div class="po-title">Call Me When You're Home</div>
@@ -824,6 +861,120 @@
     }).join('');
   }
   renderStories('workStories');
+
+  // ============= TIKTOK-STYLE OVERLAY + CONTROLS =============
+  (function() {
+    const slidesAll = document.querySelectorAll('.phone-slide');
+    const seenSet = new Set(); // tracks which slides have already shown their intro overlay
+    const fadeTimers = new WeakMap();
+
+    function showOverlayFor(slide, autoFade = true) {
+      slide.classList.add('show-overlay');
+      if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
+      if (autoFade) {
+        const t = setTimeout(() => slide.classList.remove('show-overlay'), 3000);
+        fadeTimers.set(slide, t);
+      }
+    }
+    function hideOverlayFor(slide) {
+      if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
+      slide.classList.remove('show-overlay');
+    }
+
+    // Hover → show overlay (no auto-fade); leave → fade after short delay
+    slidesAll.forEach(slide => {
+      slide.addEventListener('mouseenter', () => showOverlayFor(slide, false));
+      slide.addEventListener('mouseleave', () => {
+        if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
+        const t = setTimeout(() => slide.classList.remove('show-overlay'), 600);
+        fadeTimers.set(slide, t);
+      });
+    });
+
+    // Center play/pause button
+    document.querySelectorAll('.phone-ctl[data-action="play"], .phone-tap').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const slide = btn.closest('.phone-slide');
+        const idx = btn.getAttribute('data-slide-idx');
+        const vid = document.getElementById('phone-video-' + idx);
+        if (!vid) return;
+        if (vid.paused) vid.play(); else vid.pause();
+        // Update play icon
+        updatePlayIcon(slide, vid);
+        showOverlayFor(slide, true);
+      });
+    });
+
+    // Mute toggle
+    document.querySelectorAll('.phone-ctl[data-action="mute"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const slide = btn.closest('.phone-slide');
+        const idx = btn.getAttribute('data-slide-idx');
+        const vid = document.getElementById('phone-video-' + idx);
+        if (!vid) return;
+        vid.muted = !vid.muted;
+        updateMuteIcon(btn, vid);
+        showOverlayFor(slide, true);
+      });
+    });
+
+    function updatePlayIcon(slide, vid) {
+      const btn = slide.querySelector('.phone-ctl[data-action="play"] svg');
+      if (!btn) return;
+      if (vid.paused) {
+        btn.innerHTML = '<polygon points="6,4 20,12 6,20"/>';
+      } else {
+        btn.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+      }
+    }
+    function updateMuteIcon(btn, vid) {
+      const svg = btn.querySelector('svg');
+      if (!svg) return;
+      if (vid.muted) {
+        svg.innerHTML = '<path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+      } else {
+        svg.innerHTML = '<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+      }
+    }
+
+    // IntersectionObserver — when a slide enters view: play + show intro overlay (once)
+    if ('IntersectionObserver' in window) {
+      const phoneScroll = document.getElementById('phoneScroll');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const slide = entry.target;
+          const idx = slide.dataset.clip;
+          const vid = slide.querySelector('.phone-video');
+          if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+            if (vid && vid.tagName === 'VIDEO') {
+              vid.play().catch(() => {});
+              updatePlayIcon(slide, vid);
+            }
+            // Show intro overlay ONCE per slide (re-shows when re-entering)
+            const key = 'slide-' + idx;
+            if (!seenSet.has(key)) {
+              seenSet.add(key);
+            }
+            // Always show on enter, auto-fade after 3s
+            showOverlayFor(slide, true);
+            // Sync sidebar
+            document.querySelectorAll('.sr-item').forEach(it => it.classList.remove('active'));
+            const sr = document.querySelectorAll('.sr-item')[parseInt(idx)];
+            if (sr) sr.classList.add('active');
+          } else if (entry.intersectionRatio < 0.3) {
+            if (vid && vid.tagName === 'VIDEO') vid.pause();
+            hideOverlayFor(slide);
+            // Reset seen so next time it re-enters, intro overlay re-shows
+            seenSet.delete('slide-' + idx);
+          }
+        });
+      }, { root: phoneScroll, threshold: [0.3, 0.6] });
+      slidesAll.forEach(s => io.observe(s));
+    }
+  })();
+
 </script>
 </body>
 </html>
