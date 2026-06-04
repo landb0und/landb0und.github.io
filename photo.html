@@ -459,31 +459,35 @@
 <script src="data.js"></script>
 <script>
   // ============= PHOTO DATA =============
-  const PHOTOS = [
-    { src: 'photos/commercial/Aporro.jpg', client: 'aporro', tag: 'COMMERCIAL · APORRO', title: 'Aporro — campaign frame', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA Studio · 2025', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '1,418' },
-    { src: 'photos/commercial/Aporro-2.jpg', client: 'aporro', tag: 'COMMERCIAL · APORRO', title: 'Aporro — alt frame', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA Studio · 2025', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '987' },
-    { src: 'photos/commercial/Aporro-3.jpg', client: 'aporro', tag: 'COMMERCIAL · APORRO', title: 'Aporro — campaign frame 03', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA Studio · 2025', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '742' },
-    { src: 'photos/commercial/Aporro-4.png', client: 'aporro', tag: 'COMMERCIAL · APORRO', title: 'Aporro — campaign frame 04', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA Studio · 2025', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '654' },
-    { src: 'photos/commercial/Aporro-5.png', client: 'aporro', tag: 'COMMERCIAL · APORRO', title: 'Aporro — campaign frame 05', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA Studio · 2025', camera: 'Phase One', location: 'LA Studio', year: '2025', project: 'Aporro campaign', likes: '821' },
-    { src: 'photos/commercial/Max-Frost-1.png', client: 'max-frost', tag: 'COMMERCIAL · MAX FROST', title: 'Max Frost — press portrait', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA · 2025', camera: 'Phase One', location: 'LA', year: '2025', project: 'Max Frost press', likes: '1,103' },
-    { src: 'photos/commercial/Max-Frost-2.jpeg', client: 'max-frost', tag: 'COMMERCIAL · MAX FROST', title: 'Max Frost — alt frame', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA · 2025', camera: 'Phase One', location: 'LA', year: '2025', project: 'Max Frost press', likes: '876' },
-    { client: 'landbound', palette: 'p7', tag: '35MM FILM', title: 'LA street', caption: 'Photography by Jacob Boehme (@landbound) · Leica M6 · HP5 · Echo Park · 2024', camera: 'Leica M6 · HP5', location: 'Echo Park', year: '2024', project: 'Personal Work', likes: '189' },
-    { client: 'landbound', palette: 'p8', tag: 'PERSONAL', title: 'Mojave', caption: 'Photography by Jacob Boehme (@landbound) · Phase One IQ4 · Mojave Desert · 2023', camera: 'Phase One IQ4', location: 'Mojave Desert', year: '2023', project: 'Personal Work', likes: '634' },
-    { client: 'landbound', palette: 'p9', tag: 'BTS · FIRST CIRCLE', title: 'The First Circle — practicals', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · On location · 2023', camera: 'Phase One', location: 'On location', year: '2023', project: 'The First Circle', likes: '301' },
-    { client: 'christian-gates', palette: 'p10', tag: 'MUSIC · BTS', title: 'Bleed — underwater rig', caption: 'Photography by Jacob Boehme (@landbound) · Arri Mini LF · LA Sound Stage · 2025', camera: 'Arri Mini LF', location: 'LA Sound Stage', year: '2025', project: 'Bleed', likes: '578' },
-    { client: 'mike-posner', palette: 'p11', tag: 'CLIENT · PROMO', title: 'Mike Posner — promo', caption: 'Photography by Jacob Boehme (@landbound) · Sony A7S · LA · 2024', camera: 'Sony A7S', location: 'LA', year: '2024', project: 'Posner promo', likes: '892' },
-    { client: 'landbound', palette: 'p12', tag: 'PERSONAL', title: 'Joshua Tree', caption: 'Photography by Jacob Boehme (@landbound) · 35mm Ektar 100 · Joshua Tree · 2024', camera: '35mm Ektar 100', location: 'Joshua Tree', year: '2024', project: 'Personal Work', likes: '412' },
-    { client: 'grace-vanderwaal', palette: 'p13', tag: 'BTS · CHILDSTAR', title: 'CHILDSTAR — wardrobe test', caption: 'Photography by Jacob Boehme (@landbound) · Polaroid Now · LA Studio · 2025', camera: 'Polaroid Now', location: 'LA Studio', year: '2025', project: 'CHILDSTAR', likes: '256' },
-    { client: 'gym-class-heroes', palette: 'p14', tag: 'CLIENT · PROMO', title: 'Gym Class Heroes — reunion', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA Studio · 2024', camera: 'Phase One', location: 'LA Studio', year: '2024', project: 'GCH reunion', likes: '703' },
-    { client: 'landbound', palette: 'p15', tag: 'PERSONAL', title: 'Echo Park, golden hour', caption: 'Photography by Jacob Boehme (@landbound) · iPhone 15 Pro · Echo Park · 2024', camera: 'iPhone 15 Pro', location: 'Echo Park', year: '2024', project: 'Personal Work', likes: '198' },
-    { client: 'surfaces', palette: 'p16', tag: 'MUSIC · BTS', title: 'Dreams — Surfaces, set', caption: 'Photography by Jacob Boehme (@landbound) · Arri Alexa · LA · 2023', camera: 'Arri Alexa', location: 'LA', year: '2023', project: 'Dreams — Surfaces', likes: '521' },
-    { client: 'landbound', palette: 'p17', tag: '35MM FILM', title: 'Topanga night', caption: 'Photography by Jacob Boehme (@landbound) · Leica M6 · Cinestill · Topanga · 2022', camera: 'Leica M6 · Cinestill', location: 'Topanga', year: '2022', project: 'Personal Work', likes: '167' },
-    { client: 'allison-hagendorf', palette: 'p18', tag: 'BTS · HAGENDORF', title: 'Hagendorf S4 — studio rig', caption: 'Photography by Jacob Boehme (@landbound) · iPhone · LA Studio · 2025', camera: 'iPhone', location: 'LA Studio', year: '2025', project: 'Hagendorf S4', likes: '142' },
-    { client: 'allison-hagendorf', palette: 'p3', tag: 'EDITORIAL', title: 'Allison Hagendorf — promo', caption: 'Photography by Jacob Boehme (@landbound) · Sony FX9 · LA · 2024', camera: 'Sony FX9', location: 'LA', year: '2024', project: 'Hagendorf S4 promo', likes: '589' },
-    { client: 'landbound', palette: 'p7', tag: 'PERSONAL', title: 'Big Sur', caption: 'Photography by Jacob Boehme (@landbound) · Mamiya 7 · Big Sur · 2024', camera: 'Mamiya 7', location: 'Big Sur', year: '2024', project: 'Personal Work', likes: '378' },
-    { client: 'two-feet', palette: 'p5', tag: 'LIVE EVENT', title: 'Two Feet — rehearsal stills', caption: 'Photography by Jacob Boehme (@landbound) · Sony A7S · LA Rehearsal · 2023', camera: 'Sony A7S', location: 'LA Rehearsal', year: '2023', project: 'Two Feet tour', likes: '294' },
-    { client: 'landbound', palette: 'p9', tag: 'COMMERCIAL', title: 'Super Bowl spot — production stills', caption: 'Photography by Jacob Boehme (@landbound) · Phase One · LA · 2025', camera: 'Phase One', location: 'LA', year: '2025', project: 'Super Bowl Spot', likes: '927' }
-  ];
+  const PHOTOS = (function() {
+    // Build a unified photo feed from window.CLIENTS (data.js).
+    // Every client's photo media becomes a feed post automatically — add a photo
+    // to a client in data.js and it appears on this Photo tab without touching photo.html.
+    if (!window.CLIENTS) return [];
+    const out = [];
+    window.CLIENTS.forEach(c => {
+      const photos = (c.media || []).filter(m => m.type === 'photo');
+      photos.forEach((p, i) => {
+        const handleClean = (c.handle || '').replace('@','').toLowerCase();
+        const handleDisplay = c.handle && c.handle.startsWith('@') ? c.handle : '@' + (c.id || '').replace(/-/g,'');
+        out.push({
+          src: p.src,
+          client: c.id,
+          clientName: c.name,
+          clientHandle: handleDisplay,
+          tag: ((c.role || '').toUpperCase() + ' · ' + c.name.toUpperCase()).slice(0, 60),
+          title: p.title || c.name,
+          caption: 'Photography by Jacob Boehme (@landbound) · ' + (p.location || c.name) + ' · ' + (p.year || ''),
+          camera: p.camera || 'Phase One',
+          location: p.location || '',
+          year: p.year || '2024',
+          project: p.title || (c.name + ' — selects'),
+          likes: p.likes || (Math.floor(Math.random() * 800 + 200) + '')
+        });
+      });
+    });
+    return out;
+  })();
 
   // ============= IG FEED MODE =============
   function enterFeed(startIdx) {
