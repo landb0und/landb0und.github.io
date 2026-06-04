@@ -367,19 +367,20 @@ window.clientThumb = function(c) {
   if (firstPhoto) return firstPhoto.src;
   const firstVid = c.media.find(m => m.type === 'video');
   if (firstVid) {
-    if (firstVid.bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + firstVid.embedId + '/thumbnail.jpg?v=' + (window.BUNNY && window.BUNNY.THUMB_VER || 1);
+    if (firstVid.bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + firstVid.embedId + '/thumbnail.jpg';
     return 'https://img.youtube.com/vi/' + firstVid.embedId + '/maxresdefault.jpg';
   }
   return null;
 };
 
 // Bunny config — exported so other files can build thumbnail/embed URLs.
-// THUMB_VER is a global cache-buster: bump this number to force every browser
-// to re-fetch all Bunny thumbnails (use when you update a thumb in the Bunny
-// dashboard and the old image is still showing).
-window.BUNNY = { LIB: '675985', CDN: 'vz-5dfccea4-b84.b-cdn.net', THUMB_VER: 3 };
+// NOTE: do NOT append query strings (?v=N) to thumbnail URLs. Some videos in
+// this library have token authentication that rejects any query string and
+// returns 403/404. Use bare URLs. To force-refresh a thumb, hard-refresh the
+// browser (Cmd+Shift+R) or wait for CDN/browser cache to expire.
+window.BUNNY = { LIB: '675985', CDN: 'vz-5dfccea4-b84.b-cdn.net' };
 window.bunnyThumb = function(guid) {
-  return 'https://vz-5dfccea4-b84.b-cdn.net/' + guid + '/thumbnail.jpg?v=' + window.BUNNY.THUMB_VER;
+  return 'https://vz-5dfccea4-b84.b-cdn.net/' + guid + '/thumbnail.jpg';
 };
 window.mediaThumb = function(m) {
   if (m.type === 'photo') return m.src;
@@ -564,7 +565,7 @@ window.VERTICALS = [
 ];
 
 window.verticalThumb = function(v) {
-  return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/thumbnail.jpg?v=' + window.BUNNY.THUMB_VER;
+  return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/thumbnail.jpg';
 };
 window.verticalMp4 = function(v, quality) {
   return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/play_' + (quality || '480p') + '.mp4';
