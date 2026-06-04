@@ -67,12 +67,12 @@
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
-    animation: storyRingSpin 14s linear infinite; z-index: -1;
+    animation: storyRingSpin 5s linear infinite; z-index: -1;
   }
-  .story:nth-child(3n) .story-ring::before { animation-delay: -4s; }
-  .story:nth-child(3n+1) .story-ring::before { animation-delay: -8s; }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -1.7s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -3.3s; }
   .story:hover .story-ring { transform: scale(1.06); }
-  .story:hover .story-ring::before { animation-duration: 4s; }
+  .story:hover .story-ring::before { animation-duration: 2s; }
   @keyframes storyRingSpin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) {
     .story-ring::before { animation: none; }

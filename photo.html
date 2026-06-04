@@ -160,12 +160,12 @@
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
-    animation: ringSpin 14s linear infinite; z-index: -1;
+    animation: ringSpin 5s linear infinite; z-index: -1;
   }
-  .story:nth-child(3n) .story-ring::before { animation-delay: -4s; }
-  .story:nth-child(3n+1) .story-ring::before { animation-delay: -8s; }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -1.7s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -3.3s; }
   .story:hover .story-ring { transform: scale(1.06); }
-  .story:hover .story-ring::before { animation-duration: 4s; }
+  .story:hover .story-ring::before { animation-duration: 2s; }
   @keyframes ringSpin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) {
     .story-ring::before { animation: none; }
@@ -318,8 +318,12 @@
       <span class="tab active" data-cat="all">All <span class="count" data-cat-count="all">0</span></span>
       <span class="tab" data-cat="music">Music <span class="count" data-cat-count="music">0</span></span>
       <span class="tab" data-cat="commercial">Commercial <span class="count" data-cat-count="commercial">0</span></span>
+      <span class="tab" data-cat="collab">Collab <span class="count" data-cat-count="collab">0</span></span>
       <span class="tab" data-cat="bts">BTS <span class="count" data-cat-count="bts">0</span></span>
       <span class="tab" data-cat="editorial">Editorial <span class="count" data-cat-count="editorial">0</span></span>
+      <span class="tab" data-cat="live">Live <span class="count" data-cat-count="live">0</span></span>
+      <span class="tab" data-cat="film">35mm <span class="count" data-cat-count="film">0</span></span>
+      <span class="tab" data-cat="phone">Phone <span class="count" data-cat-count="phone">0</span></span>
       <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
     </div>
 
@@ -352,8 +356,12 @@
       <span class="tab active" data-cat="all">All <span class="count" data-cat-count="all">0</span></span>
       <span class="tab" data-cat="music">Music <span class="count" data-cat-count="music">0</span></span>
       <span class="tab" data-cat="commercial">Commercial <span class="count" data-cat-count="commercial">0</span></span>
+      <span class="tab" data-cat="collab">Collab <span class="count" data-cat-count="collab">0</span></span>
       <span class="tab" data-cat="bts">BTS <span class="count" data-cat-count="bts">0</span></span>
       <span class="tab" data-cat="editorial">Editorial <span class="count" data-cat-count="editorial">0</span></span>
+      <span class="tab" data-cat="live">Live <span class="count" data-cat-count="live">0</span></span>
+      <span class="tab" data-cat="film">35mm <span class="count" data-cat-count="film">0</span></span>
+      <span class="tab" data-cat="phone">Phone <span class="count" data-cat-count="phone">0</span></span>
       <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
     </div>
 
@@ -489,20 +497,32 @@
         entry.authors.push({ id: c.id, name: c.name, short: c.short || c.name, handle: handleDisplay, role: c.role, palette: c.palette });
       });
     });
-    // Derive filter categories per photo from the clients involved and any
-    // explicit tags on the photo. Used by the IG/grid filter pills.
-    function deriveCategories(authors, photoTags) {
+    // Derive filter categories per photo. Single source of truth — when a new
+    // client/photo is added these rules apply automatically.
+    //  - Commercial: brand product/campaign clients (Aporro, future brands)
+    //  - Personal: Landbound (Jacob's own personal frames)
+    //  - Music: every other artist/band — they're music clients by default
+    //  - Collab: any photo with >1 author (multi-client shared)
+    //  - BTS / Editorial / Live Event / 35mm Film / Phone — only fire when the
+    //    photo itself is tagged that way in data.js (future-proof, pills auto-
+    //    appear once at least one photo has that tag).
+    const COMMERCIAL_CLIENTS = ['aporro'];
+    function deriveCategories(authors, photoTags, photoCamera) {
       const cats = new Set();
       const tagLow = (photoTags || []).map(t => String(t).toLowerCase());
       if (tagLow.includes('bts')) cats.add('bts');
       if (tagLow.includes('editorial')) cats.add('editorial');
+      if (tagLow.includes('live') || tagLow.includes('live event')) cats.add('live');
+      // Camera-based: 35mm Film tag, phone tag
+      const cam = (photoCamera || '').toLowerCase();
+      if (cam.includes('35mm') || tagLow.includes('35mm')) cats.add('film');
+      if (cam.includes('phone') || tagLow.includes('phone')) cats.add('phone');
       authors.forEach(a => {
         if (a.id === 'landbound') cats.add('personal');
-        if (['aporro','max-frost'].includes(a.id)) cats.add('commercial');
-        const client = window.clientById ? window.clientById(a.id) : null;
-        const hasVideo = client && (client.media || []).some(m => m.type === 'video');
-        if (hasVideo && a.id !== 'landbound') cats.add('music');
+        else if (COMMERCIAL_CLIENTS.includes(a.id)) cats.add('commercial');
+        else cats.add('music'); // every other client is a music artist by default
       });
+      if (authors.length > 1) cats.add('collab');
       return Array.from(cats);
     }
 
@@ -519,7 +539,7 @@
         clientHandle: primary.handle,
         authors: entry.authors,
         coAuthorsLine: coNames,
-        categories: deriveCategories(entry.authors, entry.tags),
+        categories: deriveCategories(entry.authors, entry.tags, entry.camera),
         tag: ((entry.authors.length > 1 ? 'COLLAB · ' : '') + tagBase).slice(0, 70),
         title: entry.title,
         caption: 'Photography by Jacob Boehme (@landbound) · ' + (entry.location || primary.name) + ' · ' + entry.year,
@@ -564,10 +584,17 @@
     return PHOTOS.filter(p => (p.categories || []).includes(currentCategory));
   }
   function updateCounts() {
-    const cats = ['all','music','commercial','bts','editorial','personal'];
+    // Cover every category the deriveCategories function emits. Pills with 0
+    // hits get display: none — future-proof: tag a photo BTS and that pill
+    // auto-appears without touching this file.
+    const cats = ['all','music','commercial','collab','bts','editorial','live','film','phone','personal'];
     cats.forEach(cat => {
       const n = cat === 'all' ? PHOTOS.length : PHOTOS.filter(p => (p.categories || []).includes(cat)).length;
       document.querySelectorAll('[data-cat-count="' + cat + '"]').forEach(el => { el.textContent = n; });
+      // Hide the entire pill when empty (always show All)
+      document.querySelectorAll('.tab[data-cat="' + cat + '"]').forEach(pill => {
+        pill.style.display = (cat === 'all' || n > 0) ? '' : 'none';
+      });
     });
   }
 
