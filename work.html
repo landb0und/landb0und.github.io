@@ -260,20 +260,16 @@
   .shorts-x { margin-left: auto; color: #fff; font-size: 22px; cursor: pointer; padding: 6px 10px; border-radius: 50%; transition: background .15s; }
   .shorts-x:hover { background: rgba(255,255,255,0.15); }
 
-  /* Full-screen TikTok layout — stage fills remaining width, phone fills full height */
-  .shorts-stage { flex: 1; display: flex; align-items: stretch; justify-content: center; padding: 0; }
+  /* Full-screen TikTok layout — the scroller spans the entire stage, the 9:16
+     content frame is just centered inside it. This means a wheel anywhere over
+     the stage (incl. the black margins flanking the video) targets the native
+     scroll container directly — same buttery scroll-snap behavior as scrolling
+     over the video itself. No JS wheel handler required. */
+  .shorts-stage { flex: 1; display: block; padding: 0; }
   .phone {
-    /* Full viewport height, 9:16 aspect ratio width */
     height: 100dvh;
-    width: calc(100dvh * 9 / 16);
-    max-width: 100%;
-    /* No phone frame — edge to edge */
-    border-radius: 0;
-    box-shadow: none;
-    mask-image: none;
-    -webkit-mask-image: none;
+    width: 100%;
     background: #000;
-    /* Scroll */
     overflow-y: scroll;
     overflow-x: hidden;
     scroll-snap-type: y mandatory;
@@ -325,10 +321,14 @@
   .toggle-btn { position: fixed; bottom: 60px; right: 14px; padding: 10px 16px; background: var(--rose); border: none; color: var(--bg); font-weight: 800; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 100px; cursor: pointer; font-family: 'SF Mono', Menlo, monospace; z-index: 49; }
 
 
-  /* Each slide = full viewport height, snaps to top */
+  /* Each slide = full viewport height, 9:16 wide and centered, snaps to top.
+     Negative space to either side of the slide is just .phone background (#000),
+     so hovering it doesn't fire .phone-slide mouseenter — overlays stay hidden. */
   .phone-slide {
     position: relative;
-    width: 100%;
+    width: calc(100dvh * 9 / 16);
+    max-width: 100%;
+    margin: 0 auto;
     height: 100dvh;
     min-height: 100dvh;
     flex-shrink: 0;
@@ -336,7 +336,6 @@
     scroll-snap-stop: always;
     overflow: hidden;
     border-radius: 0;
-    margin: 0;
   }
   .phone-slide iframe.phone-video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1; }
   .phone-slide.vg1 { background: linear-gradient(180deg, #1a0a10 0%, #501838 70%, var(--rose) 100%); }
@@ -915,22 +914,10 @@
     openShorts();
   }
 
-  // Wheel scroll outside the phone (the black margins to either side) —
-  // we forward the raw deltaY into the phone scroller so the negative-space
-  // experience is byte-identical to scrolling directly on the video.
-  // `.phone` already has scroll-snap-type: y mandatory + scroll-snap-stop: always
-  // on each slide, so the native scroller snaps one clip at a time even with
-  // big trackpad deltas. No debounce, no snap math, no overlay activation.
-  (function() {
-    const stage = document.querySelector('.shorts-stage');
-    if (!stage) return;
-    stage.addEventListener('wheel', (e) => {
-      const phone = document.getElementById('phoneScroll');
-      if (!phone || phone.contains(e.target)) return; // inside-phone scroll runs natively
-      e.preventDefault();
-      phone.scrollBy({ top: e.deltaY, left: 0 });
-    }, { passive: false });
-  })();
+  // (Wheel scroll handler removed — the .phone scroller now spans the entire
+  // .shorts-stage width, so the native browser scroll handles wheel events
+  // anywhere over the stage with byte-identical snap behavior. The 9:16 slide
+  // is just visually centered inside the wide scroll container.)
 
   // Hash routing — #shorts opens shorts view, #shorts/N opens at slide N
   function handleHash() {
