@@ -184,6 +184,53 @@
   .ltile-title { font-size: 12.5px; color: var(--ink); font-weight: 700; line-height: 1.2; letter-spacing: -0.005em; }
   .ltile-client { font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
 
+  /* ============= UNIFIED HOME FEED (IG-style posts) =============
+     Mixes photos, verticals, and wide videos as posts. Component shared with
+     photo.html's IG feed view — adding/changing here keeps both feeds aligned. */
+  .home-feed { display: flex; flex-direction: column; gap: 22px; max-width: 580px; margin: 18px auto 40px; width: 100%; }
+  .post { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .post-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+  .post-avatar { width: 36px; height: 36px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); flex-shrink: 0; cursor: pointer; text-decoration: none; }
+  .post-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; }
+  .post-avatar-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 12px; }
+  .post-head-info { flex: 1; min-width: 0; }
+  .post-head-name { font-size: 13px; color: var(--ink); font-weight: 800; cursor: pointer; text-decoration: none; }
+  .post-head-name:hover { color: var(--amber); }
+  .post-head-loc { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 1px; display: flex; align-items: center; gap: 8px; }
+  .post-co-author { color: var(--ink-2); font-weight: 700; text-decoration: none; font-size: 13px; }
+  .post-co-author:hover { color: var(--amber); }
+  .post-with { color: var(--ink-4); font-weight: 400; font-style: italic; margin: 0 2px; }
+  .post-collab-pill { display: inline-block; padding: 2px 7px; background: rgba(232,88,154,0.14); color: var(--rose); font-size: 8px; font-weight: 800; letter-spacing: 0.2em; border-radius: 100px; }
+  .post-head-menu { color: var(--ink-3); font-size: 18px; cursor: pointer; padding: 0 6px; margin-left: auto; }
+
+  /* Image post — natural aspect, IG-style framing */
+  .post-image-real { display: flex; align-items: center; justify-content: center; background: #000; max-height: 750px; position: relative; }
+  .post-image-real img { display: block; width: 100%; height: auto; max-height: 750px; object-fit: contain; }
+
+  /* Vertical reel post — 9:16, click-through to shorts feed */
+  .post-image-vertical { aspect-ratio: 9/16; max-height: 750px; background: #000 center/cover no-repeat; position: relative; display: block; text-decoration: none; }
+  .post-image-vertical video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .post-image-vertical .reel-badge { position: absolute; top: 12px; right: 12px; padding: 4px 10px; background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; backdrop-filter: blur(6px); display: inline-flex; align-items: center; gap: 5px; }
+
+  /* Wide video post — 16:9 poster + play overlay, click opens Work tab at that video */
+  .post-image-video { aspect-ratio: 16/9; background: #000 center/cover no-repeat; position: relative; display: block; text-decoration: none; }
+  .post-image-video .play-circle { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.92); display: flex; align-items: center; justify-content: center; z-index: 2; transition: transform .15s; }
+  .post-image-video .play-circle::after { content: ''; width: 0; height: 0; border-left: 16px solid var(--bg); border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 4px; }
+  .post-image-video:hover .play-circle { transform: translate(-50%, -50%) scale(1.08); }
+  .post-image-video .feat-badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; background: var(--amber); color: var(--bg); font-size: 9px; letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; text-transform: uppercase; }
+
+  .post-actions { display: flex; align-items: center; padding: 12px 14px 4px; gap: 14px; }
+  .post-actions .icn { font-size: 22px; color: var(--ink); cursor: pointer; transition: color .15s; }
+  .post-actions .icn:hover { color: var(--amber); }
+  .post-actions .icn.save { margin-left: auto; }
+  .post-likes { padding: 0 14px; font-size: 13px; color: var(--ink); font-weight: 700; }
+  .post-caption { padding: 8px 14px; font-size: 13px; color: var(--ink); line-height: 1.4; }
+  .post-caption .nm { font-weight: 800; margin-right: 6px; text-decoration: none; color: var(--ink); }
+  .post-caption .nm:hover { color: var(--amber); }
+  .post-credit { font-size: 12.5px; color: var(--ink-2); padding: 4px 14px 8px; line-height: 1.45; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.02em; }
+  .post-meta { padding: 4px 14px 14px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; display: flex; gap: 14px; }
+  .post-meta span strong { color: var(--ink-3); font-weight: 700; }
+
   /* AI footnote — visually muted, italic, under the lanes */
   .ai-footnote { margin-top: 18px; padding: 12px 14px; background: rgba(255,255,255,0.015); border: 1px solid var(--line-2); border-radius: 6px; font-size: 12px; color: var(--ink-3); font-style: italic; line-height: 1.5; }
   .ai-footnote strong { color: var(--ink-2); font-style: normal; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; display: block; margin-bottom: 4px; }
@@ -519,53 +566,10 @@
     <a class="short-cta" href="work.html#shorts"><span class="arr">↗</span><span class="t">Open Shorts Feed</span><span class="m">All clips</span></a>
   </div>
 
-  <!-- FEATURED -->
-  <div class="page-section-head"><span class="label">Featured Work</span></div>
-  <div class="section-sub"><span>Hand-picked. Full filmography in <em>Work</em>.</span><a href="work.html">VIEW ALL 24 →</a></div>
-  <div class="feat-grid">
-    <a class="feat feat-1" href="work.html#video/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8"><div class="feat-bg feat-bg-1"><img src="https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="feat-stamp">★ Featured</span><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + EP · 2025 · 4.2M VIEWS</span><div class="t">CHILDSTAR: Final Act</div><div class="m">Grace VanderWaal · Music Video</div></div></a>
-    <a class="feat" href="work.html#video/b58d5348-c997-4338-8a9d-f83302bf948a"><div class="feat-bg feat-bg-2"><img src="photos/stills/secrets.png" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR + DP + ED + VFX · 2024</span><div class="t">Secrets</div><div class="m">Christian Gates</div></div></a>
-    <a class="feat" href="work.html#video/oD42T1md068"><div class="feat-bg feat-bg-3" style="background:#000;"><img src="https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">DIR · SCREAMFEST · 2022</span><div class="t">Forgive &amp; Forget</div><div class="m">Short Film</div></div></a>
-    <a class="feat" href="work.html"><div class="feat-bg feat-bg-5"></div><div class="feat-overlay"></div><span class="play-pill">▶ PLAY</span><div class="feat-cap"><span class="tag">FEATURE · 2023 · 250 VFX SHOTS</span><div class="t">The First Circle</div><div class="m">VFX Supervisor</div></div></a>
-  </div>
-
-  <!-- TOUR POSTER -->
-  <div class="worked-section">
-        <div class="poster">
-      <div class="poster-label"><span class="line"></span>Worked With<span class="line"></span></div>
-      <div class="poster-row"><a class="poster-name headliner" href="client.html?id=mike-posner" style="text-decoration:none;">MIKE POSNER</a></div>
-      <div class="poster-row">
-        <a class="poster-name big" href="client.html?id=surfaces" style="text-decoration:none;">SURFACES</a>
-        <a class="poster-name big alt" href="client.html?id=gym-class-heroes" style="text-decoration:none;">Gym Class Heroes</a>
-      </div>
-      <div class="poster-row">
-        <a class="poster-name med" href="client.html?id=saint-motel" style="text-decoration:none;">SAINT MOTEL</a>
-        <a class="poster-name med alt" href="client.html?id=two-feet" style="text-decoration:none;">Two Feet</a>
-        <a class="poster-name med" href="client.html?id=grace-vanderwaal" style="text-decoration:none;">GRACE VANDERWAAL</a>
-      </div>
-      <div class="poster-row">
-        <a class="poster-name sm" href="client.html?id=mowglis" style="text-decoration:none;">THE MOWGLI'S</a>
-        <a class="poster-name sm alt" href="client.html?id=max-frost" style="text-decoration:none;">Max Frost</a>
-        <a class="poster-name sm" href="client.html?id=young-rising-sons" style="text-decoration:none;">YOUNG RISING SONS</a>
-        <a class="poster-name sm alt" href="client.html?id=christian-gates" style="text-decoration:none;">Christian Gates</a>
-        <a class="poster-name sm" href="client.html?id=bahari" style="text-decoration:none;">BAHARI</a>
-        <a class="poster-name sm alt" href="client.html?id=allen-stone" style="text-decoration:none;">Allen Stone</a>
-        <a class="poster-name sm" href="client.html?id=scotty-sire" style="text-decoration:none;">SCOTTY SIRE</a>
-        <a class="poster-name sm alt" href="client.html?id=magic-giant" style="text-decoration:none;">Magic Giant</a>
-      </div>
-      <div class="poster-row">
-        <a class="poster-name sm dim" href="client.html?id=raw-material" style="text-decoration:none;">Raw Material</a>
-        <a class="poster-name sm dim alt" href="client.html?id=allison-hagendorf" style="text-decoration:none;">Allison Hagendorf</a>
-        <a class="poster-name sm dim" href="client.html?id=screamfest" style="text-decoration:none;">SCREAMFEST</a>
-        <a class="poster-name sm dim alt" href="client.html?id=tiktok" style="text-decoration:none;">TikTok Partner</a>
-        <a class="poster-name sm dim" href="client.html?id=nyc-cinematography-awards" style="text-decoration:none;">NYC CINEMATOGRAPHY AWARDS</a>
-      </div>
-      <div class="poster-foot">
-        <span>24 credits · 100+ projects</span>
-        <a href="clients.html">Full client list →</a>
-      </div>
-    </div>
-  </div>
+  <!-- HOME FEED — unified IG-style feed mixing photos, verticals, and wide-screen video -->
+  <div class="page-section-head" style="margin-top: 38px;"><span class="label">— Latest</span></div>
+  <div class="section-sub"><span>Recent work — photos, shorts, and music videos.</span><a href="work.html">FULL ARCHIVE →</a></div>
+  <div class="home-feed" id="homeFeed"></div>
 
   <div class="footer">
     <span class="clapper">
@@ -734,6 +738,173 @@
     mount.innerHTML = html;
   }
   renderRoleLanes();
+
+  // ============= UNIFIED HOME FEED =============
+  // Mixes photos, verticals, and wide-screen video into a single shuffled
+  // IG-style feed. PRIORITY_PINS keeps Director's Reel (and any future
+  // hero pieces) anchored at the top regardless of shuffle.
+  const PRIORITY_PINS = {
+    'e0374508-213f-47a2-ae0d-dd50d9df695d': 100   // Director's Reel always first
+  };
+  // CHILDSTAR + Secrets thumbnail overrides (Bunny URLs 404 on those two)
+  const FEED_THUMB_OVERRIDE = {
+    'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
+    'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
+  };
+
+  function bunnyVideoThumb(embedId, bunny) {
+    if (FEED_THUMB_OVERRIDE[embedId]) return FEED_THUMB_OVERRIDE[embedId];
+    if (bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + embedId + '/thumbnail.jpg';
+    return 'https://img.youtube.com/vi/' + embedId + '/maxresdefault.jpg';
+  }
+
+  function shuffleArr(a) {
+    a = a.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Build a unified feed from CLIENTS (photos + horizontal videos) + VERTICALS.
+  // Adding new media to data.js (any client's media[] or a new VERTICALS entry)
+  // surfaces here automatically.
+  function buildHomeFeed() {
+    if (!window.CLIENTS || !window.VERTICALS) return [];
+    const out = [];
+
+    // 1. Photos — dedupe by src, collect every client that shares each file
+    const photosBySrc = new Map();
+    window.CLIENTS.forEach(c => {
+      (c.media || []).filter(m => m.type === 'photo').forEach(p => {
+        if (!p.src) return;
+        if (!photosBySrc.has(p.src)) {
+          photosBySrc.set(p.src, { src: p.src, authors: [], year: p.year || '2024', location: p.location || '', tags: p.tags || [] });
+        }
+        photosBySrc.get(p.src).authors.push(c);
+      });
+    });
+    Array.from(photosBySrc.values()).forEach(p => {
+      out.push({
+        type: 'photo', priority: 0,
+        src: p.src, authors: p.authors,
+        year: p.year, location: p.location,
+        likes: Math.floor(Math.random() * 800 + 200)
+      });
+    });
+
+    // 2. Verticals — every entry from data.js VERTICALS
+    window.VERTICALS.forEach((v, i) => {
+      const c = window.clientById(v.client);
+      if (!c) return;
+      out.push({
+        type: 'vertical', priority: PRIORITY_PINS[v.guid] || 0,
+        embedId: v.guid, bunny: true,
+        title: v.title, role: v.role, tag: v.tag, music: v.music,
+        verticalIndex: i, // for #shorts/N deep link
+        authors: [c],
+        likes: Math.floor(Math.random() * 2000 + 400)
+      });
+    });
+
+    // 3. Wide-screen videos — every CLIENT media with bunny:true and no Vertical tag.
+    // Plus Director's Reel (lives under landbound) gets the priority pin.
+    const seenEmbed = new Set();
+    window.CLIENTS.forEach(c => {
+      (c.media || []).filter(m => m.type === 'video' && !(m.tags || []).includes('Vertical')).forEach(v => {
+        if (!v.embedId || seenEmbed.has(v.embedId)) return;
+        seenEmbed.add(v.embedId);
+        out.push({
+          type: 'video', priority: PRIORITY_PINS[v.embedId] || 0,
+          embedId: v.embedId, bunny: !!v.bunny,
+          title: v.title, role: (v.tags || []).join(' · '),
+          authors: [c],
+          year: v.year || '2024',
+          likes: Math.floor(Math.random() * 3000 + 800)
+        });
+      });
+    });
+
+    // Shuffle, then stable-sort by priority so pinned items go first
+    return shuffleArr(out).sort((a, b) => (b.priority || 0) - (a.priority || 0));
+  }
+
+  function postHead(item) {
+    const primary = item.authors[0];
+    const others = item.authors.slice(1);
+    const thumb = window.clientThumb ? window.clientThumb(primary) : null;
+    const initials = window.clientInitials ? window.clientInitials(primary) : '';
+    const profileLink = 'client.html?id=' + primary.id;
+    const handle = primary.handle && primary.handle.startsWith('@') ? primary.handle : '@' + primary.id.replace(/-/g, '');
+    const avatarStyle = thumb ? "style=\"background-image: url('" + thumb + "');\"" : '';
+    const avatarLabel = thumb ? '' : initials;
+    const coLinks = others.map(a => '<a href="client.html?id=' + a.id + '" class="post-co-author">' + (a.handle || '@' + a.id) + '</a>').join('');
+    const collabPill = others.length ? '<span class="post-collab-pill">COLLAB</span>' : '';
+    const location = item.location ? (item.location + ' · ' + (item.year || '')) : (item.year || '');
+    return ''
+      + '<div class="post-head">'
+      +   '<a href="' + profileLink + '" class="post-avatar"><div class="post-avatar-inner"><div class="post-avatar-img ' + (thumb ? '' : (primary.palette || 'sa-1')) + '" ' + avatarStyle + '>' + avatarLabel + '</div></div></a>'
+      +   '<div class="post-head-info">'
+      +     '<span><a class="post-head-name" href="' + profileLink + '">' + handle.replace('@', '') + '</a>' + (others.length ? ' <span class="post-with">with</span> ' + coLinks : '') + '</span>'
+      +     '<div class="post-head-loc">' + location + collabPill + '</div>'
+      +   '</div>'
+      +   '<span class="post-head-menu">⋯</span>'
+      + '</div>';
+  }
+
+  function commonFooter(item, captionLine) {
+    const primary = item.authors[0];
+    const handle = primary.handle && primary.handle.startsWith('@') ? primary.handle.replace('@', '') : primary.id.replace(/-/g, '');
+    return ''
+      + '<div class="post-actions"><span class="icn heart">♡</span><span class="icn">💬</span><span class="icn">↗</span><span class="icn save">⌐</span></div>'
+      + '<div class="post-likes"><strong>' + item.likes + '</strong> likes</div>'
+      + '<div class="post-caption"><a class="nm" href="client.html?id=' + primary.id + '">' + handle + '</a> ' + (captionLine || '') + '</div>';
+  }
+
+  function renderPhotoPost(item) {
+    return '<div class="post">' + postHead(item)
+      + '<div class="post-image-real"><img src="' + item.src + '" alt="" loading="lazy"></div>'
+      + commonFooter(item, 'Photographed by Jacob Boehme (@landbound).')
+      + '</div>';
+  }
+
+  function renderVerticalPost(item) {
+    const thumb = bunnyVideoThumb(item.embedId, item.bunny);
+    const href = 'work.html#shorts/' + (item.verticalIndex || 0);
+    return '<div class="post">' + postHead(item)
+      + '<a class="post-image-vertical" href="' + href + '" style="background-image: url(\'' + thumb + '\');">'
+      +   '<span class="reel-badge">▶ Reel</span>'
+      + '</a>'
+      + commonFooter(item, '<strong>' + item.title + '</strong> — ' + (item.music || item.role || ''))
+      + '</div>';
+  }
+
+  function renderVideoPost(item) {
+    const thumb = bunnyVideoThumb(item.embedId, item.bunny);
+    const href = 'work.html#video/' + item.embedId;
+    const featured = (item.priority || 0) > 0;
+    return '<div class="post">' + postHead(item)
+      + '<a class="post-image-video" href="' + href + '" style="background-image: url(\'' + thumb + '\');">'
+      +   (featured ? '<span class="feat-badge">★ Featured</span>' : '')
+      +   '<div class="play-circle"></div>'
+      + '</a>'
+      + commonFooter(item, '<strong>' + item.title + '</strong>' + (item.role ? ' — ' + item.role : ''))
+      + '</div>';
+  }
+
+  function renderHomeFeed() {
+    const mount = document.getElementById('homeFeed');
+    if (!mount) return;
+    const items = buildHomeFeed();
+    mount.innerHTML = items.map(item => {
+      if (item.type === 'photo') return renderPhotoPost(item);
+      if (item.type === 'vertical') return renderVerticalPost(item);
+      if (item.type === 'video') return renderVideoPost(item);
+      return '';
+    }).join('');
+  }
+  renderHomeFeed();
 </script>
 </body>
 </html>
