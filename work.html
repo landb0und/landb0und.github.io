@@ -915,36 +915,20 @@
     openShorts();
   }
 
-  // Wheel scroll outside the phone (the black margins to either side) used to
-  // map deltaY straight into scrollBy — Mac trackpads with high deltaY values
-  // sent the feed flying through multiple slides and made the rail go haywire.
-  // Now: debounced, one slide per wheel tick, smooth-scroll to the next snap.
+  // Wheel scroll outside the phone (the black margins to either side) —
+  // we forward the raw deltaY into the phone scroller so the negative-space
+  // experience is byte-identical to scrolling directly on the video.
+  // `.phone` already has scroll-snap-type: y mandatory + scroll-snap-stop: always
+  // on each slide, so the native scroller snaps one clip at a time even with
+  // big trackpad deltas. No debounce, no snap math, no overlay activation.
   (function() {
     const stage = document.querySelector('.shorts-stage');
     if (!stage) return;
-    let wheelBusy = false;
     stage.addEventListener('wheel', (e) => {
       const phone = document.getElementById('phoneScroll');
-      if (!phone || phone.contains(e.target)) return; // let real phone scrolling run
+      if (!phone || phone.contains(e.target)) return; // inside-phone scroll runs natively
       e.preventDefault();
-      if (wheelBusy) return;
-      if (Math.abs(e.deltaY) < 8) return; // ignore tiny noise
-      wheelBusy = true;
-      setTimeout(() => { wheelBusy = false; }, 380); // cool-down ~ one slide
-      const slides = phone.querySelectorAll('.phone-slide');
-      if (!slides.length) return;
-      // Find index of slide currently nearest the top
-      const tops = Array.from(slides).map(s => s.offsetTop);
-      let curIdx = 0;
-      let smallest = Infinity;
-      tops.forEach((t, i) => {
-        const d = Math.abs(t - phone.scrollTop);
-        if (d < smallest) { smallest = d; curIdx = i; }
-      });
-      const dir = e.deltaY > 0 ? 1 : -1;
-      const nextIdx = Math.max(0, Math.min(slides.length - 1, curIdx + dir));
-      const target = slides[nextIdx];
-      if (target) phone.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+      phone.scrollBy({ top: e.deltaY, left: 0 });
     }, { passive: false });
   })();
 
