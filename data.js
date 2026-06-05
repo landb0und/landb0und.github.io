@@ -13,7 +13,7 @@ window.CLIENTS = [
     role: 'Director · Executive Producer',
     blurb: 'CHILDSTAR album rollout — visual identity and music video direction. End-to-end Landbound shop.',
     palette: 'sa-1',
-    thumb: null,
+    thumb: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
     media: [
       { type: 'video', embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'] },
       { type: 'video', embedId: 'e8775058-272b-48b5-85a9-37410c6cbb25', bunny: true, title: 'HIGH SOCIAL', year: '2025', tags: ['Director','Editor','Vertical'] }
@@ -27,7 +27,7 @@ window.CLIENTS = [
     role: 'Director · DP · Editor · VFX',
     blurb: 'Two music videos. Direction, photography, post.',
     palette: 'sa-2',
-    thumb: null,
+    thumb: 'photos/clients/christian-gates.png',
     media: [
       { type: 'video', embedId: '9e6f327c-1d83-4545-b88c-3193d7dd4274', bunny: true, title: 'Bleed', year: '2025', tags: ['Director','Editor'] },
       { type: 'video', embedId: 'b58d5348-c997-4338-8a9d-f83302bf948a', bunny: true, title: 'Secrets', year: '2024', tags: ['Director','DP','Editor','VFX'] }
@@ -380,7 +380,7 @@ window.clientThumb = function(c) {
   if (firstPhoto) return firstPhoto.src;
   const firstVid = c.media.find(m => m.type === 'video');
   if (firstVid) {
-    if (firstVid.bunny) return 'https://vz-5dfccea4-b84.b-cdn.net/' + firstVid.embedId + '/thumbnail.jpg';
+    if (firstVid.bunny) return window.bunnyThumb(firstVid.embedId);
     return 'https://img.youtube.com/vi/' + firstVid.embedId + '/maxresdefault.jpg';
   }
   return null;
@@ -392,7 +392,16 @@ window.clientThumb = function(c) {
 // returns 403/404. Use bare URLs. To force-refresh a thumb, hard-refresh the
 // browser (Cmd+Shift+R) or wait for CDN/browser cache to expire.
 window.BUNNY = { LIB: '675985', CDN: 'vz-5dfccea4-b84.b-cdn.net' };
+// CHILDSTAR + Secrets thumbnail files 404 on Bunny's public CDN even after
+// re-uploads. These overrides point to the released YouTube thumbnails of the
+// same videos — they're reliable and globally cached. Remove an entry here
+// the moment Bunny's storage starts serving the file again.
+window.BUNNY_THUMB_OVERRIDES = {
+  'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
+  'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
+};
 window.bunnyThumb = function(guid) {
+  if (window.BUNNY_THUMB_OVERRIDES[guid]) return window.BUNNY_THUMB_OVERRIDES[guid];
   return 'https://vz-5dfccea4-b84.b-cdn.net/' + guid + '/thumbnail.jpg';
 };
 window.mediaThumb = function(m) {

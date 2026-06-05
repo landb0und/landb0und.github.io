@@ -296,7 +296,12 @@
       let vicon = '';
       if (m.type === 'video') {
         if (m.bunny) {
-          tileImg = `https://vz-5dfccea4-b84.b-cdn.net/${m.embedId}/thumbnail.jpg`;
+          // CHILDSTAR + Secrets thumbnails 404 on Bunny — fall back to the released YouTube thumbs
+          const THUMB_OVERRIDES = {
+            'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
+            'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
+          };
+          tileImg = THUMB_OVERRIDES[m.embedId] || `https://vz-5dfccea4-b84.b-cdn.net/${m.embedId}/thumbnail.jpg`;
         } else {
           tileImg = `https://img.youtube.com/vi/${m.embedId}/maxresdefault.jpg`;
         }

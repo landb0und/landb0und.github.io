@@ -621,9 +621,18 @@
     const mount = document.getElementById('recsMount');
     if (!mount) return;
     const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+    // CHILDSTAR + Secrets thumbnails 404 on Bunny's public CDN even after
+    // re-uploading. Hard-overrides point to the released YouTube thumbnails
+    // until/unless Bunny's storage is rebuilt for those two videos.
+    const THUMB_OVERRIDES = {
+      'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
+      'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
+    };
     mount.innerHTML = VIDEOS.map((v, i) => {
-      // Bare URLs — Bunny token auth rejects query strings on older thumbs (see data.js).
-      const thumb = (v.embedId && v.bunny) ? ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg')
+      const override = v.embedId ? THUMB_OVERRIDES[v.embedId] : null;
+      const thumb = override
+                  ? override
+                  : (v.embedId && v.bunny) ? ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg')
                   : (v.embedId && !v.bunny) ? ('https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg')
                   : null;
       const thumbHTML = thumb
