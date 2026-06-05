@@ -54,18 +54,24 @@
   .stories::-webkit-scrollbar { height: 4px; }
   .stories::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
   .story { display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start; cursor: pointer; flex-shrink: 0; width: 72px; text-decoration: none; }
-  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; }
+  /* Faster spin + breathing pulse so the row reads alive, not decorative */
+  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; animation: homeRingPulse 2.4s ease-in-out infinite; }
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
-    animation: homeRingSpin 3s linear infinite; z-index: -1;
+    animation: homeRingSpin 2s linear infinite; z-index: -1;
   }
-  .story:nth-child(3n) .story-ring::before { animation-delay: -1s; }
-  .story:nth-child(3n+1) .story-ring::before { animation-delay: -2s; }
-  .story:hover .story-ring { transform: scale(1.06); }
-  .story:hover .story-ring::before { animation-duration: 1.2s; }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -0.66s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -1.33s; }
+  .story:nth-child(2n) .story-ring { animation-delay: -1.2s; }
+  .story:hover .story-ring { transform: scale(1.08); animation: none; }
+  .story:hover .story-ring::before { animation-duration: 0.9s; }
   @keyframes homeRingSpin { to { transform: rotate(360deg); } }
-  @media (prefers-reduced-motion: reduce) { .story-ring::before { animation: none; } }
+  @keyframes homeRingPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+  @media (prefers-reduced-motion: reduce) {
+    .story-ring { animation: none; }
+    .story-ring::before { animation: none; }
+  }
   .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .story-avatar { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; background-size: cover; background-position: center; }
   .story-name { font-size: 11px; color: var(--ink-2); font-weight: 600; text-align: center; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -105,32 +111,58 @@
   .profile-bio .lane-1 { font-weight: 700; }
   .profile-bio .lane-2 { color: var(--ink-2); }
   .profile-bio .lane-ai { color: var(--ink-3); font-size: 12px; font-style: italic; }
-  .profile-stats { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; padding-top: 12px; border-top: 1px solid var(--line-2); }
+  /* Proof line — small social-proof row above the stats divider */
+  .profile-proof { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  .profile-proof .sep { color: var(--ink-4); margin: 0 6px; }
+  .profile-proof strong { color: var(--amber); font-weight: 800; }
+
+  .profile-stats { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; padding-top: 10px; border-top: 1px solid var(--line-2); }
   .profile-stats strong { color: var(--ink); font-weight: 800; }
   .profile-stats .stat { display: inline-flex; align-items: center; gap: 5px; }
-  .profile-stats .stat::after { content: '·'; color: var(--ink-4); margin-left: 12px; }
+  .profile-stats .stat::after { content: '·'; color: var(--ink-4); margin-left: 10px; }
   .profile-stats .stat:last-child::after { display: none; }
 
-  .profile-actions { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .pa-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; text-decoration: none; transition: all .15s; }
+  /* IG-style button row — primary clearly marked, secondaries quiet */
+  .profile-actions { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .pa-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; text-decoration: none; transition: all .15s; }
   .pa-btn.primary { background: var(--amber); color: var(--bg); border: 1px solid var(--amber); }
   .pa-btn.primary:hover { background: #ffc555; }
-  .pa-btn.secondary { background: rgba(255,255,255,0.02); color: var(--ink); border: 1px solid var(--line); }
-  .pa-btn.secondary:hover { background: rgba(245,176,66,0.08); color: var(--amber); border-color: rgba(245,176,66,0.6); }
-  .pa-btn .ic { font-size: 13px; }
+  .pa-btn.secondary { background: rgba(255,255,255,0.02); color: var(--ink-2); border: 1px solid var(--line); }
+  .pa-btn.secondary:hover { background: rgba(245,176,66,0.06); color: var(--amber); border-color: rgba(245,176,66,0.4); }
+  .pa-btn .ic { font-size: 11px; }
 
-  /* Credits-by-lane in the expanded view */
-  .lane { padding: 14px 0; border-bottom: 1px solid var(--line-2); display: grid; grid-template-columns: 140px 1fr; gap: 18px; align-items: baseline; }
-  .lane:last-child { border-bottom: none; }
-  .lane-label { font-size: 11px; color: var(--ink); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; }
-  .lane-credits { font-size: 14px; color: var(--ink-2); line-height: 1.6; }
-  .lane-credits a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; transition: all .15s; }
-  .lane-credits a:hover { color: var(--amber); border-bottom-color: var(--amber); }
-  .lane-credits .meta { color: var(--ink-3); font-size: 12px; font-family: 'SF Mono', Menlo, monospace; }
-  /* AI lane visually set apart */
-  .lane.lane-ai { background: rgba(255,255,255,0.015); margin: 6px -12px 0; padding: 14px 12px; border-radius: 6px; border: 1px solid var(--line-2); }
-  .lane.lane-ai .lane-label { color: var(--ink-3); }
-  .lane.lane-ai .lane-credits { font-style: italic; color: var(--ink-3); font-size: 13px; }
+  /* Quiet expand link instead of giant amber CTA */
+  .expand-toggle.quiet { background: transparent; border: none; border-top: 1px solid var(--line-2); padding: 14px 0 0; margin-top: 16px; border-radius: 0; width: 100%; color: var(--ink-3); font-size: 10px; letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: color .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .expand-toggle.quiet:hover { color: var(--amber); transform: none; background: transparent; }
+  .expand-toggle.quiet:hover .arr { color: var(--amber); }
+  .expand-toggle.quiet .arr { font-size: 9px; color: var(--ink-4); transition: transform .25s; }
+
+  /* Selected Work grid — replaces the comma-wall lanes */
+  .selected-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
+  .selected-h .lbl { font-size: 11px; color: var(--ink); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; }
+  .selected-h .all { font-size: 10px; color: var(--amber); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; text-decoration: none; }
+  .selected-h .all:hover { color: #fff5d8; }
+
+  .sel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 1100px) { .sel-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 700px)  { .sel-grid { grid-template-columns: 1fr; } }
+
+  .sel-tile { background: var(--bg-3); border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; text-decoration: none; color: inherit; transition: all .15s; display: flex; flex-direction: column; }
+  .sel-tile:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .sel-thumb { aspect-ratio: 16/9; background: #000 center/cover no-repeat; position: relative; border-bottom: 1px solid var(--line-2); }
+  .sel-thumb.fallback-amber { background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
+  .sel-thumb.fallback-rose  { background: linear-gradient(135deg, #1a0a10 0%, #4a1828 50%, var(--rose) 100%); }
+  .sel-thumb.fallback-leaf  { background: linear-gradient(135deg, #1a1f10 0%, #2a3a18 50%, var(--leaf) 100%); }
+  .sel-thumb-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.45); font-family: 'SF Mono', Menlo, monospace; font-size: 10px; letter-spacing: 0.22em; font-weight: 800; text-transform: uppercase; text-align: center; padding: 0 16px; }
+  .sel-year { position: absolute; top: 8px; right: 8px; padding: 3px 8px; background: rgba(0,0,0,0.7); color: var(--amber); font-size: 9px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; backdrop-filter: blur(4px); }
+  .sel-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .sel-title { font-size: 14px; color: var(--ink); font-weight: 800; line-height: 1.2; letter-spacing: -0.005em; }
+  .sel-meta { font-size: 10px; color: var(--amber); letter-spacing: 0.16em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; line-height: 1.3; }
+  .sel-desc { font-size: 11.5px; color: var(--ink-3); line-height: 1.45; margin-top: 4px; }
+
+  /* AI footnote — visually muted, italic, under the grid */
+  .ai-footnote { margin-top: 18px; padding: 12px 14px; background: rgba(255,255,255,0.015); border: 1px solid var(--line-2); border-radius: 6px; font-size: 12px; color: var(--ink-3); font-style: italic; line-height: 1.5; }
+  .ai-footnote strong { color: var(--ink-2); font-style: normal; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; display: block; margin-bottom: 4px; }
 
   /* JACOB SIDE */
   .char-head { display: flex; gap: 18px; align-items: center; }
@@ -395,12 +427,14 @@
             <span class="lane-2">Music videos · commercials · performance</span><br>
             <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
           </div>
+          <div class="profile-proof">
+            <strong>3×</strong> ADDY<span class="sep">·</span>SCREAMFEST<span class="sep">·</span>Super Bowl rotation<span class="sep">·</span>TikTok Partner<span class="sep">·</span>Chinese Theatre
+          </div>
           <div class="profile-stats">
             <span class="stat"><strong>45M+</strong> views</span>
-            <span class="stat"><strong>100K</strong> @ TikTok</span>
-            <span class="stat"><strong>11K</strong> @ IG</span>
+            <span class="stat"><strong>100K</strong> TikTok</span>
+            <span class="stat"><strong>11K</strong> IG</span>
             <span class="stat"><strong>24</strong> IMDb</span>
-            <span class="stat"><strong>3×</strong> awards</span>
           </div>
         </div>
       </div>
@@ -411,14 +445,24 @@
         <a href="hire.html" class="pa-btn secondary"><span class="ic">▷</span> Book a call</a>
       </div>
 
-      <button class="expand-toggle" onclick="document.getElementById('heroCard').classList.toggle('open')">
-        <span class="lbl-closed">See selected credits</span>
-        <span class="lbl-open">Hide credits</span>
+      <button class="expand-toggle quiet" onclick="document.getElementById('heroCard').classList.toggle('open')">
+        <span class="lbl-closed">See selected work</span>
+        <span class="lbl-open">Hide selected work</span>
         <span class="arr">▼</span>
       </button>
 
       <div class="expanded">
-        <div class="expanded-inner" id="heroLanes"><!-- rendered by JS from CLIENTS in data.js --></div>
+        <div class="expanded-inner">
+          <div class="selected-h">
+            <span class="lbl">Selected Work</span>
+            <a class="all" href="work.html">See all 24 →</a>
+          </div>
+          <div class="sel-grid" id="heroSelectedWork"></div>
+          <div class="ai-footnote">
+            <strong>AI / AI-VFX practice</strong>
+            Independent AI / VFX practice — not on every project. Offered on request for previs and select post. Toolkit listed on <a href="hire.html#stack" style="color: var(--amber); text-decoration: none;">Hire</a>.
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -574,53 +618,48 @@
   }
   renderHomeStories();
 
-  // ============= SELECTED CREDITS (lanes) =============
-  // Single source: pull from CLIENTS where the client's role contains a given
-  // keyword. New clients in data.js → auto-appear in the matching lanes.
-  function renderLanes() {
-    const mount = document.getElementById('heroLanes');
-    if (!mount || !window.CLIENTS) return;
-    const clientsByRole = (kw) => window.CLIENTS.filter(c => {
-      if (c.id === 'landbound' || c.id === 'tiktok' || c.id === 'nyc-cinematography-awards' || c.id === 'raw-material') return false;
-      return new RegExp('\\\\b' + kw + '\\\\b', 'i').test(c.role || '');
-    });
-    // role-keyword shortcuts. The roles in data.js are strings like
-    // "Director · DP · Editor · VFX · Photographer" — we match word-boundaried.
-    const directors    = window.CLIENTS.filter(c => /Director/i.test(c.role || '') && c.id !== 'landbound' && c.id !== 'tiktok');
-    const dps          = window.CLIENTS.filter(c => /\bDP\b|Cinematographer/i.test(c.role || '') && c.id !== 'landbound' && c.id !== 'tiktok');
-    const editors      = window.CLIENTS.filter(c => /Editor/i.test(c.role || '') && c.id !== 'landbound' && c.id !== 'tiktok');
-    const vfxClients   = window.CLIENTS.filter(c => /VFX/i.test(c.role || '') && c.id !== 'landbound' && c.id !== 'tiktok');
-    const eps          = window.CLIENTS.filter(c => /Executive Producer|\bEP\b/i.test(c.role || ''));
-
-    function linkList(arr) {
-      if (!arr.length) return '<span class="meta">— soon —</span>';
-      return arr.map(c => '<a href="client.html?id=' + c.id + '">' + c.name + '</a>').join(', ');
-    }
-
-    const lanes = [
-      { label: 'Direction',  html: linkList(directors) },
-      { label: 'DP',         html: linkList(dps) },
-      { label: 'Editing',    html: linkList(editors) + ' <span class="meta">+ Director\'s Reel, Allison Hagendorf Show S4</span>' },
-      { label: 'VFX',        html: linkList(vfxClients) + ' <span class="meta">+ The First Circle (Feature · 250 shots · VFX Sup)</span>' },
-      { label: 'Producing',  html: eps.length ? linkList(eps) + ' <span class="meta">(EP)</span>' : 'CHILDSTAR <span class="meta">(EP, Grace VanderWaal)</span>' }
+  // ============= SELECTED WORK (curated tile grid) =============
+  // Six hand-picked highlight projects with thumb + title + role + descriptor.
+  // Clicking a tile deep-links into Work tab via #video/<embedId>.
+  function renderSelectedWork() {
+    const mount = document.getElementById('heroSelectedWork');
+    if (!mount) return;
+    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+    const tiles = [
+      { embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', role: 'Director · EP · VFX · Editor', client: 'Grace VanderWaal', year: '2025', desc: 'Album rollout. End-to-end Landbound shop — 4.2M views.', fallback: 'amber' },
+      { embedId: 'b58d5348-c997-4338-8a9d-f83302bf948a', bunny: true, title: 'Secrets',              role: 'Director · DP · Editor · VFX', client: 'Christian Gates', year: '2024', desc: 'Music video — anamorphic, practical VFX, red-light hero.', fallback: 'rose' },
+      { embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", role: 'Director · DP · Editor · VFX', client: 'Surfaces', year: '2024', desc: 'Wide + vertical cut delivered. Beach to bedroom narrative.', fallback: 'amber' },
+      { embedId: '6b38b59e-aedd-4208-a1fc-ff85adb30021', bunny: true, title: 'Blame It All On Me',   role: 'Director · DP · Editor', client: 'Surfaces × Mike Posner', year: '2025', desc: 'Performance collab — two artists, one room, one camera.', fallback: 'rose' },
+      { embedId: '9e6f327c-1d83-4545-b88c-3193d7dd4274', bunny: true, title: 'Bleed',                role: 'Director · Editor', client: 'Christian Gates', year: '2025', desc: 'Chandelier hero shot. Single-take ensemble framing.', fallback: 'rose' },
+      { palette: 'g4',                                                title: 'The First Circle',     role: 'VFX Supervisor',                 client: 'Feature · 94 min', year: '2023', desc: '250+ shots supervised. Practical-to-CG transitions.', fallback: 'leaf' }
     ];
 
-    const laneHTML = lanes.map(l => ''
-      + '<div class="lane">'
-      +   '<div class="lane-label">' + l.label + '</div>'
-      +   '<div class="lane-credits">' + l.html + '</div>'
-      + '</div>'
-    ).join('');
-
-    const aiLane = ''
-      + '<div class="lane lane-ai">'
-      +   '<div class="lane-label">AI / AI-VFX</div>'
-      +   '<div class="lane-credits">Independent AI / VFX practice — not on every project. Offered on request for previs and select post.</div>'
-      + '</div>';
-
-    mount.innerHTML = laneHTML + aiLane;
+    mount.innerHTML = tiles.map(t => {
+      const href = t.embedId ? ('work.html#video/' + t.embedId) : 'work.html';
+      // Use Bunny thumb if we have a working embedId. CHILDSTAR + Secrets are known
+      // to 404 on the public thumbnail URL — gradient fallback covers it gracefully.
+      const knownBroken = ['fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', 'b58d5348-c997-4338-8a9d-f83302bf948a'];
+      const useFallback = !t.embedId || knownBroken.includes(t.embedId);
+      const thumbStyle = (!useFallback && t.bunny)
+        ? ('background-image: url(\'https://' + CDN + '/' + t.embedId + '/thumbnail.jpg\');')
+        : '';
+      const fallbackClass = useFallback ? (' fallback-' + (t.fallback || 'amber')) : '';
+      const labelOverlay = useFallback ? ('<div class="sel-thumb-label">' + t.title + '</div>') : '';
+      return ''
+        + '<a class="sel-tile" href="' + href + '">'
+        +   '<div class="sel-thumb' + fallbackClass + '" style="' + thumbStyle + '">'
+        +     '<span class="sel-year">' + t.year + '</span>'
+        +     labelOverlay
+        +   '</div>'
+        +   '<div class="sel-body">'
+        +     '<div class="sel-title">' + t.title + '</div>'
+        +     '<div class="sel-meta">' + t.client + ' · ' + t.role + '</div>'
+        +     '<div class="sel-desc">' + t.desc + '</div>'
+        +   '</div>'
+        + '</a>';
+    }).join('');
   }
-  renderLanes();
+  renderSelectedWork();
 </script>
 </body>
 </html>
