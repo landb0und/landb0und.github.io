@@ -60,22 +60,28 @@
   /* Story ring with slowly-rotating conic gradient — quiet life, not flashy.
      Pseudo-element rotates while the avatar inside stays still. Rows are
      phase-staggered via nth-child so the sweep doesn't hit at once. */
-  /* Faster spin + breathing pulse so the row reads alive */
-  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; animation: storyRingPulse 2.4s ease-in-out infinite; }
+  /* All movement is on the gradient ring only. The avatar inside stays still. */
+  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; }
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
-    animation: storyRingSpin 2s linear infinite; z-index: -1;
+    animation: storyRingSpin 2s linear infinite, storyRingPulse 2.4s ease-in-out infinite;
+    z-index: -1; transform-origin: center;
   }
-  .story:nth-child(3n) .story-ring::before { animation-delay: -0.66s; }
-  .story:nth-child(3n+1) .story-ring::before { animation-delay: -1.33s; }
-  .story:nth-child(2n) .story-ring { animation-delay: -1.2s; }
-  .story:hover .story-ring { transform: scale(1.08); animation: none; }
-  .story:hover .story-ring::before { animation-duration: 0.9s; }
-  @keyframes storyRingSpin { to { transform: rotate(360deg); } }
-  @keyframes storyRingPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -0.66s, -1.2s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -1.33s, -0.4s; }
+  .story:hover .story-ring { transform: scale(1.08); }
+  .story:hover .story-ring::before { animation-duration: 0.9s, 1.4s; }
+  @keyframes storyRingSpin {
+    0%   { transform: rotate(0deg)   scale(1); }
+    50%  { transform: rotate(180deg) scale(1.08); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  @keyframes storyRingPulse {
+    0%, 100% { filter: brightness(1)   saturate(1); }
+    50%      { filter: brightness(1.15) saturate(1.2); }
+  }
   @media (prefers-reduced-motion: reduce) {
-    .story-ring { animation: none; }
     .story-ring::before { animation: none; }
   }
   .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -104,37 +110,24 @@
   .opt:hover { background: rgba(255,255,255,0.04); color: var(--ink); }
   .opt.active { background: rgba(245,176,66,0.12); color: var(--amber); }
   .opt-sep { width: 1px; height: 12px; background: var(--line-2); margin: 0 2px; flex-shrink: 0; }
-  /* Random pill — sits with the filter row but visibly different.
-     A solid amber-rose gradient with a die icon. Pushed to the end via
-     margin-left: auto so it never crowds the actual filters. */
+  /* Random pill — sits at the end of the filter row. Same weight as the
+     floating Open Shorts CTA (solid color, mono caps), different hue so it
+     reads as a peer action, not a louder one. */
   .opt.opt-random {
     margin-left: auto;
     color: var(--bg);
-    background: linear-gradient(135deg, var(--amber) 0%, var(--rose) 100%);
+    background: var(--amber);
     border: 1px solid var(--amber);
-    padding: 6px 14px 6px 11px;
+    padding: 6px 14px;
     display: inline-flex;
     align-items: center;
     gap: 7px;
     font-weight: 800;
-    box-shadow: 0 2px 10px rgba(232,88,154,0.18);
+    letter-spacing: 0.16em;
+    border-radius: 100px;
   }
-  .opt.opt-random:hover {
-    background: linear-gradient(135deg, #ffc555 0%, #ff7ab8 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(232,88,154,0.28);
-  }
-  .opt.opt-random .die {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    border-radius: 4px;
-    background: rgba(0,0,0,0.18);
-    font-size: 11px;
-    line-height: 1;
-  }
+  .opt.opt-random:hover { background: #ffc555; }
+  .opt.opt-random svg { width: 13px; height: 13px; }
 
   /* YT layout */
   .yt { display: grid; grid-template-columns: 1fr 340px; gap: 22px; }
@@ -482,7 +475,10 @@
       <span class="opt-sep"></span>
       <span class="opt" data-filter="commercial">Commercial</span>
       <span class="opt-sep"></span>
-      <span class="opt opt-random" id="randomVideo" title="Surprise me"><span class="die">⚄</span> Random</span>
+      <span class="opt opt-random" id="randomVideo" title="Surprise me">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        Random
+      </span>
     </div>
   </div>
 
@@ -910,16 +906,38 @@
     openShorts();
   }
 
-  // Forward scroll events from the stage black area to the phone scroller
-  document.querySelector('.shorts-stage').addEventListener('wheel', (e) => {
-    const phone = document.getElementById('phoneScroll');
-    if (!phone) return;
-    // Only forward if the event didn't originate inside the phone itself
-    if (!phone.contains(e.target)) {
+  // Wheel scroll outside the phone (the black margins to either side) used to
+  // map deltaY straight into scrollBy — Mac trackpads with high deltaY values
+  // sent the feed flying through multiple slides and made the rail go haywire.
+  // Now: debounced, one slide per wheel tick, smooth-scroll to the next snap.
+  (function() {
+    const stage = document.querySelector('.shorts-stage');
+    if (!stage) return;
+    let wheelBusy = false;
+    stage.addEventListener('wheel', (e) => {
+      const phone = document.getElementById('phoneScroll');
+      if (!phone || phone.contains(e.target)) return; // let real phone scrolling run
       e.preventDefault();
-      phone.scrollBy({ top: e.deltaY, behavior: 'auto' });
-    }
-  }, { passive: false });
+      if (wheelBusy) return;
+      if (Math.abs(e.deltaY) < 8) return; // ignore tiny noise
+      wheelBusy = true;
+      setTimeout(() => { wheelBusy = false; }, 380); // cool-down ~ one slide
+      const slides = phone.querySelectorAll('.phone-slide');
+      if (!slides.length) return;
+      // Find index of slide currently nearest the top
+      const tops = Array.from(slides).map(s => s.offsetTop);
+      let curIdx = 0;
+      let smallest = Infinity;
+      tops.forEach((t, i) => {
+        const d = Math.abs(t - phone.scrollTop);
+        if (d < smallest) { smallest = d; curIdx = i; }
+      });
+      const dir = e.deltaY > 0 ? 1 : -1;
+      const nextIdx = Math.max(0, Math.min(slides.length - 1, curIdx + dir));
+      const target = slides[nextIdx];
+      if (target) phone.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+    }, { passive: false });
+  })();
 
   // Hash routing — #shorts opens shorts view, #shorts/N opens at slide N
   function handleHash() {
@@ -978,7 +996,7 @@
     const allTile = `
         <a class="story" href="clients.html">
           <div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, #f5b042, #e8589a, #c084fc); font-size: 16px;">All</div></div></div>
-          <div class="story-name">All clients</div>
+          <div class="story-name" style="font-weight: 800; color: var(--amber);">All clients</div>
         </a>`;
     const items = window.CLIENTS.map(cl => {
       const t = window.clientThumb(cl);

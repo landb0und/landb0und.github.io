@@ -54,22 +54,31 @@
   .stories::-webkit-scrollbar { height: 4px; }
   .stories::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
   .story { display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start; cursor: pointer; flex-shrink: 0; width: 72px; text-decoration: none; }
-  /* Faster spin + breathing pulse so the row reads alive, not decorative */
-  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; animation: homeRingPulse 2.4s ease-in-out infinite; }
+  /* All movement is on the GRADIENT ring (::before pseudo) only. The avatar
+     inside (.story-inner / .story-avatar) stays perfectly still. */
+  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; }
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
     background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
-    animation: homeRingSpin 2s linear infinite; z-index: -1;
+    animation: homeRingSpin 2s linear infinite, homeRingPulse 2.4s ease-in-out infinite;
+    z-index: -1; transform-origin: center;
   }
-  .story:nth-child(3n) .story-ring::before { animation-delay: -0.66s; }
-  .story:nth-child(3n+1) .story-ring::before { animation-delay: -1.33s; }
-  .story:nth-child(2n) .story-ring { animation-delay: -1.2s; }
-  .story:hover .story-ring { transform: scale(1.08); animation: none; }
-  .story:hover .story-ring::before { animation-duration: 0.9s; }
-  @keyframes homeRingSpin { to { transform: rotate(360deg); } }
-  @keyframes homeRingPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -0.66s, -1.2s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -1.33s, -0.4s; }
+  .story:hover .story-ring { transform: scale(1.08); }
+  .story:hover .story-ring::before { animation-duration: 0.9s, 1.4s; }
+  @keyframes homeRingSpin {
+    0%   { transform: rotate(0deg)   scale(1); }
+    50%  { transform: rotate(180deg) scale(1.08); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  /* Separate pulse keyframe runs in parallel; combined effect is a spinning,
+     softly-breathing gradient ring around a still avatar. */
+  @keyframes homeRingPulse {
+    0%, 100% { filter: brightness(1)   saturate(1); }
+    50%      { filter: brightness(1.15) saturate(1.2); }
+  }
   @media (prefers-reduced-motion: reduce) {
-    .story-ring { animation: none; }
     .story-ring::before { animation: none; }
   }
   .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -111,56 +120,71 @@
   .profile-bio .lane-1 { font-weight: 700; }
   .profile-bio .lane-2 { color: var(--ink-2); }
   .profile-bio .lane-ai { color: var(--ink-3); font-size: 12px; font-style: italic; }
-  /* Proof line — small social-proof row above the stats divider */
-  .profile-proof { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
-  .profile-proof .sep { color: var(--ink-4); margin: 0 6px; }
+  /* Proof line — short editorial run of credentials, sans-serif, sentence case */
+  .profile-proof { font-size: 12px; color: var(--ink-3); margin-bottom: 14px; line-height: 1.5; }
+  .profile-proof .sep { color: var(--ink-4); margin: 0 7px; }
   .profile-proof strong { color: var(--amber); font-weight: 800; }
 
-  .profile-stats { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; padding-top: 10px; border-top: 1px solid var(--line-2); }
-  .profile-stats strong { color: var(--ink); font-weight: 800; }
-  .profile-stats .stat { display: inline-flex; align-items: center; gap: 5px; }
-  .profile-stats .stat::after { content: '·'; color: var(--ink-4); margin-left: 10px; }
-  .profile-stats .stat:last-child::after { display: none; }
+  /* Profile stats — IG-style cards: big number on top, label underneath.
+     Substantial, readable, no monospace cramming on the number itself. */
+  .profile-stats { display: flex; gap: 0; padding-top: 14px; border-top: 1px solid var(--line-2); flex-wrap: wrap; }
+  .profile-stats .stat { padding: 0 18px; border-right: 1px solid var(--line-2); display: flex; flex-direction: column; gap: 2px; }
+  .profile-stats .stat:first-child { padding-left: 0; }
+  .profile-stats .stat:last-child { border-right: none; }
+  .profile-stats .num { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1; letter-spacing: -0.02em; }
+  .profile-stats .num .plus { color: var(--amber); }
+  .profile-stats .lbl { font-size: 9px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; margin-top: 4px; }
 
-  /* IG-style button row — primary clearly marked, secondaries quiet */
-  .profile-actions { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
-  .pa-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; text-decoration: none; transition: all .15s; }
+  /* IG-style action buttons — sentence case, system sans, readable at any size */
+  .profile-actions { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .pa-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; letter-spacing: -0.005em; text-transform: none; font-family: -apple-system, system-ui, 'SF Pro Text', sans-serif; text-decoration: none; transition: all .15s; }
   .pa-btn.primary { background: var(--amber); color: var(--bg); border: 1px solid var(--amber); }
   .pa-btn.primary:hover { background: #ffc555; }
-  .pa-btn.secondary { background: rgba(255,255,255,0.02); color: var(--ink-2); border: 1px solid var(--line); }
+  .pa-btn.secondary { background: rgba(255,255,255,0.02); color: var(--ink); border: 1px solid var(--line); }
   .pa-btn.secondary:hover { background: rgba(245,176,66,0.06); color: var(--amber); border-color: rgba(245,176,66,0.4); }
-  .pa-btn .ic { font-size: 11px; }
+  .pa-btn .ic { font-size: 13px; opacity: 0.9; }
 
-  /* Quiet expand link instead of giant amber CTA */
-  .expand-toggle.quiet { background: transparent; border: none; border-top: 1px solid var(--line-2); padding: 14px 0 0; margin-top: 16px; border-radius: 0; width: 100%; color: var(--ink-3); font-size: 10px; letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: color .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  /* Quiet expand link — sentence case, sans-serif, not a CTA */
+  .expand-toggle.quiet { background: transparent; border: none; border-top: 1px solid var(--line-2); padding: 14px 0 0; margin-top: 18px; border-radius: 0; width: 100%; color: var(--ink-3); font-size: 13px; letter-spacing: -0.005em; font-family: -apple-system, system-ui, 'SF Pro Text', sans-serif; font-weight: 600; text-transform: none; cursor: pointer; transition: color .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .expand-toggle.quiet:hover { color: var(--amber); transform: none; background: transparent; }
   .expand-toggle.quiet:hover .arr { color: var(--amber); }
-  .expand-toggle.quiet .arr { font-size: 9px; color: var(--ink-4); transition: transform .25s; }
+  .expand-toggle.quiet .arr { font-size: 10px; color: var(--ink-4); transition: transform .25s; }
+  .hero-card.open .expand-toggle.quiet .arr { transform: rotate(180deg); }
 
-  /* Selected Work grid — replaces the comma-wall lanes */
-  .selected-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
-  .selected-h .lbl { font-size: 11px; color: var(--ink); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; }
-  .selected-h .all { font-size: 10px; color: var(--amber); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; text-decoration: none; }
+  /* Bold "All clients" label in stories rows */
+  .story-name-all { font-weight: 800; color: var(--amber) !important; letter-spacing: 0.02em; }
+
+  /* Role-based lanes — the expanded view groups my work by what *I* did,
+     not just a flat "Selected Work" wall. A project appears in every lane
+     where I wore that hat. Cards are smaller, horizontally scrollable. */
+  .selected-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .selected-h .lbl { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: -0.01em; }
+  .selected-h .sub { font-size: 11px; color: var(--ink-4); font-style: italic; font-family: Georgia, serif; margin-left: 8px; }
+  .selected-h .all { font-size: 12px; color: var(--amber); font-weight: 600; text-decoration: none; }
   .selected-h .all:hover { color: #fff5d8; }
 
-  .sel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  @media (max-width: 1100px) { .sel-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 700px)  { .sel-grid { grid-template-columns: 1fr; } }
+  .role-lane { padding: 14px 0 4px; border-bottom: 1px solid var(--line-2); }
+  .role-lane:last-of-type { border-bottom: none; }
+  .lane-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .lane-head .nm { font-size: 11px; color: var(--ink); font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .lane-head .ct { font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; }
+  .lane-tiles { display: flex; gap: 10px; overflow-x: auto; padding: 2px 0 14px; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .lane-tiles::-webkit-scrollbar { height: 4px; }
+  .lane-tiles::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
 
-  .sel-tile { background: var(--bg-3); border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; text-decoration: none; color: inherit; transition: all .15s; display: flex; flex-direction: column; }
-  .sel-tile:hover { border-color: var(--amber); transform: translateY(-2px); }
-  .sel-thumb { aspect-ratio: 16/9; background: #000 center/cover no-repeat; position: relative; border-bottom: 1px solid var(--line-2); }
-  .sel-thumb.fallback-amber { background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
-  .sel-thumb.fallback-rose  { background: linear-gradient(135deg, #1a0a10 0%, #4a1828 50%, var(--rose) 100%); }
-  .sel-thumb.fallback-leaf  { background: linear-gradient(135deg, #1a1f10 0%, #2a3a18 50%, var(--leaf) 100%); }
-  .sel-thumb-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.45); font-family: 'SF Mono', Menlo, monospace; font-size: 10px; letter-spacing: 0.22em; font-weight: 800; text-transform: uppercase; text-align: center; padding: 0 16px; }
-  .sel-year { position: absolute; top: 8px; right: 8px; padding: 3px 8px; background: rgba(0,0,0,0.7); color: var(--amber); font-size: 9px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; backdrop-filter: blur(4px); }
-  .sel-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
-  .sel-title { font-size: 14px; color: var(--ink); font-weight: 800; line-height: 1.2; letter-spacing: -0.005em; }
-  .sel-meta { font-size: 10px; color: var(--amber); letter-spacing: 0.16em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; line-height: 1.3; }
-  .sel-desc { font-size: 11.5px; color: var(--ink-3); line-height: 1.45; margin-top: 4px; }
+  .ltile { flex: 0 0 200px; scroll-snap-align: start; background: var(--bg-3); border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; text-decoration: none; color: inherit; transition: all .15s; display: flex; flex-direction: column; }
+  .ltile:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .ltile-thumb { aspect-ratio: 16/9; background: #000 center/cover no-repeat; position: relative; }
+  .ltile-thumb.fallback-amber { background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
+  .ltile-thumb.fallback-rose  { background: linear-gradient(135deg, #1a0a10 0%, #4a1828 50%, var(--rose) 100%); }
+  .ltile-thumb.fallback-leaf  { background: linear-gradient(135deg, #1a1f10 0%, #2a3a18 50%, var(--leaf) 100%); }
+  .ltile-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.55); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.18em; font-weight: 800; text-transform: uppercase; text-align: center; padding: 0 10px; }
+  .ltile-yr { position: absolute; top: 6px; right: 6px; padding: 2px 6px; background: rgba(0,0,0,0.75); color: var(--amber); font-size: 8px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; }
+  .ltile-body { padding: 10px 12px 11px; display: flex; flex-direction: column; gap: 2px; }
+  .ltile-title { font-size: 12.5px; color: var(--ink); font-weight: 700; line-height: 1.2; letter-spacing: -0.005em; }
+  .ltile-client { font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
 
-  /* AI footnote — visually muted, italic, under the grid */
+  /* AI footnote — visually muted, italic, under the lanes */
   .ai-footnote { margin-top: 18px; padding: 12px 14px; background: rgba(255,255,255,0.015); border: 1px solid var(--line-2); border-radius: 6px; font-size: 12px; color: var(--ink-3); font-style: italic; line-height: 1.5; }
   .ai-footnote strong { color: var(--ink-2); font-style: normal; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; display: block; margin-bottom: 4px; }
 
@@ -428,13 +452,25 @@
             <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
           </div>
           <div class="profile-proof">
-            <strong>3×</strong> ADDY<span class="sep">·</span>SCREAMFEST<span class="sep">·</span>Super Bowl rotation<span class="sep">·</span>TikTok Partner<span class="sep">·</span>Chinese Theatre
+            <strong>3× ADDY</strong><span class="sep">·</span>SCREAMFEST<span class="sep">·</span>Super Bowl rotation<span class="sep">·</span>TikTok Partner<span class="sep">·</span>Chinese Theatre
           </div>
           <div class="profile-stats">
-            <span class="stat"><strong>45M+</strong> views</span>
-            <span class="stat"><strong>100K</strong> TikTok</span>
-            <span class="stat"><strong>11K</strong> IG</span>
-            <span class="stat"><strong>24</strong> IMDb</span>
+            <div class="stat">
+              <div class="num">45M<span class="plus">+</span></div>
+              <div class="lbl">Total Views</div>
+            </div>
+            <div class="stat">
+              <div class="num">100K</div>
+              <div class="lbl">TikTok</div>
+            </div>
+            <div class="stat">
+              <div class="num">11K</div>
+              <div class="lbl">Instagram</div>
+            </div>
+            <div class="stat">
+              <div class="num">24</div>
+              <div class="lbl">IMDb credits</div>
+            </div>
           </div>
         </div>
       </div>
@@ -446,21 +482,21 @@
       </div>
 
       <button class="expand-toggle quiet" onclick="document.getElementById('heroCard').classList.toggle('open')">
-        <span class="lbl-closed">See selected work</span>
-        <span class="lbl-open">Hide selected work</span>
+        <span class="lbl-closed">See selected work by role</span>
+        <span class="lbl-open">Hide</span>
         <span class="arr">▼</span>
       </button>
 
       <div class="expanded">
         <div class="expanded-inner">
           <div class="selected-h">
-            <span class="lbl">Selected Work</span>
-            <a class="all" href="work.html">See all 24 →</a>
+            <span class="lbl">Selected Work<span class="sub">— by role</span></span>
+            <a class="all" href="work.html">See all →</a>
           </div>
-          <div class="sel-grid" id="heroSelectedWork"></div>
+          <div id="heroRoleLanes"></div>
           <div class="ai-footnote">
             <strong>AI / AI-VFX practice</strong>
-            Independent AI / VFX practice — not on every project. Offered on request for previs and select post. Toolkit listed on <a href="hire.html#stack" style="color: var(--amber); text-decoration: none;">Hire</a>.
+            Independent AI / VFX practice — not on every project. Offered on request for previs and select post. Toolkit listed on <a href="hire.html" style="color: var(--amber); text-decoration: none;">Hire</a>.
           </div>
         </div>
       </div>
@@ -601,7 +637,7 @@
     const allTile = ''
       + '<a class="story" href="clients.html" style="text-decoration:none;">'
       +   '<div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, #f5b042, #e8589a, #c084fc); font-size: 16px;">All</div></div></div>'
-      +   '<div class="story-name">All clients</div>'
+      +   '<div class="story-name story-name-all">All clients</div>'
       + '</a>';
     const items = window.CLIENTS.map(cl => {
       const t = window.clientThumb(cl);
@@ -618,48 +654,83 @@
   }
   renderHomeStories();
 
-  // ============= SELECTED WORK (curated tile grid) =============
-  // Six hand-picked highlight projects with thumb + title + role + descriptor.
-  // Clicking a tile deep-links into Work tab via #video/<embedId>.
-  function renderSelectedWork() {
-    const mount = document.getElementById('heroSelectedWork');
+  // ============= SELECTED WORK BY ROLE =============
+  // Source-of-truth project list with role array. Each project gets surfaced
+  // in every lane where I played that role — adding a new project here makes
+  // it auto-appear under every matching lane.
+  const PROJECTS = [
+    { title: 'CHILDSTAR: Final Act',     client: 'Grace VanderWaal',         year: '2025',   embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, fallback: 'amber', roles: ['Direction','EP','VFX','Editing'] },
+    { title: "Call Me When You're Home", client: 'Surfaces',                 year: '2024',   embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, fallback: 'amber', roles: ['Direction','DP','Editing','VFX'] },
+    { title: 'Blame It All On Me',       client: 'Surfaces × Mike Posner',   year: '2025',   embedId: '6b38b59e-aedd-4208-a1fc-ff85adb30021', bunny: true, fallback: 'rose',  roles: ['Direction','DP','Editing'] },
+    { title: 'Secrets',                  client: 'Christian Gates',          year: '2024',   embedId: 'b58d5348-c997-4338-8a9d-f83302bf948a', bunny: true, fallback: 'rose',  roles: ['Direction','DP','Editing','VFX'] },
+    { title: 'Bleed',                    client: 'Christian Gates',          year: '2025',   embedId: '9e6f327c-1d83-4545-b88c-3193d7dd4274', bunny: true, fallback: 'rose',  roles: ['Direction','Editing'] },
+    { title: 'Bby',                      client: 'Two Feet',                 year: '2025',   embedId: '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3', bunny: true, fallback: 'rose',  roles: ['Direction','DP','Editing'] },
+    { title: "Director's Reel",          client: 'Landbound',                year: '2025',   embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true, fallback: 'amber', roles: ['Direction','DP','VFX','Editing'] },
+    { title: 'Forgive & Forget',         client: 'SCREAMFEST · Short Film',  year: '2022',   embedId: 'oD42T1md068',                          bunny: false, fallback: 'rose', roles: ['Direction','DP','Editing','VFX','Writer'] },
+    { title: 'The First Circle',         client: 'Feature · 94 min',         year: '2023',   embedId: null,                                   bunny: false, fallback: 'leaf', roles: ['VFX'] },
+    { title: 'Allison Hagendorf Show S4',client: 'Series · Active',          year: '2025–26',embedId: null,                                   bunny: false, fallback: 'amber',roles: ['Direction','Editing'] },
+    { title: 'Super Bowl Spot',          client: 'Commercial · 5-state',     year: '2024',   embedId: null,                                   bunny: false, fallback: 'amber',roles: ['Direction'] },
+    { title: 'Dreams',                   client: 'Surfaces',                 year: '2023',   embedId: null,                                   bunny: false, fallback: 'amber',roles: ['DP'] }
+  ];
+
+  const LANES = [
+    { key: 'Direction', label: 'Direction' },
+    { key: 'DP',        label: 'DP / Cinematography' },
+    { key: 'Editing',   label: 'Editing' },
+    { key: 'VFX',       label: 'VFX' },
+    { key: 'EP',        label: 'Producing · EP' }
+  ];
+
+  function renderRoleLanes() {
+    const mount = document.getElementById('heroRoleLanes');
     if (!mount) return;
     const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
-    const tiles = [
-      { embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', role: 'Director · EP · VFX · Editor', client: 'Grace VanderWaal', year: '2025', desc: 'Album rollout. End-to-end Landbound shop — 4.2M views.', fallback: 'amber' },
-      { embedId: 'b58d5348-c997-4338-8a9d-f83302bf948a', bunny: true, title: 'Secrets',              role: 'Director · DP · Editor · VFX', client: 'Christian Gates', year: '2024', desc: 'Music video — anamorphic, practical VFX, red-light hero.', fallback: 'rose' },
-      { embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, title: "Call Me When You're Home", role: 'Director · DP · Editor · VFX', client: 'Surfaces', year: '2024', desc: 'Wide + vertical cut delivered. Beach to bedroom narrative.', fallback: 'amber' },
-      { embedId: '6b38b59e-aedd-4208-a1fc-ff85adb30021', bunny: true, title: 'Blame It All On Me',   role: 'Director · DP · Editor', client: 'Surfaces × Mike Posner', year: '2025', desc: 'Performance collab — two artists, one room, one camera.', fallback: 'rose' },
-      { embedId: '9e6f327c-1d83-4545-b88c-3193d7dd4274', bunny: true, title: 'Bleed',                role: 'Director · Editor', client: 'Christian Gates', year: '2025', desc: 'Chandelier hero shot. Single-take ensemble framing.', fallback: 'rose' },
-      { palette: 'g4',                                                title: 'The First Circle',     role: 'VFX Supervisor',                 client: 'Feature · 94 min', year: '2023', desc: '250+ shots supervised. Practical-to-CG transitions.', fallback: 'leaf' }
-    ];
+    // Bunny thumbnails on these two specific GUIDs return 404 on the public CDN
+    // even after re-uploading from the dashboard. Use the gradient fallback for them.
+    const knownBroken = new Set(['fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', 'b58d5348-c997-4338-8a9d-f83302bf948a']);
 
-    mount.innerHTML = tiles.map(t => {
-      const href = t.embedId ? ('work.html#video/' + t.embedId) : 'work.html';
-      // Use Bunny thumb if we have a working embedId. CHILDSTAR + Secrets are known
-      // to 404 on the public thumbnail URL — gradient fallback covers it gracefully.
-      const knownBroken = ['fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', 'b58d5348-c997-4338-8a9d-f83302bf948a'];
-      const useFallback = !t.embedId || knownBroken.includes(t.embedId);
-      const thumbStyle = (!useFallback && t.bunny)
-        ? ('background-image: url(\'https://' + CDN + '/' + t.embedId + '/thumbnail.jpg\');')
-        : '';
-      const fallbackClass = useFallback ? (' fallback-' + (t.fallback || 'amber')) : '';
-      const labelOverlay = useFallback ? ('<div class="sel-thumb-label">' + t.title + '</div>') : '';
+    function tile(p) {
+      const href = p.embedId
+        ? (p.bunny ? 'work.html#video/' + p.embedId : 'work.html#video/' + p.embedId)
+        : 'work.html';
+      const broken = !p.embedId || knownBroken.has(p.embedId);
+      let thumbStyle = '';
+      if (!broken && p.bunny) thumbStyle = "background-image: url('https://" + CDN + "/" + p.embedId + "/thumbnail.jpg');";
+      else if (p.embedId && !p.bunny) thumbStyle = "background-image: url('https://img.youtube.com/vi/" + p.embedId + "/maxresdefault.jpg');";
+      const fallbackCls = broken ? (' fallback-' + (p.fallback || 'amber')) : '';
+      const overlay = broken ? ('<div class="ltile-overlay">' + p.title + '</div>') : '';
       return ''
-        + '<a class="sel-tile" href="' + href + '">'
-        +   '<div class="sel-thumb' + fallbackClass + '" style="' + thumbStyle + '">'
-        +     '<span class="sel-year">' + t.year + '</span>'
-        +     labelOverlay
+        + '<a class="ltile" href="' + href + '">'
+        +   '<div class="ltile-thumb' + fallbackCls + '" style="' + thumbStyle + '">'
+        +     '<span class="ltile-yr">' + p.year + '</span>'
+        +     overlay
         +   '</div>'
-        +   '<div class="sel-body">'
-        +     '<div class="sel-title">' + t.title + '</div>'
-        +     '<div class="sel-meta">' + t.client + ' · ' + t.role + '</div>'
-        +     '<div class="sel-desc">' + t.desc + '</div>'
+        +   '<div class="ltile-body">'
+        +     '<div class="ltile-title">' + p.title + '</div>'
+        +     '<div class="ltile-client">' + p.client + '</div>'
         +   '</div>'
         + '</a>';
+    }
+
+    const html = LANES.map(lane => {
+      const matches = PROJECTS.filter(p => p.roles.includes(lane.key));
+      if (!matches.length) return '';
+      const word = matches.length === 1 ? 'project' : 'projects';
+      return ''
+        + '<div class="role-lane">'
+        +   '<div class="lane-head">'
+        +     '<span class="nm">' + lane.label + '</span>'
+        +     '<span class="ct">' + matches.length + ' ' + word + '</span>'
+        +   '</div>'
+        +   '<div class="lane-tiles">'
+        +     matches.map(tile).join('')
+        +   '</div>'
+        + '</div>';
     }).join('');
+
+    mount.innerHTML = html;
   }
-  renderSelectedWork();
+  renderRoleLanes();
 </script>
 </body>
 </html>
