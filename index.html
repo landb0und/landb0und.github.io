@@ -206,18 +206,23 @@
   /* Image post — natural aspect, IG-style framing */
   .post-image-real { display: flex; align-items: center; justify-content: center; background: #000; max-height: 750px; position: relative; }
   .post-image-real img { display: block; width: 100%; height: auto; max-height: 750px; object-fit: contain; }
+  /* Inline-playable video wrappers — shared overlay controls */
+  .post-vol-btn { position: absolute; bottom: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.65); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); z-index: 4; padding: 0; transition: transform .15s, background .15s; }
+  .post-vol-btn:hover { background: rgba(0,0,0,0.85); transform: scale(1.08); }
+  .post-vol-btn svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .post-open-link { position: absolute; inset: 0; z-index: 1; }
 
   /* Vertical reel post — 9:16, click-through to shorts feed */
-  .post-image-vertical { aspect-ratio: 9/16; max-height: 750px; background: #000 center/cover no-repeat; position: relative; display: block; text-decoration: none; }
-  .post-image-vertical video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .post-image-vertical .reel-badge { position: absolute; top: 12px; right: 12px; padding: 4px 10px; background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; backdrop-filter: blur(6px); display: inline-flex; align-items: center; gap: 5px; }
+  /* Verticals — IG portrait card (4:5) with the 9:16 reel centered, light letterbox */
+  .post-image-vertical { aspect-ratio: 4 / 5; max-height: 750px; background: #000; position: relative; display: block; overflow: hidden; }
+  .post-image-vertical .vid-stage { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); aspect-ratio: 9/16; height: 100%; background: #000 center/cover no-repeat; }
+  .post-image-vertical video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .post-image-vertical .reel-badge { position: absolute; top: 12px; right: 12px; padding: 4px 10px; background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; backdrop-filter: blur(6px); display: inline-flex; align-items: center; gap: 5px; z-index: 3; }
 
   /* Wide video post — 16:9 poster + play overlay, click opens Work tab at that video */
-  .post-image-video { aspect-ratio: 16/9; background: #000 center/cover no-repeat; position: relative; display: block; text-decoration: none; }
-  .post-image-video .play-circle { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.92); display: flex; align-items: center; justify-content: center; z-index: 2; transition: transform .15s; }
-  .post-image-video .play-circle::after { content: ''; width: 0; height: 0; border-left: 16px solid var(--bg); border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 4px; }
-  .post-image-video:hover .play-circle { transform: translate(-50%, -50%) scale(1.08); }
-  .post-image-video .feat-badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; background: var(--amber); color: var(--bg); font-size: 9px; letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; text-transform: uppercase; }
+  .post-image-video { aspect-ratio: 16/9; background: #000 center/cover no-repeat; position: relative; display: block; overflow: hidden; }
+  .post-image-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .post-image-video .feat-badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; background: var(--amber); color: var(--bg); font-size: 9px; letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; text-transform: uppercase; z-index: 3; }
 
   .post-actions { display: flex; align-items: center; padding: 12px 14px 4px; gap: 14px; }
   .post-actions .icn { font-size: 22px; color: var(--ink); cursor: pointer; transition: color .15s; }
@@ -770,11 +775,17 @@
   // Build a unified feed from CLIENTS (photos + horizontal videos) + VERTICALS.
   // Adding new media to data.js (any client's media[] or a new VERTICALS entry)
   // surfaces here automatically.
+  //
+  // MIX STRATEGY: video-heavy. Director's Reel pinned first, then we interleave
+  // wide + vertical videos at a 2:1 ratio against photos so the feed leads with
+  // motion (matches Jacob's role — filmmaker, not photographer).
   function buildHomeFeed() {
     if (!window.CLIENTS || !window.VERTICALS) return [];
-    const out = [];
+    const photos = [];
+    const verticals = [];
+    const videos = [];
 
-    // 1. Photos — dedupe by src, collect every client that shares each file
+    // 1. Photos (deduped by src, gather all collaborating clients)
     const photosBySrc = new Map();
     window.CLIENTS.forEach(c => {
       (c.media || []).filter(m => m.type === 'photo').forEach(p => {
@@ -786,7 +797,7 @@
       });
     });
     Array.from(photosBySrc.values()).forEach(p => {
-      out.push({
+      photos.push({
         type: 'photo', priority: 0,
         src: p.src, authors: p.authors,
         year: p.year, location: p.location,
@@ -794,28 +805,27 @@
       });
     });
 
-    // 2. Verticals — every entry from data.js VERTICALS
+    // 2. Verticals
     window.VERTICALS.forEach((v, i) => {
       const c = window.clientById(v.client);
       if (!c) return;
-      out.push({
+      verticals.push({
         type: 'vertical', priority: PRIORITY_PINS[v.guid] || 0,
         embedId: v.guid, bunny: true,
         title: v.title, role: v.role, tag: v.tag, music: v.music,
-        verticalIndex: i, // for #shorts/N deep link
+        verticalIndex: i,
         authors: [c],
         likes: Math.floor(Math.random() * 2000 + 400)
       });
     });
 
-    // 3. Wide-screen videos — every CLIENT media with bunny:true and no Vertical tag.
-    // Plus Director's Reel (lives under landbound) gets the priority pin.
+    // 3. Wide-screen videos
     const seenEmbed = new Set();
     window.CLIENTS.forEach(c => {
       (c.media || []).filter(m => m.type === 'video' && !(m.tags || []).includes('Vertical')).forEach(v => {
         if (!v.embedId || seenEmbed.has(v.embedId)) return;
         seenEmbed.add(v.embedId);
-        out.push({
+        videos.push({
           type: 'video', priority: PRIORITY_PINS[v.embedId] || 0,
           embedId: v.embedId, bunny: !!v.bunny,
           title: v.title, role: (v.tags || []).join(' · '),
@@ -826,9 +836,42 @@
       });
     });
 
-    // Shuffle, then stable-sort by priority so pinned items go first
-    return shuffleArr(out).sort((a, b) => (b.priority || 0) - (a.priority || 0));
+    // Pull pinned items off the top (Director's Reel etc.)
+    const all = [...photos, ...verticals, ...videos];
+    const pinned = all.filter(i => i.priority > 0).sort((a, b) => b.priority - a.priority);
+    const pinnedKeys = new Set(pinned.map(i => i.embedId || i.src));
+
+    const restVideos = shuffleArr(videos.filter(i => !pinnedKeys.has(i.embedId)));
+    const restVerts  = shuffleArr(verticals.filter(i => !pinnedKeys.has(i.embedId)));
+    const restPhotos = shuffleArr(photos.filter(i => !pinnedKeys.has(i.src)));
+
+    // Interleave videos with verticals so both types stay live
+    const motion = [];
+    let vi = 0, ti = 0;
+    while (vi < restVideos.length || ti < restVerts.length) {
+      if (vi < restVideos.length) motion.push(restVideos[vi++]);
+      if (ti < restVerts.length)  motion.push(restVerts[ti++]);
+    }
+
+    // Final order: pinned → repeating block of [motion, motion, photo]
+    const out = [...pinned];
+    let mi = 0, pi = 0;
+    while (mi < motion.length || pi < restPhotos.length) {
+      if (mi < motion.length) out.push(motion[mi++]);
+      if (mi < motion.length) out.push(motion[mi++]);
+      if (pi < restPhotos.length) out.push(restPhotos[pi++]);
+    }
+    return out;
   }
+
+  // Bunny MP4 stream URL (same pattern used in work.html)
+  function bunnyMp4(embedId) {
+    return 'https://vz-5dfccea4-b84.b-cdn.net/' + embedId + '/play_720p.mp4';
+  }
+
+  // SVG icons for the mute toggle
+  const SVG_MUTE = '<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+  const SVG_UNMUTE = '<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>';
 
   function postHead(item) {
     const primary = item.authors[0];
@@ -871,23 +914,42 @@
 
   function renderVerticalPost(item) {
     const thumb = bunnyVideoThumb(item.embedId, item.bunny);
+    const mp4 = bunnyMp4(item.embedId);
     const href = 'work.html#shorts/' + (item.verticalIndex || 0);
     return '<div class="post">' + postHead(item)
-      + '<a class="post-image-vertical" href="' + href + '" style="background-image: url(\'' + thumb + '\');">'
+      + '<div class="post-image-vertical">'
+      +   '<div class="vid-stage" style="background-image: url(\'' + thumb + '\');">'
+      +     '<video data-src="' + mp4 + '" poster="' + thumb + '" muted loop playsinline preload="none" webkit-playsinline></video>'
+      +   '</div>'
+      +   '<a class="post-open-link" href="' + href + '" aria-label="Open in shorts feed"></a>'
+      +   '<button type="button" class="post-vol-btn" aria-label="Toggle sound">' + SVG_MUTE + '</button>'
       +   '<span class="reel-badge">▶ Reel</span>'
-      + '</a>'
+      + '</div>'
       + commonFooter(item, '<strong>' + item.title + '</strong> — ' + (item.music || item.role || ''))
       + '</div>';
   }
 
   function renderVideoPost(item) {
     const thumb = bunnyVideoThumb(item.embedId, item.bunny);
-    const href = 'work.html#video/' + item.embedId;
     const featured = (item.priority || 0) > 0;
+    const href = 'work.html#video/' + item.embedId;
+    // Only Bunny-hosted clips inline-play; YouTube embeds keep the click-thru poster.
+    if (item.bunny) {
+      const mp4 = bunnyMp4(item.embedId);
+      return '<div class="post">' + postHead(item)
+        + '<div class="post-image-video" style="background-image: url(\'' + thumb + '\');">'
+        +   '<video data-src="' + mp4 + '" poster="' + thumb + '" muted loop playsinline preload="none" webkit-playsinline></video>'
+        +   '<a class="post-open-link" href="' + href + '" aria-label="Open full player"></a>'
+        +   '<button type="button" class="post-vol-btn" aria-label="Toggle sound">' + SVG_MUTE + '</button>'
+        +   (featured ? '<span class="feat-badge">★ Featured</span>' : '')
+        + '</div>'
+        + commonFooter(item, '<strong>' + item.title + '</strong>' + (item.role ? ' — ' + item.role : ''))
+        + '</div>';
+    }
+    // YouTube fallback — link-to-player tile with play badge
     return '<div class="post">' + postHead(item)
       + '<a class="post-image-video" href="' + href + '" style="background-image: url(\'' + thumb + '\');">'
       +   (featured ? '<span class="feat-badge">★ Featured</span>' : '')
-      +   '<div class="play-circle"></div>'
       + '</a>'
       + commonFooter(item, '<strong>' + item.title + '</strong>' + (item.role ? ' — ' + item.role : ''))
       + '</div>';
@@ -903,7 +965,92 @@
       if (item.type === 'video') return renderVideoPost(item);
       return '';
     }).join('');
+    initFeedVideoPlayback(mount);
   }
+
+  // ============= FEED VIDEO PLAYBACK ENGINE =============
+  // Goals (IG-style):
+  //   - Videos autoplay muted as they scroll into view; pause when out of view.
+  //   - One global "sound on" flag: if the user unmutes any video, all future
+  //     in-view videos come up unmuted too. Re-muting any video flips it back.
+  //   - Only ONE video may have audio at a time — the most-visible one in view.
+  //     If the user unmutes a second video, the first auto-mutes.
+  function initFeedVideoPlayback(scope) {
+    if (!('IntersectionObserver' in window)) return;
+    const videos = Array.from(scope.querySelectorAll('video[data-src]'));
+    if (!videos.length) return;
+
+    // Global, persists across renders within this page load
+    if (window.__feedAudio === undefined) window.__feedAudio = false; // sticky unmute flag
+    if (!window.__feedAudioOwner) window.__feedAudioOwner = null;     // <video> currently with sound
+
+    const visibility = new Map(); // video -> ratio
+
+    function applyMuteState(v) {
+      const stage = v.closest('.post-image-vertical, .post-image-video');
+      const btn = stage ? stage.querySelector('.post-vol-btn') : null;
+      const wantSound = window.__feedAudio && window.__feedAudioOwner === v;
+      v.muted = !wantSound;
+      if (btn) btn.innerHTML = wantSound ? SVG_UNMUTE : SVG_MUTE;
+    }
+
+    function chooseAudioOwner() {
+      // Among in-view (ratio>=0.6) videos, the one with the highest ratio gets audio
+      if (!window.__feedAudio) { window.__feedAudioOwner = null; videos.forEach(applyMuteState); return; }
+      let best = null, bestR = 0.6;
+      visibility.forEach((r, v) => { if (r >= bestR) { bestR = r; best = v; } });
+      window.__feedAudioOwner = best;
+      videos.forEach(applyMuteState);
+    }
+
+    function ensureLoaded(v) {
+      if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.load(); }
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        const v = en.target;
+        visibility.set(v, en.intersectionRatio);
+        if (en.intersectionRatio >= 0.55) {
+          ensureLoaded(v);
+          const playP = v.play();
+          if (playP && playP.catch) playP.catch(()=>{});
+        } else if (en.intersectionRatio < 0.35) {
+          v.pause();
+          // releasing audio? recompute owner
+          if (window.__feedAudioOwner === v) { window.__feedAudioOwner = null; }
+        }
+      });
+      chooseAudioOwner();
+    }, { threshold: [0, 0.35, 0.55, 0.75, 1] });
+
+    videos.forEach(v => {
+      io.observe(v);
+      applyMuteState(v);
+
+      // Mute toggle button
+      const stage = v.closest('.post-image-vertical, .post-image-video');
+      const btn = stage ? stage.querySelector('.post-vol-btn') : null;
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          if (window.__feedAudioOwner === v && window.__feedAudio) {
+            // currently unmuted — mute it (and clear global)
+            window.__feedAudio = false;
+            window.__feedAudioOwner = null;
+          } else {
+            // unmute this one; sticky flag on for the rest of the session
+            window.__feedAudio = true;
+            window.__feedAudioOwner = v;
+            ensureLoaded(v);
+            const p = v.play(); if (p && p.catch) p.catch(()=>{});
+          }
+          videos.forEach(applyMuteState);
+        });
+      }
+    });
+  }
+
   renderHomeFeed();
 </script>
 </body>
