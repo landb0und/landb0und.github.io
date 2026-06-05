@@ -49,21 +49,88 @@
   .main { margin-left: 220px; padding: 32px 40px 60px; max-width: 1400px; position: relative; z-index: 2; }
 
   /* ============= SHARED HERO PANEL ============= */
+  /* ============= STORIES (clients) — same component as photo/work ============= */
+  .stories { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-left: 8px; padding: 6px 2px 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line-2); scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .stories::-webkit-scrollbar { height: 4px; }
+  .stories::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .story { display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start; cursor: pointer; flex-shrink: 0; width: 72px; text-decoration: none; }
+  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; }
+  .story-ring::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
+    animation: homeRingSpin 3s linear infinite; z-index: -1;
+  }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -1s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -2s; }
+  .story:hover .story-ring { transform: scale(1.06); }
+  .story:hover .story-ring::before { animation-duration: 1.2s; }
+  @keyframes homeRingSpin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .story-ring::before { animation: none; } }
+  .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .story-avatar { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 16px; background-size: cover; background-position: center; }
+  .story-name { font-size: 11px; color: var(--ink-2); font-weight: 600; text-align: center; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sa-1 { background: linear-gradient(135deg, #d4a44c, #6b3a1a); }
+  .sa-2 { background: linear-gradient(135deg, #1a2a3a, #4a7aa8); }
+  .sa-3 { background: linear-gradient(135deg, #4a1838, #c084fc); }
+  .sa-4 { background: linear-gradient(135deg, #8caf3a, #1f2a18); }
+  .sa-5 { background: linear-gradient(135deg, #c4533a, #2a1810); }
+  .sa-6 { background: linear-gradient(135deg, #f5b042, #501838); }
+  .sa-7 { background: linear-gradient(135deg, #4a6a2a, #c5e060); }
+  .sa-8 { background: linear-gradient(135deg, #1a1418, #6a4a8a); }
+  .sa-9 { background: linear-gradient(135deg, #2a2018, #b08040); }
+  .sa-10 { background: linear-gradient(135deg, #1a0a10, #e8589a); }
+
   .hero-card { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 36px; }
   .hero-bar { padding: 11px 18px; background: var(--bg-3); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; font-size: 11px; min-height: 42px; }
   .hero-bar .badge-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(140,175,58,0.12); border: 1px solid rgba(140,175,58,0.4); color: var(--leaf); border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
   .hero-bar .badge-status .d { width: 5px; height: 5px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
 
-  /* Internal split — Jacob | Connect */
-  .hero-split { display: grid; grid-template-columns: 1.55fr 1px 1fr; transition: grid-template-columns .3s ease; }
-  .hero-divider { background: var(--line-2); }
-  .hero-left { padding: 22px 24px; }
-  .hero-right { padding: 28px 24px; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  /* ===== NEW: IG profile layout ===== */
+  .hero-body { padding: 22px 24px; }
+  .profile { display: grid; grid-template-columns: 132px 1fr; gap: 22px; align-items: start; }
+  .profile-avatar { width: 132px; height: 132px; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber)); animation: heroAvatarSpin 6s linear infinite; flex-shrink: 0; }
+  @keyframes heroAvatarSpin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .profile-avatar { animation: none; } }
+  .profile-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 4px; animation: heroAvatarCounterSpin 6s linear infinite; }
+  @keyframes heroAvatarCounterSpin { to { transform: rotate(-360deg); } }
+  @media (prefers-reduced-motion: reduce) { .profile-avatar-inner { animation: none; } }
+  .profile-avatar-img { width: 100%; height: 100%; border-radius: 50%; background: url('headshot.jpg') center/cover no-repeat var(--bg-3); }
+  .profile-info { min-width: 0; }
+  .profile-name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+  .profile-name { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+  .profile-verified { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--amber); color: var(--bg); font-size: 12px; font-weight: 900; }
+  .profile-handle { font-size: 12px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-bottom: 14px; }
+  .profile-handle .dot { color: var(--ink-4); margin: 0 6px; }
+  .profile-bio { font-size: 13.5px; color: var(--ink); line-height: 1.6; margin-bottom: 14px; }
+  .profile-bio .lane-1 { font-weight: 700; }
+  .profile-bio .lane-2 { color: var(--ink-2); }
+  .profile-bio .lane-ai { color: var(--ink-3); font-size: 12px; font-style: italic; }
+  .profile-stats { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; padding-top: 12px; border-top: 1px solid var(--line-2); }
+  .profile-stats strong { color: var(--ink); font-weight: 800; }
+  .profile-stats .stat { display: inline-flex; align-items: center; gap: 5px; }
+  .profile-stats .stat::after { content: '·'; color: var(--ink-4); margin-left: 12px; }
+  .profile-stats .stat:last-child::after { display: none; }
 
-  /* When expanded: Jacob takes full width, Connect + divider hide */
-  .hero-card.open .hero-split { grid-template-columns: 1fr 0 0; }
-  .hero-card.open .hero-divider,
-  .hero-card.open .hero-right { display: none; }
+  .profile-actions { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .pa-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; text-decoration: none; transition: all .15s; }
+  .pa-btn.primary { background: var(--amber); color: var(--bg); border: 1px solid var(--amber); }
+  .pa-btn.primary:hover { background: #ffc555; }
+  .pa-btn.secondary { background: rgba(255,255,255,0.02); color: var(--ink); border: 1px solid var(--line); }
+  .pa-btn.secondary:hover { background: rgba(245,176,66,0.08); color: var(--amber); border-color: rgba(245,176,66,0.6); }
+  .pa-btn .ic { font-size: 13px; }
+
+  /* Credits-by-lane in the expanded view */
+  .lane { padding: 14px 0; border-bottom: 1px solid var(--line-2); display: grid; grid-template-columns: 140px 1fr; gap: 18px; align-items: baseline; }
+  .lane:last-child { border-bottom: none; }
+  .lane-label { font-size: 11px; color: var(--ink); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; }
+  .lane-credits { font-size: 14px; color: var(--ink-2); line-height: 1.6; }
+  .lane-credits a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; transition: all .15s; }
+  .lane-credits a:hover { color: var(--amber); border-bottom-color: var(--amber); }
+  .lane-credits .meta { color: var(--ink-3); font-size: 12px; font-family: 'SF Mono', Menlo, monospace; }
+  /* AI lane visually set apart */
+  .lane.lane-ai { background: rgba(255,255,255,0.015); margin: 6px -12px 0; padding: 14px 12px; border-radius: 6px; border: 1px solid var(--line-2); }
+  .lane.lane-ai .lane-label { color: var(--ink-3); }
+  .lane.lane-ai .lane-credits { font-style: italic; color: var(--ink-3); font-size: 13px; }
 
   /* JACOB SIDE */
   .char-head { display: flex; gap: 18px; align-items: center; }
@@ -305,143 +372,54 @@
 
 <main class="main">
 
-  <!-- SHARED HERO PANEL -->
+  <!-- Client stories (now on home too) — same component as Work + Photo -->
+  <div class="stories" id="homeStories"></div>
+
+  <!-- HERO PROFILE -->
   <div class="hero-card" id="heroCard">
     <div class="hero-bar">
       <span class="badge-status"><span class="d"></span>Accepting Work · Available Now</span>
     </div>
 
-    <div class="hero-split">
-
-      <!-- JACOB SIDE -->
-      <div class="hero-left">
-        <div class="char-head">
-          <div class="avatar"></div>
-          <div class="id-block">
-            <div class="name">Jacob Boehme</div>
-            <div class="tagline">Director · VFX Editor · DP — Los Angeles</div>
-            <div class="pills">
-              <span class="pill">DIRECTION</span>
-              <span class="pill">EDITING</span>
-              <span class="pill">VFX</span>
-              <span class="pill">DP</span>
-              <span class="pill">AI/VFX</span>
-            </div>
+    <div class="hero-body">
+      <div class="profile">
+        <div class="profile-avatar"><div class="profile-avatar-inner"><div class="profile-avatar-img"></div></div></div>
+        <div class="profile-info">
+          <div class="profile-name-row">
+            <span class="profile-name">Jacob Boehme</span>
+            <span class="profile-verified" title="Verified Landbound">✓</span>
           </div>
-        </div>
-
-        <!-- Unified stats bar: 45M+ + 4 social stats -->
-        <div class="stats-bar">
-          <div class="stat-big">
-            <div class="num">45M<span class="plus">+</span></div>
-            <div class="lbl">Total Views</div>
+          <div class="profile-handle">@landbound<span class="dot">·</span>Los Angeles</div>
+          <div class="profile-bio">
+            <span class="lane-1">Director · DP · VFX Editor</span><br>
+            <span class="lane-2">Music videos · commercials · performance</span><br>
+            <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
           </div>
-          <a class="stat-small" href="https://www.tiktok.com/@landbound" target="_blank" rel="noopener">
-            <div class="top"><span class="ic tt"><svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg></span><span class="k">TikTok</span></div>
-            <div class="v">100K</div>
-          </a>
-          <a class="stat-small" href="https://www.instagram.com/landbound" target="_blank" rel="noopener">
-            <div class="top"><span class="ic ig"><svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></span><span class="k">Instagram</span></div>
-            <div class="v">11K</div>
-          </a>
-          <a class="stat-small" href="https://www.imdb.com/name/nm13209955/" target="_blank" rel="noopener">
-            <div class="top"><span class="ic imdb">i</span><span class="k">IMDb</span></div>
-            <div class="v">24</div>
-          </a>
-          <div class="stat-small">
-            <div class="top"><span class="ic aw">★</span><span class="k">Awards</span></div>
-            <div class="v">3×</div>
-          </div>
-        </div>
-
-        <a class="latest-drop" href="work.html#video/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8" style="text-decoration:none;">
-          <div class="ld-thumb">
-            <img src="https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg" alt="CHILDSTAR: Final Act" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;">
-            <div class="ld-play" style="z-index:3;"></div>
-            <span class="ld-dur" style="z-index:3;">4:12</span>
-            <span class="ld-pulse" style="z-index:3;">FEATURED</span>
-          </div>
-          <div class="ld-info">
-            <div class="ld-lbl">★ Recommended Watch</div>
-            <div class="ld-title">CHILDSTAR: Final Act</div>
-            <div class="ld-meta"><strong>Grace VanderWaal</strong> · Director + EP</div>
-            <div class="ld-stats">
-              <span><strong>4.2M</strong> views</span>
-              <span>·</span>
-              <span>Music Video · 2025</span>
-            </div>
-          </div>
-        </a>
-
-        <button class="expand-toggle" onclick="document.getElementById('heroCard').classList.toggle('open')">
-          <span class="lbl-closed">See the full breakdown</span>
-          <span class="lbl-open">Collapse</span>
-          <span class="arr">▼</span>
-        </button>
-
-        <div class="expanded">
-          <div class="expanded-inner">
-            <div class="section">
-              <div class="section-head"><span class="label">Skills</span><span class="count">years experience</span></div>
-              <div class="skills">
-                <div class="skill"><span class="nm">DIRECTION</span><span class="yr">10 YR</span></div>
-                <div class="skill"><span class="nm">EDITING</span><span class="yr">10 YR</span></div>
-                <div class="skill"><span class="nm">VFX</span><span class="yr">8 YR</span></div>
-                <div class="skill"><span class="nm">CINEMATOGRAPHY</span><span class="yr">8 YR</span></div>
-                <div class="skill"><span class="nm">PRODUCING</span><span class="yr">8 YR</span></div>
-                <div class="skill"><span class="nm">AI / AI-VFX</span><span class="yr">3 YR</span></div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="section-head"><span class="label">Equipped</span><span class="count">9 tools</span></div>
-              <div class="equip-grid">
-                <div class="equip-chip">DAVINCI</div>
-                <div class="equip-chip">PREMIERE</div>
-                <div class="equip-chip">AFTER EFX</div>
-                <div class="equip-chip">BLENDER</div>
-                <div class="equip-chip">UNREAL</div>
-                <div class="equip-chip">NUKE</div>
-                <div class="equip-chip">MIDJOURNEY</div>
-                <div class="equip-chip">KLING</div>
-                <div class="equip-chip">ARRI</div>
-              </div>
-            </div>
-            <div class="section">
-              <div class="section-head"><span class="label">Achievements</span><span class="count">7</span></div>
-              <div class="badges-grid">
-                <span class="ribbon-badge">3× ADDY</span>
-                <span class="ribbon-badge">SCREAMFEST</span>
-                <span class="ribbon-badge">CHINESE THEATRE</span>
-                <span class="ribbon-badge">100K TIKTOK</span>
-                <span class="ribbon-badge">45M+ VIEWS</span>
-                <span class="ribbon-badge">TIKTOK PARTNER</span>
-                <span class="ribbon-badge">SUPER BOWL · 5-STATE</span>
-              </div>
-            </div>
+          <div class="profile-stats">
+            <span class="stat"><strong>45M+</strong> views</span>
+            <span class="stat"><strong>100K</strong> @ TikTok</span>
+            <span class="stat"><strong>11K</strong> @ IG</span>
+            <span class="stat"><strong>24</strong> IMDb</span>
+            <span class="stat"><strong>3×</strong> awards</span>
           </div>
         </div>
       </div>
 
-      <!-- DIVIDER -->
-      <div class="hero-divider"></div>
-
-      <!-- CONNECT SIDE -->
-      <div class="hero-right">
-        <div class="connect-h">— Connect</div>
-        <div class="connect-hello">Working on something?</div>
-        <div class="connect-sub">Music videos, commercials, VFX, AI/VFX workflows. Available now.</div>
-
-        <a href="mailto:jacob.t.boehme@gmail.com" class="connect-btn primary">
-          <span class="ic">✉</span> Send an Email →
-        </a>
-
-        <a href="hire.html" class="connect-btn secondary">
-          <span class="ic">▤</span> Project Inquiry →
-        </a>
-
-        <a href="hire.html" class="connect-link">or book a call →</a>
+      <div class="profile-actions">
+        <a href="mailto:jacob.t.boehme@gmail.com" class="pa-btn primary"><span class="ic">✉</span> Email</a>
+        <a href="hire.html" class="pa-btn secondary"><span class="ic">▤</span> Hire</a>
+        <a href="hire.html" class="pa-btn secondary"><span class="ic">▷</span> Book a call</a>
       </div>
 
+      <button class="expand-toggle" onclick="document.getElementById('heroCard').classList.toggle('open')">
+        <span class="lbl-closed">See selected credits</span>
+        <span class="lbl-open">Hide credits</span>
+        <span class="arr">▼</span>
+      </button>
+
+      <div class="expanded">
+        <div class="expanded-inner" id="heroLanes"><!-- rendered by JS from CLIENTS in data.js --></div>
+      </div>
     </div>
   </div>
 
@@ -570,6 +548,79 @@
     }
   }
   renderVerticalsStrip();
+
+  // ============= STORIES (clients) =============
+  // First tile is "All clients" linking to clients.html, then every client.
+  function renderHomeStories() {
+    const mount = document.getElementById('homeStories');
+    if (!mount || !window.CLIENTS) return;
+    const allTile = ''
+      + '<a class="story" href="clients.html" style="text-decoration:none;">'
+      +   '<div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, #f5b042, #e8589a, #c084fc); font-size: 16px;">All</div></div></div>'
+      +   '<div class="story-name">All clients</div>'
+      + '</a>';
+    const items = window.CLIENTS.map(cl => {
+      const t = window.clientThumb(cl);
+      const initials = window.clientInitials(cl);
+      const bgStyle = t ? 'style="background-image: url(\'' + t + '\');"' : '';
+      const label = t ? '' : initials;
+      return ''
+        + '<a class="story" href="client.html?id=' + cl.id + '" style="text-decoration:none;">'
+        +   '<div class="story-ring"><div class="story-inner"><div class="story-avatar ' + (t ? '' : cl.palette) + '" ' + bgStyle + '>' + label + '</div></div></div>'
+        +   '<div class="story-name">' + cl.short + '</div>'
+        + '</a>';
+    }).join('');
+    mount.innerHTML = allTile + items;
+  }
+  renderHomeStories();
+
+  // ============= SELECTED CREDITS (lanes) =============
+  // Single source: pull from CLIENTS where the client's role contains a given
+  // keyword. New clients in data.js → auto-appear in the matching lanes.
+  function renderLanes() {
+    const mount = document.getElementById('heroLanes');
+    if (!mount || !window.CLIENTS) return;
+    const clientsByRole = (kw) => window.CLIENTS.filter(c => {
+      if (c.id === 'landbound' || c.id === 'tiktok' || c.id === 'nyc-cinematography-awards' || c.id === 'raw-material') return false;
+      return new RegExp('\\\\b' + kw + '\\\\b', 'i').test(c.role || '');
+    });
+    // role-keyword shortcuts. The roles in data.js are strings like
+    // "Director · DP · Editor · VFX · Photographer" — we match word-boundaried.
+    const directors    = window.CLIENTS.filter(c => /Director/i.test(c.role || '') && c.id !== 'landbound' && c.id !== 'tiktok');
+    const dps          = window.CLIENTS.filter(c => /\bDP\b|Cinematographer/i.test(c.role || '') && c.id !== 'landbound' && c.id !== 'tiktok');
+    const editors      = window.CLIENTS.filter(c => /Editor/i.test(c.role || '') && c.id !== 'landbound' && c.id !== 'tiktok');
+    const vfxClients   = window.CLIENTS.filter(c => /VFX/i.test(c.role || '') && c.id !== 'landbound' && c.id !== 'tiktok');
+    const eps          = window.CLIENTS.filter(c => /Executive Producer|\bEP\b/i.test(c.role || ''));
+
+    function linkList(arr) {
+      if (!arr.length) return '<span class="meta">— soon —</span>';
+      return arr.map(c => '<a href="client.html?id=' + c.id + '">' + c.name + '</a>').join(', ');
+    }
+
+    const lanes = [
+      { label: 'Direction',  html: linkList(directors) },
+      { label: 'DP',         html: linkList(dps) },
+      { label: 'Editing',    html: linkList(editors) + ' <span class="meta">+ Director\'s Reel, Allison Hagendorf Show S4</span>' },
+      { label: 'VFX',        html: linkList(vfxClients) + ' <span class="meta">+ The First Circle (Feature · 250 shots · VFX Sup)</span>' },
+      { label: 'Producing',  html: eps.length ? linkList(eps) + ' <span class="meta">(EP)</span>' : 'CHILDSTAR <span class="meta">(EP, Grace VanderWaal)</span>' }
+    ];
+
+    const laneHTML = lanes.map(l => ''
+      + '<div class="lane">'
+      +   '<div class="lane-label">' + l.label + '</div>'
+      +   '<div class="lane-credits">' + l.html + '</div>'
+      + '</div>'
+    ).join('');
+
+    const aiLane = ''
+      + '<div class="lane lane-ai">'
+      +   '<div class="lane-label">AI / AI-VFX</div>'
+      +   '<div class="lane-credits">Independent AI / VFX practice — not on every project. Offered on request for previs and select post.</div>'
+      + '</div>';
+
+    mount.innerHTML = laneHTML + aiLane;
+  }
+  renderLanes();
 </script>
 </body>
 </html>

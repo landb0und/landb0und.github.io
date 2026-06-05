@@ -244,7 +244,8 @@
 
   .rail-h { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; }
   .rail-h-title { font-size: 12px; color: var(--ink-3); font-weight: 700; letter-spacing: 0.04em; }
-  .rail-h-see { font-size: 11px; color: var(--ink); font-weight: 800; cursor: pointer; }
+  .rail-h-see { font-size: 11px; color: var(--amber); font-weight: 800; cursor: pointer; letter-spacing: 0.04em; }
+  .rail-h-see:hover { color: #fff; }
 
   .rail-cats { display: flex; flex-direction: column; gap: 10px; padding: 4px; }
   .rail-cat { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background .15s; padding: 6px; border-radius: 8px; margin: -6px; }
@@ -254,6 +255,10 @@
   .rail-cat-name { font-size: 13px; color: var(--ink); font-weight: 700; line-height: 1.2; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.02em; }
   .rail-cat-sub { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 2px; }
   .rail-cat-action { font-size: 11px; color: var(--amber); font-weight: 800; cursor: pointer; letter-spacing: 0.06em; }
+  .rail-cat.active { background: rgba(245,176,66,0.1); border: 1px solid rgba(245,176,66,0.35); margin: -7px; padding: 7px; }
+  .rail-cat.active .rail-cat-hash { background: var(--amber); color: var(--bg); border-color: var(--amber); }
+  .rail-cat.active .rail-cat-name { color: var(--amber); }
+  .rail-cat.active .rail-cat-action { color: #fff; }
 
   .rail-footer { padding: 16px 4px 4px; border-top: 1px solid var(--line-2); font-size: 10px; color: var(--ink-4); letter-spacing: 0.08em; line-height: 1.8; font-family: 'SF Mono', Menlo, monospace; }
   .rail-footer span::after { content: ' · '; color: var(--ink-4); }
@@ -371,75 +376,12 @@
 
         <div class="rail-h">
           <span class="rail-h-title">Filter by type</span>
-          <span class="rail-h-see">See all</span>
+          <span class="rail-h-see" id="railClearFilter" style="display:none;">Clear</span>
         </div>
 
-        <div class="rail-cats">
-          <div class="rail-cat">
-            <div class="rail-cat-hash">#</div>
-            <div class="rail-cat-info">
-              <div class="rail-cat-name">#editorial</div>
-              <div class="rail-cat-sub">62 frames</div>
-            </div>
-            <span class="rail-cat-action">Filter</span>
-          </div>
-          <div class="rail-cat">
-            <div class="rail-cat-hash">#</div>
-            <div class="rail-cat-info">
-              <div class="rail-cat-name">#bts</div>
-              <div class="rail-cat-sub">98 frames</div>
-            </div>
-            <span class="rail-cat-action">Filter</span>
-          </div>
-          <div class="rail-cat">
-            <div class="rail-cat-hash">#</div>
-            <div class="rail-cat-info">
-              <div class="rail-cat-name">#music</div>
-              <div class="rail-cat-sub">41 frames</div>
-            </div>
-            <span class="rail-cat-action">Filter</span>
-          </div>
-          <div class="rail-cat">
-            <div class="rail-cat-hash">#</div>
-            <div class="rail-cat-info">
-              <div class="rail-cat-name">#client</div>
-              <div class="rail-cat-sub">38 frames</div>
-            </div>
-            <span class="rail-cat-action">Filter</span>
-          </div>
-          <div class="rail-cat">
-            <div class="rail-cat-hash">#</div>
-            <div class="rail-cat-info">
-              <div class="rail-cat-name">#commercial</div>
-              <div class="rail-cat-sub">29 frames</div>
-            </div>
-            <span class="rail-cat-action">Filter</span>
-          </div>
-          <div class="rail-cat">
-            <div class="rail-cat-hash">#</div>
-            <div class="rail-cat-info">
-              <div class="rail-cat-name">#liveevent</div>
-              <div class="rail-cat-sub">22 frames</div>
-            </div>
-            <span class="rail-cat-action">Filter</span>
-          </div>
-          <div class="rail-cat">
-            <div class="rail-cat-hash">#</div>
-            <div class="rail-cat-info">
-              <div class="rail-cat-name">#personal</div>
-              <div class="rail-cat-sub">34 frames</div>
-            </div>
-            <span class="rail-cat-action">Filter</span>
-          </div>
-          <div class="rail-cat">
-            <div class="rail-cat-hash">#</div>
-            <div class="rail-cat-info">
-              <div class="rail-cat-name">#35mmfilm</div>
-              <div class="rail-cat-sub">12 frames</div>
-            </div>
-            <span class="rail-cat-action">Filter</span>
-          </div>
-        </div>
+        <!-- rail-cats rendered by renderRailCats() from PHOTOS categories. Each
+             entry is a clickable filter; clicking the same one again clears. -->
+        <div class="rail-cats" id="railCats"></div>
 
 
       </div>
@@ -669,22 +611,80 @@
     `).join('');
   }
 
-  // Wire category tab pills (both grid + feed copies) to filter both views.
-  function wireCategoryTabs() {
-    const allTabs = document.querySelectorAll('#photoTabs .tab, #feedTabs .tab');
-    allTabs.forEach(t => {
-      t.addEventListener('click', () => {
-        const cat = t.dataset.cat || 'all';
-        currentCategory = cat;
-        // Mirror active state on both tab rows
-        allTabs.forEach(o => o.classList.toggle('active', o.dataset.cat === cat));
-        // Re-render both views; tile-click handlers rewire on each grid render
-        renderGrid();
-        renderFeed(0);
-        wireGridClicks();
-        settleAndShowGrid();
+  // Category metadata for the IG-style hashtag rail. Same categories
+  // deriveCategories emits — order shown matches priority of display.
+  const RAIL_CATEGORIES = [
+    { key: 'music',      label: '#music' },
+    { key: 'commercial', label: '#commercial' },
+    { key: 'collab',     label: '#collab' },
+    { key: 'bts',        label: '#bts' },
+    { key: 'editorial',  label: '#editorial' },
+    { key: 'live',       label: '#liveevent' },
+    { key: 'film',       label: '#35mmfilm' },
+    { key: 'phone',      label: '#phone' },
+    { key: 'personal',   label: '#personal' }
+  ];
+
+  // Render the right-rail hashtag list — counts derived from real PHOTOS data,
+  // empty categories hidden, active state mirrors the grid tabs.
+  function renderRailCats() {
+    const mount = document.getElementById('railCats');
+    if (!mount) return;
+    const html = RAIL_CATEGORIES.map(cat => {
+      const n = PHOTOS.filter(p => (p.categories || []).includes(cat.key)).length;
+      if (!n) return '';
+      const active = currentCategory === cat.key ? ' active' : '';
+      const word = n === 1 ? 'frame' : 'frames';
+      return ''
+        + '<div class="rail-cat' + active + '" data-cat="' + cat.key + '">'
+        +   '<div class="rail-cat-hash">#</div>'
+        +   '<div class="rail-cat-info">'
+        +     '<div class="rail-cat-name">' + cat.label + '</div>'
+        +     '<div class="rail-cat-sub">' + n + ' ' + word + '</div>'
+        +   '</div>'
+        +   '<span class="rail-cat-action">' + (currentCategory === cat.key ? 'Active' : 'Filter') + '</span>'
+        + '</div>';
+    }).join('');
+    mount.innerHTML = html;
+    // Toggle the "Clear" button next to "Filter by type"
+    const clearBtn = document.getElementById('railClearFilter');
+    if (clearBtn) {
+      clearBtn.style.display = (currentCategory === 'all') ? 'none' : '';
+    }
+    // Wire clicks on each rail-cat: click → apply filter; click again on the
+    // active one → clear back to All.
+    mount.querySelectorAll('.rail-cat').forEach(el => {
+      el.addEventListener('click', () => {
+        const cat = el.dataset.cat;
+        setCategory(currentCategory === cat ? 'all' : cat);
       });
     });
+  }
+
+  // Single source of truth for changing the active filter. Updates state +
+  // re-renders feed + grid + rail-cats + grid tabs in one call.
+  function setCategory(cat) {
+    currentCategory = cat || 'all';
+    // Sync grid tabs (the top-of-grid filter pills) — these were previously
+    // wired here in wireCategoryTabs but kept their own handler. Update once.
+    document.querySelectorAll('#photoTabs .tab').forEach(o => {
+      o.classList.toggle('active', o.dataset.cat === currentCategory);
+    });
+    renderGrid();
+    renderFeed(0);
+    wireGridClicks();
+    settleAndShowGrid();
+    renderRailCats();
+  }
+
+  // Wire category tab pills (grid view only — feed view uses the rail).
+  function wireCategoryTabs() {
+    document.querySelectorAll('#photoTabs .tab').forEach(t => {
+      t.addEventListener('click', () => setCategory(t.dataset.cat || 'all'));
+    });
+    // Clear button in the rail header
+    const clearBtn = document.getElementById('railClearFilter');
+    if (clearBtn) clearBtn.addEventListener('click', () => setCategory('all'));
   }
   function wireGridClicks() {
     document.querySelectorAll('.photo[data-photo]').forEach(el => {
@@ -726,6 +726,7 @@
   wireGridClicks();
   updateCounts();
   wireCategoryTabs();
+  renderRailCats();
 
   // ESC exits feed
   document.addEventListener('keydown', (e) => {
