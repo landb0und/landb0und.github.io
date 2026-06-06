@@ -59,7 +59,7 @@
   .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; }
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--leaf), var(--amber));
+    background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--amber));
     animation: homeRingSpin 2s linear infinite, homeRingPulse 2.4s ease-in-out infinite;
     z-index: -1; transform-origin: center;
   }
@@ -103,7 +103,7 @@
   /* ===== NEW: IG profile layout ===== */
   .hero-body { padding: 22px 24px; }
   .profile { display: grid; grid-template-columns: 132px 1fr; gap: 22px; align-items: start; }
-  .profile-avatar { width: 132px; height: 132px; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--leaf), var(--amber)); animation: heroAvatarSpin 6s linear infinite; flex-shrink: 0; }
+  .profile-avatar { width: 132px; height: 132px; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--amber)); animation: heroAvatarSpin 6s linear infinite; flex-shrink: 0; }
   @keyframes heroAvatarSpin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) { .profile-avatar { animation: none; } }
   .profile-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 4px; animation: heroAvatarCounterSpin 6s linear infinite; }
@@ -121,8 +121,8 @@
   .profile-bio .lane-2 { color: var(--ink-2); }
   .profile-bio .lane-ai { color: var(--ink-3); font-size: 12px; font-style: italic; }
   /* Proof line — short editorial run of credentials, sans-serif, sentence case */
-  .profile-proof { font-size: 12px; color: var(--ink-3); margin-bottom: 14px; line-height: 1.5; }
-  .profile-proof .sep { color: var(--ink-4); margin: 0 7px; }
+  .profile-proof { font-size: 12px; color: var(--amber); margin-bottom: 14px; line-height: 1.5; font-weight: 700; letter-spacing: 0.01em; }
+  .profile-proof .sep { color: rgba(245,176,66,0.45); margin: 0 7px; font-weight: 400; }
   .profile-proof strong { color: var(--amber); font-weight: 800; }
 
   /* Profile stats — IG-style cards: big number on top, label underneath.
@@ -142,7 +142,8 @@
   .pa-btn.primary:hover { background: #ffc555; }
   .pa-btn.secondary { background: rgba(255,255,255,0.02); color: var(--ink); border: 1px solid var(--line); }
   .pa-btn.secondary:hover { background: rgba(245,176,66,0.06); color: var(--amber); border-color: rgba(245,176,66,0.4); }
-  .pa-btn .ic { font-size: 13px; opacity: 0.9; }
+  .pa-btn .ic { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; opacity: 0.95; }
+  .pa-btn .ic svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   /* Quiet expand link — sentence case, sans-serif, not a CTA */
   .expand-toggle.quiet { background: transparent; border: none; border-top: 1px solid var(--line-2); padding: 14px 0 0; margin-top: 18px; border-radius: 0; width: 100%; color: var(--ink-3); font-size: 13px; letter-spacing: -0.005em; font-family: -apple-system, system-ui, 'SF Pro Text', sans-serif; font-weight: 600; text-transform: none; cursor: pointer; transition: color .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -218,7 +219,7 @@
   }
   .post { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   .post-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
-  .post-avatar { width: 36px; height: 36px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), var(--leaf)); flex-shrink: 0; cursor: pointer; text-decoration: none; }
+  .post-avatar { width: 36px; height: 36px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose)); flex-shrink: 0; cursor: pointer; text-decoration: none; }
   .post-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; }
   .post-avatar-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 12px; }
   .post-head-info { flex: 1; min-width: 0; }
@@ -556,9 +557,9 @@
       </div>
 
       <div class="profile-actions">
-        <a href="mailto:jacob.t.boehme@gmail.com" class="pa-btn primary"><span class="ic">✉</span> Email</a>
-        <a href="hire.html" class="pa-btn secondary"><span class="ic">▤</span> Hire</a>
-        <a href="hire.html" class="pa-btn secondary"><span class="ic">▷</span> Book a call</a>
+        <a href="hire.html" class="pa-btn primary"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span> Hire me</a>
+        <a href="mailto:jacob.t.boehme@gmail.com" class="pa-btn secondary"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></span> Email</a>
+        <a href="hire.html" class="pa-btn secondary"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span> Book a call</a>
       </div>
 
       <button class="expand-toggle quiet" onclick="document.getElementById('heroCard').classList.toggle('open')">
@@ -683,7 +684,7 @@
     if (!mount || !window.CLIENTS) return;
     const allTile = ''
       + '<a class="story" href="clients.html" style="text-decoration:none;">'
-      +   '<div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, var(--amber), var(--rose), var(--leaf)); font-size: 16px;">All</div></div></div>'
+      +   '<div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, var(--amber), var(--rose)); font-size: 16px;">All</div></div></div>'
       +   '<div class="story-name story-name-all">All clients</div>'
       + '</a>';
     const items = window.CLIENTS.map(cl => {

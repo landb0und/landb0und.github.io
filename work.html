@@ -64,7 +64,7 @@
   .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; }
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--leaf), var(--amber));
+    background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--amber));
     animation: storyRingSpin 2s linear infinite, storyRingPulse 2.4s ease-in-out infinite;
     z-index: -1; transform-origin: center;
   }
@@ -975,7 +975,7 @@
     if (!c || !window.CLIENTS) return;
     const allTile = `
         <a class="story" href="clients.html">
-          <div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, var(--amber), var(--rose), var(--leaf)); font-size: 16px;">All</div></div></div>
+          <div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, var(--amber), var(--rose)); font-size: 16px;">All</div></div></div>
           <div class="story-name" style="font-weight: 800; color: var(--amber);">All clients</div>
         </a>`;
     const items = window.CLIENTS.map(cl => {
