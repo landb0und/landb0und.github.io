@@ -687,7 +687,13 @@
       +   '<div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, var(--amber), var(--rose)); font-size: 16px;">All</div></div></div>'
       +   '<div class="story-name story-name-all">All clients</div>'
       + '</a>';
-    const items = window.CLIENTS.map(cl => {
+    // Pin Landbound right after "All clients" — Jacob's own brand reads first
+    const ordered = (function() {
+      const lb = window.CLIENTS.find(x => x.id === 'landbound');
+      const rest = window.CLIENTS.filter(x => x.id !== 'landbound');
+      return lb ? [lb, ...rest] : window.CLIENTS;
+    })();
+    const items = ordered.map(cl => {
       const t = window.clientThumb(cl);
       const initials = window.clientInitials(cl);
       const bgStyle = t ? 'style="background-image: url(\'' + t + '\');"' : '';

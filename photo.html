@@ -89,7 +89,12 @@
   .carousel-arr.next { right: 16px; }
 
   /* CATEGORY TABS — IG profile style */
-  .tabs { display: flex; gap: 4px; margin-bottom: 22px; border-bottom: 1px solid var(--line-2); overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 22px; border-bottom: 1px solid var(--line-2); overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; align-items: center; }
+  /* Shuffle pill — same amber-filled treatment as the work-tab Random pill */
+  .tab-shuffle { margin-left: auto; color: var(--bg); background: var(--amber); border: 1px solid var(--amber); padding: 6px 14px; display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 100px; cursor: pointer; font-family: 'SF Mono', Menlo, monospace; flex-shrink: 0; transition: background .15s, transform .25s; }
+  .tab-shuffle:hover { background: #ffc555; }
+  .tab-shuffle.spin { transform: rotate(360deg); }
+  .tab-shuffle svg { width: 13px; height: 13px; }
   .tabs::-webkit-scrollbar { height: 4px; }
   .tabs::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
   .tab { padding: 14px 18px; color: var(--ink-3); font-size: 11px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; cursor: pointer; transition: color .15s; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -1px; }
@@ -337,6 +342,10 @@
       <span class="tab" data-cat="film">35mm <span class="count" data-cat-count="film">0</span></span>
       <span class="tab" data-cat="phone">Phone <span class="count" data-cat-count="phone">0</span></span>
       <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
+      <span class="tab-shuffle" id="photoShuffle" title="Shuffle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        Shuffle
+      </span>
     </div>
 
     <!-- MASONRY -->
@@ -751,7 +760,13 @@
           <div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, var(--amber), var(--rose)); font-size: 18px;">All</div></div></div>
           <div class="story-name" style="font-weight: 800; color: var(--amber);">All clients</div>
         </a>`;
-    const items = window.CLIENTS.map(cl => {
+    // Pin Landbound right after "All clients" — Jacob's own brand reads first
+    const ordered = (function() {
+      const lb = window.CLIENTS.find(x => x.id === 'landbound');
+      const rest = window.CLIENTS.filter(x => x.id !== 'landbound');
+      return lb ? [lb, ...rest] : window.CLIENTS;
+    })();
+    const items = ordered.map(cl => {
       const t = window.clientThumb(cl);
       const initials = window.clientInitials(cl);
       const bgStyle = t ? `style="background-image: url('${t}');"` : '';
@@ -767,9 +782,30 @@
   renderStories('photoStories');
   renderStories('feedStories');
 
-  // Default: open Photo in IG feed view (use ?grid=1 to start on grid)
-  const startOnGrid = /[?&]grid=1/.test(window.location.search);
-  if (!startOnGrid) {
+  // Grid shuffle button — re-shuffles PHOTOS in place then re-renders the grid
+  // (and the feed if it's currently open). Same Fisher-Yates the initial build
+  // uses, so order is unbiased.
+  (function() {
+    const btn = document.getElementById('photoShuffle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      for (let i = PHOTOS.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [PHOTOS[i], PHOTOS[j]] = [PHOTOS[j], PHOTOS[i]];
+      }
+      renderGrid();
+      wireGridClicks();
+      settleAndShowGrid();
+      if (document.body.classList.contains('feed-mode')) renderFeed(0);
+      btn.classList.add('spin');
+      setTimeout(() => btn.classList.remove('spin'), 280);
+    });
+  })();
+
+  // Default: open Photo in GRID view. Tapping a tile already calls enterFeed(idx)
+  // via wireGridClicks(), so feed-on-tap still works. Use ?feed=1 to land on feed.
+  const startOnFeed = /[?&]feed=1/.test(window.location.search);
+  if (startOnFeed) {
     enterFeed(0);
   }
 </script>
