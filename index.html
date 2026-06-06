@@ -59,7 +59,7 @@
   .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; }
   .story-ring::before {
     content: ''; position: absolute; inset: 0; border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber));
+    background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--leaf), var(--amber));
     animation: homeRingSpin 2s linear infinite, homeRingPulse 2.4s ease-in-out infinite;
     z-index: -1; transform-origin: center;
   }
@@ -103,7 +103,7 @@
   /* ===== NEW: IG profile layout ===== */
   .hero-body { padding: 22px 24px; }
   .profile { display: grid; grid-template-columns: 132px 1fr; gap: 22px; align-items: start; }
-  .profile-avatar { width: 132px; height: 132px; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, var(--amber), var(--rose), #c084fc, var(--amber)); animation: heroAvatarSpin 6s linear infinite; flex-shrink: 0; }
+  .profile-avatar { width: 132px; height: 132px; border-radius: 50%; padding: 3px; background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--leaf), var(--amber)); animation: heroAvatarSpin 6s linear infinite; flex-shrink: 0; }
   @keyframes heroAvatarSpin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) { .profile-avatar { animation: none; } }
   .profile-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 4px; animation: heroAvatarCounterSpin 6s linear infinite; }
@@ -187,10 +187,38 @@
   /* ============= UNIFIED HOME FEED (IG-style posts) =============
      Mixes photos, verticals, and wide videos as posts. Component shared with
      photo.html's IG feed view — adding/changing here keeps both feeds aligned. */
-  .home-feed { display: flex; flex-direction: column; gap: 22px; max-width: 580px; margin: 18px auto 40px; width: 100%; }
+  /* Feed-with-rail layout — mirrors photo.html so the home feed sits left-of-center
+     beside a sticky hashtag rail. Same 1fr/300px grid + 56px gap so the visual
+     rhythm matches across the two tabs. */
+  .feed-layout { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: start; max-width: 1080px; margin: 18px auto 40px; }
+  .home-feed { display: flex; flex-direction: column; gap: 22px; max-width: 580px; justify-self: center; width: 100%; }
+  /* Right rail — sticky filter pills with #tag styling */
+  .feed-rail { position: sticky; top: 30px; display: flex; flex-direction: column; gap: 20px; }
+  .rail-h { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; }
+  .rail-h-title { font-size: 12px; color: var(--ink-3); font-weight: 700; letter-spacing: 0.04em; }
+  .rail-h-see { font-size: 11px; color: var(--amber); font-weight: 800; cursor: pointer; letter-spacing: 0.04em; }
+  .rail-h-see:hover { color: #fff; }
+  .rail-cats { display: flex; flex-direction: column; gap: 10px; padding: 4px; }
+  .rail-cat { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background .15s; padding: 6px; border-radius: 8px; margin: -6px; }
+  .rail-cat:hover { background: rgba(255,255,255,0.03); }
+  .rail-cat-hash { width: 42px; height: 42px; border-radius: 8px; flex-shrink: 0; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.25); display: flex; align-items: center; justify-content: center; color: var(--amber); font-weight: 900; font-size: 20px; font-family: 'SF Mono', Menlo, monospace; }
+  .rail-cat-info { flex: 1; min-width: 0; }
+  .rail-cat-name { font-size: 13px; color: var(--ink); font-weight: 700; line-height: 1.2; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.02em; }
+  .rail-cat-sub { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 2px; }
+  .rail-cat-action { font-size: 11px; color: var(--amber); font-weight: 800; cursor: pointer; letter-spacing: 0.06em; }
+  .rail-cat.active { background: rgba(245,176,66,0.1); border: 1px solid rgba(245,176,66,0.35); margin: -7px; padding: 7px; }
+  .rail-cat.active .rail-cat-hash { background: var(--amber); color: var(--bg); border-color: var(--amber); }
+  .rail-cat.active .rail-cat-name { color: var(--amber); }
+  .rail-cat.active .rail-cat-action { color: #fff; }
+  /* Below the rail breakpoint, drop the rail and let the feed center under it */
+  @media (max-width: 980px) {
+    .feed-layout { grid-template-columns: 1fr; }
+    .feed-rail { display: none; }
+    .home-feed { max-width: 580px; margin: 0 auto; }
+  }
   .post { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   .post-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
-  .post-avatar { width: 36px; height: 36px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), #c084fc); flex-shrink: 0; cursor: pointer; text-decoration: none; }
+  .post-avatar { width: 36px; height: 36px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose), var(--leaf)); flex-shrink: 0; cursor: pointer; text-decoration: none; }
   .post-avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; }
   .post-avatar-img { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 12px; }
   .post-head-info { flex: 1; min-width: 0; }
@@ -574,7 +602,17 @@
   <!-- HOME FEED — unified IG-style feed mixing photos, verticals, and wide-screen video -->
   <div class="page-section-head" style="margin-top: 38px;"><span class="label">— Feed</span></div>
   <div class="section-sub"><span>Recent work — photos, shorts, and music videos.</span><a href="work.html">FULL ARCHIVE →</a></div>
-  <div class="home-feed" id="homeFeed"></div>
+  <div class="feed-layout">
+    <div class="home-feed" id="homeFeed"></div>
+    <aside class="feed-rail">
+      <div class="rail-h">
+        <span class="rail-h-title">Filter by type</span>
+        <span class="rail-h-see" id="railClearFilter" style="display:none;">Clear</span>
+      </div>
+      <!-- rail-cats rendered by renderRailCats() from buildHomeFeed categories -->
+      <div class="rail-cats" id="railCats"></div>
+    </aside>
+  </div>
 
   <div class="footer">
     <span class="clapper">
@@ -645,7 +683,7 @@
     if (!mount || !window.CLIENTS) return;
     const allTile = ''
       + '<a class="story" href="clients.html" style="text-decoration:none;">'
-      +   '<div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, #f5b042, #e8589a, #c084fc); font-size: 16px;">All</div></div></div>'
+      +   '<div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, var(--amber), var(--rose), var(--leaf)); font-size: 16px;">All</div></div></div>'
       +   '<div class="story-name story-name-all">All clients</div>'
       + '</a>';
     const items = window.CLIENTS.map(cl => {
@@ -772,6 +810,31 @@
     return a;
   }
 
+  // Commercial-brand clients — items credited to them get the #commercial tag.
+  // Add a client id here when a new brand campaign goes up.
+  const COMMERCIAL_CLIENTS = ['aporro'];
+
+  // Map a feed item to a list of category keys. Single source of truth — the
+  // rail derives its pill set + counts from these, and filter clicks reuse them.
+  function deriveFeedCats(item) {
+    const cats = new Set();
+    const tagSet = new Set((item._tags || []).map(t => String(t).toLowerCase()));
+    if (item.type === 'photo') cats.add('photos');
+    if (item.type === 'vertical') cats.add('verticals');
+    if (item.type === 'video') {
+      // wide video — by default treat as music video unless it's a brand campaign
+      const primary = item.authors[0];
+      if (primary && COMMERCIAL_CLIENTS.includes(primary.id)) cats.add('commercial');
+      else cats.add('musicvideos');
+    }
+    // VFX tag flows through from data.js media tags
+    if (tagSet.has('vfx')) cats.add('vfx');
+    // Commercial trumps when client is a brand even for non-video posts (e.g. Aporro stills)
+    const primary = item.authors[0];
+    if (primary && COMMERCIAL_CLIENTS.includes(primary.id)) cats.add('commercial');
+    return Array.from(cats);
+  }
+
   // Build a unified feed from CLIENTS (photos + horizontal videos) + VERTICALS.
   // Adding new media to data.js (any client's media[] or a new VERTICALS entry)
   // surfaces here automatically.
@@ -801,6 +864,7 @@
         type: 'photo', priority: 0,
         src: p.src, authors: p.authors,
         year: p.year, location: p.location,
+        _tags: p.tags,
         likes: Math.floor(Math.random() * 800 + 200)
       });
     });
@@ -815,6 +879,7 @@
         title: v.title, role: v.role, tag: v.tag, music: v.music,
         verticalIndex: i,
         authors: [c],
+        _tags: v.tags || [],
         likes: Math.floor(Math.random() * 2000 + 400)
       });
     });
@@ -831,6 +896,7 @@
           title: v.title, role: (v.tags || []).join(' · '),
           authors: [c],
           year: v.year || '2024',
+          _tags: v.tags || [],
           likes: Math.floor(Math.random() * 3000 + 800)
         });
       });
@@ -861,7 +927,65 @@
       if (mi < motion.length) out.push(motion[mi++]);
       if (pi < restPhotos.length) out.push(restPhotos[pi++]);
     }
+    // Annotate every item with derived category keys for the rail filter
+    out.forEach(it => { it.categories = deriveFeedCats(it); });
     return out;
+  }
+
+  // Cached unfiltered feed — rebuilt once on load and again whenever the user
+  // toggles a filter (we keep the original order, just slice down).
+  let HOME_FEED_ALL = [];
+  let homeFilter = 'all';
+
+  // Rail metadata. Order = display order in the rail. Pills hide if count = 0.
+  const HOME_RAIL_CATS = [
+    { key: 'musicvideos', label: '#musicvideos' },
+    { key: 'verticals',   label: '#verticals' },
+    { key: 'vfx',         label: '#vfx' },
+    { key: 'photos',      label: '#photos' },
+    { key: 'commercial',  label: '#commercial' }
+  ];
+
+  function filteredHomeFeed() {
+    if (homeFilter === 'all') return HOME_FEED_ALL;
+    return HOME_FEED_ALL.filter(it => (it.categories || []).includes(homeFilter));
+  }
+
+  function renderHomeRail() {
+    const mount = document.getElementById('railCats');
+    if (!mount) return;
+    const html = HOME_RAIL_CATS.map(cat => {
+      const n = HOME_FEED_ALL.filter(it => (it.categories || []).includes(cat.key)).length;
+      if (!n) return '';
+      const active = homeFilter === cat.key ? ' active' : '';
+      const word = (cat.key === 'photos') ? (n === 1 ? 'frame' : 'frames')
+                 : (cat.key === 'verticals') ? (n === 1 ? 'reel' : 'reels')
+                 : (n === 1 ? 'post' : 'posts');
+      return ''
+        + '<div class="rail-cat' + active + '" data-cat="' + cat.key + '">'
+        +   '<div class="rail-cat-hash">#</div>'
+        +   '<div class="rail-cat-info">'
+        +     '<div class="rail-cat-name">' + cat.label + '</div>'
+        +     '<div class="rail-cat-sub">' + n + ' ' + word + '</div>'
+        +   '</div>'
+        +   '<span class="rail-cat-action">' + (homeFilter === cat.key ? 'Active' : 'Filter') + '</span>'
+        + '</div>';
+    }).join('');
+    mount.innerHTML = html;
+    const clearBtn = document.getElementById('railClearFilter');
+    if (clearBtn) clearBtn.style.display = (homeFilter === 'all') ? 'none' : '';
+    mount.querySelectorAll('.rail-cat').forEach(el => {
+      el.addEventListener('click', () => {
+        const cat = el.dataset.cat;
+        setHomeFilter(homeFilter === cat ? 'all' : cat);
+      });
+    });
+  }
+
+  function setHomeFilter(cat) {
+    homeFilter = cat || 'all';
+    renderHomeFeed();
+    renderHomeRail();
   }
 
   // Bunny MP4 stream URL (same pattern used in work.html)
@@ -958,7 +1082,12 @@
   function renderHomeFeed() {
     const mount = document.getElementById('homeFeed');
     if (!mount) return;
-    const items = buildHomeFeed();
+    if (!HOME_FEED_ALL.length) HOME_FEED_ALL = buildHomeFeed();
+    const items = filteredHomeFeed();
+    if (!items.length) {
+      mount.innerHTML = '<div style="padding: 60px 20px; text-align: center; color: var(--ink-3); font-size: 13px;">No posts in this category yet.</div>';
+      return;
+    }
     mount.innerHTML = items.map(item => {
       if (item.type === 'photo') return renderPhotoPost(item);
       if (item.type === 'vertical') return renderVerticalPost(item);
@@ -1052,6 +1181,11 @@
   }
 
   renderHomeFeed();
+  renderHomeRail();
+  (function() {
+    const clearBtn = document.getElementById('railClearFilter');
+    if (clearBtn) clearBtn.addEventListener('click', () => setHomeFilter('all'));
+  })();
 </script>
 </body>
 </html>
