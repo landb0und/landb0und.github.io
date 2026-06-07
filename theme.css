@@ -7,9 +7,10 @@
 
    Slate is the default — identical to the existing :root values.
    Picking any other theme swaps the whole vibe:
-     • Noir     — color-grading suite, cool teal + coral
-     • Phosphor — CRT terminal / edit bay, phosphor green
-     • Graphite — minimalist mono w/ a single burnt-orange accent
+     • Noir     — midnight steel blue, grading-suite quiet
+     • Graphite — editorial monochrome w/ a muted terracotta accent
+     • Ember    — glowing coals + a slow firelight flicker overlay
+     • Neonoir  — rainy LA, muted neon
    ============================================================= */
 
 /* SLATE — the current site palette (also the default with no attr) */
@@ -20,38 +21,29 @@ html[data-theme="slate"] {
   --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
 }
 
-/* NOIR — DI suite / color-grading bay. Cool teal as the primary
-   accent, coral as the warm contrast, soft lavender as the third. */
+/* NOIR — midnight steel blue. Pulls from late-night color grading bays:
+   cobalt-stained black ground, a clean steel-blue primary, warm rust as
+   the only warm contrast, soft slate as the tertiary neutral. Quieter
+   and more disciplined than the previous teal version. */
 html[data-theme="noir"] {
-  --bg: #0a0e15; --bg-2: #121823; --bg-3: #1a2230;
-  --line: #28344a; --line-2: #1d2638;
-  --ink: #e8eef7; --ink-2: #b4c0d2; --ink-3: #7c8aa3; --ink-4: #4e5872;
-  --amber: #5dd4d0;  /* electric teal — primary */
-  --rose:  #ff7385;  /* coral — secondary */
-  --leaf:  #b8a3ff;  /* lavender — tertiary */
-}
-
-/* PHOSPHOR — CRT terminal, late-night edit bay. Phosphor green
-   primary, warning amber + alert pink as the only chromatic foils. */
-html[data-theme="phosphor"] {
-  --bg: #060807; --bg-2: #0c100d; --bg-3: #131814;
-  --line: #1c2620; --line-2: #18211c;
-  --ink: #dceedb; --ink-2: #a3c5a4; --ink-3: #6d8c70; --ink-4: #455a48;
-  --amber: #6ee49b;  /* phosphor green — primary */
-  --rose:  #ffb84f;  /* warning amber — secondary */
-  --leaf:  #ff5e7a;  /* alert pink — tertiary */
+  --bg: #060b16; --bg-2: #0c1422; --bg-3: #142133;
+  --line: #1f2e46; --line-2: #182238;
+  --ink: #e4ecf6; --ink-2: #a8b6cc; --ink-3: #6e7e98; --ink-4: #44516a;
+  --amber: #5d9cd6;  /* steel blue — primary */
+  --rose:  #c97e5d;  /* warm rust — only warm note */
+  --leaf:  #7e92ad;  /* slate neutral */
 }
 
 /* GRAPHITE — editorial monochrome. Neutral charcoal greys + a single
-   razor-red accent. Pulls from high-end editorial design (Wallpaper,
-   Vogue) where the only chromatic mark is the red headline. */
+   muted terracotta accent (toned down from the previous loud red so it
+   reads "considered editorial" instead of "stop sign"). */
 html[data-theme="graphite"] {
   --bg: #131313; --bg-2: #1c1c1c; --bg-3: #262626;
   --line: #353535; --line-2: #292929;
   --ink: #e8e8e8; --ink-2: #b0b0b0; --ink-3: #808080; --ink-4: #525252;
-  --amber: #e5391f;  /* razor newsprint red — the only chromatic */
-  --rose:  #e5391f;
-  --leaf:  #808080;  /* mid-grey, no third color */
+  --amber: #c75c46;  /* muted terracotta — quieter than razor red */
+  --rose:  #c75c46;
+  --leaf:  #808080;
 }
 
 /* EMBER — real fire, glowing coals. Saturated ember orange + deep
@@ -64,6 +56,39 @@ html[data-theme="ember"] {
   --amber: #ff4818;  /* hot ember orange — saturated, real fire */
   --rose:  #c41818;  /* deep coal red */
   --leaf:  #d97a2e;  /* copper glow — replaces the fire-yellow */
+}
+
+/* EMBER FLICKER — a faint warm radial gradient pinned to the viewport
+   that softly breathes opacity at firelight cadence (~7s loop, prime-ish
+   number multipliers stop the rhythm from feeling metronome-y). Two
+   layers at different speeds + offsets give the flame an irregular,
+   organic pulse rather than a clean sine. mix-blend-mode: screen so it
+   ADDS warmth to whatever's under it instead of dimming the content. */
+html[data-theme="ember"] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(ellipse 80% 60% at 18% 100%, rgba(255, 96, 36, 0.08),  transparent 65%),
+    radial-gradient(ellipse 90% 55% at 82% 102%, rgba(255, 132, 48, 0.06), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(196, 24, 24, 0.05),  transparent 75%);
+  animation: emberFlicker 7.3s ease-in-out infinite;
+}
+@keyframes emberFlicker {
+  0%   { opacity: 0.65; transform: translateY(0)    scaleY(1); }
+  12%  { opacity: 0.95; transform: translateY(-2px) scaleY(1.02); }
+  27%  { opacity: 0.55; transform: translateY(1px)  scaleY(0.99); }
+  41%  { opacity: 0.85; transform: translateY(-1px) scaleY(1.015); }
+  58%  { opacity: 0.7;  transform: translateY(2px)  scaleY(0.98); }
+  73%  { opacity: 1;    transform: translateY(-3px) scaleY(1.03); }
+  88%  { opacity: 0.6;  transform: translateY(0)    scaleY(1); }
+  100% { opacity: 0.65; transform: translateY(0)    scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="ember"] body::after { animation: none; opacity: 0.7; transform: none; }
 }
 
 /* NEONOIR — rainy LA at 3am, neon through fog. Muted dusty pink and
@@ -101,11 +126,11 @@ html[data-theme="neonoir"] {
 .theme-switcher .ts-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
 }
 .theme-switcher .ts-sw {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   border: 1.5px solid rgba(255,255,255,0.12);
   cursor: pointer;
@@ -132,9 +157,8 @@ html[data-theme="neonoir"] {
 }
 /* Each swatch shows a tiny preview of its palette via gradient */
 .theme-switcher .ts-sw[data-theme="slate"]::before    { background: linear-gradient(135deg, #f5b042 0%, #f5b042 50%, #e8589a 50%, #e8589a 100%); }
-.theme-switcher .ts-sw[data-theme="noir"]::before     { background: linear-gradient(135deg, #5dd4d0 0%, #5dd4d0 50%, #ff7385 50%, #ff7385 100%); }
-.theme-switcher .ts-sw[data-theme="phosphor"]::before { background: linear-gradient(135deg, #6ee49b 0%, #6ee49b 50%, #ffb84f 50%, #ffb84f 100%); }
-.theme-switcher .ts-sw[data-theme="graphite"]::before { background: linear-gradient(135deg, #e5391f 0%, #e5391f 50%, #808080 50%, #808080 100%); }
+.theme-switcher .ts-sw[data-theme="noir"]::before     { background: linear-gradient(135deg, #5d9cd6 0%, #5d9cd6 50%, #c97e5d 50%, #c97e5d 100%); }
+.theme-switcher .ts-sw[data-theme="graphite"]::before { background: linear-gradient(135deg, #c75c46 0%, #c75c46 50%, #808080 50%, #808080 100%); }
 .theme-switcher .ts-sw[data-theme="ember"]::before    { background: linear-gradient(135deg, #ff4818 0%, #ff4818 50%, #c41818 50%, #c41818 100%); }
 .theme-switcher .ts-sw[data-theme="neonoir"]::before  { background: linear-gradient(135deg, #d957a8 0%, #d957a8 50%, #5fa8c4 50%, #5fa8c4 100%); }
 .theme-switcher .ts-name {

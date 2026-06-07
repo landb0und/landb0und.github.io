@@ -7,15 +7,18 @@
   const THEMES = [
     { key: 'slate',    name: 'Slate' },
     { key: 'noir',     name: 'Noir' },
-    { key: 'phosphor', name: 'Phosphor' },
     { key: 'graphite', name: 'Graphite' },
     { key: 'ember',    name: 'Ember' },
     { key: 'neonoir',  name: 'Neonoir' }
   ];
+  const VALID = new Set(THEMES.map(t => t.key));
 
   function getSaved() {
-    try { return localStorage.getItem('lb-theme') || 'slate'; }
-    catch (e) { return 'slate'; }
+    try {
+      const t = localStorage.getItem('lb-theme') || 'slate';
+      // Fallback for users who had a now-removed theme saved (e.g. phosphor)
+      return VALID.has(t) ? t : 'slate';
+    } catch (e) { return 'slate'; }
   }
   function save(t) {
     try { localStorage.setItem('lb-theme', t); } catch (e) {}
