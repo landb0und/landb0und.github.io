@@ -8,7 +8,9 @@
     { key: 'slate',    name: 'Slate' },
     { key: 'noir',     name: 'Noir' },
     { key: 'phosphor', name: 'Phosphor' },
-    { key: 'graphite', name: 'Graphite' }
+    { key: 'graphite', name: 'Graphite' },
+    { key: 'ember',    name: 'Ember' },
+    { key: 'neonoir',  name: 'Neonoir' }
   ];
 
   function getSaved() {

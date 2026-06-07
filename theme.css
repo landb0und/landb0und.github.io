@@ -53,6 +53,28 @@ html[data-theme="graphite"] {
   --leaf:  #888888;  /* neutral grey */
 }
 
+/* EMBER — glowing coals, dying fire. Charred near-black with hot
+   ember orange + coal red. Reads warmer/more aggressive than Slate. */
+html[data-theme="ember"] {
+  --bg: #0c0604; --bg-2: #150906; --bg-3: #20100a;
+  --line: #3a1b10; --line-2: #2a130a;
+  --ink: #f8e3cf; --ink-2: #d1a08a; --ink-3: #8f6048; --ink-4: #5a3a2a;
+  --amber: #ff6b2e;  /* hot ember orange — primary */
+  --rose:  #ff3858;  /* coal red — secondary */
+  --leaf:  #ffb142;  /* fire yellow — tertiary */
+}
+
+/* NEONOIR — rainy LA, Blade Runner sign-glow. Desaturated blue-purple
+   ground with hot magenta + electric cyan neon, warm amber for contrast. */
+html[data-theme="neonoir"] {
+  --bg: #07060e; --bg-2: #0c0a18; --bg-3: #131127;
+  --line: #271f3f; --line-2: #1b1530;
+  --ink: #e8e4f5; --ink-2: #b0a8d0; --ink-3: #7a7298; --ink-4: #4a4570;
+  --amber: #ff2bd6;  /* hot neon magenta — primary */
+  --rose:  #2ce6ff;  /* electric cyan — secondary */
+  --leaf:  #ffb84a;  /* warm amber neon — tertiary */
+}
+
 /* =============================================================
    Theme switcher UI — injected by theme.js into .nav and pinned
    at the bottom of the left nav. Small swatch row, hover label.
@@ -75,11 +97,12 @@ html[data-theme="graphite"] {
 }
 .theme-switcher .ts-row {
   display: flex;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 7px;
 }
 .theme-switcher .ts-sw {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 1.5px solid rgba(255,255,255,0.12);
   cursor: pointer;
@@ -109,6 +132,8 @@ html[data-theme="graphite"] {
 .theme-switcher .ts-sw[data-theme="noir"]::before     { background: linear-gradient(135deg, #5dd4d0 0%, #5dd4d0 50%, #ff7385 50%, #ff7385 100%); }
 .theme-switcher .ts-sw[data-theme="phosphor"]::before { background: linear-gradient(135deg, #6ee49b 0%, #6ee49b 50%, #ffb84f 50%, #ffb84f 100%); }
 .theme-switcher .ts-sw[data-theme="graphite"]::before { background: linear-gradient(135deg, #d97852 0%, #d97852 50%, #888888 50%, #888888 100%); }
+.theme-switcher .ts-sw[data-theme="ember"]::before    { background: linear-gradient(135deg, #ff6b2e 0%, #ff6b2e 50%, #ff3858 50%, #ff3858 100%); }
+.theme-switcher .ts-sw[data-theme="neonoir"]::before  { background: linear-gradient(135deg, #ff2bd6 0%, #ff2bd6 50%, #2ce6ff 50%, #2ce6ff 100%); }
 .theme-switcher .ts-name {
   font-size: 9px;
   color: var(--ink-3);
