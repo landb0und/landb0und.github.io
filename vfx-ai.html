@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>jacobboehme.com — VFX &amp; AI</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -32,8 +34,8 @@
   .nav-soc-icon svg { width: 16px; height: 16px; }
   .nav-soc-icon.tt svg { color: #000; }
   .nav-soc-icon.ig svg, .nav-soc-icon.li svg { color: #fff; }
-  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); color: #000; }
-  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); color: #fff; }
+  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); }
+  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); }
   .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
   .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
   .nav-soc-info { flex: 1; min-width: 0; }
@@ -46,7 +48,6 @@
 
   .main { margin-left: 220px; padding: 40px 40px 60px; max-width: 1400px; position: relative; z-index: 2; }
 
-  /* Page hero */
   .page-hero { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--line-2); }
   .page-hero h1 { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; color: var(--ink); line-height: 0.95; margin-bottom: 12px; }
   .page-hero h1 .amp { color: var(--amber); font-family: Georgia, serif; font-style: italic; font-weight: 700; }
@@ -57,63 +58,103 @@
   .stat-mini .v .plus { color: var(--amber); }
   .stat-mini .k { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-top: 4px; }
 
-  /* Section */
   .section { margin-bottom: 44px; }
   .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
   .section-head .num { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; }
   .section-head .label { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
   .section-head .hint { margin-left: auto; font-size: 11px; color: var(--ink-4); font-family: Georgia, serif; font-style: italic; }
 
-  /* Featured breakdown — big tile */
+  /* BEFORE / AFTER */
+  .ba-container { width: 100%; height: 380px; position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); cursor: ew-resize; user-select: none; }
+  .ba-before { position: absolute; inset: 0; background: url('https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg') center/cover; filter: saturate(0.15) contrast(0.8) brightness(1.1); }
+  .ba-after  { position: absolute; inset: 0; background: url('https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg') center/cover; clip-path: inset(0 50% 0 0); transition: none; }
+  .ba-scan { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); pointer-events: none; z-index: 2; }
+  .ba-handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--amber); left: 50%; transform: translateX(-50%); z-index: 10; cursor: ew-resize; }
+  .ba-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; }
+  .ba-grip svg { width: 14px; height: 14px; }
+  .ba-label { position: absolute; bottom: 12px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 9px; background: rgba(0,0,0,0.65); border-radius: 3px; font-weight: 700; z-index: 4; }
+  .ba-label.before { left: 14px; color: var(--ink-4); }
+  .ba-label.after  { right: 14px; color: var(--amber); }
+  .ba-credit { margin-top: 8px; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
+
+  /* SERVICES */
+  .pills { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .pill { padding: 6px 14px; border: 1px solid var(--line); border-radius: 100px; font-size: 10px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: var(--ink-3); transition: all .15s; font-weight: 700; }
+  .pill:hover { border-color: var(--amber); color: var(--amber); }
+  .pill.active { background: rgba(245,176,66,0.1); border-color: var(--amber); color: var(--amber); }
+  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .svc-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; transition: opacity .2s, border-color .2s; }
+  .svc-card:hover { border-color: rgba(245,176,66,0.3); }
+  .svc-card.dim { opacity: 0.15; }
+  .svc-card.lit { border-color: rgba(245,176,66,0.4); }
+  .svc-card .svc-type { font-size: 9px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
+  .svc-card .svc-name { font-size: 13px; font-weight: 900; color: var(--ink); margin-bottom: 5px; }
+  .svc-card .svc-desc { font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; margin-bottom: 8px; }
+  .svc-card .svc-tech { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.05em; line-height: 1.5; }
+  .svc-card .svc-ex { font-size: 9px; color: var(--ink-2); font-style: italic; margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--line-2); font-family: Georgia, serif; line-height: 1.4; }
+  .svc-card.svc-wide { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr 1fr; gap: 20px; align-items: center; }
+  .svc-card.svc-wide .svc-col { border-left: 1px solid var(--line-2); padding-left: 20px; }
+  .cgi-note { margin-top: 12px; padding: 14px 16px; background: rgba(232,88,154,0.04); border: 1px solid rgba(232,88,154,0.12); border-radius: 8px; display: grid; grid-template-columns: 1fr 1px 1fr; gap: 16px; }
+  .cgi-div { background: rgba(232,88,154,0.12); }
+  .cgi-col .cl { font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
+  .cgi-col.comp .cl { color: var(--amber); }
+  .cgi-col.cgi-s .cl { color: var(--rose); }
+  .cgi-col .cd { font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; margin-bottom: 4px; }
+  .cgi-col .ce { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.05em; }
+  .cgi-foot { grid-column: 1 / -1; padding-top: 10px; border-top: 1px solid rgba(232,88,154,0.1); font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; text-align: center; }
+
+  /* FEATURED BREAKDOWN */
   .feat-breakdown { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
   .breakdown-player { background: #000; border: 1px solid var(--line); border-radius: 10px; aspect-ratio: 16/9; position: relative; overflow: hidden; cursor: pointer; }
   .breakdown-player::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, #2a1f15 0%, #5b3018 30%, #c97f2e 70%, #f5b042 100%); opacity: 0.5; }
   .breakdown-player::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); }
   .bp-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; z-index: 2; }
   .bp-play::after { content: ''; width: 0; height: 0; border-left: 22px solid var(--bg); border-top: 13px solid transparent; border-bottom: 13px solid transparent; margin-left: 4px; }
-  .bp-tag { position: absolute; top: 14px; left: 14px; z-index: 3; padding: 4px 10px; background: rgba(0,0,0,0.7); border: 1px solid var(--amber); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; border-radius: 3px; backdrop-filter: blur(6px); }
+  .bp-tag { position: absolute; top: 14px; left: 14px; z-index: 3; padding: 4px 10px; background: rgba(0,0,0,0.7); border: 1px solid var(--amber); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; border-radius: 3px; }
   .bp-meta { position: absolute; left: 18px; right: 18px; bottom: 16px; z-index: 3; }
   .bp-meta .t { font-size: 24px; font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.01em; }
   .bp-meta .m { font-size: 11px; color: #d4c8ad; margin-top: 4px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
-
-  /* Breakdown panel right */
   .breakdown-info { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; }
-  .breakdown-info h3 { font-size: 18px; font-weight: 900; color: var(--ink); letter-spacing: -0.005em; }
+  .breakdown-info h3 { font-size: 18px; font-weight: 900; color: var(--ink); }
   .breakdown-info .sub { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; }
   .breakdown-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; background: rgba(245,176,66,0.05); border: 1px solid rgba(245,176,66,0.2); border-radius: 6px; }
-  .breakdown-stats .item { }
   .breakdown-stats .v { font-size: 22px; font-weight: 900; color: var(--ink); letter-spacing: -0.02em; line-height: 1; font-family: 'SF Mono', Menlo, monospace; }
   .breakdown-stats .v .plus { color: var(--amber); }
   .breakdown-stats .k { font-size: 9px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; margin-top: 4px; }
   .breakdown-tags { display: flex; flex-wrap: wrap; gap: 5px; }
   .breakdown-tags span { padding: 4px 10px; background: var(--bg-3); border: 1px solid var(--line-2); border-radius: 100px; font-size: 10px; color: var(--ink-2); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; }
 
-  /* Project grid */
+  /* PROJECT GRID */
   .proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
   .proj { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; transition: all .15s; }
   .proj:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .proj.feat-proj { grid-column: span 2; }
   .proj-thumb { aspect-ratio: 16/9; position: relative; overflow: hidden; }
-  .proj-thumb::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.02) 3px 4px); }
-  .proj-thumb::after { content: '▶'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 24px; text-shadow: 0 2px 6px rgba(0,0,0,0.6); opacity: 0; transition: opacity .15s; }
+  .proj.feat-proj .proj-thumb { aspect-ratio: 16/7; }
+  .proj-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .proj-thumb::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.02) 3px 4px); z-index: 1; }
+  .proj-thumb::after { content: '▶'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 24px; text-shadow: 0 2px 6px rgba(0,0,0,0.6); opacity: 0; transition: opacity .15s; z-index: 2; }
   .proj:hover .proj-thumb::after { opacity: 1; }
-  .proj-bg-1 { background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, #f5b042 100%); }
-  .proj-bg-2 { background: linear-gradient(160deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); }
-  .proj-bg-3 { background: linear-gradient(45deg, #0a0806 0%, #2a1810 50%, #c4533a 100%); }
-  .proj-bg-4 { background: linear-gradient(180deg, #1f2a18 0%, #4a6a2a 60%, #c5e060 100%); }
-  .proj-bg-5 { background: linear-gradient(120deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
-  .proj-bg-6 { background: linear-gradient(200deg, #1a0a0a 0%, #5a2a10 50%, #c4533a 100%); }
+  .proj-bg-1 { background: linear-gradient(135deg, #1a0a08 0%, #4a1a10 50%, #c4533a 100%); }
+  .proj-bg-2 { background: linear-gradient(135deg, #2a1f15 0%, #5b3018 30%, #c97f2e 100%); }
+  .proj-bg-3 { background: linear-gradient(160deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); }
+  .proj-bg-4 { background: linear-gradient(45deg, #0a0806 0%, #2a1810 50%, #c4533a 100%); }
+  .proj-bg-5 { background: linear-gradient(180deg, #1f2a18 0%, #4a6a2a 60%, #c5e060 100%); }
+  .proj-bg-6 { background: linear-gradient(120deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
   .proj-info { padding: 14px 16px; }
   .proj-info .tag { font-size: 9px; color: var(--amber); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
-  .proj-info .t { font-size: 15px; font-weight: 900; color: var(--ink); line-height: 1.2; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .proj-info .t { font-size: 15px; font-weight: 900; color: var(--ink); line-height: 1.2; margin-bottom: 4px; }
   .proj-info .m { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
   .proj-info .shots { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 2px 8px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.25); color: var(--amber); font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; border-radius: 100px; }
+  .proj-info .feat-badge { display: inline-flex; align-items: center; margin-top: 8px; padding: 3px 10px; background: rgba(245,176,66,0.12); border: 1px solid rgba(245,176,66,0.35); color: var(--amber); font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; border-radius: 100px; }
 
-  /* AI Workflow showcase */
+  /* AI WORKFLOWS */
+  .ai-note { padding: 11px 16px; background: rgba(245,176,66,0.04); border: 1px solid rgba(245,176,66,0.12); border-radius: 8px; margin-bottom: 14px; font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; text-align: center; }
   .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .ai-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; }
   .ai-card .head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .ai-card .badge { padding: 3px 10px; background: rgba(232,88,154,0.12); border: 1px solid rgba(232,88,154,0.4); color: var(--rose); font-size: 9px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; border-radius: 100px; }
-  .ai-card h3 { font-size: 17px; font-weight: 900; color: var(--ink); letter-spacing: -0.01em; }
+  .ai-card h3 { font-size: 17px; font-weight: 900; color: var(--ink); }
   .ai-card .desc { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; line-height: 1.6; font-style: italic; margin-bottom: 14px; }
   .ai-card .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .ai-card .step { padding: 6px 12px; background: var(--bg-3); border: 1px solid var(--line-2); border-radius: 6px; font-size: 11px; color: var(--ink); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; font-weight: 700; }
@@ -121,7 +162,7 @@
   .ai-card .tools { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-2); font-size: 10px; color: var(--ink-4); letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
   .ai-card .tools strong { color: var(--ink-2); }
 
-  /* Stack — tools by category */
+  /* STACK */
   .stack { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   .stack-col { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
   .stack-col h4 { font-size: 10px; color: var(--amber); letter-spacing: 0.24em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
@@ -129,9 +170,8 @@
   .stack-col li { font-size: 12px; color: var(--ink); font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
   .stack-col li .yr { color: var(--ink-4); font-weight: 500; margin-left: 6px; font-size: 10px; }
 
-  /* CTA */
   .cta-band { margin-top: 40px; padding: 32px 36px; background: linear-gradient(135deg, rgba(245,176,66,0.08) 0%, var(--bg-2) 60%); border: 1px solid rgba(245,176,66,0.3); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-  .cta-band .text h3 { font-size: 22px; font-weight: 900; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.015em; }
+  .cta-band .text h3 { font-size: 22px; font-weight: 900; color: var(--ink); margin-bottom: 6px; }
   .cta-band .text p { font-size: 13px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; }
   .cta-band a { padding: 14px 22px; background: var(--amber); color: var(--bg); font-weight: 800; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 6px; font-family: 'SF Mono', Menlo, monospace; transition: all .15s; white-space: nowrap; }
   .cta-band a:hover { background: #ffc555; transform: translateY(-1px); }
@@ -139,7 +179,6 @@
   .footer { margin-top: 50px; padding-top: 26px; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
   .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
-
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
 </head>
@@ -172,32 +211,130 @@
 
 <main class="main">
 
-  <!-- HERO -->
   <div class="page-hero">
     <div>
       <h1>VFX <span class="amp">&amp;</span> AI</h1>
-      <div class="lede">VFX supervision, comp work, and AI-augmented pipelines. Where the photoreal meets the impossible.</div>
+      <div class="lede">Supervision, cleanup, comp, CG. With or without AI. The tool depends on the shot.</div>
     </div>
     <div class="stats-mini">
-      <div class="stat-mini">
-        <div class="v">250<span class="plus">+</span></div>
-        <div class="k">Feature Shots</div>
-      </div>
-      <div class="stat-mini">
-        <div class="v">8</div>
-        <div class="k">Years VFX</div>
-      </div>
-      <div class="stat-mini">
-        <div class="v">3</div>
-        <div class="k">Years AI</div>
-      </div>
+      <div class="stat-mini"><div class="v">250<span class="plus">+</span></div><div class="k">Feature Shots</div></div>
+      <div class="stat-mini"><div class="v">8</div><div class="k">Years VFX</div></div>
+      <div class="stat-mini"><div class="v">3</div><div class="k">Years AI</div></div>
     </div>
   </div>
 
-  <!-- FEATURED BREAKDOWN -->
+  <!-- 01. BEFORE / AFTER -->
   <div class="section">
     <div class="section-head">
       <span class="num">01.</span>
+      <span class="label">Before → After</span>
+      <span class="hint">Drag the handle</span>
+    </div>
+    <div class="ba-container" id="baContainer">
+      <div class="ba-before"></div>
+      <div class="ba-after" id="baAfter"></div>
+      <div class="ba-scan"></div>
+      <div class="ba-handle" id="baHandle">
+        <div class="ba-grip">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M4 7H1M4 7L2.5 5.5M4 7L2.5 8.5M10 7H13M10 7L11.5 5.5M10 7L11.5 8.5" stroke="#12100c" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <span class="ba-label before">Raw</span>
+      <span class="ba-label after">Finished</span>
+    </div>
+    <div class="ba-credit">Chloe Star — Stunt Fall · Wire removal · 2024 · Jacob Boehme / Landbound</div>
+  </div>
+
+  <!-- 02. WHAT DO YOU NEED -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">02.</span>
+      <span class="label">What do you need?</span>
+      <span class="hint">Filter by project type</span>
+    </div>
+    <div class="pills">
+      <div class="pill" data-type="mv">Music Video</div>
+      <div class="pill" data-type="comm">Commercial</div>
+      <div class="pill" data-type="feat">Feature / Short</div>
+      <div class="pill" data-type="creator">Creator Content</div>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-card" data-types="mv,comm,feat,creator">
+        <div class="svc-type">Cleanup</div>
+        <div class="svc-name">Make It Disappear</div>
+        <div class="svc-desc">Wires. Rigs. A crew member who walked through. Removed.</div>
+        <div class="svc-tech">Mocha · Nuke · After Effects · Runway</div>
+        <div class="svc-ex">Chloe Star — stunt fall wire removal · 2024</div>
+      </div>
+      <div class="svc-card" data-types="mv,comm,feat">
+        <div class="svc-type">Compositing</div>
+        <div class="svc-name">Wrong Location</div>
+        <div class="svc-desc">Sky's off. Background doesn't fit. Fixed in post.</div>
+        <div class="svc-tech">Nuke · After Effects · Kling · Blender</div>
+        <div class="svc-ex">The First Circle — 250+ shots, set extensions · 2023</div>
+      </div>
+      <div class="svc-card" data-types="mv,comm,feat">
+        <div class="svc-type">CGI</div>
+        <div class="svc-name">Built From Nothing</div>
+        <div class="svc-desc">3D element that wasn't on set. Object, creature, environment. Built, lit, dropped in.</div>
+        <div class="svc-tech">Blender · Unreal · Houdini · Nuke</div>
+        <div class="svc-ex">The First Circle — creature work · 2023</div>
+      </div>
+      <div class="svc-card" data-types="mv,comm,feat">
+        <div class="svc-type">Stunt &amp; Action</div>
+        <div class="svc-name">Make It Land</div>
+        <div class="svc-desc">The stunt happened. Now make it read. Blood, debris, impact. Augmented so it hits.</div>
+        <div class="svc-tech">Nuke · After Effects · Blender</div>
+        <div class="svc-ex">LL Cool J — "Passion," VFX &nbsp;·&nbsp; Chloe Star · 2024</div>
+      </div>
+      <div class="svc-card" data-types="mv,comm,creator">
+        <div class="svc-type">AI-Assisted</div>
+        <div class="svc-name">Tight Timeline</div>
+        <div class="svc-desc">Some shots run faster through an AI pipeline, same quality bar. Used when it makes sense.</div>
+        <div class="svc-tech">Runway · Kling · Wonder → Nuke / AE</div>
+        <div class="svc-ex" style="color:var(--ink-4)">Same result. Faster turnaround on the right shots.</div>
+      </div>
+      <div class="svc-card" data-types="comm,feat">
+        <div class="svc-type">Supervision</div>
+        <div class="svc-name">I'm On Set</div>
+        <div class="svc-desc">Problems found on set are cheap. Problems found in post are expensive.</div>
+        <div class="svc-tech">Shot planning · Reference capture · Grey balls · Plates</div>
+        <div class="svc-ex">The First Circle — 250 shots · 2023 &nbsp;·&nbsp; LL Cool J — "Passion"</div>
+      </div>
+      <div class="svc-card svc-wide" data-types="mv,comm,feat,creator">
+        <div>
+          <div class="svc-type">Pre-Production</div>
+          <div class="svc-name">Pitch It First</div>
+        </div>
+        <div class="svc-col">
+          <div class="svc-desc">Need the label or brand to see it before you shoot it. Treatment frames and pre-vis, fast.</div>
+          <div class="svc-tech">Midjourney · Kling · Photoshop · After Effects</div>
+        </div>
+        <div class="svc-col">
+          <div class="svc-ex" style="margin:0;padding:0;border:none;">CHILDSTAR · Bleed — treatment pre-vis · 2025</div>
+        </div>
+      </div>
+    </div>
+    <div class="cgi-note">
+      <div class="cgi-col comp">
+        <div class="cl">Compositing</div>
+        <div class="cd">Working with footage that exists. Integrating, removing, replacing, extending.</div>
+        <div class="ce">Most jobs. Included in standard packages.</div>
+      </div>
+      <div class="cgi-div"></div>
+      <div class="cgi-col cgi-s">
+        <div class="cl">CGI</div>
+        <div class="cd">Building 3D assets from scratch. Modeled, rigged, rendered, composited. Entirely different scope.</div>
+        <div class="ce">Quoted separately. Not assumed.</div>
+      </div>
+      <div class="cgi-foot">Not sure which you need? Describe the shot and I'll tell you.</div>
+    </div>
+  </div>
+
+  <!-- 03. FEATURED BREAKDOWN -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">03.</span>
       <span class="label">Featured Breakdown</span>
       <span class="hint">Before / After supervised by JB</span>
     </div>
@@ -212,233 +349,159 @@
       </div>
       <div class="breakdown-info">
         <h3>The First Circle</h3>
-        <div class="sub">Indie feature, no traditional VFX budget. Built a pipeline that delivered 250 shots — set extensions, comp, sky replacement, creature work — at 1/10 the typical cost.</div>
+        <div class="sub">Indie feature, no traditional VFX budget. 250 shots: set extensions, comp, sky replacement, creature work. Fraction of the typical cost.</div>
         <div class="breakdown-stats">
-          <div class="item">
-            <div class="v">250<span class="plus">+</span></div>
-            <div class="k">Shots</div>
-          </div>
-          <div class="item">
-            <div class="v">94<span class="plus">m</span></div>
-            <div class="k">Runtime</div>
-          </div>
-          <div class="item">
-            <div class="v">2023</div>
-            <div class="k">Year</div>
-          </div>
-          <div class="item">
-            <div class="v">SUP</div>
-            <div class="k">Role</div>
-          </div>
+          <div class="item"><div class="v">250<span class="plus">+</span></div><div class="k">Shots</div></div>
+          <div class="item"><div class="v">94<span class="plus">m</span></div><div class="k">Runtime</div></div>
+          <div class="item"><div class="v">2023</div><div class="k">Year</div></div>
+          <div class="item"><div class="v">SUP</div><div class="k">Role</div></div>
         </div>
         <div class="breakdown-tags">
-          <span>NUKE</span>
-          <span>AFTER EFX</span>
-          <span>BLENDER</span>
-          <span>UNREAL</span>
-          <span>RESOLVE</span>
+          <span>NUKE</span><span>AFTER EFX</span><span>BLENDER</span><span>UNREAL</span><span>RESOLVE</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- PROJECTS -->
+  <!-- 04. SELECTED VFX WORK -->
   <div class="section">
     <div class="section-head">
-      <span class="num">02.</span>
+      <span class="num">04.</span>
       <span class="label">Selected VFX Work</span>
       <span class="hint">Click any tile to play</span>
     </div>
     <div class="proj-grid">
-      <a class="proj" href="work.html">
+      <a class="proj feat-proj" href="work.html">
         <div class="proj-thumb proj-bg-1"></div>
         <div class="proj-info">
-          <div class="tag">MUSIC VIDEO · 2024</div>
-          <div class="t">Secrets — Two Feet</div>
-          <div class="m">DIR + DP + ED + VFX</div>
-          <span class="shots">36 shots</span>
-        </div>
-      </a>
-      <a class="proj" href="work.html">
-        <div class="proj-thumb proj-bg-2"></div>
-        <div class="proj-info">
-          <div class="tag">FEATURE · 2023</div>
-          <div class="t">The First Circle</div>
+          <div class="tag">Hip-Hop · VFX</div>
+          <div class="t">LL Cool J — "Passion"</div>
           <div class="m">VFX Supervisor</div>
-          <span class="shots">250 shots</span>
+          <span class="feat-badge">★ Featured Credit</span>
         </div>
       </a>
       <a class="proj" href="work.html">
-        <div class="proj-thumb proj-bg-3"></div>
+        <div class="proj-thumb"><img src="https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg" alt="CHILDSTAR" loading="lazy"></div>
         <div class="proj-info">
-          <div class="tag">MUSIC VIDEO · 2025</div>
+          <div class="tag">Music Video · 2025</div>
           <div class="t">CHILDSTAR: Final Act</div>
           <div class="m">Director + EP + VFX</div>
           <span class="shots">24 shots</span>
         </div>
       </a>
       <a class="proj" href="work.html">
-        <div class="proj-thumb proj-bg-4"></div>
+        <div class="proj-thumb"><img src="https://vz-5dfccea4-b84.b-cdn.net/b58d5348-c997-4338-8a9d-f83302bf948a/thumbnail.jpg" alt="Secrets" loading="lazy"></div>
         <div class="proj-info">
-          <div class="tag">SHORT · 2022</div>
+          <div class="tag">Music Video · 2024</div>
+          <div class="t">Secrets</div>
+          <div class="m">Dir + DP + Ed + VFX</div>
+        </div>
+      </a>
+      <a class="proj" href="work.html">
+        <div class="proj-thumb"><img src="https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/thumbnail.jpg" alt="Bleed" loading="lazy"></div>
+        <div class="proj-info">
+          <div class="tag">Music Video · 2025</div>
+          <div class="t">Bleed</div>
+          <div class="m">Dir + Ed + VFX</div>
+          <span class="shots">15 shots</span>
+        </div>
+      </a>
+      <a class="proj" href="work.html">
+        <div class="proj-thumb"><img src="https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg" alt="Call Me When You're Home" loading="lazy"></div>
+        <div class="proj-info">
+          <div class="tag">Music Video · 2024</div>
+          <div class="t">Call Me When You're Home</div>
+          <div class="m">Dir + DP + Ed + VFX</div>
+        </div>
+      </a>
+      <a class="proj" href="work.html">
+        <div class="proj-thumb"><img src="https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg" alt="Forgive & Forget" loading="lazy"></div>
+        <div class="proj-info">
+          <div class="tag">Short Film · 2022</div>
           <div class="t">Forgive &amp; Forget</div>
           <div class="m">VFX Supervisor · SCREAMFEST</div>
           <span class="shots">42 shots</span>
         </div>
       </a>
-      <a class="proj" href="work.html">
-        <div class="proj-thumb proj-bg-5"></div>
-        <div class="proj-info">
-          <div class="tag">COMMERCIAL · 2024</div>
-          <div class="t">Super Bowl Spot</div>
-          <div class="m">Director · 5-state air</div>
-          <span class="shots">18 shots</span>
-        </div>
-      </a>
-      <a class="proj" href="work.html">
-        <div class="proj-thumb proj-bg-6"></div>
-        <div class="proj-info">
-          <div class="tag">MUSIC VIDEO · 2025</div>
-          <div class="t">Bleed</div>
-          <div class="m">DIR + ED + VFX</div>
-          <span class="shots">15 shots</span>
-        </div>
-      </a>
     </div>
   </div>
 
-  <!-- AI WORKFLOWS -->
+  <!-- 05. AI WORKFLOWS -->
   <div class="section">
     <div class="section-head">
-      <span class="num">03.</span>
+      <span class="num">05.</span>
       <span class="label">AI Workflows</span>
       <span class="hint">Where AI earns its place</span>
     </div>
+    <div class="ai-note">I use AI the same way I use Nuke. When it's the right tool for the shot. Not by default.</div>
     <div class="ai-grid">
       <div class="ai-card">
-        <div class="head">
-          <span class="badge">★ Concept → Plate</span>
-          <h3>Pre-vis at Speed</h3>
-        </div>
+        <div class="head"><span class="badge">★ Concept → Plate</span><h3>Pre-vis at Speed</h3></div>
         <div class="desc">Treatment images and shot pre-vis in hours, not weeks. Used on CHILDSTAR and Bleed to pitch fully-realized treatments.</div>
-        <div class="flow">
-          <span class="step">Reference</span>
-          <span class="arr">→</span>
-          <span class="step">MJ</span>
-          <span class="arr">→</span>
-          <span class="step">Comp</span>
-          <span class="arr">→</span>
-          <span class="step">Plate</span>
-        </div>
+        <div class="flow"><span class="step">Reference</span><span class="arr">→</span><span class="step">MJ</span><span class="arr">→</span><span class="step">Comp</span><span class="arr">→</span><span class="step">Plate</span></div>
         <div class="tools"><strong>Tools:</strong> Midjourney · Kling · Magnific · Photoshop · After Effects</div>
       </div>
       <div class="ai-card">
-        <div class="head">
-          <span class="badge">★ AI-VFX</span>
-          <h3>Generative Comp</h3>
-        </div>
-        <div class="desc">Plate generation, sky replacement, set extension, and texture work via AI — fed back into Nuke for traditional comp. Hybrid pipeline.</div>
-        <div class="flow">
-          <span class="step">Footage</span>
-          <span class="arr">→</span>
-          <span class="step">Kling/Runway</span>
-          <span class="arr">→</span>
-          <span class="step">Nuke comp</span>
-          <span class="arr">→</span>
-          <span class="step">Final</span>
-        </div>
+        <div class="head"><span class="badge">★ AI-VFX</span><h3>Generative Comp</h3></div>
+        <div class="desc">Plate generation, sky replacement, set extension, texture work via AI. Fed back into Nuke for traditional comp. Hybrid pipeline.</div>
+        <div class="flow"><span class="step">Footage</span><span class="arr">→</span><span class="step">Kling/Runway</span><span class="arr">→</span><span class="step">Nuke comp</span><span class="arr">→</span><span class="step">Final</span></div>
         <div class="tools"><strong>Tools:</strong> Kling · Runway · Nuke · After Effects · Resolve</div>
       </div>
       <div class="ai-card">
-        <div class="head">
-          <span class="badge">★ Production</span>
-          <h3>AI-Assisted Storyboarding</h3>
-        </div>
-        <div class="desc">Director-side: generate consistent style frames per shot, shot list pre-vis, and lookbook fragments. Speed-to-treatment killer.</div>
-        <div class="flow">
-          <span class="step">Script</span>
-          <span class="arr">→</span>
-          <span class="step">MJ · ChatGPT</span>
-          <span class="arr">→</span>
-          <span class="step">Lookbook</span>
-          <span class="arr">→</span>
-          <span class="step">Pitch</span>
-        </div>
+        <div class="head"><span class="badge">★ Production</span><h3>AI-Assisted Storyboarding</h3></div>
+        <div class="desc">Consistent style frames per shot, shot list pre-vis, lookbook fragments. Treatment turned around fast.</div>
+        <div class="flow"><span class="step">Script</span><span class="arr">→</span><span class="step">MJ · ChatGPT</span><span class="arr">→</span><span class="step">Lookbook</span><span class="arr">→</span><span class="step">Pitch</span></div>
         <div class="tools"><strong>Tools:</strong> Midjourney · ChatGPT · Figma · Photoshop</div>
       </div>
       <div class="ai-card">
-        <div class="head">
-          <span class="badge">★ Post</span>
-          <h3>Roto + Object Removal</h3>
-        </div>
-        <div class="desc">AI-driven roto, object removal, and crowd cleanup pre-bake — saves days on shots that used to take weeks. Then refine in Nuke.</div>
-        <div class="flow">
-          <span class="step">Footage</span>
-          <span class="arr">→</span>
-          <span class="step">Runway/Wonder</span>
-          <span class="arr">→</span>
-          <span class="step">Nuke refine</span>
-          <span class="arr">→</span>
-          <span class="step">Final</span>
-        </div>
+        <div class="head"><span class="badge">★ Post</span><h3>Roto + Object Removal</h3></div>
+        <div class="desc">AI-driven roto and object removal pre-bake. Saves days on shots that used to take weeks. Refined in Nuke.</div>
+        <div class="flow"><span class="step">Footage</span><span class="arr">→</span><span class="step">Runway/Wonder</span><span class="arr">→</span><span class="step">Nuke refine</span><span class="arr">→</span><span class="step">Final</span></div>
         <div class="tools"><strong>Tools:</strong> Runway · Wonder Dynamics · Nuke · Mocha</div>
       </div>
     </div>
   </div>
 
-  <!-- STACK -->
+  <!-- 06. STACK -->
   <div class="section">
     <div class="section-head">
-      <span class="num">04.</span>
+      <span class="num">06.</span>
       <span class="label">The Stack</span>
     </div>
     <div class="stack">
-      <div class="stack-col">
-        <h4>Comp</h4>
-        <ul>
-          <li>Nuke <span class="yr">8YR</span></li>
-          <li>After Effects <span class="yr">10YR</span></li>
-          <li>Mocha <span class="yr">6YR</span></li>
-          <li>Fusion <span class="yr">3YR</span></li>
-        </ul>
-      </div>
-      <div class="stack-col">
-        <h4>3D / CG</h4>
-        <ul>
-          <li>Blender <span class="yr">5YR</span></li>
-          <li>Unreal <span class="yr">3YR</span></li>
-          <li>Cinema 4D <span class="yr">4YR</span></li>
-          <li>Houdini <span class="yr">1YR</span></li>
-        </ul>
-      </div>
-      <div class="stack-col">
-        <h4>AI</h4>
-        <ul>
-          <li>Midjourney <span class="yr">3YR</span></li>
-          <li>Kling <span class="yr">1YR</span></li>
-          <li>Runway <span class="yr">2YR</span></li>
-          <li>Magnific <span class="yr">1YR</span></li>
-        </ul>
-      </div>
-      <div class="stack-col">
-        <h4>Color / Finish</h4>
-        <ul>
-          <li>DaVinci Resolve <span class="yr">10YR</span></li>
-          <li>Baselight <span class="yr">2YR</span></li>
-          <li>Frame.io <span class="yr">6YR</span></li>
-          <li>ShotGrid <span class="yr">3YR</span></li>
-        </ul>
-      </div>
+      <div class="stack-col"><h4>Comp</h4><ul>
+        <li>Nuke <span class="yr">8YR</span></li>
+        <li>After Effects <span class="yr">10YR</span></li>
+        <li>Mocha <span class="yr">6YR</span></li>
+        <li>Fusion <span class="yr">3YR</span></li>
+      </ul></div>
+      <div class="stack-col"><h4>3D / CG</h4><ul>
+        <li>Blender <span class="yr">5YR</span></li>
+        <li>Unreal <span class="yr">3YR</span></li>
+        <li>Cinema 4D <span class="yr">4YR</span></li>
+        <li>Houdini <span class="yr">1YR</span></li>
+      </ul></div>
+      <div class="stack-col"><h4>AI</h4><ul>
+        <li>Midjourney <span class="yr">3YR</span></li>
+        <li>Kling <span class="yr">1YR</span></li>
+        <li>Runway <span class="yr">2YR</span></li>
+        <li>Magnific <span class="yr">1YR</span></li>
+      </ul></div>
+      <div class="stack-col"><h4>Color / Finish</h4><ul>
+        <li>DaVinci Resolve <span class="yr">10YR</span></li>
+        <li>Baselight <span class="yr">2YR</span></li>
+        <li>Frame.io <span class="yr">6YR</span></li>
+        <li>ShotGrid <span class="yr">3YR</span></li>
+      </ul></div>
     </div>
   </div>
 
-  <!-- CTA -->
   <div class="cta-band">
     <div class="text">
       <h3>Need VFX on a real timeline?</h3>
-      <p>Music video, commercial, feature sup, or AI-pipeline build. I take on most things — let's talk scope.</p>
+      <p>Music video, commercial, feature sup, or AI pipeline build. Send a brief and I'll tell you what it takes.</p>
     </div>
-    <a href="hire.html">Inquire →</a>
+    <a href="hire.html">Send a Brief →</a>
   </div>
 
   <div class="footer">
@@ -452,5 +515,41 @@
 </main>
 
 <div class="banner">VFX & AI PAGE</div>
+
+<script>
+  const pills = document.querySelectorAll('.pill');
+  const cards = document.querySelectorAll('.svc-card');
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const wasActive = pill.classList.contains('active');
+      pills.forEach(p => p.classList.remove('active'));
+      cards.forEach(c => c.classList.remove('dim', 'lit'));
+      if (!wasActive) {
+        pill.classList.add('active');
+        const t = pill.dataset.type;
+        cards.forEach(c => {
+          c.dataset.types.split(',').includes(t) ? c.classList.add('lit') : c.classList.add('dim');
+        });
+      }
+    });
+  });
+
+  const cont = document.getElementById('baContainer');
+  const after = document.getElementById('baAfter');
+  const handle = document.getElementById('baHandle');
+  let drag = false;
+  function pos(x) {
+    const r = cont.getBoundingClientRect();
+    const p = Math.min(100, Math.max(0, ((x - r.left) / r.width) * 100));
+    after.style.clipPath = 'inset(0 ' + (100 - p) + '% 0 0)';
+    handle.style.left = p + '%';
+  }
+  handle.addEventListener('mousedown', e => { drag = true; e.preventDefault(); });
+  document.addEventListener('mouseup', () => drag = false);
+  document.addEventListener('mousemove', e => { if (drag) pos(e.clientX); });
+  handle.addEventListener('touchstart', e => { drag = true; e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchend', () => drag = false);
+  document.addEventListener('touchmove', e => { if (drag) pos(e.touches[0].clientX); }, { passive: true });
+</script>
 </body>
 </html>

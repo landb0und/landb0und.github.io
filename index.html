@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Jacob Boehme — Director · VFX Editor · DP · Los Angeles</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -146,10 +148,10 @@
   .pa-btn .ic svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   /* Quiet expand link — sentence case, sans-serif, not a CTA */
-  .expand-toggle.quiet { background: transparent; border: none; border-top: 1px solid var(--line-2); padding: 14px 0 0; margin-top: 18px; border-radius: 0; width: 100%; color: var(--ink-3); font-size: 13px; letter-spacing: -0.005em; font-family: -apple-system, system-ui, 'SF Pro Text', sans-serif; font-weight: 600; text-transform: none; cursor: pointer; transition: color .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .expand-toggle.quiet:hover { color: var(--amber); transform: none; background: transparent; }
-  .expand-toggle.quiet:hover .arr { color: var(--amber); }
-  .expand-toggle.quiet .arr { font-size: 10px; color: var(--ink-4); transition: transform .25s; }
+  .expand-toggle.quiet { background: transparent; border: none; border-top: 1px solid var(--line-2); padding: 14px 0 0; margin-top: 18px; border-radius: 0; width: 100%; color: var(--amber); font-size: 13px; letter-spacing: -0.005em; font-family: -apple-system, system-ui, 'SF Pro Text', sans-serif; font-weight: 700; text-transform: none; cursor: pointer; transition: color .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .expand-toggle.quiet:hover { color: #fff; transform: none; background: transparent; }
+  .expand-toggle.quiet:hover .arr { color: #fff; }
+  .expand-toggle.quiet .arr { font-size: 10px; color: var(--amber); transition: transform .25s, color .15s; }
   .hero-card.open .expand-toggle.quiet .arr { transform: rotate(180deg); }
 
   /* Bold "All clients" label in stories rows */

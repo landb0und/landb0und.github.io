@@ -1,0 +1,120 @@
+/* =============================================================
+   Site-wide palette themes. Each page already defines :root with
+   --bg / --ink / --amber / --rose / --leaf. We override those via
+   html[data-theme="<name>"] selectors so the entire site re-skins
+   from a single attribute swap. Higher specificity than :root, so
+   load order doesn't matter.
+
+   Slate is the default — identical to the existing :root values.
+   Picking any other theme swaps the whole vibe:
+     • Noir     — color-grading suite, cool teal + coral
+     • Phosphor — CRT terminal / edit bay, phosphor green
+     • Graphite — minimalist mono w/ a single burnt-orange accent
+   ============================================================= */
+
+/* SLATE — the current site palette (also the default with no attr) */
+html[data-theme="slate"] {
+  --bg: #12100c; --bg-2: #1a1612; --bg-3: #221c16;
+  --line: #2e2620; --line-2: #2e2620;
+  --ink: #f1e6cd; --ink-2: #c7b893; --ink-3: #8a7a5e; --ink-4: #5d4f3a;
+  --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
+}
+
+/* NOIR — DI suite / color-grading bay. Cool teal as the primary
+   accent, coral as the warm contrast, soft lavender as the third. */
+html[data-theme="noir"] {
+  --bg: #0a0e15; --bg-2: #121823; --bg-3: #1a2230;
+  --line: #28344a; --line-2: #1d2638;
+  --ink: #e8eef7; --ink-2: #b4c0d2; --ink-3: #7c8aa3; --ink-4: #4e5872;
+  --amber: #5dd4d0;  /* electric teal — primary */
+  --rose:  #ff7385;  /* coral — secondary */
+  --leaf:  #b8a3ff;  /* lavender — tertiary */
+}
+
+/* PHOSPHOR — CRT terminal, late-night edit bay. Phosphor green
+   primary, warning amber + alert pink as the only chromatic foils. */
+html[data-theme="phosphor"] {
+  --bg: #060807; --bg-2: #0c100d; --bg-3: #131814;
+  --line: #1c2620; --line-2: #18211c;
+  --ink: #dceedb; --ink-2: #a3c5a4; --ink-3: #6d8c70; --ink-4: #455a48;
+  --amber: #6ee49b;  /* phosphor green — primary */
+  --rose:  #ffb84f;  /* warning amber — secondary */
+  --leaf:  #ff5e7a;  /* alert pink — tertiary */
+}
+
+/* GRAPHITE — editorial monochrome. One burnt-orange accent against
+   pure greyscale. The most disciplined of the four. */
+html[data-theme="graphite"] {
+  --bg: #0e0e0e; --bg-2: #161616; --bg-3: #1f1f1f;
+  --line: #2c2c2c; --line-2: #232323;
+  --ink: #ededed; --ink-2: #b8b8b8; --ink-3: #888888; --ink-4: #5a5a5a;
+  --amber: #d97852;  /* burnt orange — the only chromatic hue */
+  --rose:  #d97852;  /* same orange — graphite has one accent */
+  --leaf:  #888888;  /* neutral grey */
+}
+
+/* =============================================================
+   Theme switcher UI — injected by theme.js into .nav and pinned
+   at the bottom of the left nav. Small swatch row, hover label.
+   ============================================================= */
+.theme-switcher {
+  margin-top: auto;
+  padding: 14px 16px 8px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.theme-switcher .ts-label {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--ink-4);
+  font-family: 'SF Mono', Menlo, monospace;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.theme-switcher .ts-row {
+  display: flex;
+  gap: 8px;
+}
+.theme-switcher .ts-sw {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  position: relative;
+  transition: transform .15s, border-color .15s;
+  padding: 0;
+  background: none;
+}
+.theme-switcher .ts-sw::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+}
+.theme-switcher .ts-sw:hover { transform: scale(1.12); border-color: rgba(255,255,255,0.5); }
+.theme-switcher .ts-sw.active { border-color: var(--amber); }
+.theme-switcher .ts-sw.active::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid var(--amber);
+  opacity: 0.5;
+}
+/* Each swatch shows a tiny preview of its palette via gradient */
+.theme-switcher .ts-sw[data-theme="slate"]::before    { background: linear-gradient(135deg, #f5b042 0%, #f5b042 50%, #e8589a 50%, #e8589a 100%); }
+.theme-switcher .ts-sw[data-theme="noir"]::before     { background: linear-gradient(135deg, #5dd4d0 0%, #5dd4d0 50%, #ff7385 50%, #ff7385 100%); }
+.theme-switcher .ts-sw[data-theme="phosphor"]::before { background: linear-gradient(135deg, #6ee49b 0%, #6ee49b 50%, #ffb84f 50%, #ffb84f 100%); }
+.theme-switcher .ts-sw[data-theme="graphite"]::before { background: linear-gradient(135deg, #d97852 0%, #d97852 50%, #888888 50%, #888888 100%); }
+.theme-switcher .ts-name {
+  font-size: 9px;
+  color: var(--ink-3);
+  font-family: 'SF Mono', Menlo, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  min-height: 11px;
+}
