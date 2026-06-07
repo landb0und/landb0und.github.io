@@ -61,7 +61,8 @@ window.CLIENTS = [
     thumb: 'photos/commercial/Max-Frost-2.jpeg',
     media: [
       { type: 'photo', src: 'photos/commercial/Max-Frost-1.png', title: 'Press portrait 01', year: '2025' },
-      { type: 'photo', src: 'photos/commercial/Max-Frost-2.jpeg', title: 'Press portrait 02', year: '2025' }
+      { type: 'photo', src: 'photos/commercial/Max-Frost-2.jpeg', title: 'Press portrait 02', year: '2025' },
+      { type: 'photo', src: 'photos/commercial/Max-Frost.jpeg', title: 'Press portrait 03', year: '2025' }
     ]
   },
   {
@@ -126,11 +127,26 @@ window.CLIENTS = [
     name: 'Allison Hagendorf',
     short: 'Allison H.',
     handle: '@allisonhagendorf',
-    role: 'Director · Editor',
-    blurb: 'The Allison Hagendorf Show — S4 in production.',
+    role: 'Director · Editor · Photographer',
+    blurb: 'The Allison Hagendorf Show — S4 in production. BTS stills from the Yungblud episode shoot.',
     palette: 'sa-6',
-    thumb: null,
-    media: []
+    thumb: 'photos/clients/allison-yungblud-bts/yungblud-bts-1.jpg',
+    media: [
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-1.jpg',  title: 'Yungblud BTS — 01', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-2.jpg',  title: 'Yungblud BTS — 02', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-3.jpg',  title: 'Yungblud BTS — 03', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-4.jpg',  title: 'Yungblud BTS — 04', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-5.jpg',  title: 'Yungblud BTS — 05', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-6.jpg',  title: 'Yungblud BTS — 06', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-7.jpg',  title: 'Yungblud BTS — 07', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-8.jpg',  title: 'Yungblud BTS — 08', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-9.jpg',  title: 'Yungblud BTS — 09', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-10.jpg', title: 'Yungblud BTS — 10', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-11.jpg', title: 'Yungblud BTS — 11', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-12.jpg', title: 'Yungblud BTS — 12', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-13.jpg', title: 'Yungblud BTS — 13', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-14.jpg', title: 'Yungblud BTS — 14', year: '2024', camera: '35mm', tags: ['BTS','Black & White','35mm','Photographer'] }
+    ]
   },
   {
     id: 'two-feet',
@@ -227,6 +243,17 @@ window.CLIENTS = [
     role: 'Director · DP',
     blurb: 'Music projects — direction and cinematography.',
     palette: 'sa-3',
+    thumb: null,
+    media: []
+  },
+  {
+    id: 'landon-barker',
+    name: 'Landon Barker',
+    short: 'Landon B.',
+    handle: '@landonasherbarker',
+    role: 'Director · Editor',
+    blurb: 'Music project — performance vertical, full Landbound shop.',
+    palette: 'sa-4',
     thumb: null,
     media: []
   },
@@ -335,8 +362,7 @@ window.CLIENTS = [
     palette: 'sa-10',
     thumb: null,
     media: [
-      { type: 'video', embedId: 'e183de5b-77e6-432a-ad2b-764062367acc', bunny: true, title: 'Canvas', year: '2025', tags: ['Director','Editor','Vertical'] },
-      { type: 'video', embedId: 'ae99920a-46b4-4765-9c3b-408a23eb8508', bunny: true, title: 'Canvas — alt cut', year: '2025', tags: ['Director','Editor','Vertical'] }
+      { type: 'video', embedId: 'e183de5b-77e6-432a-ad2b-764062367acc', bunny: true, title: 'Canvas', year: '2025', tags: ['Director','Editor','Vertical'] }
     ]
   },
   {
@@ -573,18 +599,6 @@ window.VERTICALS = [
     caption: 'landbound · self-shot'
   },
   {
-    id: 'claudia-canvas-2',
-    guid: 'ae99920a-46b4-4765-9c3b-408a23eb8508',
-    title: 'Canvas (alt)',
-    client: 'claudia-valentina',
-    type: 'music',
-    tag: 'Claudia Valentina · 2025',
-    role: 'Director · Editor',
-    music: '@claudia_valentina__ — Canvas',
-    label: 'Canvas alt',
-    caption: 'Claudia Valentina · alt cut'
-  },
-  {
     id: 'natalie-jane-vertical-2',
     guid: '39fe2dc1-70f2-4826-8337-407a593292ef',
     title: 'Natalie Jane (take 2)',
@@ -595,6 +609,80 @@ window.VERTICALS = [
     music: '@nataliejane',
     label: 'Natalie Jane 2',
     caption: 'Natalie Jane · vertical 2'
+  },
+  // Landon Barker — performance vertical (new artist client)
+  {
+    id: 'landon-barker-1',
+    guid: '85b07d51-f4b2-4ca0-b966-06f43b1a491c',
+    title: 'Landon Barker',
+    client: 'landon-barker',
+    type: 'music',
+    tag: 'Landon Barker · 2025',
+    role: 'Director · Editor',
+    music: '@landonasherbarker',
+    label: 'Landon Barker',
+    caption: 'Landon Barker · vertical'
+  },
+  // Landbound — VFX showcase cuts (no-AI VFX work on personal phone footage)
+  {
+    id: 'landbound-vfx-bts',
+    guid: 'f811a989-8e93-4fc1-b823-7166a3b1b100',
+    title: 'VFX BTS — Wire Removal',
+    client: 'landbound',
+    type: 'bts',
+    tag: 'Landbound · 2025',
+    role: 'VFX · Editor',
+    music: '@landbound',
+    label: 'VFX BTS',
+    caption: 'landbound · VFX breakdown'
+  },
+  {
+    id: 'landbound-dp-reel',
+    guid: 'c3c54357-2567-4d6a-be29-0392a3cb682e',
+    title: "The Ground Doesn't Want You",
+    client: 'landbound',
+    type: 'edits',
+    tag: 'Landbound · 2025',
+    role: 'Director · DP',
+    music: '@landbound',
+    label: 'DP Reel',
+    caption: 'landbound · cinematography'
+  },
+  {
+    id: 'landbound-used-cars',
+    guid: '41bc4117-5779-4d67-9ab7-21b4ec9c5948',
+    title: 'Used Cars',
+    client: 'landbound',
+    type: 'edits',
+    tag: 'Landbound · 2025',
+    role: 'VFX · Editor',
+    music: '@landbound',
+    label: 'Used Cars',
+    caption: 'landbound · VFX, no AI'
+  },
+  {
+    id: 'landbound-people',
+    guid: '56ecd563-da69-433d-ac2a-5eabb09bea69',
+    title: 'People <3',
+    client: 'landbound',
+    type: 'edits',
+    tag: 'Landbound · 2025',
+    role: 'VFX · Editor',
+    music: '@landbound',
+    label: 'People',
+    caption: 'landbound · VFX, no AI'
+  },
+  {
+    id: 'landbound-backroom',
+    guid: 'f8b05921-3c9b-4c12-a31c-a7a0f987bd42',
+    title: 'Backroom',
+    client: 'landbound',
+    type: 'edits',
+    tag: 'Landbound · 2025',
+    role: 'VFX · Editor',
+    music: '@landbound',
+    label: 'Backroom',
+    caption: 'landbound · VFX, no AI'
   }
 ];
 
