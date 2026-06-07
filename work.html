@@ -289,6 +289,14 @@
   .po-credits strong { color: var(--amber); font-weight: 700; }
   .po-music { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.18); font-size: 11px; color: rgba(255,255,255,0.85); }
   .po-music::before { content: '♪'; font-size: 14px; color: var(--amber); }
+  /* Bio caption + meta row (views / AI note / related-film chip).
+     Sits between the role line and the music ticker. */
+  .po-caption { font-size: 12px; color: rgba(255,255,255,0.92); line-height: 1.45; margin-top: 6px; }
+  .po-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; font-family: 'SF Mono', Menlo, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .po-meta .po-views { color: var(--amber); font-weight: 800; }
+  .po-meta .po-ai { color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.18); padding: 2px 7px; border-radius: 100px; font-weight: 700; }
+  .po-meta .po-related { color: var(--bg); background: var(--amber); padding: 2px 9px; border-radius: 100px; text-decoration: none; font-weight: 800; letter-spacing: 0.06em; transition: background .15s; }
+  .po-meta .po-related:hover { background: #ffc555; }
 
   .phone-actions { position: absolute; right: 12px; bottom: 30px; display: flex; flex-direction: column; gap: 16px; z-index: 5; align-items: center; }
   .pa { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
@@ -303,7 +311,25 @@
   .phone-progress .fill { position: absolute; left: 0; right: 0; top: 0; height: 32%; background: var(--rose); border-radius: 100px; }
   .swipe-hint { position: absolute; right: -56px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 16px; color: rgba(255,255,255,0.4); font-size: 24px; }
 
-  .shorts-rail { width: 300px; background: var(--bg); border-left: 1px solid var(--line); padding: 24px 18px 20px; overflow-y: auto; }
+  .shorts-rail { width: 300px; background: var(--bg); border-left: 1px solid var(--line); padding: 24px 18px 20px; overflow-y: auto; position: relative; }
+  /* Sticky cat-tabs — sit pinned to the top of the rail as the user scrolls
+     through clips. Background matches rail so it doesn't bleed through. */
+  .cat-tabs-sticky { position: sticky; top: -24px; z-index: 5; background: var(--bg); padding: 18px 0 12px; margin: -24px 0 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  /* Random pill mirrors the work-videos Random button — amber filled, mono caps */
+  .cat-tab.cat-random { margin-left: auto; color: var(--bg); background: var(--amber); border: 1px solid var(--amber); padding: 4px 11px; display: inline-flex; align-items: center; gap: 6px; font-weight: 800; letter-spacing: 0.12em; border-radius: 100px; }
+  .cat-tab.cat-random:hover { background: #ffc555; color: var(--bg); border-color: var(--amber); }
+  .cat-tab.cat-random svg { width: 11px; height: 11px; }
+  /* Related-verticals strip under the active main video. Auto-shown only when
+     the current embedId is the relatedTo target of one or more verticals. */
+  .related-verticals { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-2); }
+  .related-verticals .rv-head { font-size: 11px; color: var(--amber); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 14px; }
+  .related-verticals .rv-strip { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .related-verticals .rv-strip::-webkit-scrollbar { height: 6px; }
+  .related-verticals .rv-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .related-verticals .rv-tile { flex: 0 0 160px; aspect-ratio: 9/16; border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--line); background: #000 center/cover no-repeat; text-decoration: none; transition: border-color .15s, transform .15s; }
+  .related-verticals .rv-tile:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .related-verticals .rv-tile .rv-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); }
+  .related-verticals .rv-tile .rv-cap { position: absolute; left: 10px; right: 10px; bottom: 10px; font-size: 11px; color: #fff; font-weight: 700; line-height: 1.25; }
   /* Override cat-tab colors for the dark rail context */
   /* override removed — generic .cat-tab styling now applies in the rail too */
   .shorts-rail .cat-tab:hover { background: rgba(255,255,255,0.08); color: var(--ink); border-color: var(--ink-4); }
@@ -506,6 +532,15 @@
         <div class="row"><span class="k">Crew</span><span class="v">Landbound — Jacob Boehme</span></div>
         <div class="row"><span class="k">Featured</span><span class="v">CHILDSTAR · Secrets · Bleed · First Circle</span></div>
       </div>
+
+      <!-- RELATED VERTICALS — surfaces verticals whose data.js relatedTo.embedId
+           matches the currently-active main player video. e.g. Forgive & Forget
+           gets Wire Removal + Ground Doesn't Want You under it. JS hides it when
+           no related verticals exist for the active video. -->
+      <div class="related-verticals" id="relatedVerticals" style="display:none;">
+        <div class="rv-head">Related verticals</div>
+        <div class="rv-strip" id="rvStrip"></div>
+      </div>
     </div>
 
     <div class="side">
@@ -546,15 +581,19 @@
   </div>
 
   <div class="shorts-rail">
-    <div class="cat-tabs" style="margin-bottom:18px;">
+    <div class="cat-tabs cat-tabs-sticky">
       <span class="cat-tab active" data-filter="all">All</span>
       <span class="cat-tab" data-filter="vfx">VFX</span>
       <span class="cat-tab" data-filter="bts">BTS</span>
       <span class="cat-tab" data-filter="music">Music</span>
       <span class="cat-tab" data-filter="commercial">Commercial</span>
       <span class="cat-tab" data-filter="edits">Edits</span>
+      <span class="cat-tab cat-random" id="shortsRandom" title="Surprise me">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        Random
+      </span>
     </div>
-    <div class="sr-h">// VERTICAL FEED — 47 CLIPS</div>
+    <div class="sr-h">// VERTICAL FEED</div>
     <div class="sr-list">
       <!-- sr-items rendered by renderShortsFeed() from window.VERTICALS -->
     </div>
@@ -672,10 +711,37 @@
       subEl.innerHTML = v.sub;
       actionsEl.innerHTML = v.chips.map(([t, cls]) => `<span class="chip ${cls}">${t}</span>`).join('');
       creditsEl.innerHTML = v.credits.map(([k, val]) => `<div class="row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('');
+      // Repopulate Related Verticals strip for this video, if any qualify
+      renderRelatedVerticals(v.embedId);
       // Scroll player into view so user sees the swap happen
       document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   });
+
+  // Render verticals whose data.js relatedTo.embedId matches the current
+  // main-player video. Hides the section when nothing matches.
+  function renderRelatedVerticals(activeEmbedId) {
+    const wrap  = document.getElementById('relatedVerticals');
+    const strip = document.getElementById('rvStrip');
+    if (!wrap || !strip || !window.VERTICALS) return;
+    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+    const matches = window.VERTICALS
+      .map((v, idx) => ({ v, idx }))
+      .filter(({ v }) => v.relatedTo && v.relatedTo.embedId === activeEmbedId);
+    if (!matches.length) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    strip.innerHTML = matches.map(({ v, idx }) => {
+      const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+      const cap = v.label || v.title || '';
+      return ''
+        + '<a class="rv-tile" href="#shorts/' + idx + '" onclick="openShorts(' + idx + ');return false;" style="background-image:url(\'' + thumb + '\');">'
+        +   '<div class="rv-overlay"></div>'
+        +   '<div class="rv-cap">' + cap + '</div>'
+        + '</a>';
+    }).join('');
+  }
+  // Initial render for whatever's loaded by default (CHILDSTAR sizzle reel)
+  renderRelatedVerticals('e0374508-213f-47a2-ae0d-dd50d9df695d');
 
   // ============= FILTER BAR =============
   (function() {
@@ -752,9 +818,21 @@
       // VFX flag — slide qualifies as #vfx if either the role line or the tag
       // list mentions VFX. The vfx-ai page reads this same flag to build its strip.
       const isVfx = ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx');
+      // IG-style overlay extras — only render when the data is present so we
+      // never show placeholder dashes. Views go in the caption meta line, AI
+      // note + Related-film chip slot in next to it. Likes float over the heart.
+      const metaBits = [];
+      if (v.views)  metaBits.push('<span class="po-views">' + v.views + ' views</span>');
+      if (v.aiNote) metaBits.push('<span class="po-ai">' + v.aiNote + '</span>');
+      if (v.relatedTo && v.relatedTo.embedId) {
+        metaBits.push('<a class="po-related" href="work.html#video/' + v.relatedTo.embedId + '">From ' + v.relatedTo.label + ' ↗</a>');
+      }
+      const metaLine = metaBits.length ? '<div class="po-meta">' + metaBits.join('') + '</div>' : '';
+      const captionLine = v.caption ? '<div class="po-caption">' + v.caption + '</div>' : '';
+      const likesChip = v.likes ? '<span class="pa-lbl">' + v.likes + '</span>' : '';
       return `
-      <div class="phone-slide" data-clip="${i}" data-type="${v.type || ''}" data-vfx="${isVfx ? '1' : '0'}" style="background: #000 url('${thumb}') center/cover no-repeat;">
-        <video id="phone-video-${i}" class="phone-video" data-bunny-guid="${v.guid}" data-vsrc="${mp4}" poster="${thumb}" loop muted playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:transparent; z-index:1;"></video>
+      <div class="phone-slide" data-clip="${i}" data-type="${v.type || ''}" data-vfx="${isVfx ? '1' : '0'}" style="background: #000;">
+        <video id="phone-video-${i}" class="phone-video" data-bunny-guid="${v.guid}" data-vsrc="${mp4}" poster="${thumb}" loop muted playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000; z-index:1;"></video>
         <button class="phone-tap" data-slide-idx="${i}" aria-label="Toggle play/pause"></button>
         <div class="phone-controls">
           <button class="phone-ctl" data-action="mute" data-slide-idx="${i}" aria-label="Toggle mute">${muteIcon}</button>
@@ -764,13 +842,15 @@
           <div class="po-credit-tag">${v.tag || ''}</div>
           <div class="po-title">${v.title || ''}</div>
           <div class="po-credits"><a href="client.html?id=${v.client}" style="color:inherit; text-decoration:none;"><strong>${clientName}</strong></a><br>${v.role || ''}</div>
+          ${captionLine}
+          ${metaLine}
           <div class="po-music">${v.music || ''}</div>
         </div>
         <div class="phone-actions">
-          <div class="pa"><div class="pa-icon heart">♥</div><span class="pa-lbl">—</span></div>
-          <div class="pa"><div class="pa-icon">💬</div><span class="pa-lbl">—</span></div>
-          <div class="pa"><div class="pa-icon">↗</div><span class="pa-lbl">—</span></div>
-          <div class="pa"><div class="pa-icon">♫</div><span class="pa-lbl"></span></div>
+          <div class="pa"><div class="pa-icon heart">♥</div>${likesChip}</div>
+          <div class="pa"><div class="pa-icon">💬</div></div>
+          <div class="pa"><div class="pa-icon">↗</div></div>
+          <div class="pa"><div class="pa-icon">♫</div></div>
         </div>
       </div>`;
     }).join('');
@@ -1245,6 +1325,20 @@
     }
     applyCatFromHash();
     window.addEventListener('hashchange', applyCatFromHash);
+
+    // Random button — pick a random VISIBLE slide and scroll to it. Respects
+    // whatever cat filter is currently active (so #vfx Random stays in VFX).
+    const rndBtn = document.getElementById('shortsRandom');
+    if (rndBtn) {
+      rndBtn.addEventListener('click', () => {
+        const visible = Array.from(document.querySelectorAll('.phone-slide'))
+          .filter(s => s.style.display !== 'none');
+        if (!visible.length) return;
+        const pick = visible[Math.floor(Math.random() * visible.length)];
+        const scroller = document.getElementById('phoneScroll');
+        if (scroller && pick) scroller.scrollTo({ top: pick.offsetTop, behavior: 'smooth' });
+      });
+    }
   })();
 
 </script>

@@ -61,8 +61,7 @@ window.CLIENTS = [
     thumb: 'photos/commercial/Max-Frost-2.jpeg',
     media: [
       { type: 'photo', src: 'photos/commercial/Max-Frost-1.png', title: 'Press portrait 01', year: '2025' },
-      { type: 'photo', src: 'photos/commercial/Max-Frost-2.jpeg', title: 'Press portrait 02', year: '2025' },
-      { type: 'photo', src: 'photos/commercial/Max-Frost.jpeg', title: 'Press portrait 03', year: '2025' }
+      { type: 'photo', src: 'photos/commercial/Max-Frost-2.jpeg', title: 'Press portrait 02', year: '2025' }
     ]
   },
   {
@@ -497,45 +496,60 @@ window.clientInitials = function(c) {
   return c.name.slice(0,2).toUpperCase();
 };
 
-// VERTICALS — single source of truth for short-form work
+// VERTICALS — single source of truth for short-form work.
 // Add a new vertical here → it auto-appears in: home strip, Work shorts feed,
-// and on the linked client's profile page.
+// vfx-ai strip, and on the linked client's profile page.
+//
+// Schema notes:
+//   role     — credit chain shown beneath the title
+//   aiNote   — short tag like 'No AI', 'AI-assisted' — surfaces in caption
+//   views    — when known, shown in the overlay meta line ("2M views")
+//   likes    — only set when the explicit count is known; rendered as the
+//              IG-style "<n> likes" line. When undefined we render NOTHING
+//              (no placeholder dash), per Jacob's directive.
+//   relatedTo — { type:'film', embedId:'oD42T1md068', label:'Forgive & Forget' }
+//              links a vertical back to its parent film. Surfaces as a
+//              tappable chip in the overlay AND as a "Related verticals"
+//              strip under the parent video on the work tab.
 window.VERTICALS = [
   {
     id: 'stunt-fall-vfx-bts',
     guid: 'e155dcd4-733a-489c-9d89-3417e3333cfe',
-    title: 'Stunt Fall VFX — Behind The Scenes',
+    title: 'Stunt Fall VFX',
     client: 'chloe-star',
     type: 'bts',
     tag: 'Chloe Star · 2024',
     role: 'VFX · VFX Supervisor · Editor',
+    aiNote: 'No AI',
     music: '@chloestar',
     label: 'Stunt Fall',
-    caption: 'BTS · Chloe Star'
+    caption: 'Stunt Fall VFX — no AI'
   },
   {
-    id: 'landbound-w-color-phone',
+    id: 'again-and-again',
     guid: '27445ba3-d8a3-45f7-b833-0e049e6274c9',
-    title: 'Phone color pass',
+    title: 'Again & Again',
     client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
-    role: 'Director · DP · Editor · VFX',
+    role: 'VFX · Editor',
+    aiNote: 'No AI',
     music: '@landbound',
-    label: 'Phone Color',
-    caption: 'landbound · self-shot'
+    label: 'Again & Again',
+    caption: 'Personal VFX — no AI'
   },
   {
-    id: 'landbound-tiktok-mp4',
+    id: 'slice-of-life',
     guid: '9284b2d3-3ea3-4cb4-be22-3b2f6dd5c778',
-    title: 'Untitled (TikTok)',
+    title: 'Slice of Life',
     client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
-    role: 'Director · DP · Editor · VFX',
+    role: 'VFX · Editor',
+    aiNote: 'Some AI',
     music: '@landbound',
-    label: 'Untitled',
-    caption: 'landbound · self-shot'
+    label: 'Slice of Life',
+    caption: 'Personal VFX — some AI'
   },
   {
     id: 'bahari-better-than-us-1',
@@ -557,21 +571,22 @@ window.VERTICALS = [
     type: 'music',
     tag: 'Surfaces · 2024',
     role: 'Director · DP · Editor · VFX',
+    aiNote: 'No AI',
     music: '@surfaces — Call Me When You\'re Home',
     label: 'CMWYH',
-    caption: 'Surfaces · vertical'
+    caption: 'Surfaces · Call Me When You\'re Home — VFX, no AI'
   },
   {
     id: 'grace-high-social',
     guid: 'e8775058-272b-48b5-85a9-37410c6cbb25',
-    title: 'HIGH SOCIAL',
+    title: 'High',
     client: 'grace-vanderwaal',
     type: 'music',
     tag: 'Grace VanderWaal · 2025',
-    role: 'Director · Editor',
-    music: '@gracevanderwaal — HIGH SOCIAL',
-    label: 'HIGH SOCIAL',
-    caption: 'Grace VanderWaal · vertical'
+    role: 'Director · DP · Editor',
+    music: '@gracevanderwaal — High',
+    label: 'High',
+    caption: 'Grace VanderWaal · shot, directed & cut by Landbound'
   },
   {
     id: 'dye-dx7',
@@ -588,26 +603,28 @@ window.VERTICALS = [
   {
     id: 'claudia-canvas',
     guid: 'e183de5b-77e6-432a-ad2b-764062367acc',
-    title: 'Canvas',
+    title: 'Spotify Canvas',
     client: 'claudia-valentina',
     type: 'music',
     tag: 'Claudia Valentina · 2025',
     role: 'Director · Editor',
-    music: '@claudia_valentina__ — Canvas',
+    music: '@claudia_valentina__',
     label: 'Canvas',
-    caption: 'Claudia Valentina · vertical'
+    caption: 'Claudia Valentina · Spotify Canvas'
   },
   {
-    id: 'natalie-jane-vertical',
+    id: 'claudia-how-u-been-1',
     guid: '6f8f2d98-78dc-49d6-8576-9f6138d5e53f',
-    title: 'Natalie Jane',
-    client: 'natalie-jane',
+    title: 'how u been?',
+    client: 'claudia-valentina',
     type: 'music',
-    tag: 'Natalie Jane · 2025',
-    role: 'Director · DP · Editor',
-    music: '@nataliejane',
-    label: 'Natalie Jane',
-    caption: 'Natalie Jane · vertical'
+    tag: 'Claudia Valentina · 2025',
+    role: 'Director · Editor',
+    music: '@claudia_valentina__ — how u been?',
+    label: 'how u been?',
+    caption: 'Claudia Valentina · social content for "how u been?"',
+    views: '2M',
+    likes: '83K'
   },
   {
     id: 'biaom-surfaces-posner',
@@ -619,93 +636,98 @@ window.VERTICALS = [
     role: 'Director · DP · Editor',
     music: '@surfaces x @mikeposner — Blame It All On Me',
     label: 'BIAOM',
-    caption: 'Surfaces x Posner · performance'
+    caption: 'Surfaces × Mike Posner · directed, shot & edited by Landbound'
   },
   {
-    id: 'landbound-oaky',
+    id: 'landbound-visions',
     guid: 'f8cf0b2b-02fc-4e45-8430-c3c234e1a5ea',
-    title: 'oaky oaky oaky',
+    title: 'Visions',
     client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
-    role: 'Director · DP · Editor · VFX',
+    role: 'DP · VFX',
     music: '@landbound',
-    label: 'oaky',
-    caption: 'landbound · self-shot'
+    label: 'Visions',
+    caption: 'Personal — VFX & cinematography'
   },
   {
-    id: 'landbound-tiktok-with-lut',
+    id: 'landbound-worlds',
     guid: '62c948a3-9548-4261-a408-8eadc51071bf',
-    title: 'LUT pass',
+    title: 'Worlds',
     client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
-    role: 'Director · DP · Editor · VFX',
+    role: 'DP · VFX',
     music: '@landbound',
-    label: 'LUT',
-    caption: 'landbound · self-shot'
+    label: 'Worlds',
+    caption: 'Personal — VFX & cinematography'
   },
   {
-    id: 'natalie-jane-vertical-2',
+    id: 'claudia-how-u-been-2',
     guid: '39fe2dc1-70f2-4826-8337-407a593292ef',
-    title: 'Natalie Jane (take 2)',
-    client: 'natalie-jane',
+    title: 'how u been? (pt. 2)',
+    client: 'claudia-valentina',
     type: 'music',
-    tag: 'Natalie Jane · 2025',
-    role: 'Director · DP · Editor',
-    music: '@nataliejane',
-    label: 'Natalie Jane 2',
-    caption: 'Natalie Jane · vertical 2'
+    tag: 'Claudia Valentina · 2025',
+    role: 'Director · Editor',
+    music: '@claudia_valentina__ — how u been?',
+    label: 'how u been? 2',
+    caption: 'Claudia Valentina · social content for "how u been?" — part 2'
   },
-  // Landon Barker — performance vertical (new artist client)
   {
-    id: 'landon-barker-1',
+    id: 'landon-barker-dodge',
     guid: '85b07d51-f4b2-4ca0-b966-06f43b1a491c',
-    title: 'Landon Barker',
+    title: 'Landon Barker × Dodge',
     client: 'landon-barker',
-    type: 'music',
-    tag: 'Landon Barker · 2025',
+    type: 'commercial',
+    tag: 'Landon Barker × Dodge · 2025',
     role: 'Director · Editor',
     music: '@landonasherbarker',
-    label: 'Landon Barker',
-    caption: 'Landon Barker · vertical'
+    label: 'Landon × Dodge',
+    caption: 'Landon Barker × Dodge — brand partnership for the new EV'
   },
-  // Landbound — VFX showcase cuts (no-AI VFX work on personal phone footage)
+  // Wire Removal + Ground Doesn't Want You both anchor back to Forgive & Forget.
+  // The relatedTo field surfaces as a chip in the overlay and pulls these into
+  // a "Related verticals" strip under F&F on the work tab.
   {
-    id: 'landbound-vfx-bts',
+    id: 'wire-removal-vfx',
     guid: 'f811a989-8e93-4fc1-b823-7166a3b1b100',
-    title: 'VFX BTS — Wire Removal',
+    title: 'Wire Removal VFX',
     client: 'landbound',
     type: 'bts',
-    tag: 'Landbound · 2025',
+    tag: 'Forgive & Forget · 2022',
     role: 'VFX · Editor',
+    aiNote: 'No AI',
     music: '@landbound',
-    label: 'VFX BTS',
-    caption: 'landbound · VFX breakdown'
+    label: 'Wire Removal',
+    caption: 'VFX breakdown — wire removal from the short film Forgive & Forget',
+    relatedTo: { type: 'film', embedId: 'oD42T1md068', label: 'Forgive & Forget' }
   },
   {
-    id: 'landbound-dp-reel',
+    id: 'ground-doesnt-want-you',
     guid: 'c3c54357-2567-4d6a-be29-0392a3cb682e',
     title: "The Ground Doesn't Want You",
     client: 'landbound',
-    type: 'edits',
-    tag: 'Landbound · 2025',
-    role: 'Director · DP',
+    type: 'bts',
+    tag: 'Forgive & Forget · 2022',
+    role: 'DP',
     music: '@landbound',
-    label: 'DP Reel',
-    caption: 'landbound · cinematography'
+    label: "Ground Doesn't Want You",
+    caption: "Cinematography test footage — for the short film Forgive & Forget",
+    relatedTo: { type: 'film', embedId: 'oD42T1md068', label: 'Forgive & Forget' }
   },
   {
     id: 'landbound-used-cars',
     guid: '41bc4117-5779-4d67-9ab7-21b4ec9c5948',
-    title: 'Used Cars',
+    title: 'Used Cars!',
     client: 'landbound',
     type: 'edits',
     tag: 'Landbound · 2025',
-    role: 'VFX · Editor',
+    role: 'DP · VFX · Editor',
+    aiNote: 'No AI',
     music: '@landbound',
-    label: 'Used Cars',
-    caption: 'landbound · VFX, no AI'
+    label: 'Used Cars!',
+    caption: 'Personal — cinematography & VFX, no AI'
   },
   {
     id: 'landbound-people',
@@ -715,9 +737,10 @@ window.VERTICALS = [
     type: 'edits',
     tag: 'Landbound · 2025',
     role: 'VFX · Editor',
+    aiNote: 'AI-assisted',
     music: '@landbound',
     label: 'People',
-    caption: 'landbound · VFX, no AI'
+    caption: 'Personal VFX — AI-assisted'
   },
   {
     id: 'landbound-backroom',
@@ -727,9 +750,10 @@ window.VERTICALS = [
     type: 'edits',
     tag: 'Landbound · 2025',
     role: 'VFX · Editor',
+    aiNote: 'No AI',
     music: '@landbound',
     label: 'Backroom',
-    caption: 'landbound · VFX, no AI'
+    caption: 'Personal VFX — no AI'
   }
 ];
 
