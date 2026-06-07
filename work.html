@@ -548,6 +548,7 @@
   <div class="shorts-rail">
     <div class="cat-tabs" style="margin-bottom:18px;">
       <span class="cat-tab active" data-filter="all">All</span>
+      <span class="cat-tab" data-filter="vfx">VFX</span>
       <span class="cat-tab" data-filter="bts">BTS</span>
       <span class="cat-tab" data-filter="music">Music</span>
       <span class="cat-tab" data-filter="commercial">Commercial</span>
@@ -748,8 +749,11 @@
       // poster + data-vsrc + preload=none — actual MP4 is fetched lazily by the
       // IntersectionObserver below when the slide enters view. Loading 10 MP4s
       // up-front froze the renderer.
+      // VFX flag — slide qualifies as #vfx if either the role line or the tag
+      // list mentions VFX. The vfx-ai page reads this same flag to build its strip.
+      const isVfx = ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx');
       return `
-      <div class="phone-slide" data-clip="${i}" data-type="${v.type || ''}" style="background: #000 url('${thumb}') center/cover no-repeat;">
+      <div class="phone-slide" data-clip="${i}" data-type="${v.type || ''}" data-vfx="${isVfx ? '1' : '0'}" style="background: #000 url('${thumb}') center/cover no-repeat;">
         <video id="phone-video-${i}" class="phone-video" data-bunny-guid="${v.guid}" data-vsrc="${mp4}" poster="${thumb}" loop muted playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:transparent; z-index:1;"></video>
         <button class="phone-tap" data-slide-idx="${i}" aria-label="Toggle play/pause"></button>
         <div class="phone-controls">
@@ -774,8 +778,9 @@
     railMount.innerHTML = verts.map((v, i) => {
       const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
       const num = String(i + 1).padStart(2, '0');
+      const isVfxRail = ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx');
       return `
-      <div class="sr-item${i === 0 ? ' active' : ''}">
+      <div class="sr-item${i === 0 ? ' active' : ''}" data-type="${v.type || ''}" data-vfx="${isVfxRail ? '1' : '0'}">
         <div class="sr-num">${num}</div>
         <div class="sr-thumb" style="background:#000; overflow:hidden;">
           <img src="${thumb}" alt="" style="width:100%; height:100%; object-fit:cover;">
@@ -1206,27 +1211,40 @@
   })();
 
   // ============= SHORTS FILTER PILLS =============
-  (function() {
+  // 'vfx' filter reads data-vfx="1" (derived from role + tags), others match
+  // data-type. applyShortsFilter is also exported so the hash router below can
+  // auto-select a filter when arriving from a deep link (vfx-ai page does this).
+  function applyShortsFilter(f) {
     const catTabs = document.querySelectorAll('.cat-tab[data-filter]');
-    catTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const f = tab.dataset.filter;
-        catTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        const allSlides = document.querySelectorAll('.phone-slide');
-        const allSrItems = document.querySelectorAll('.sr-item');
-        allSlides.forEach((slide, i) => {
-          const t = slide.dataset.type || '';
-          const matches = (f === 'all') || (t === f);
-          slide.style.display = matches ? '' : 'none';
-          if (allSrItems[i]) allSrItems[i].style.display = matches ? '' : 'none';
-        });
-        // Scroll first visible slide into view
-        const firstVisible = Array.from(allSlides).find(s => s.style.display !== 'none');
-        const scroller = document.getElementById('phoneScroll');
-        if (firstVisible && scroller) scroller.scrollTop = firstVisible.offsetTop;
-      });
+    catTabs.forEach(t => t.classList.toggle('active', t.dataset.filter === f));
+    const allSlides = document.querySelectorAll('.phone-slide');
+    const allSrItems = document.querySelectorAll('.sr-item');
+    allSlides.forEach((slide, i) => {
+      const matches = (f === 'all')
+        ? true
+        : (f === 'vfx')
+          ? slide.dataset.vfx === '1'
+          : (slide.dataset.type || '') === f;
+      slide.style.display = matches ? '' : 'none';
+      if (allSrItems[i]) allSrItems[i].style.display = matches ? '' : 'none';
     });
+    const firstVisible = Array.from(allSlides).find(s => s.style.display !== 'none');
+    const scroller = document.getElementById('phoneScroll');
+    if (firstVisible && scroller) scroller.scrollTop = firstVisible.offsetTop;
+  }
+  window.applyShortsFilter = applyShortsFilter;
+  (function() {
+    document.querySelectorAll('.cat-tab[data-filter]').forEach(tab => {
+      tab.addEventListener('click', () => applyShortsFilter(tab.dataset.filter));
+    });
+    // Honor ?cat=vfx (or any future cat) from the hash query — fired by the
+    // vfx-ai page when a strip tile is clicked.
+    function applyCatFromHash() {
+      const m = (window.location.hash || '').match(/[?&]cat=([a-z]+)/i);
+      if (m) applyShortsFilter(m[1]);
+    }
+    applyCatFromHash();
+    window.addEventListener('hashchange', applyCatFromHash);
   })();
 
 </script>

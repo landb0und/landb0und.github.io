@@ -180,6 +180,31 @@
   .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
+
+  /* VFX VERTICALS STRIP — mirrors home shorts strip layout. Each tile deep-links
+     into work.html#shorts/<idx>?cat=vfx so the shorts feed lands on that clip
+     with the VFX category pill auto-selected. */
+  .vfx-strip-head { display: flex; align-items: baseline; gap: 14px; margin: 6px 0 12px; }
+  .vfx-strip-head .num { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; }
+  .vfx-strip-head .lbl { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
+  .vfx-strip-head .sub { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+  .vfx-strip-head .all { margin-left: auto; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.1em; text-decoration: none; }
+  .vfx-strip-head .all:hover { color: var(--ink); }
+  .vfx-strip { display: flex; gap: 10px; overflow-x: auto; padding-top: 6px; padding-bottom: 8px; margin-bottom: 40px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .vfx-strip::-webkit-scrollbar { height: 6px; }
+  .vfx-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .vfx-strip .vfx-short { flex: 0 0 180px; aspect-ratio: 9/16; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--line); transition: transform .15s, border-color .15s; text-decoration: none; background: #000 center/cover no-repeat; }
+  .vfx-strip .vfx-short:hover { transform: translateY(-3px); border-color: var(--amber); }
+  .vfx-strip .vfx-short video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .vfx-strip .vfx-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); z-index: 2; pointer-events: none; }
+  .vfx-strip .vfx-meta { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 3; }
+  .vfx-strip .vfx-meta .cap { font-size: 11px; color: #fff; font-weight: 700; line-height: 1.25; }
+  .vfx-strip .vfx-tag { position: absolute; top: 10px; left: 10px; z-index: 3; padding: 3px 8px; background: rgba(245,176,66,0.85); color: var(--bg); font-size: 8px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; text-transform: uppercase; border-radius: 100px; backdrop-filter: blur(4px); }
+  .vfx-strip .vfx-cta { flex: 0 0 180px; aspect-ratio: 9/16; border-radius: 10px; border: 1px dashed var(--amber); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--amber); cursor: pointer; padding: 20px; text-align: center; text-decoration: none; }
+  .vfx-strip .vfx-cta:hover { background: rgba(245,176,66,0.06); }
+  .vfx-strip .vfx-cta .arr { font-size: 24px; }
+  .vfx-strip .vfx-cta .t { font-size: 13px; font-weight: 800; letter-spacing: 0.04em; }
+  .vfx-strip .vfx-cta .m { font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -222,6 +247,17 @@
       <div class="stat-mini"><div class="v">3</div><div class="k">Years AI</div></div>
     </div>
   </div>
+
+  <!-- VFX VERTICALS — pulled from window.VERTICALS where role/tags mention VFX.
+       Click → work.html#shorts/<idx>?cat=vfx so the shorts feed opens at the
+       clip with the VFX filter pre-selected. -->
+  <div class="vfx-strip-head">
+    <span class="num">—</span>
+    <span class="lbl">VFX Reels</span>
+    <span class="sub">Verticals</span>
+    <a class="all" href="work.html#shorts/0?cat=vfx">Open VFX feed →</a>
+  </div>
+  <div class="vfx-strip" id="vfxStrip"></div>
 
   <!-- 01. BEFORE / AFTER -->
   <div class="section">
@@ -516,6 +552,50 @@
 
 <div class="banner">VFX & AI PAGE</div>
 
+<script src="data.js?v=3"></script>
+<script>
+  // ============= VFX VERTICALS STRIP =============
+  // Read VERTICALS, keep only those tagged VFX (role/tags), preserve the index
+  // from the original array so deep links into work.html#shorts/<idx> still land
+  // on the right slide. Each tile lazy-loads its MP4 on hover for cheap preview.
+  (function renderVfxStrip() {
+    const mount = document.getElementById('vfxStrip');
+    if (!mount || !window.VERTICALS) return;
+    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+    const items = window.VERTICALS
+      .map((v, idx) => ({ v, idx }))
+      .filter(({ v }) => ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx'));
+    if (!items.length) { mount.style.display = 'none'; return; }
+    mount.innerHTML = items.map(({ v, idx }) => {
+      const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+      const mp4   = 'https://' + CDN + '/' + v.guid + '/play_480p.mp4';
+      const cap   = v.label || v.title || '';
+      const tag   = (v.type === 'bts') ? 'BTS' : 'VFX';
+      return ''
+        + '<a class="vfx-short" href="work.html#shorts/' + idx + '?cat=vfx" data-vsrc="' + mp4 + '" style="background-image: url(\'' + thumb + '\');">'
+        +   '<video poster="' + thumb + '" muted loop playsinline preload="none"></video>'
+        +   '<span class="vfx-tag">' + tag + '</span>'
+        +   '<div class="vfx-overlay"></div>'
+        +   '<div class="vfx-meta"><div class="cap">' + cap + '</div></div>'
+        + '</a>';
+    }).join('')
+    + '<a class="vfx-cta" href="work.html#shorts/0?cat=vfx"><span class="arr">↗</span><span class="t">Open VFX feed</span><span class="m">All clips</span></a>';
+
+    // Hover-preview: lazy-attach src and play on hover
+    mount.querySelectorAll('.vfx-short').forEach(a => {
+      const vid = a.querySelector('video');
+      if (!vid) return;
+      a.addEventListener('mouseenter', () => {
+        if (!vid.src) vid.src = a.dataset.vsrc;
+        const p = vid.play(); if (p && p.catch) p.catch(()=>{});
+      });
+      a.addEventListener('mouseleave', () => {
+        vid.pause();
+        vid.currentTime = 0;
+      });
+    });
+  })();
+</script>
 <script>
   const pills = document.querySelectorAll('.pill');
   const cards = document.querySelectorAll('.svc-card');
