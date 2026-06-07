@@ -252,12 +252,13 @@
   .post-open-link { position: absolute; inset: 0; z-index: 1; }
 
   /* Vertical reel post — 9:16, click-through to shorts feed */
-  /* Verticals — full IG Reels card. The post box IS 9:16 so there's no left/right
-     letterbox; the video uses object-fit:cover so square clips zoom-in to fill
-     (matches the strip "thumbnail zoom" Jacob likes). max-height caps absurdly
-     tall posts on big monitors. */
-  .post-image-vertical { aspect-ratio: 9 / 16; max-height: 820px; background: #000; position: relative; display: block; overflow: hidden; }
-  .post-image-vertical video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Verticals — IG portrait card (4:5). The video fills the box via object-fit:
+     cover so tall 9:16 clips scale up and crop top/bottom (matches IG Reels in
+     the feed: see the middle of the vertical, tap-in for the full clip). The
+     box itself is full post width, so nothing is "pushed left" — no inner
+     centered stage. object-position: center keeps the active region middled. */
+  .post-image-vertical { aspect-ratio: 4 / 5; max-height: 750px; background: #000; position: relative; display: block; overflow: hidden; width: 100%; }
+  .post-image-vertical video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
   .post-image-vertical .reel-badge { position: absolute; top: 12px; right: 12px; padding: 4px 10px; background: rgba(0,0,0,0.65); color: #fff; font-size: 10px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; backdrop-filter: blur(6px); display: inline-flex; align-items: center; gap: 5px; z-index: 3; }
 
   /* Wide video post — 16:9 poster + play overlay, click opens Work tab at that video */
