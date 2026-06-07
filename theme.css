@@ -42,37 +42,40 @@ html[data-theme="phosphor"] {
   --leaf:  #ff5e7a;  /* alert pink — tertiary */
 }
 
-/* GRAPHITE — editorial monochrome. One burnt-orange accent against
-   pure greyscale. The most disciplined of the four. */
+/* GRAPHITE — editorial monochrome. Neutral charcoal greys + a single
+   razor-red accent. Pulls from high-end editorial design (Wallpaper,
+   Vogue) where the only chromatic mark is the red headline. */
 html[data-theme="graphite"] {
-  --bg: #0e0e0e; --bg-2: #161616; --bg-3: #1f1f1f;
-  --line: #2c2c2c; --line-2: #232323;
-  --ink: #ededed; --ink-2: #b8b8b8; --ink-3: #888888; --ink-4: #5a5a5a;
-  --amber: #d97852;  /* burnt orange — the only chromatic hue */
-  --rose:  #d97852;  /* same orange — graphite has one accent */
-  --leaf:  #888888;  /* neutral grey */
+  --bg: #131313; --bg-2: #1c1c1c; --bg-3: #262626;
+  --line: #353535; --line-2: #292929;
+  --ink: #e8e8e8; --ink-2: #b0b0b0; --ink-3: #808080; --ink-4: #525252;
+  --amber: #e5391f;  /* razor newsprint red — the only chromatic */
+  --rose:  #e5391f;
+  --leaf:  #808080;  /* mid-grey, no third color */
 }
 
-/* EMBER — glowing coals, dying fire. Charred near-black with hot
-   ember orange + coal red. Reads warmer/more aggressive than Slate. */
+/* EMBER — real fire, glowing coals. Saturated ember orange + deep
+   coal red on charred near-black with a warm red undertone. Copper
+   tertiary instead of yellow — closer to actual burning wood. */
 html[data-theme="ember"] {
-  --bg: #0c0604; --bg-2: #150906; --bg-3: #20100a;
-  --line: #3a1b10; --line-2: #2a130a;
-  --ink: #f8e3cf; --ink-2: #d1a08a; --ink-3: #8f6048; --ink-4: #5a3a2a;
-  --amber: #ff6b2e;  /* hot ember orange — primary */
-  --rose:  #ff3858;  /* coal red — secondary */
-  --leaf:  #ffb142;  /* fire yellow — tertiary */
+  --bg: #0a0503; --bg-2: #14080a; --bg-3: #1f0e10;
+  --line: #3a1d18; --line-2: #28140e;
+  --ink: #f5dcc4; --ink-2: #c89880; --ink-3: #87604a; --ink-4: #4f3528;
+  --amber: #ff4818;  /* hot ember orange — saturated, real fire */
+  --rose:  #c41818;  /* deep coal red */
+  --leaf:  #d97a2e;  /* copper glow — replaces the fire-yellow */
 }
 
-/* NEONOIR — rainy LA, Blade Runner sign-glow. Desaturated blue-purple
-   ground with hot magenta + electric cyan neon, warm amber for contrast. */
+/* NEONOIR — rainy LA at 3am, neon through fog. Muted dusty pink and
+   steel-cyan, dialed back from "billboard" to "wet sidewalk reflection".
+   Closer to Drive (2011) than vaporwave. */
 html[data-theme="neonoir"] {
-  --bg: #07060e; --bg-2: #0c0a18; --bg-3: #131127;
-  --line: #271f3f; --line-2: #1b1530;
-  --ink: #e8e4f5; --ink-2: #b0a8d0; --ink-3: #7a7298; --ink-4: #4a4570;
-  --amber: #ff2bd6;  /* hot neon magenta — primary */
-  --rose:  #2ce6ff;  /* electric cyan — secondary */
-  --leaf:  #ffb84a;  /* warm amber neon — tertiary */
+  --bg: #0a0814; --bg-2: #11101e; --bg-3: #1a1828;
+  --line: #2a2842; --line-2: #1d1c32;
+  --ink: #e2dfee; --ink-2: #a8a3c0; --ink-3: #75708e; --ink-4: #47435f;
+  --amber: #d957a8;  /* dusty rose-mauve — soft neon */
+  --rose:  #5fa8c4;  /* muted steel-cyan, not electric */
+  --leaf:  #d4a25c;  /* muted warm amber */
 }
 
 /* =============================================================
@@ -131,9 +134,9 @@ html[data-theme="neonoir"] {
 .theme-switcher .ts-sw[data-theme="slate"]::before    { background: linear-gradient(135deg, #f5b042 0%, #f5b042 50%, #e8589a 50%, #e8589a 100%); }
 .theme-switcher .ts-sw[data-theme="noir"]::before     { background: linear-gradient(135deg, #5dd4d0 0%, #5dd4d0 50%, #ff7385 50%, #ff7385 100%); }
 .theme-switcher .ts-sw[data-theme="phosphor"]::before { background: linear-gradient(135deg, #6ee49b 0%, #6ee49b 50%, #ffb84f 50%, #ffb84f 100%); }
-.theme-switcher .ts-sw[data-theme="graphite"]::before { background: linear-gradient(135deg, #d97852 0%, #d97852 50%, #888888 50%, #888888 100%); }
-.theme-switcher .ts-sw[data-theme="ember"]::before    { background: linear-gradient(135deg, #ff6b2e 0%, #ff6b2e 50%, #ff3858 50%, #ff3858 100%); }
-.theme-switcher .ts-sw[data-theme="neonoir"]::before  { background: linear-gradient(135deg, #ff2bd6 0%, #ff2bd6 50%, #2ce6ff 50%, #2ce6ff 100%); }
+.theme-switcher .ts-sw[data-theme="graphite"]::before { background: linear-gradient(135deg, #e5391f 0%, #e5391f 50%, #808080 50%, #808080 100%); }
+.theme-switcher .ts-sw[data-theme="ember"]::before    { background: linear-gradient(135deg, #ff4818 0%, #ff4818 50%, #c41818 50%, #c41818 100%); }
+.theme-switcher .ts-sw[data-theme="neonoir"]::before  { background: linear-gradient(135deg, #d957a8 0%, #d957a8 50%, #5fa8c4 50%, #5fa8c4 100%); }
 .theme-switcher .ts-name {
   font-size: 9px;
   color: var(--ink-3);
