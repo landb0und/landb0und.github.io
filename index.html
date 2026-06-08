@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Jacob Boehme — Director · VFX Editor · DP · Los Angeles</title>
-<link rel="stylesheet" href="theme.css?v=2">
-<script src="theme.js?v=2"></script>
+<link rel="stylesheet" href="theme.css?v=4">
+<script src="theme.js?v=4"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -646,7 +646,7 @@
       const thumb = window.verticalThumb(v);
       return `
       <a class="short" href="work.html#shorts/${i}" style="background: url('${thumb}') center/cover #000;">
-        <video data-vsrc="${window.verticalMp4(v)}" poster="${thumb}" muted loop playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; opacity:0; transition:opacity .3s;"></video>
+        <video data-vsrc="${window.verticalMp4(v)}" poster="${thumb}" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; opacity:0; transition:opacity .3s;"></video>
         <div class="short-overlay"></div>
         <span class="short-tag">▶</span>
         <div class="short-meta">
@@ -656,25 +656,28 @@
       </a>
     `;
     }).join('');
-    // Lazy autoplay: only load + play videos when they enter the viewport.
-    // Loading 10 MP4s simultaneously froze the renderer; this defers the
-    // network hit until each tile is actually visible.
-    // Fade the video in once it can play — until then the parent's bg-image
-    // thumbnail is what the user sees (works around Safari's strict autoplay).
-    function attachFadeIn(v) {
-      v.addEventListener('canplay', () => { v.style.opacity = '1'; }, { once: true });
+    // Lazy autoplay — Safari/iOS-friendly:
+    //   1. Element already carries declarative `muted autoplay playsinline
+    //      webkit-playsinline` — Safari refuses to autoplay otherwise.
+    //   2. preload="metadata" so the engine pre-fetches enough to start.
+    //   3. We DON'T call .play() synchronously after setting src — Safari often
+    //      rejects with a "load was interrupted" error. Instead we wait for
+    //      `loadedmetadata` and try then, falling back to `canplay`.
+    function safariSafePlay(v) {
+      v.muted = true;
+      v.playsInline = true;
+      const go = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+      if (v.readyState >= 1) go();
+      else v.addEventListener('loadedmetadata', go, { once: true });
+      v.addEventListener('canplay', () => { v.style.opacity = '1'; go(); }, { once: true });
     }
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach(e => {
           const v = e.target;
           if (e.isIntersecting) {
-            if (!v.src) {
-              v.src = v.dataset.vsrc;
-              attachFadeIn(v);
-              v.load();
-            }
-            v.play().catch(() => {});
+            if (!v.src && v.dataset.vsrc) { v.src = v.dataset.vsrc; v.load(); }
+            safariSafePlay(v);
           } else {
             v.pause();
           }
@@ -682,7 +685,7 @@
       }, { threshold: 0.25 });
       container.querySelectorAll('video[data-vsrc]').forEach(v => io.observe(v));
     } else {
-      container.querySelectorAll('video[data-vsrc]').forEach(v => { v.src = v.dataset.vsrc; attachFadeIn(v); v.play().catch(() => {}); });
+      container.querySelectorAll('video[data-vsrc]').forEach(v => { v.src = v.dataset.vsrc; v.load(); safariSafePlay(v); });
     }
   }
   renderVerticalsStrip();
@@ -1066,7 +1069,7 @@
     // Full 9:16 card, no centered stage wrapper — video fills the post box.
     return '<div class="post">' + postHead(item)
       + '<div class="post-image-vertical" style="background-image: url(\'' + thumb + '\'); background-size: cover; background-position: center;">'
-      +   '<video data-src="' + mp4 + '" poster="' + thumb + '" muted loop playsinline preload="none" webkit-playsinline></video>'
+      +   '<video data-src="' + mp4 + '" poster="' + thumb + '" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>'
       +   '<a class="post-open-link" href="' + href + '" aria-label="Open in shorts feed"></a>'
       +   '<button type="button" class="post-vol-btn" aria-label="Toggle sound">' + SVG_MUTE + '</button>'
       +   '<span class="reel-badge">▶ Reel</span>'
@@ -1084,7 +1087,7 @@
       const mp4 = bunnyMp4(item.embedId);
       return '<div class="post">' + postHead(item)
         + '<div class="post-image-video" style="background-image: url(\'' + thumb + '\');">'
-        +   '<video data-src="' + mp4 + '" poster="' + thumb + '" muted loop playsinline preload="none" webkit-playsinline></video>'
+        +   '<video data-src="' + mp4 + '" poster="' + thumb + '" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>'
         +   '<a class="post-open-link" href="' + href + '" aria-label="Open full player"></a>'
         +   '<button type="button" class="post-vol-btn" aria-label="Toggle sound">' + SVG_MUTE + '</button>'
         +   (featured ? '<span class="feat-badge">★ Featured</span>' : '')
@@ -1157,6 +1160,21 @@
     function ensureLoaded(v) {
       if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.load(); }
     }
+    // Safari-safe play: re-assert muted + playsinline right before play() so
+    // iOS doesn't reject; if metadata isn't ready yet, wait for it then retry.
+    // Also retry on canplay since some Safari versions reject the first call
+    // even after loadedmetadata fires.
+    function safePlay(v) {
+      v.muted = true;
+      v.playsInline = true;
+      const tryGo = () => { const p = v.play(); if (p && p.catch) p.catch(()=>{}); };
+      if (v.readyState >= 1) tryGo();
+      else v.addEventListener('loadedmetadata', tryGo, { once: true });
+      if (!v.dataset.canplayHooked) {
+        v.dataset.canplayHooked = '1';
+        v.addEventListener('canplay', tryGo);
+      }
+    }
 
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => {
@@ -1164,8 +1182,7 @@
         visibility.set(v, en.intersectionRatio);
         if (en.intersectionRatio >= 0.55) {
           ensureLoaded(v);
-          const playP = v.play();
-          if (playP && playP.catch) playP.catch(()=>{});
+          safePlay(v);
         } else if (en.intersectionRatio < 0.35) {
           v.pause();
           // releasing audio? recompute owner

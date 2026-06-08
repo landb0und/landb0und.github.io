@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>jacobboehme.com — VFX &amp; AI</title>
-<link rel="stylesheet" href="theme.css?v=2">
-<script src="theme.js?v=2"></script>
+<link rel="stylesheet" href="theme.css?v=4">
+<script src="theme.js?v=4"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -573,7 +573,7 @@
       const tag   = (v.type === 'bts') ? 'BTS' : 'VFX';
       return ''
         + '<a class="vfx-short" href="work.html#shorts/' + idx + '?cat=vfx" data-vsrc="' + mp4 + '" style="background-image: url(\'' + thumb + '\');">'
-        +   '<video poster="' + thumb + '" muted loop playsinline preload="none"></video>'
+        +   '<video poster="' + thumb + '" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>'
         +   '<span class="vfx-tag">' + tag + '</span>'
         +   '<div class="vfx-overlay"></div>'
         +   '<div class="vfx-meta"><div class="cap">' + cap + '</div></div>'
