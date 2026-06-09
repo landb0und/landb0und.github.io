@@ -18,6 +18,7 @@
   body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%); }
   a { color: inherit; text-decoration: none; }
 
+  /* NAV */
   .nav { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg-2); border-right: 1px solid var(--line); padding: 24px 0; z-index: 20; display: flex; flex-direction: column; }
   .nav-brand { padding: 0 22px 22px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
   .nav-brand .logo { font-size: 15px; font-weight: 900; letter-spacing: 0.04em; color: var(--amber); }
@@ -32,11 +33,12 @@
   .nav-soc:not(:last-child) { border-bottom: 1px solid var(--line-2); }
   .nav-soc-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
   .nav-soc-icon svg { width: 16px; height: 16px; }
-  .nav-soc-icon.tt svg { color: #000; }
-  .nav-soc-icon.ig svg, .nav-soc-icon.li svg { color: #fff; }
   .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); }
+  .nav-soc-icon.tt svg { color: #000; }
   .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); }
+  .nav-soc-icon.ig svg { color: #fff; }
   .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
+  .nav-soc-icon.li svg { color: #fff; }
   .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
   .nav-soc-info { flex: 1; min-width: 0; }
   .nav-soc-h { font-size: 11px; color: var(--ink); font-weight: 700; line-height: 1.1; }
@@ -48,6 +50,7 @@
 
   .main { margin-left: 220px; padding: 40px 40px 60px; max-width: 1400px; position: relative; z-index: 2; }
 
+  /* HERO */
   .page-hero { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--line-2); }
   .page-hero h1 { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; color: var(--ink); line-height: 0.95; margin-bottom: 12px; }
   .page-hero h1 .amp { color: var(--amber); font-family: Georgia, serif; font-style: italic; font-weight: 700; }
@@ -64,126 +67,7 @@
   .section-head .label { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
   .section-head .hint { margin-left: auto; font-size: 11px; color: var(--ink-4); font-family: Georgia, serif; font-style: italic; }
 
-  /* BEFORE / AFTER */
-  .ba-container { width: 100%; height: 380px; position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); cursor: ew-resize; user-select: none; }
-  .ba-before { position: absolute; inset: 0; background: url('https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg') center/cover; filter: saturate(0.15) contrast(0.8) brightness(1.1); }
-  .ba-after  { position: absolute; inset: 0; background: url('https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg') center/cover; clip-path: inset(0 50% 0 0); transition: none; }
-  .ba-scan { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); pointer-events: none; z-index: 2; }
-  .ba-handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--amber); left: 50%; transform: translateX(-50%); z-index: 10; cursor: ew-resize; }
-  .ba-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; }
-  .ba-grip svg { width: 14px; height: 14px; }
-  .ba-label { position: absolute; bottom: 12px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 9px; background: rgba(0,0,0,0.65); border-radius: 3px; font-weight: 700; z-index: 4; }
-  .ba-label.before { left: 14px; color: var(--ink-4); }
-  .ba-label.after  { right: 14px; color: var(--amber); }
-  .ba-credit { margin-top: 8px; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
-
-  /* SERVICES */
-  .pills { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
-  .pill { padding: 6px 14px; border: 1px solid var(--line); border-radius: 100px; font-size: 10px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: var(--ink-3); transition: all .15s; font-weight: 700; }
-  .pill:hover { border-color: var(--amber); color: var(--amber); }
-  .pill.active { background: rgba(245,176,66,0.1); border-color: var(--amber); color: var(--amber); }
-  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .svc-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; transition: opacity .2s, border-color .2s; }
-  .svc-card:hover { border-color: rgba(245,176,66,0.3); }
-  .svc-card.dim { opacity: 0.15; }
-  .svc-card.lit { border-color: rgba(245,176,66,0.4); }
-  .svc-card .svc-type { font-size: 9px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
-  .svc-card .svc-name { font-size: 13px; font-weight: 900; color: var(--ink); margin-bottom: 5px; }
-  .svc-card .svc-desc { font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; margin-bottom: 8px; }
-  .svc-card .svc-tech { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.05em; line-height: 1.5; }
-  .svc-card .svc-ex { font-size: 9px; color: var(--ink-2); font-style: italic; margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--line-2); font-family: Georgia, serif; line-height: 1.4; }
-  .svc-card.svc-wide { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr 1fr; gap: 20px; align-items: center; }
-  .svc-card.svc-wide .svc-col { border-left: 1px solid var(--line-2); padding-left: 20px; }
-  .cgi-note { margin-top: 12px; padding: 14px 16px; background: rgba(232,88,154,0.04); border: 1px solid rgba(232,88,154,0.12); border-radius: 8px; display: grid; grid-template-columns: 1fr 1px 1fr; gap: 16px; }
-  .cgi-div { background: rgba(232,88,154,0.12); }
-  .cgi-col .cl { font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
-  .cgi-col.comp .cl { color: var(--amber); }
-  .cgi-col.cgi-s .cl { color: var(--rose); }
-  .cgi-col .cd { font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; margin-bottom: 4px; }
-  .cgi-col .ce { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.05em; }
-  .cgi-foot { grid-column: 1 / -1; padding-top: 10px; border-top: 1px solid rgba(232,88,154,0.1); font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; text-align: center; }
-
-  /* FEATURED BREAKDOWN */
-  .feat-breakdown { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
-  .breakdown-player { background: #000; border: 1px solid var(--line); border-radius: 10px; aspect-ratio: 16/9; position: relative; overflow: hidden; cursor: pointer; }
-  .breakdown-player::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, #2a1f15 0%, #5b3018 30%, #c97f2e 70%, #f5b042 100%); opacity: 0.5; }
-  .breakdown-player::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); }
-  .bp-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; z-index: 2; }
-  .bp-play::after { content: ''; width: 0; height: 0; border-left: 22px solid var(--bg); border-top: 13px solid transparent; border-bottom: 13px solid transparent; margin-left: 4px; }
-  .bp-tag { position: absolute; top: 14px; left: 14px; z-index: 3; padding: 4px 10px; background: rgba(0,0,0,0.7); border: 1px solid var(--amber); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; border-radius: 3px; }
-  .bp-meta { position: absolute; left: 18px; right: 18px; bottom: 16px; z-index: 3; }
-  .bp-meta .t { font-size: 24px; font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.01em; }
-  .bp-meta .m { font-size: 11px; color: #d4c8ad; margin-top: 4px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
-  .breakdown-info { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; }
-  .breakdown-info h3 { font-size: 18px; font-weight: 900; color: var(--ink); }
-  .breakdown-info .sub { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; }
-  .breakdown-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; background: rgba(245,176,66,0.05); border: 1px solid rgba(245,176,66,0.2); border-radius: 6px; }
-  .breakdown-stats .v { font-size: 22px; font-weight: 900; color: var(--ink); letter-spacing: -0.02em; line-height: 1; font-family: 'SF Mono', Menlo, monospace; }
-  .breakdown-stats .v .plus { color: var(--amber); }
-  .breakdown-stats .k { font-size: 9px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; margin-top: 4px; }
-  .breakdown-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-  .breakdown-tags span { padding: 4px 10px; background: var(--bg-3); border: 1px solid var(--line-2); border-radius: 100px; font-size: 10px; color: var(--ink-2); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; }
-
-  /* PROJECT GRID */
-  .proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .proj { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; transition: all .15s; }
-  .proj:hover { border-color: var(--amber); transform: translateY(-2px); }
-  .proj.feat-proj { grid-column: span 2; }
-  .proj-thumb { aspect-ratio: 16/9; position: relative; overflow: hidden; }
-  .proj.feat-proj .proj-thumb { aspect-ratio: 16/7; }
-  .proj-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .proj-thumb::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.02) 3px 4px); z-index: 1; }
-  .proj-thumb::after { content: '▶'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 24px; text-shadow: 0 2px 6px rgba(0,0,0,0.6); opacity: 0; transition: opacity .15s; z-index: 2; }
-  .proj:hover .proj-thumb::after { opacity: 1; }
-  .proj-bg-1 { background: linear-gradient(135deg, #1a0a08 0%, #4a1a10 50%, #c4533a 100%); }
-  .proj-bg-2 { background: linear-gradient(135deg, #2a1f15 0%, #5b3018 30%, #c97f2e 100%); }
-  .proj-bg-3 { background: linear-gradient(160deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); }
-  .proj-bg-4 { background: linear-gradient(45deg, #0a0806 0%, #2a1810 50%, #c4533a 100%); }
-  .proj-bg-5 { background: linear-gradient(180deg, #1f2a18 0%, #4a6a2a 60%, #c5e060 100%); }
-  .proj-bg-6 { background: linear-gradient(120deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
-  .proj-info { padding: 14px 16px; }
-  .proj-info .tag { font-size: 9px; color: var(--amber); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
-  .proj-info .t { font-size: 15px; font-weight: 900; color: var(--ink); line-height: 1.2; margin-bottom: 4px; }
-  .proj-info .m { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
-  .proj-info .shots { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 2px 8px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.25); color: var(--amber); font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; border-radius: 100px; }
-  .proj-info .feat-badge { display: inline-flex; align-items: center; margin-top: 8px; padding: 3px 10px; background: rgba(245,176,66,0.12); border: 1px solid rgba(245,176,66,0.35); color: var(--amber); font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; border-radius: 100px; }
-
-  /* AI WORKFLOWS */
-  .ai-note { padding: 11px 16px; background: rgba(245,176,66,0.04); border: 1px solid rgba(245,176,66,0.12); border-radius: 8px; margin-bottom: 14px; font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; text-align: center; }
-  .ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .ai-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 22px 24px; }
-  .ai-card .head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .ai-card .badge { padding: 3px 10px; background: rgba(232,88,154,0.12); border: 1px solid rgba(232,88,154,0.4); color: var(--rose); font-size: 9px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; border-radius: 100px; }
-  .ai-card h3 { font-size: 17px; font-weight: 900; color: var(--ink); }
-  .ai-card .desc { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; line-height: 1.6; font-style: italic; margin-bottom: 14px; }
-  .ai-card .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .ai-card .step { padding: 6px 12px; background: var(--bg-3); border: 1px solid var(--line-2); border-radius: 6px; font-size: 11px; color: var(--ink); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; font-weight: 700; }
-  .ai-card .arr { color: var(--amber); font-family: 'SF Mono', Menlo, monospace; }
-  .ai-card .tools { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-2); font-size: 10px; color: var(--ink-4); letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
-  .ai-card .tools strong { color: var(--ink-2); }
-
-  /* STACK */
-  .stack { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .stack-col { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
-  .stack-col h4 { font-size: 10px; color: var(--amber); letter-spacing: 0.24em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
-  .stack-col ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-  .stack-col li { font-size: 12px; color: var(--ink); font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
-  .stack-col li .yr { color: var(--ink-4); font-weight: 500; margin-left: 6px; font-size: 10px; }
-
-  .cta-band { margin-top: 40px; padding: 32px 36px; background: linear-gradient(135deg, rgba(245,176,66,0.08) 0%, var(--bg-2) 60%); border: 1px solid rgba(245,176,66,0.3); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-  .cta-band .text h3 { font-size: 22px; font-weight: 900; color: var(--ink); margin-bottom: 6px; }
-  .cta-band .text p { font-size: 13px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; }
-  .cta-band a { padding: 14px 22px; background: var(--amber); color: var(--bg); font-weight: 800; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 6px; font-family: 'SF Mono', Menlo, monospace; transition: all .15s; white-space: nowrap; }
-  .cta-band a:hover { background: #ffc555; transform: translateY(-1px); }
-
-  .footer { margin-top: 50px; padding-top: 26px; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
-  .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
-  .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
-  .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
-
-  /* VFX VERTICALS STRIP — mirrors home shorts strip layout. Each tile deep-links
-     into work.html#shorts/<idx>?cat=vfx so the shorts feed lands on that clip
-     with the VFX category pill auto-selected. */
+  /* VFX REELS STRIP */
   .vfx-strip-head { display: flex; align-items: baseline; gap: 14px; margin: 6px 0 12px; }
   .vfx-strip-head .num { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; }
   .vfx-strip-head .lbl { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
@@ -195,7 +79,8 @@
   .vfx-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
   .vfx-strip .vfx-short { flex: 0 0 180px; aspect-ratio: 9/16; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--line); transition: transform .15s, border-color .15s; text-decoration: none; background: #000 center/cover no-repeat; }
   .vfx-strip .vfx-short:hover { transform: translateY(-3px); border-color: var(--amber); }
-  .vfx-strip .vfx-short video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .vfx-strip .vfx-short video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .3s; }
+  .vfx-strip .vfx-short video.live { opacity: 1; }
   .vfx-strip .vfx-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); z-index: 2; pointer-events: none; }
   .vfx-strip .vfx-meta { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 3; }
   .vfx-strip .vfx-meta .cap { font-size: 11px; color: #fff; font-weight: 700; line-height: 1.25; }
@@ -205,6 +90,107 @@
   .vfx-strip .vfx-cta .arr { font-size: 24px; }
   .vfx-strip .vfx-cta .t { font-size: 13px; font-weight: 800; letter-spacing: 0.04em; }
   .vfx-strip .vfx-cta .m { font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* BEFORE / AFTER */
+  .ba-container { width: 100%; height: 380px; position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); cursor: ew-resize; user-select: none; }
+  .ba-before { position: absolute; inset: 0; background: url('https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg') center/cover; filter: saturate(0.1) contrast(0.85) brightness(1.1); }
+  .ba-after  { position: absolute; inset: 0; background: url('https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg') center/cover; clip-path: inset(0 50% 0 0); }
+  .ba-scan { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); pointer-events: none; z-index: 2; }
+  .ba-handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--amber); left: 50%; transform: translateX(-50%); z-index: 10; cursor: ew-resize; }
+  .ba-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; }
+  .ba-grip svg { width: 14px; height: 14px; }
+  .ba-label { position: absolute; bottom: 12px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 9px; background: rgba(0,0,0,0.65); border-radius: 3px; font-weight: 700; z-index: 4; }
+  .ba-label.before { left: 14px; color: var(--ink-4); }
+  .ba-label.after  { right: 14px; color: var(--amber); }
+  .ba-credit { margin-top: 8px; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
+
+  /* WHAT DO YOU NEED */
+  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .svc-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; transition: border-color .15s; }
+  .svc-card:hover { border-color: rgba(245,176,66,0.3); }
+  .svc-card.onset { background: transparent; border: 1px dashed rgba(245,176,66,0.3); }
+  .svc-card.onset .svc-type { color: var(--ink-3); }
+  .svc-card.onset .svc-name { color: var(--ink-2); }
+  .svc-type { font-size: 9px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
+  .svc-name { font-size: 13px; font-weight: 900; color: var(--ink); margin-bottom: 5px; }
+  .svc-desc { font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; margin-bottom: 8px; }
+  .svc-tech { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.05em; line-height: 1.5; }
+  .ai-chip { display: inline-flex; align-items: center; gap: 4px; margin-top: 9px; padding: 3px 8px; background: rgba(232,88,154,0.1); border: 1px solid rgba(232,88,154,0.35); color: var(--rose); border-radius: 100px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; }
+  .ai-chip::before { content: '⚡'; }
+  .onset-badge { display: inline-flex; align-items: center; gap: 5px; margin-top: 9px; padding: 3px 9px; background: rgba(245,176,66,0.06); border: 1px solid rgba(245,176,66,0.2); color: var(--ink-3); border-radius: 100px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; }
+  .onset-badge::before { content: '●'; color: var(--amber); font-size: 7px; }
+
+  /* THE LAYERS */
+  .layers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .lcard { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: 150px 1fr; transition: border-color .3s; }
+  .lcard.lit { border-color: rgba(245,176,66,0.35); }
+  .lcard-img { position: relative; overflow: hidden; }
+  .lcard-img img, .lcard-img .lcard-ph { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter .7s ease; }
+  .l-tag { position: absolute; top: 8px; left: 8px; z-index: 2; padding: 3px 7px; background: rgba(0,0,0,0.85); border: 1px solid var(--amber); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; border-radius: 3px; }
+  .lcard-body { padding: 13px 15px; display: flex; flex-direction: column; gap: 8px; }
+  .lcard-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .lcard-project { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+  .hrs-badge .hv { font-size: 15px; font-weight: 900; color: var(--ink); font-family: 'SF Mono', Menlo, monospace; line-height: 1; text-align: right; }
+  .hrs-badge .hk { font-size: 8px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; text-align: right; }
+  .lcard-steps { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .lstep { display: grid; grid-template-columns: 20px 1fr; gap: 4px; align-items: baseline; }
+  .lstep-n { font-family: 'SF Mono', Menlo, monospace; font-size: 9px; font-weight: 800; letter-spacing: 0.1em; transition: color .5s; }
+  .lstep-t { line-height: 1.3; transition: color .5s, font-size .4s, font-weight .4s; }
+  .lstep.active .lstep-n { color: var(--amber); }
+  .lstep.active .lstep-t { font-size: 12px; font-weight: 700; color: var(--ink); }
+  .lstep.done .lstep-n { color: var(--ink-4); }
+  .lstep.done .lstep-t { font-size: 11px; color: var(--ink-4); }
+  .lstep.inactive .lstep-n { color: var(--line); }
+  .lstep.inactive .lstep-t { font-size: 11px; color: var(--line); }
+  .lcard-bar { height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .lcard-fill { height: 100%; background: var(--amber); border-radius: 2px; transition: width .7s ease; }
+
+  /* FILM STRIP */
+  .strip-outer { position: relative; border-radius: 5px; overflow: hidden; border: 1px solid rgba(245,176,66,0.35); box-shadow: 0 0 0 1px rgba(0,0,0,0.8), inset 0 1px 0 rgba(245,176,66,0.1), inset 0 -1px 0 rgba(245,176,66,0.1); }
+  .strip-fade-l, .strip-fade-r { position: absolute; top: 0; bottom: 0; width: 90px; z-index: 5; pointer-events: none; }
+  .strip-fade-l { left: 0; background: linear-gradient(90deg, var(--bg) 0%, rgba(18,16,12,0.8) 40%, transparent 100%); }
+  .strip-fade-r { right: 0; background: linear-gradient(270deg, var(--bg) 0%, rgba(18,16,12,0.8) 40%, transparent 100%); }
+  .strip-scroll { overflow-x: auto; overflow-y: hidden; cursor: grab; scrollbar-width: none; background: #070402; }
+  .strip-scroll::-webkit-scrollbar { display: none; }
+  .strip-scroll:active { cursor: grabbing; }
+  .strip-body { display: flex; flex-direction: column; width: max-content; }
+  .perf-row { height: 26px; background: #0c0806; position: relative; flex-shrink: 0; border-bottom: 1px solid rgba(245,176,66,0.08); }
+  .perf-row.bot { border-bottom: none; border-top: 1px solid rgba(245,176,66,0.08); }
+  .perf-hole { position: absolute; top: 50%; transform: translateY(-50%); width: 12px; height: 17px; background: #000; border-radius: 2px; border: 1px solid rgba(245,176,66,0.5); box-shadow: 0 0 6px rgba(245,176,66,0.15), inset 0 1px 0 rgba(245,176,66,0.08); }
+  .frames-row { display: flex; gap: 2px; background: #070402; }
+  .frame { flex: 0 0 272px; display: flex; flex-direction: column; cursor: pointer; transition: transform .3s ease; }
+  .frame:hover { transform: translateY(-1px); }
+  .frame-img { aspect-ratio: 16/9; position: relative; overflow: hidden; background: #0a0806; }
+  .frame-img img, .frame-img .frame-pg { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+  .frame:hover .frame-img img, .frame:hover .frame-img .frame-pg { transform: scale(1.04); }
+  .frame-img::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,0.4) 0%, transparent 18%, transparent 82%, rgba(0,0,0,0.4) 100%), linear-gradient(180deg, rgba(0,0,0,0.08) 0%, transparent 25%, transparent 55%, rgba(0,0,0,0.8) 100%); }
+  .frame-meta { background: #0a0603; padding: 8px 11px 9px; border-top: 1px solid rgba(245,176,66,0); transition: border-color .2s; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .frame:hover .frame-meta { border-top-color: rgba(245,176,66,0.4); }
+  .frame-num { font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: rgba(245,176,66,0.4); letter-spacing: 0.12em; flex-shrink: 0; transition: color .2s; }
+  .frame:hover .frame-num { color: rgba(245,176,66,0.8); }
+  .frame-title { font-size: 11px; font-weight: 800; color: var(--ink); letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; text-align: center; }
+  .frame-detail { font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: rgba(241,230,205,0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; transition: color .2s; }
+  .frame:hover .frame-detail { color: rgba(241,230,205,0.6); }
+
+  /* STACK */
+  .stack { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stack-col { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+  .stack-col h4 { font-size: 10px; color: var(--amber); letter-spacing: 0.24em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
+  .stack-col ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .stack-col li { font-size: 12px; color: var(--ink); font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
+  .stack-col li .yr { color: var(--ink-4); font-weight: 500; margin-left: 6px; font-size: 10px; }
+
+  /* CTA */
+  .cta-band { margin-top: 40px; padding: 32px 36px; background: linear-gradient(135deg, rgba(245,176,66,0.08) 0%, var(--bg-2) 60%); border: 1px solid rgba(245,176,66,0.3); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .cta-band .text h3 { font-size: 22px; font-weight: 900; color: var(--ink); margin-bottom: 6px; }
+  .cta-band .text p { font-size: 13px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; }
+  .cta-band a { padding: 14px 22px; background: var(--amber); color: var(--bg); font-weight: 800; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 6px; font-family: 'SF Mono', Menlo, monospace; transition: all .15s; white-space: nowrap; }
+  .cta-band a:hover { background: #ffc555; transform: translateY(-1px); }
+
+  .footer { margin-top: 50px; padding-top: 26px; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
+  .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
+  .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
 </head>
 <body>
@@ -236,6 +222,7 @@
 
 <main class="main">
 
+  <!-- HERO -->
   <div class="page-hero">
     <div>
       <h1>VFX <span class="amp">&amp;</span> AI</h1>
@@ -248,9 +235,7 @@
     </div>
   </div>
 
-  <!-- VFX VERTICALS — pulled from window.VERTICALS where role/tags mention VFX.
-       Click → work.html#shorts/<idx>?cat=vfx so the shorts feed opens at the
-       clip with the VFX filter pre-selected. -->
+  <!-- 01. VFX REELS — rendered from window.VERTICALS via data.js -->
   <div class="vfx-strip-head">
     <span class="num">—</span>
     <span class="lbl">VFX Reels</span>
@@ -259,10 +244,10 @@
   </div>
   <div class="vfx-strip" id="vfxStrip"></div>
 
-  <!-- 01. BEFORE / AFTER -->
+  <!-- 02. BEFORE / AFTER -->
   <div class="section">
     <div class="section-head">
-      <span class="num">01.</span>
+      <span class="num">02.</span>
       <span class="label">Before → After</span>
       <span class="hint">Drag the handle</span>
     </div>
@@ -281,224 +266,90 @@
     <div class="ba-credit">Chloe Star — Stunt Fall · Wire removal · 2024 · Jacob Boehme / Landbound</div>
   </div>
 
-  <!-- 02. WHAT DO YOU NEED -->
-  <div class="section">
-    <div class="section-head">
-      <span class="num">02.</span>
-      <span class="label">What do you need?</span>
-      <span class="hint">Filter by project type</span>
-    </div>
-    <div class="pills">
-      <div class="pill" data-type="mv">Music Video</div>
-      <div class="pill" data-type="comm">Commercial</div>
-      <div class="pill" data-type="feat">Feature / Short</div>
-      <div class="pill" data-type="creator">Creator Content</div>
-    </div>
-    <div class="svc-grid">
-      <div class="svc-card" data-types="mv,comm,feat,creator">
-        <div class="svc-type">Cleanup</div>
-        <div class="svc-name">Make It Disappear</div>
-        <div class="svc-desc">Wires. Rigs. A crew member who walked through. Removed.</div>
-        <div class="svc-tech">Mocha · Nuke · After Effects · Runway</div>
-        <div class="svc-ex">Chloe Star — stunt fall wire removal · 2024</div>
-      </div>
-      <div class="svc-card" data-types="mv,comm,feat">
-        <div class="svc-type">Compositing</div>
-        <div class="svc-name">Wrong Location</div>
-        <div class="svc-desc">Sky's off. Background doesn't fit. Fixed in post.</div>
-        <div class="svc-tech">Nuke · After Effects · Kling · Blender</div>
-        <div class="svc-ex">The First Circle — 250+ shots, set extensions · 2023</div>
-      </div>
-      <div class="svc-card" data-types="mv,comm,feat">
-        <div class="svc-type">CGI</div>
-        <div class="svc-name">Built From Nothing</div>
-        <div class="svc-desc">3D element that wasn't on set. Object, creature, environment. Built, lit, dropped in.</div>
-        <div class="svc-tech">Blender · Unreal · Houdini · Nuke</div>
-        <div class="svc-ex">The First Circle — creature work · 2023</div>
-      </div>
-      <div class="svc-card" data-types="mv,comm,feat">
-        <div class="svc-type">Stunt &amp; Action</div>
-        <div class="svc-name">Make It Land</div>
-        <div class="svc-desc">The stunt happened. Now make it read. Blood, debris, impact. Augmented so it hits.</div>
-        <div class="svc-tech">Nuke · After Effects · Blender</div>
-        <div class="svc-ex">LL Cool J — "Passion," VFX &nbsp;·&nbsp; Chloe Star · 2024</div>
-      </div>
-      <div class="svc-card" data-types="mv,comm,creator">
-        <div class="svc-type">AI-Assisted</div>
-        <div class="svc-name">Tight Timeline</div>
-        <div class="svc-desc">Some shots run faster through an AI pipeline, same quality bar. Used when it makes sense.</div>
-        <div class="svc-tech">Runway · Kling · Wonder → Nuke / AE</div>
-        <div class="svc-ex" style="color:var(--ink-4)">Same result. Faster turnaround on the right shots.</div>
-      </div>
-      <div class="svc-card" data-types="comm,feat">
-        <div class="svc-type">Supervision</div>
-        <div class="svc-name">I'm On Set</div>
-        <div class="svc-desc">Problems found on set are cheap. Problems found in post are expensive.</div>
-        <div class="svc-tech">Shot planning · Reference capture · Grey balls · Plates</div>
-        <div class="svc-ex">The First Circle — 250 shots · 2023 &nbsp;·&nbsp; LL Cool J — "Passion"</div>
-      </div>
-      <div class="svc-card svc-wide" data-types="mv,comm,feat,creator">
-        <div>
-          <div class="svc-type">Pre-Production</div>
-          <div class="svc-name">Pitch It First</div>
-        </div>
-        <div class="svc-col">
-          <div class="svc-desc">Need the label or brand to see it before you shoot it. Treatment frames and pre-vis, fast.</div>
-          <div class="svc-tech">Midjourney · Kling · Photoshop · After Effects</div>
-        </div>
-        <div class="svc-col">
-          <div class="svc-ex" style="margin:0;padding:0;border:none;">CHILDSTAR · Bleed — treatment pre-vis · 2025</div>
-        </div>
-      </div>
-    </div>
-    <div class="cgi-note">
-      <div class="cgi-col comp">
-        <div class="cl">Compositing</div>
-        <div class="cd">Working with footage that exists. Integrating, removing, replacing, extending.</div>
-        <div class="ce">Most jobs. Included in standard packages.</div>
-      </div>
-      <div class="cgi-div"></div>
-      <div class="cgi-col cgi-s">
-        <div class="cl">CGI</div>
-        <div class="cd">Building 3D assets from scratch. Modeled, rigged, rendered, composited. Entirely different scope.</div>
-        <div class="ce">Quoted separately. Not assumed.</div>
-      </div>
-      <div class="cgi-foot">Not sure which you need? Describe the shot and I'll tell you.</div>
-    </div>
-  </div>
-
-  <!-- 03. FEATURED BREAKDOWN -->
+  <!-- 03. WHAT DO YOU NEED -->
   <div class="section">
     <div class="section-head">
       <span class="num">03.</span>
-      <span class="label">Featured Breakdown</span>
-      <span class="hint">Before / After supervised by JB</span>
+      <span class="label">What do you need?</span>
+      <span class="hint">Not sure? Describe the shot and I'll tell you.</span>
     </div>
-    <div class="feat-breakdown">
-      <div class="breakdown-player">
-        <span class="bp-tag">★ Reel · 2:14</span>
-        <div class="bp-play"></div>
-        <div class="bp-meta">
-          <div class="t">The First Circle — VFX Reel</div>
-          <div class="m">Feature · 2023 · 250 shots supervised</div>
-        </div>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-type">Cleanup</div>
+        <div class="svc-name">Make It Disappear</div>
+        <div class="svc-desc">Wires. Rigs. A crew member who walked through. Removed.</div>
+        <div class="svc-tech">Seen in: Chloe Star stunt fall · 2024</div>
+        <div class="ai-chip">AI-accelerated option</div>
       </div>
-      <div class="breakdown-info">
-        <h3>The First Circle</h3>
-        <div class="sub">Indie feature, no traditional VFX budget. 250 shots: set extensions, comp, sky replacement, creature work. Fraction of the typical cost.</div>
-        <div class="breakdown-stats">
-          <div class="item"><div class="v">250<span class="plus">+</span></div><div class="k">Shots</div></div>
-          <div class="item"><div class="v">94<span class="plus">m</span></div><div class="k">Runtime</div></div>
-          <div class="item"><div class="v">2023</div><div class="k">Year</div></div>
-          <div class="item"><div class="v">SUP</div><div class="k">Role</div></div>
-        </div>
-        <div class="breakdown-tags">
-          <span>NUKE</span><span>AFTER EFX</span><span>BLENDER</span><span>UNREAL</span><span>RESOLVE</span>
-        </div>
+      <div class="svc-card">
+        <div class="svc-type">Compositing</div>
+        <div class="svc-name">Wrong Location</div>
+        <div class="svc-desc">Sky's off. Background doesn't fit. Fixed in post.</div>
+        <div class="svc-tech">Seen in: The First Circle · 250+ shots · 2023</div>
+        <div class="ai-chip">AI-accelerated option</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-type">CGI</div>
+        <div class="svc-name">Built From Nothing</div>
+        <div class="svc-desc">3D element that wasn't on set. Object, creature, environment. Built, lit, dropped in.</div>
+        <div class="svc-tech">Seen in: The First Circle · creature work · 2023</div>
+        <div class="ai-chip">AI-accelerated option</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-type">Stunt &amp; Action</div>
+        <div class="svc-name">Make It Land</div>
+        <div class="svc-desc">The stunt happened. Now make it read. Blood, debris, impact. Augmented so it hits.</div>
+        <div class="svc-tech">Seen in: LL Cool J "Passion" · Chloe Star · 2024</div>
+        <div class="ai-chip">AI-accelerated option</div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-type">Pre-Production</div>
+        <div class="svc-name">Pitch It First</div>
+        <div class="svc-desc">Treatment frames and pre-vis before you shoot. Label needs to see it first.</div>
+        <div class="svc-tech">Seen in: CHILDSTAR · Bleed treatments · 2025</div>
+        <div class="ai-chip">AI-accelerated option</div>
+      </div>
+      <div class="svc-card onset">
+        <div class="svc-type">Supervision</div>
+        <div class="svc-name">I'm On Set</div>
+        <div class="svc-desc">Problems found on set are cheap. Problems found in post are expensive.</div>
+        <div class="svc-tech">Seen in: The First Circle · LL Cool J · 2023–24</div>
+        <div class="onset-badge">Physical Production</div>
       </div>
     </div>
   </div>
 
-  <!-- 04. SELECTED VFX WORK -->
+  <!-- 04. THE LAYERS -->
   <div class="section">
     <div class="section-head">
       <span class="num">04.</span>
-      <span class="label">Selected VFX Work</span>
-      <span class="hint">Click any tile to play</span>
+      <span class="label">The Layers</span>
+      <span class="hint">How a shot gets built</span>
     </div>
-    <div class="proj-grid">
-      <a class="proj feat-proj" href="work.html">
-        <div class="proj-thumb proj-bg-1"></div>
-        <div class="proj-info">
-          <div class="tag">Hip-Hop · VFX</div>
-          <div class="t">LL Cool J — "Passion"</div>
-          <div class="m">VFX Supervisor</div>
-          <span class="feat-badge">★ Featured Credit</span>
-        </div>
-      </a>
-      <a class="proj" href="work.html">
-        <div class="proj-thumb"><img src="https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg" alt="CHILDSTAR" loading="lazy"></div>
-        <div class="proj-info">
-          <div class="tag">Music Video · 2025</div>
-          <div class="t">CHILDSTAR: Final Act</div>
-          <div class="m">Director + EP + VFX</div>
-          <span class="shots">24 shots</span>
-        </div>
-      </a>
-      <a class="proj" href="work.html">
-        <div class="proj-thumb"><img src="https://vz-5dfccea4-b84.b-cdn.net/b58d5348-c997-4338-8a9d-f83302bf948a/thumbnail.jpg" alt="Secrets" loading="lazy"></div>
-        <div class="proj-info">
-          <div class="tag">Music Video · 2024</div>
-          <div class="t">Secrets</div>
-          <div class="m">Dir + DP + Ed + VFX</div>
-        </div>
-      </a>
-      <a class="proj" href="work.html">
-        <div class="proj-thumb"><img src="https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/thumbnail.jpg" alt="Bleed" loading="lazy"></div>
-        <div class="proj-info">
-          <div class="tag">Music Video · 2025</div>
-          <div class="t">Bleed</div>
-          <div class="m">Dir + Ed + VFX</div>
-          <span class="shots">15 shots</span>
-        </div>
-      </a>
-      <a class="proj" href="work.html">
-        <div class="proj-thumb"><img src="https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg" alt="Call Me When You're Home" loading="lazy"></div>
-        <div class="proj-info">
-          <div class="tag">Music Video · 2024</div>
-          <div class="t">Call Me When You're Home</div>
-          <div class="m">Dir + DP + Ed + VFX</div>
-        </div>
-      </a>
-      <a class="proj" href="work.html">
-        <div class="proj-thumb"><img src="https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg" alt="Forgive & Forget" loading="lazy"></div>
-        <div class="proj-info">
-          <div class="tag">Short Film · 2022</div>
-          <div class="t">Forgive &amp; Forget</div>
-          <div class="m">VFX Supervisor · SCREAMFEST</div>
-          <span class="shots">42 shots</span>
-        </div>
-      </a>
-    </div>
+    <div class="layers-grid" id="layersGrid"></div>
   </div>
 
-  <!-- 05. AI WORKFLOWS -->
+  <!-- 05. SELECTED VFX WORK — film strip -->
   <div class="section">
     <div class="section-head">
       <span class="num">05.</span>
-      <span class="label">AI Workflows</span>
-      <span class="hint">Where AI earns its place</span>
+      <span class="label">Selected VFX Work</span>
+      <span class="hint">Drag to explore</span>
     </div>
-    <div class="ai-note">I use AI the same way I use Nuke. When it's the right tool for the shot. Not by default.</div>
-    <div class="ai-grid">
-      <div class="ai-card">
-        <div class="head"><span class="badge">★ Concept → Plate</span><h3>Pre-vis at Speed</h3></div>
-        <div class="desc">Treatment images and shot pre-vis in hours, not weeks. Used on CHILDSTAR and Bleed to pitch fully-realized treatments.</div>
-        <div class="flow"><span class="step">Reference</span><span class="arr">→</span><span class="step">MJ</span><span class="arr">→</span><span class="step">Comp</span><span class="arr">→</span><span class="step">Plate</span></div>
-        <div class="tools"><strong>Tools:</strong> Midjourney · Kling · Magnific · Photoshop · After Effects</div>
-      </div>
-      <div class="ai-card">
-        <div class="head"><span class="badge">★ AI-VFX</span><h3>Generative Comp</h3></div>
-        <div class="desc">Plate generation, sky replacement, set extension, texture work via AI. Fed back into Nuke for traditional comp. Hybrid pipeline.</div>
-        <div class="flow"><span class="step">Footage</span><span class="arr">→</span><span class="step">Kling/Runway</span><span class="arr">→</span><span class="step">Nuke comp</span><span class="arr">→</span><span class="step">Final</span></div>
-        <div class="tools"><strong>Tools:</strong> Kling · Runway · Nuke · After Effects · Resolve</div>
-      </div>
-      <div class="ai-card">
-        <div class="head"><span class="badge">★ Production</span><h3>AI-Assisted Storyboarding</h3></div>
-        <div class="desc">Consistent style frames per shot, shot list pre-vis, lookbook fragments. Treatment turned around fast.</div>
-        <div class="flow"><span class="step">Script</span><span class="arr">→</span><span class="step">MJ · ChatGPT</span><span class="arr">→</span><span class="step">Lookbook</span><span class="arr">→</span><span class="step">Pitch</span></div>
-        <div class="tools"><strong>Tools:</strong> Midjourney · ChatGPT · Figma · Photoshop</div>
-      </div>
-      <div class="ai-card">
-        <div class="head"><span class="badge">★ Post</span><h3>Roto + Object Removal</h3></div>
-        <div class="desc">AI-driven roto and object removal pre-bake. Saves days on shots that used to take weeks. Refined in Nuke.</div>
-        <div class="flow"><span class="step">Footage</span><span class="arr">→</span><span class="step">Runway/Wonder</span><span class="arr">→</span><span class="step">Nuke refine</span><span class="arr">→</span><span class="step">Final</span></div>
-        <div class="tools"><strong>Tools:</strong> Runway · Wonder Dynamics · Nuke · Mocha</div>
+    <div class="strip-outer">
+      <div class="strip-fade-l"></div>
+      <div class="strip-fade-r"></div>
+      <div class="strip-scroll" id="filmScroll">
+        <div class="strip-body" id="stripBody">
+          <div class="perf-row" id="perfTop"></div>
+          <div class="frames-row" id="filmRow"></div>
+          <div class="perf-row bot" id="perfBot"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 06. STACK -->
+  <!-- 06. THE STACK -->
   <div class="section">
     <div class="section-head">
       <span class="num">06.</span>
@@ -554,66 +405,74 @@
 
 <script src="data.js?v=3"></script>
 <script>
-  // ============= VFX VERTICALS STRIP =============
-  // Read VERTICALS, keep only those tagged VFX (role/tags), preserve the index
-  // from the original array so deep links into work.html#shorts/<idx> still land
-  // on the right slide. Each tile lazy-loads its MP4 on hover for cheap preview.
-  (function renderVfxStrip() {
-    const mount = document.getElementById('vfxStrip');
-    if (!mount || !window.VERTICALS) return;
-    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
-    const items = window.VERTICALS
-      .map((v, idx) => ({ v, idx }))
-      .filter(({ v }) => ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx'));
-    if (!items.length) { mount.style.display = 'none'; return; }
-    mount.innerHTML = items.map(({ v, idx }) => {
-      const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
-      const mp4   = 'https://' + CDN + '/' + v.guid + '/play_480p.mp4';
-      const cap   = v.label || v.title || '';
-      const tag   = (v.type === 'bts') ? 'BTS' : 'VFX';
-      return ''
-        + '<a class="vfx-short" href="work.html#shorts/' + idx + '?cat=vfx" data-vsrc="' + mp4 + '" style="background-image: url(\'' + thumb + '\');">'
-        +   '<video poster="' + thumb + '" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>'
-        +   '<span class="vfx-tag">' + tag + '</span>'
-        +   '<div class="vfx-overlay"></div>'
-        +   '<div class="vfx-meta"><div class="cap">' + cap + '</div></div>'
-        + '</a>';
-    }).join('')
-    + '<a class="vfx-cta" href="work.html#shorts/0?cat=vfx"><span class="arr">↗</span><span class="t">Open VFX feed</span><span class="m">All clips</span></a>';
+// ── VFX REELS STRIP (from data.js VERTICALS) ──
+// Verticals tagged VFX render here. Thumbnails auto-animate when they scroll
+// into view (matches the home strip behavior). Safari/iOS: declarative
+// muted+autoplay+playsinline, preload=metadata, play() fired on loadedmetadata
+// since sync play() right after setting src is silently rejected on iOS.
+(function renderVfxStrip() {
+  const mount = document.getElementById('vfxStrip');
+  if (!mount || !window.VERTICALS) return;
+  const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+  const items = window.VERTICALS
+    .map((v, idx) => ({ v, idx }))
+    .filter(({ v }) => ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx'));
+  if (!items.length) { mount.style.display = 'none'; return; }
+  mount.innerHTML = items.map(({ v, idx }) => {
+    const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+    const mp4   = 'https://' + CDN + '/' + v.guid + '/play_480p.mp4';
+    const cap   = v.label || v.title || '';
+    const tag   = (v.type === 'bts') ? 'BTS' : 'VFX';
+    return '<a class="vfx-short" href="work.html#shorts/' + idx + '?cat=vfx" data-vsrc="' + mp4 + '" style="background-image: url(\'' + thumb + '\');">'
+      + '<video poster="' + thumb + '" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>'
+      + '<span class="vfx-tag">' + tag + '</span>'
+      + '<div class="vfx-overlay"></div>'
+      + '<div class="vfx-meta"><div class="cap">' + cap + '</div></div>'
+      + '</a>';
+  }).join('')
+  + '<a class="vfx-cta" href="work.html#shorts/0?cat=vfx"><span class="arr">↗</span><span class="t">Open VFX feed</span><span class="m">All clips</span></a>';
 
-    // Hover-preview: lazy-attach src and play on hover
+  // Safari-safe play helper — reasserts muted+playsinline and waits for
+  // loadedmetadata/canplay before calling play() (iOS Safari rejects sync play
+  // immediately after src assignment).
+  function safePlay(v) {
+    v.muted = true;
+    v.playsInline = true;
+    const go = () => { const p = v.play(); if (p && p.catch) p.catch(()=>{}); };
+    if (v.readyState >= 1) go();
+    else v.addEventListener('loadedmetadata', go, { once: true });
+    v.addEventListener('canplay', () => { v.classList.add('live'); go(); }, { once: true });
+  }
+
+  // IntersectionObserver: load + play when tile enters viewport, pause when it
+  // leaves. Loading every MP4 at once would crush mobile bandwidth + memory.
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const a = e.target;
+        const vid = a.querySelector('video');
+        if (!vid) return;
+        if (e.isIntersecting) {
+          if (!vid.src && a.dataset.vsrc) { vid.src = a.dataset.vsrc; vid.load(); }
+          safePlay(vid);
+        } else {
+          vid.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    mount.querySelectorAll('.vfx-short').forEach(a => io.observe(a));
+  } else {
     mount.querySelectorAll('.vfx-short').forEach(a => {
       const vid = a.querySelector('video');
       if (!vid) return;
-      a.addEventListener('mouseenter', () => {
-        if (!vid.src) vid.src = a.dataset.vsrc;
-        const p = vid.play(); if (p && p.catch) p.catch(()=>{});
-      });
-      a.addEventListener('mouseleave', () => {
-        vid.pause();
-        vid.currentTime = 0;
-      });
+      if (!vid.src && a.dataset.vsrc) { vid.src = a.dataset.vsrc; vid.load(); }
+      safePlay(vid);
     });
-  })();
-</script>
-<script>
-  const pills = document.querySelectorAll('.pill');
-  const cards = document.querySelectorAll('.svc-card');
-  pills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      const wasActive = pill.classList.contains('active');
-      pills.forEach(p => p.classList.remove('active'));
-      cards.forEach(c => c.classList.remove('dim', 'lit'));
-      if (!wasActive) {
-        pill.classList.add('active');
-        const t = pill.dataset.type;
-        cards.forEach(c => {
-          c.dataset.types.split(',').includes(t) ? c.classList.add('lit') : c.classList.add('dim');
-        });
-      }
-    });
-  });
+  }
+})();
 
+// ── BEFORE / AFTER ──
+(function initBA() {
   const cont = document.getElementById('baContainer');
   const after = document.getElementById('baAfter');
   const handle = document.getElementById('baHandle');
@@ -630,6 +489,137 @@
   handle.addEventListener('touchstart', e => { drag = true; e.preventDefault(); }, { passive: false });
   document.addEventListener('touchend', () => drag = false);
   document.addEventListener('touchmove', e => { if (drag) pos(e.touches[0].clientX); }, { passive: true });
+})();
+
+// ── THE LAYERS ──
+const SHOTS = [
+  {
+    tag: 'Wire Removal', project: 'Chloe Star · 2024', hrs: '3–5',
+    img: 'https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg',
+    filters: ['saturate(0) brightness(1.05) contrast(0.85)', 'saturate(0.2) contrast(1.1)', 'saturate(0.55)', 'saturate(1)'],
+    steps: ['Raw plate — wire still in frame', 'Track wire motion frame by frame', 'Rebuild background behind it', 'Match grain · shot is clean']
+  },
+  {
+    tag: 'Particle FX', project: 'Bleed · Christian Gates · 2025', hrs: '4–6',
+    img: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/thumbnail.jpg',
+    filters: ['saturate(0) brightness(1.0)', 'saturate(0.3) contrast(1.15)', 'saturate(0.7) brightness(1.05)', 'saturate(1)'],
+    steps: ['Raw plate — no effects', 'Build particle system for that motion', 'Match lighting to footage', 'Comp at the right depth · done']
+  },
+  {
+    tag: 'Set Extension', project: 'Surfaces · 2024', hrs: '2–4',
+    img: 'https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg',
+    filters: ['saturate(0.2) contrast(0.9)', 'saturate(0.2) contrast(1.6) brightness(1.1)', 'saturate(0.6)', 'saturate(1)'],
+    steps: ['Original sky and set as shot', 'Key out background cleanly', 'Paint in new sky · extend the set', 'Match light to talent · invisible']
+  },
+  {
+    tag: 'CGI Paper', project: 'TBD', hrs: '8–15',
+    ph: 'linear-gradient(160deg,#1a0a18,#3a1040,#8b3a9e)',
+    filters: ['brightness(0.35) saturate(0)', 'brightness(0.55) saturate(0.3)', 'brightness(0.78) saturate(0.65)', 'brightness(1) saturate(1)'],
+    steps: ['Empty plate — nothing there yet', 'Paper geometry built and rigged in 3D', 'Physics sim run · shadows rendered', 'Comped into plate · reads as real']
+  },
+  {
+    tag: 'Adding People', project: 'TBD', hrs: '15–30',
+    ph: 'linear-gradient(160deg,#0a1a10,#1a3a28,#2a6a44)',
+    filters: ['brightness(0.35) saturate(0)', 'brightness(0.55) saturate(0.3)', 'brightness(0.78) saturate(0.6)', 'brightness(1) saturate(1)'],
+    steps: ['Clean plate — location is empty', 'Figures positioned · animation locked', 'Rendered with scene lighting', "Integrated · no one knows they're CG"]
+  }
+];
+
+const MAX_STEPS = Math.max(...SHOTS.map(s => s.steps.length));
+let layerTick = 0;
+
+(function buildLayers() {
+  document.getElementById('layersGrid').innerHTML = SHOTS.map((s, i) => {
+    const media = s.img
+      ? '<img class="lcard-cm" src="' + s.img + '" alt="" style="filter:' + s.filters[0] + '">'
+      : '<div class="lcard-cm lcard-ph" style="background:' + s.ph + ';filter:' + s.filters[0] + ';"></div>';
+    const steps = s.steps.map((t, j) =>
+      '<div class="lstep ' + (j === 0 ? 'active' : 'inactive') + '"><span class="lstep-n">0' + (j + 1) + '</span><span class="lstep-t">' + t + '</span></div>'
+    ).join('');
+    const span = i === 4 ? ' style="grid-column:1/-1;grid-template-columns:150px 1fr;"' : '';
+    return '<div class="lcard" id="lc' + i + '"' + span + '>'
+      + '<div class="lcard-img">' + media + '<span class="l-tag">' + s.tag + '</span></div>'
+      + '<div class="lcard-body">'
+      + '<div class="lcard-top"><div class="lcard-project">' + s.project + '</div><div class="hrs-badge"><div class="hv">' + s.hrs + '</div><div class="hk">hrs / shot</div></div></div>'
+      + '<div class="lcard-steps">' + steps + '</div>'
+      + '<div class="lcard-bar"><div class="lcard-fill" style="width:0%"></div></div>'
+      + '</div></div>';
+  }).join('');
+})();
+
+function updateLayers() {
+  SHOTS.forEach((s, i) => {
+    const cur = Math.min(layerTick, s.steps.length - 1);
+    const card = document.getElementById('lc' + i);
+    if (!card) return;
+    card.querySelector('.lcard-cm').style.filter = s.filters[cur];
+    card.classList.toggle('lit', cur > 0);
+    card.querySelector('.lcard-fill').style.width = ((cur / (s.steps.length - 1)) * 100) + '%';
+    card.querySelectorAll('.lstep').forEach((el, j) => {
+      el.classList.remove('active', 'done', 'inactive');
+      el.classList.add(j < cur ? 'done' : j === cur ? 'active' : 'inactive');
+    });
+  });
+}
+setInterval(() => {
+  layerTick = layerTick >= MAX_STEPS - 1 ? 0 : layerTick + 1;
+  updateLayers();
+}, 2400);
+
+// ── FILM STRIP ──
+// NOTE: curated selection — refactor to render from window.CLIENTS if needed
+const FILM_FRAMES = [
+  { num: '001', title: 'LL Cool J — "Passion"',     detail: 'VFX SUP · 2024',   pg: 'linear-gradient(135deg,#1a0a08,#4a1a10,#c4533a)' },
+  { num: '002', title: 'CHILDSTAR: Final Act',      detail: '24 SHOTS · 2025',  src: 'https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg' },
+  { num: '003', title: 'Secrets',                   detail: 'DIR+VFX · 2024',   src: 'https://vz-5dfccea4-b84.b-cdn.net/b58d5348-c997-4338-8a9d-f83302bf948a/thumbnail.jpg' },
+  { num: '004', title: 'Bleed',                     detail: '15 SHOTS · 2025',  src: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/thumbnail.jpg' },
+  { num: '005', title: "Call Me When You're Home",  detail: 'DIR+VFX · 2024',   src: 'https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg' },
+  { num: '006', title: 'Forgive &amp; Forget',      detail: '42 SHOTS · 2022',  src: 'https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg' }
+];
+
+function makeFilmFrame(f) {
+  const img = f.src
+    ? '<img src="' + f.src + '" alt="">'
+    : '<div class="frame-pg" style="background:' + f.pg + '"></div>';
+  return '<div class="frame">'
+    + '<div class="frame-img">' + img + '</div>'
+    + '<div class="frame-meta">'
+    + '<span class="frame-num">' + f.num + '</span>'
+    + '<span class="frame-title">' + f.title + '</span>'
+    + '<span class="frame-detail">' + f.detail + '</span>'
+    + '</div></div>';
+}
+
+document.getElementById('filmRow').innerHTML = [...FILM_FRAMES, ...FILM_FRAMES].map(makeFilmFrame).join('');
+
+function renderPerfs() {
+  const totalW = document.getElementById('filmRow').scrollWidth;
+  const pitch = 40;
+  const holes = Math.ceil(totalW / pitch) + 1;
+  const html = Array.from({ length: holes }, (_, i) =>
+    '<div class="perf-hole" style="left:' + (i * pitch + 14) + 'px"></div>'
+  ).join('');
+  document.getElementById('perfTop').innerHTML = html;
+  document.getElementById('perfBot').innerHTML = html;
+}
+setTimeout(renderPerfs, 400);
+
+const filmScroll = document.getElementById('filmScroll');
+let filmPaused = false, filmTimer;
+
+(function filmTick() {
+  if (!filmPaused) {
+    filmScroll.scrollLeft += 0.5;
+    if (filmScroll.scrollLeft >= filmScroll.scrollWidth / 2)
+      filmScroll.scrollLeft -= filmScroll.scrollWidth / 2;
+  }
+  requestAnimationFrame(filmTick);
+})();
+
+filmScroll.addEventListener('mouseenter', () => filmPaused = true);
+filmScroll.addEventListener('mouseleave', () => filmPaused = false);
+filmScroll.addEventListener('touchstart', () => { filmPaused = true; clearTimeout(filmTimer); }, { passive: true });
+filmScroll.addEventListener('touchend', () => { filmTimer = setTimeout(() => filmPaused = false, 1500); }, { passive: true });
 </script>
 </body>
 </html>
