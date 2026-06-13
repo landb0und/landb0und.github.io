@@ -16,7 +16,13 @@ window.CLIENTS = [
     thumb: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
     media: [
       { type: 'video', embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'] },
-      { type: 'video', embedId: 'e8775058-272b-48b5-85a9-37410c6cbb25', bunny: true, title: 'HIGH SOCIAL', year: '2025', tags: ['Director','Editor','Vertical'] }
+      { type: 'video', embedId: 'e8775058-272b-48b5-85a9-37410c6cbb25', bunny: true, title: 'HIGH SOCIAL', year: '2025', tags: ['Director','Editor','Vertical'] },
+      // Performance video series — YouTube placeholders until Bunny mirrors are up
+      { type: 'video', embedId: 't7WlAiX_q20', bunny: false, title: 'Proud (Performance Video)',                year: '2024', tags: ['Director','Editor'] },
+      { type: 'video', embedId: 'ggCloEnel3Y', bunny: false, title: 'Fade (Performance Video)',                 year: '2024', tags: ['Director','Editor'] },
+      { type: 'video', embedId: 'LIuSiZpGBGU', bunny: false, title: 'Behavioral Problems (Performance Video)',  year: '2024', tags: ['Director','Editor'] },
+      { type: 'video', embedId: 'Ggfg6q2N1l0', bunny: false, title: 'Homesick (Performance Video)',             year: '2024', tags: ['Director','Editor'] },
+      { type: 'video', embedId: 'SnZ13OfKdPg', bunny: false, title: 'Brand New (Performance Video)',            year: '2024', tags: ['Director','Editor'] }
     ]
   },
   {
@@ -181,10 +187,28 @@ window.CLIENTS = [
     short: 'Allison H.',
     handle: '@allisonhagendorf',
     role: 'Director · Editor · Photographer',
-    blurb: 'The Allison Hagendorf Show — S4 in production. BTS film stills from the Yungblud episode (w/ Billy Corgan of Smashing Pumpkins).',
+    blurb: 'The Allison Hagendorf Show — S4 in production. Long-form artist interviews + BTS film stills.',
     palette: 'sa-6',
     thumb: 'photos/clients/allison-yungblud-bts/yungblud-bts-9.jpg',
     media: [
+      // ── Allison Hagendorf Show — episode list ──
+      // Shared `playlistId` collapses these into ONE "playlist" card on the
+      // Work-tab Up Next so 7+ episodes don't dominate the rail. The card
+      // expands into an episode picker that swaps the main player on click.
+      // `featured: true` marks the cover episode; the rest sort by date.
+      { type: 'video', embedId: '3aoeWVc5NHw', bunny: false, title: 'At Home With Dogstar — Keanu Reeves, Bret Domrose & Rob Mailhouse',
+        sub: 'Keanu Reeves on new music & brotherhood', year: '2024', tags: ['Director','Editor'],
+        playlistId: 'allison-show', featured: true, guest: 'Keanu Reeves · Dogstar' },
+      { type: 'video', embedId: '4Z_VwUSr_4w', bunny: false, title: 'An Evening with YUNGBLUD — The Raw, Unfiltered Truth',
+        year: '2024', tags: ['Director','Editor'], playlistId: 'allison-show', guest: 'YUNGBLUD' },
+      { type: 'video', embedId: 'DduBlVnlOOM', bunny: false, title: 'At Home With Pete Wentz & Vienna Vienna — Making Your Own Lane',
+        year: '2024', tags: ['Director','Editor'], playlistId: 'allison-show', guest: 'Pete Wentz · Vienna Vienna' },
+      { type: 'video', embedId: 'tFUowdlsAqE', bunny: false, title: 'At Home With All Time Low — 20 Years of Friendship, Music & Mayhem',
+        year: '2024', tags: ['Director','Editor'], playlistId: 'allison-show', guest: 'All Time Low' },
+      { type: 'video', embedId: '26yi4nH3f6Y', bunny: false, title: 'At Home With Chris Daughtry — The Journey Back From The Bottom',
+        year: '2024', tags: ['Director','Editor'], playlistId: 'allison-show', guest: 'Chris Daughtry' },
+      { type: 'video', embedId: 'AT9jAiQ7HIo', bunny: false, title: 'At Home With Zakk Wylde — Ozzy Stories, New Music & Doing What You Love',
+        year: '2024', tags: ['Director','Editor'], playlistId: 'allison-show', guest: 'Zakk Wylde' },
       // Only the frames Allison appears in — others surface here via the
       // auto-dedupe on photo.html which picks up multi-author shared srcs.
       { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-1.jpg', title: 'Hagendorf Show BTS — 01', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Yungblud, Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
@@ -205,6 +229,7 @@ window.CLIENTS = [
     thumb: null,
     media: [
       { type: 'video', embedId: '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3', bunny: true, title: 'Bby', sub: '<strong>Two Feet</strong> · Performance · 2025', year: '2025', tags: ['Director','DP','Editor'] },
+      { type: 'video', embedId: '9b89734d-ba4e-4a50-ba2e-d713b5795cac', bunny: true, title: 'Bathtub', sub: '<strong>Two Feet</strong> · Live Performance · 2025', year: '2025', tags: ['Director','Editor'] },
       { type: 'photo', src: 'photos/clients/two-feet-1.jpg', title: 'Press portrait — 1', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/two-feet-2.jpg', title: 'Press portrait — 2', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/two-feet-3.jpg', title: 'Press portrait — 3', year: '2024', tags: ['Photographer'] },
@@ -373,11 +398,12 @@ window.CLIENTS = [
     name: 'No Love For The Middle Child',
     short: 'No Love',
     handle: '@nolovemiddlechild',
-    role: 'Photographer',
-    blurb: 'Press and promo photography.',
+    role: 'Director · Editor · Photographer',
+    blurb: 'Music video direction + press and promo photography.',
     palette: 'sa-9',
     thumb: null,
     media: [
+      { type: 'video', embedId: '4f84800d-811b-4218-83a4-56880a993486', bunny: true, title: 'Broken Wings', sub: '<strong>No Love For The Middle Child</strong> · Music Video · 2025', year: '2025', tags: ['Director','Editor'] },
       { type: 'photo', src: 'photos/clients/no-love-1.jpg', title: 'Session — 1', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/no-love-2.jpg', title: 'Session — 2', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/no-love-3.jpg', title: 'Session — 3', year: '2024', tags: ['Photographer'] },

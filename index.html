@@ -219,6 +219,14 @@
     .feed-rail { display: none; }
     .home-feed { max-width: 580px; margin: 0 auto; }
   }
+  /* Floating back-to-top button — appears once the user has scrolled past the
+     first feed post. Pinned left of the feed (where there's empty whitespace
+     before the rail breakpoint kicks in). Hidden until needed. */
+  .feed-jump-top { position: fixed; left: 248px; bottom: 32px; width: 44px; height: 44px; border-radius: 50%; background: var(--amber); color: var(--bg); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s, transform .2s, background .15s; z-index: 80; }
+  .feed-jump-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .feed-jump-top:hover { background: #ffc555; }
+  .feed-jump-top svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  @media (max-width: 980px) { .feed-jump-top { left: auto; right: 18px; } }
   .post { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   .post-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
   .post-avatar { width: 36px; height: 36px; border-radius: 50%; padding: 2px; background: linear-gradient(45deg, var(--amber), var(--rose)); flex-shrink: 0; cursor: pointer; text-decoration: none; }
@@ -546,7 +554,7 @@
             <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
           </div>
           <div class="profile-proof">
-            <strong>3× ADDY</strong><span class="sep">·</span>SCREAMFEST<span class="sep">·</span>Super Bowl rotation<span class="sep">·</span>TikTok Partner<span class="sep">·</span>Chinese Theatre
+            <strong>3× ADDY</strong><span class="sep">·</span>SCREAMFEST<span class="sep">·</span>Super Bowl rotation<span class="sep">·</span>TikTok Partner<span class="sep">·</span>Chinese Theatre Premiere<span class="sep">·</span>B.A. Film Production
           </div>
           <div class="profile-stats">
             <div class="stat">
@@ -575,25 +583,6 @@
         <a href="hire.html" class="pa-btn secondary"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span> Book a call</a>
       </div>
 
-      <button class="expand-toggle quiet" onclick="document.getElementById('heroCard').classList.toggle('open')">
-        <span class="lbl-closed">See selected work by role</span>
-        <span class="lbl-open">Hide</span>
-        <span class="arr">▼</span>
-      </button>
-
-      <div class="expanded">
-        <div class="expanded-inner">
-          <div class="selected-h">
-            <span class="lbl">Selected Work<span class="sub">— by role</span></span>
-            <a class="all" href="work.html">See all →</a>
-          </div>
-          <div id="heroRoleLanes"></div>
-          <div class="ai-footnote">
-            <strong>AI / AI-VFX practice</strong>
-            Independent AI / VFX practice — not on every project. Offered on request for previs and select post. Toolkit listed on <a href="hire.html" style="color: var(--amber); text-decoration: none;">Hire</a>.
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -720,87 +709,6 @@
     mount.innerHTML = allTile + items;
   }
   renderHomeStories();
-
-  // ============= SELECTED WORK BY ROLE =============
-  // Source-of-truth project list with role array. Each project gets surfaced
-  // in every lane where I played that role — adding a new project here makes
-  // it auto-appear under every matching lane.
-  const PROJECTS = [
-    { title: 'CHILDSTAR: Final Act',     client: 'Grace VanderWaal',         year: '2025',   embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, fallback: 'amber', roles: ['Direction','EP','VFX','Editing'], thumbOverride: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg' },
-    { title: "Call Me When You're Home", client: 'Surfaces',                 year: '2024',   embedId: '8d669bba-e779-4860-84b1-ffc3055d1b96', bunny: true, fallback: 'amber', roles: ['Direction','DP','Editing','VFX'] },
-    { title: 'Blame It All On Me',       client: 'Surfaces × Mike Posner',   year: '2025',   embedId: '6b38b59e-aedd-4208-a1fc-ff85adb30021', bunny: true, fallback: 'rose',  roles: ['Direction','DP','Editing'] },
-    { title: 'Secrets',                  client: 'Christian Gates',          year: '2024',   embedId: 'b58d5348-c997-4338-8a9d-f83302bf948a', bunny: true, fallback: 'rose',  roles: ['Direction','DP','Editing','VFX'], thumbOverride: 'photos/stills/secrets.png' },
-    { title: 'Bleed',                    client: 'Christian Gates',          year: '2025',   embedId: '9e6f327c-1d83-4545-b88c-3193d7dd4274', bunny: true, fallback: 'rose',  roles: ['Direction','Editing'] },
-    { title: 'Bby',                      client: 'Two Feet',                 year: '2025',   embedId: '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3', bunny: true, fallback: 'rose',  roles: ['Direction','DP','Editing'] },
-    { title: "Director's Reel",          client: 'Landbound',                year: '2025',   embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true, fallback: 'amber', roles: ['Direction','DP','VFX','Editing'] },
-    { title: 'Forgive & Forget',         client: 'SCREAMFEST · Short Film',  year: '2022',   embedId: 'oD42T1md068',                          bunny: false, fallback: 'rose', roles: ['Direction','DP','Editing','VFX','Writer'] },
-    { title: 'The First Circle',         client: 'Feature · 94 min',         year: '2023',   embedId: null,                                   bunny: false, fallback: 'leaf', roles: ['VFX'] },
-    { title: 'Allison Hagendorf Show S4',client: 'Series · Active',          year: '2025–26',embedId: null,                                   bunny: false, fallback: 'amber',roles: ['Direction','Editing'] },
-    { title: 'Super Bowl Spot',          client: 'Commercial · 5-state',     year: '2024',   embedId: null,                                   bunny: false, fallback: 'amber',roles: ['Direction'] },
-    { title: 'Dreams',                   client: 'Surfaces',                 year: '2023',   embedId: null,                                   bunny: false, fallback: 'amber',roles: ['DP'] }
-  ];
-
-  const LANES = [
-    { key: 'Direction', label: 'Direction' },
-    { key: 'DP',        label: 'DP / Cinematography' },
-    { key: 'Editing',   label: 'Editing' },
-    { key: 'VFX',       label: 'VFX' },
-    { key: 'EP',        label: 'Producing · EP' }
-  ];
-
-  function renderRoleLanes() {
-    const mount = document.getElementById('heroRoleLanes');
-    if (!mount) return;
-    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
-    // Bunny thumbnails on these two specific GUIDs return 404 on the public CDN
-    // even after re-uploading from the dashboard. Use the gradient fallback for them.
-    const knownBroken = new Set(['fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', 'b58d5348-c997-4338-8a9d-f83302bf948a']);
-
-    function tile(p) {
-      const href = p.embedId
-        ? (p.bunny ? 'work.html#video/' + p.embedId : 'work.html#video/' + p.embedId)
-        : 'work.html';
-      // thumbOverride wins for entries where Bunny's URL is broken (CHILDSTAR + Secrets)
-      // — points at the YouTube thumbnail of the real released video instead.
-      const broken = !p.thumbOverride && (!p.embedId || knownBroken.has(p.embedId));
-      let thumbStyle = '';
-      if (p.thumbOverride) thumbStyle = "background-image: url('" + p.thumbOverride + "');";
-      else if (!broken && p.bunny) thumbStyle = "background-image: url('https://" + CDN + "/" + p.embedId + "/thumbnail.jpg');";
-      else if (p.embedId && !p.bunny) thumbStyle = "background-image: url('https://img.youtube.com/vi/" + p.embedId + "/maxresdefault.jpg');";
-      const fallbackCls = broken ? (' fallback-' + (p.fallback || 'amber')) : '';
-      const overlay = broken ? ('<div class="ltile-overlay">' + p.title + '</div>') : '';
-      return ''
-        + '<a class="ltile" href="' + href + '">'
-        +   '<div class="ltile-thumb' + fallbackCls + '" style="' + thumbStyle + '">'
-        +     '<span class="ltile-yr">' + p.year + '</span>'
-        +     overlay
-        +   '</div>'
-        +   '<div class="ltile-body">'
-        +     '<div class="ltile-title">' + p.title + '</div>'
-        +     '<div class="ltile-client">' + p.client + '</div>'
-        +   '</div>'
-        + '</a>';
-    }
-
-    const html = LANES.map(lane => {
-      const matches = PROJECTS.filter(p => p.roles.includes(lane.key));
-      if (!matches.length) return '';
-      const word = matches.length === 1 ? 'project' : 'projects';
-      return ''
-        + '<div class="role-lane">'
-        +   '<div class="lane-head">'
-        +     '<span class="nm">' + lane.label + '</span>'
-        +     '<span class="ct">' + matches.length + ' ' + word + '</span>'
-        +   '</div>'
-        +   '<div class="lane-tiles">'
-        +     matches.map(tile).join('')
-        +   '</div>'
-        + '</div>';
-    }).join('');
-
-    mount.innerHTML = html;
-  }
-  renderRoleLanes();
 
   // ============= UNIFIED HOME FEED =============
   // Mixes photos, verticals, and wide-screen video into a single shuffled
@@ -1224,6 +1132,47 @@
   (function() {
     const clearBtn = document.getElementById('railClearFilter');
     if (clearBtn) clearBtn.addEventListener('click', () => setHomeFilter('all'));
+  })();
+
+  // ============= FEED BACK-TO-TOP =============
+  // Appears once the user has scrolled past the FIRST feed post. Clicking it
+  // smooth-scrolls to the top of the Feed section (not the page) so the section
+  // header stays in view. Uses IntersectionObserver to watch the first post —
+  // when it leaves the viewport the button fades in.
+  (function() {
+    const feed = document.getElementById('homeFeed');
+    if (!feed) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'feed-jump-top';
+    btn.setAttribute('aria-label', 'Back to top of feed');
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>';
+    document.body.appendChild(btn);
+    btn.addEventListener('click', () => {
+      const head = document.querySelector('.page-section-head .label');
+      // Find the "— Feed" section header to land just above the feed
+      const target = Array.from(document.querySelectorAll('.page-section-head')).find(el => /feed/i.test(el.textContent));
+      const top = target ? target.getBoundingClientRect().top + window.scrollY - 24 : 0;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+    // Watch the first post; once it leaves the viewport, show the button
+    function attachObserver() {
+      const first = feed.querySelector('.post');
+      if (!first || !('IntersectionObserver' in window)) {
+        // Fallback to scroll-Y heuristic
+        const onScroll = () => btn.classList.toggle('visible', window.scrollY > 900);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        const e = entries[0];
+        btn.classList.toggle('visible', !e.isIntersecting);
+      }, { threshold: 0 });
+      io.observe(first);
+    }
+    // Feed renders after DOM ready, so wait a tick
+    setTimeout(attachObserver, 100);
   })();
 
   // ============= HOME-FEED PHOTO LIGHTBOX =============
