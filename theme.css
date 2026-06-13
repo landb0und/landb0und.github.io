@@ -105,6 +105,16 @@ html[data-theme="neonoir"] {
 }
 
 /* =============================================================
+   Always-green "Available Now" status indicator. Locked across all
+   themes so it always reads as a live/active signal (the bottom-left
+   nav status + the hero "Accepting Work" badge on home).
+   ============================================================= */
+.nav-bottom .status { color: #22c55e !important; }
+.nav-bottom .dot    { background: #22c55e !important; }
+.hero-bar .badge-status     { color: #22c55e !important; background: rgba(34,197,94,0.12) !important; border-color: rgba(34,197,94,0.45) !important; }
+.hero-bar .badge-status .d  { background: #22c55e !important; }
+
+/* =============================================================
    Theme switcher UI — injected by theme.js into .nav and pinned
    at the bottom of the left nav. Small swatch row, hover label.
    ============================================================= */

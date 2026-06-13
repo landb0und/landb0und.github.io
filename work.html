@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Work — YouTube + Shorts</title>
-<link rel="stylesheet" href="theme.css?v=6">
+<link rel="stylesheet" href="theme.css?v=7">
 <script src="theme.js?v=4"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,7 +134,11 @@
   /* YT layout */
   .yt { display: grid; grid-template-columns: 1fr 340px; gap: 22px; }
 
-  .player { background: #000; aspect-ratio: 16/9; border: 1px solid var(--line); border-radius: 8px; position: relative; overflow: hidden; }
+  /* Player capped to ~70% of the viewport height so a wide 16:9 iframe never
+     pushes the meta + Up Next sidebar off-screen on smaller monitors. On wide
+     viewports the aspect-ratio governs; on tall+narrow ones max-height + the
+     auto width on the wrapper keep it in frame. */
+  .player { background: #000; aspect-ratio: 16/9; max-height: 70vh; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; position: relative; overflow: hidden; }
   .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 5; }
   .player::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(245,176,66,0.22) 0%, transparent 65%); }
   .player::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.025) 3px 4px); pointer-events: none; }
@@ -335,10 +339,18 @@
   .related-verticals .rv-tile:hover { border-color: var(--amber); transform: translateY(-2px); }
   .related-verticals .rv-tile .rv-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); }
   .related-verticals .rv-tile .rv-cap { position: absolute; left: 10px; right: 10px; bottom: 10px; font-size: 11px; color: #fff; font-weight: 700; line-height: 1.25; }
-  /* Playlist tile in Up Next — stacked-thumb visual cue + episode-count chip */
-  .rec.is-playlist .rec-thumb { box-shadow: 3px -3px 0 -1px rgba(245,176,66,0.45), 6px -6px 0 -2px rgba(245,176,66,0.25); }
-  .rec-playlist-badge { position: absolute; top: 6px; left: 6px; padding: 3px 7px; background: var(--amber); color: var(--bg); font-size: 8px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; z-index: 4; }
-  .rec-thumb.is-playlist { position: relative; }
+  /* Playlist tile in Up Next — 2x2 thumbnail grid + episode-count chip so it
+     clearly reads as a series, not a single video. Each cell shows one
+     episode's thumb; the amber overlay badge anchors the "PLAYLIST · N" meta. */
+  .rec.is-playlist .rec-thumb { padding: 0; background: var(--bg-2); }
+  .rec.is-playlist .rec-thumb .pl-grid { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; padding: 0; }
+  .rec.is-playlist .rec-thumb .pl-cell { background: #000 center/cover no-repeat; position: relative; overflow: hidden; }
+  .rec.is-playlist .rec-thumb .pl-cell::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.35) 100%); }
+  .rec.is-playlist .rec-thumb .pl-more { display: flex; align-items: center; justify-content: center; background: var(--bg-3); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; }
+  .rec.is-playlist .rec-thumb .pl-more::before { content: '+'; margin-right: 2px; }
+  .rec-playlist-badge { position: absolute; left: 4px; bottom: 4px; padding: 2px 7px; background: var(--amber); color: var(--bg); font-size: 8px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; z-index: 4; display: inline-flex; align-items: center; gap: 3px; }
+  .rec.is-playlist .rec-info .rec-title::before { content: '▶ '; color: var(--amber); }
+  .rec.is-playlist .rec-info .rec-meta { color: var(--amber); }
   /* Episode drawer below the player — appears when active video belongs to a playlist */
   .episode-drawer { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-2); }
   .episode-drawer .ed-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
@@ -735,21 +747,42 @@
       'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
       'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
     };
-    mount.innerHTML = VIDEOS.map((v, i) => {
+    // Helper — resolve the thumb URL for a single video entry
+    function thumbFor(v) {
       const override = v.embedId ? THUMB_OVERRIDES[v.embedId] : null;
-      const thumb = override
-                  ? override
-                  : (v.embedId && v.bunny) ? ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg')
-                  : (v.embedId && !v.bunny) ? ('https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg')
-                  : null;
-      // Playlist tiles get a stacked-thumb badge + episode-count chip so they
-      // read as a series, not a single video.
+      if (override) return override;
+      if (v.embedId && v.bunny)  return 'https://' + CDN + '/' + v.embedId + '/thumbnail.jpg';
+      if (v.embedId && !v.bunny) return 'https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg';
+      return null;
+    }
+    mount.innerHTML = VIDEOS.map((v, i) => {
       const isPlaylist = !!(v.playlistMembers && v.playlistMembers.length > 1);
-      const playlistBadge = isPlaylist ? '<span class="rec-playlist-badge">▶ ' + v.playlistMembers.length + ' EPS</span>' : '';
+      let thumbHTML;
+      if (isPlaylist) {
+        // 2x2 grid: first 3 episode thumbs + a "+N" cell when there are more
+        const eps = v.playlistMembers;
+        const cells = [];
+        for (let k = 0; k < 3 && k < eps.length; k++) {
+          const t = thumbFor(eps[k]);
+          cells.push('<div class="pl-cell" style="background-image:url(\'' + t + '\');"></div>');
+        }
+        if (eps.length > 3) {
+          cells.push('<div class="pl-cell pl-more">' + (eps.length - 3) + ' more</div>');
+        } else if (eps.length === 3) {
+          // Fill the 4th cell with the featured thumb so the grid stays full
+          cells.push('<div class="pl-cell" style="background-image:url(\'' + thumbFor(eps[0]) + '\');"></div>');
+        }
+        thumbHTML = '<div class="rec-thumb is-playlist" data-dur="' + (v.dur || '') + '">'
+                  + '<div class="pl-grid">' + cells.join('') + '</div>'
+                  + '<span class="rec-playlist-badge">▶ Playlist · ' + eps.length + '</span>'
+                  + '</div>';
+      } else {
+        const thumb = thumbFor(v);
+        thumbHTML = thumb
+          ? '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + thumb + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>'
+          : '<div class="rec-thumb ' + (v.palette || '') + '" data-dur="' + (v.dur || '') + '"></div>';
+      }
       const playlistCls = isPlaylist ? ' is-playlist' : '';
-      const thumbHTML = thumb
-        ? '<div class="rec-thumb' + playlistCls + '" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + thumb + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;">' + playlistBadge + '</div>'
-        : '<div class="rec-thumb ' + (v.palette || '') + playlistCls + '" data-dur="' + (v.dur || '') + '">' + playlistBadge + '</div>';
       return '<div class="rec' + (i === 0 ? ' active' : '') + playlistCls + '" data-filters="' + (v.filters || '') + '">' + thumbHTML + '<div class="rec-info"><div class="rec-title">' + v.title + '</div><div class="rec-meta">' + (v.meta || '') + '</div></div></div>';
     }).join('');
   }
