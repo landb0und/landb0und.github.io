@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Work — YouTube + Shorts</title>
-<link rel="stylesheet" href="theme.css?v=5">
+<link rel="stylesheet" href="theme.css?v=6">
 <script src="theme.js?v=4"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -192,8 +192,13 @@
   .rec { display: grid; grid-template-columns: 120px 1fr; gap: 10px; cursor: pointer; padding: 4px; border-radius: 6px; transition: background .15s; }
   .rec:hover { background: rgba(255,255,255,0.03); }
   .rec.active { display: none; }
-  .rec-thumb { aspect-ratio: 16/9; border-radius: 4px; position: relative; overflow: hidden; }
-  .rec-thumb { position: relative; }
+  /* Bunny's auto-generated thumbnail is the FIRST frame of the video — for
+     anything with a fade-in or dark opening (Director's Reel, Bleed, Bby) it
+     comes through nearly black. We lift the img with a brightness/saturate
+     filter and back it with a faint gunmetal gradient so the tile box always
+     reads, even when the underlying frame is mostly shadow. */
+  .rec-thumb { aspect-ratio: 16/9; border-radius: 4px; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--bg-3), var(--bg-2)); box-shadow: inset 0 0 0 1px var(--line); }
+  .rec-thumb img { filter: brightness(1.18) saturate(1.08) contrast(1.02); }
   .rec-thumb::after { content: ''; position: absolute; right: 4px; bottom: 4px; padding: 1px 5px; background: rgba(0,0,0,0.85); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: #fff; border-radius: 2px; z-index: 2; }
   .rec-thumb[data-dur]::after { content: attr(data-dur); }
   .rec-info { padding-top: 2px; }
@@ -707,6 +712,14 @@
       { palette: 'g7', title: 'Super Bowl Spot', sub: 'Commercial · 2024 · 5-state air', chips: [['Director','amber']], credits: [['Air','5-state Super Bowl rotation'],['Released','2024'],['Crew','Landbound — Director'],['Tools','Arri Alexa Mini · Resolve']], dur: '00:30', filters: 'direction commercial', meta: 'DIR · 5-state air · 2024' },
       { palette: 'g8', title: 'Dreams', sub: '<strong>Surfaces</strong> · Music Video · 2023', chips: [['DP','amber']], credits: [['Artist','<strong>Surfaces</strong>'],['Released','2023'],['Crew','Landbound — Cinematographer'],['Tools','Arri Alexa · Anamorphic']], dur: '03:10', filters: 'dp', meta: 'Surfaces · DP · 2023' }
     );
+    // Shuffle on each page load so Up Next varies between visits. Director's
+    // Reel stays pinned at the top (it's the default-playing video).
+    const first = out.shift();
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    out.unshift(first);
     return out;
   })();
 

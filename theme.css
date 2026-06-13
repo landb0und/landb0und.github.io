@@ -21,17 +21,18 @@ html[data-theme="slate"] {
   --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
 }
 
-/* NOIR — gunmetal / charcoal with a steel-blue cast. Closer to a graded
-   midnight-shadow grade than a saturated navy: bg desaturated toward
-   neutral charcoal, accents stay cool but quiet. Reads "post-production
-   bay" rather than "marine theme". */
+/* NOIR — neutral charcoal with a steel-blue primary and a vivid warm
+   complement. Bg desaturated toward true gunmetal (less marine, more
+   "graded midnight"); ink lifted for stronger contrast against the bg;
+   rose pushed from quiet rust to a coral that genuinely pops as the
+   complementary color. */
 html[data-theme="noir"] {
-  --bg: #0b0d12; --bg-2: #14171d; --bg-3: #1c2028;
-  --line: #29303c; --line-2: #1f242e;
-  --ink: #e6ebf2; --ink-2: #afb8c5; --ink-3: #78818f; --ink-4: #4b5260;
-  --amber: #7398b8;  /* desaturated steel blue — primary */
-  --rose:  #c97e5d;  /* warm rust — the only warm note */
-  --leaf:  #8995a3;  /* mid slate neutral */
+  --bg: #0a0b0d; --bg-2: #14161a; --bg-3: #1c1f25;
+  --line: #2a2e36; --line-2: #1e2128;
+  --ink: #f0f3f8; --ink-2: #b4bbc8; --ink-3: #7d8593; --ink-4: #4d5460;
+  --amber: #6a9dc7;  /* steel blue — primary */
+  --rose:  #ff8a52;  /* vivid coral — pops as the warm complement */
+  --leaf:  #8995a3;  /* slate neutral */
 }
 
 /* GRAPHITE — editorial monochrome. Neutral charcoal greys + a single
@@ -157,7 +158,7 @@ html[data-theme="neonoir"] {
 }
 /* Each swatch shows a tiny preview of its palette via gradient */
 .theme-switcher .ts-sw[data-theme="slate"]::before    { background: linear-gradient(135deg, #f5b042 0%, #f5b042 50%, #e8589a 50%, #e8589a 100%); }
-.theme-switcher .ts-sw[data-theme="noir"]::before     { background: linear-gradient(135deg, #5d9cd6 0%, #5d9cd6 50%, #c97e5d 50%, #c97e5d 100%); }
+.theme-switcher .ts-sw[data-theme="noir"]::before     { background: linear-gradient(135deg, #6a9dc7 0%, #6a9dc7 50%, #ff8a52 50%, #ff8a52 100%); }
 .theme-switcher .ts-sw[data-theme="graphite"]::before { background: linear-gradient(135deg, #c75c46 0%, #c75c46 50%, #808080 50%, #808080 100%); }
 .theme-switcher .ts-sw[data-theme="ember"]::before    { background: linear-gradient(135deg, #ff4818 0%, #ff4818 50%, #c41818 50%, #c41818 100%); }
 .theme-switcher .ts-sw[data-theme="neonoir"]::before  { background: linear-gradient(135deg, #d957a8 0%, #d957a8 50%, #5fa8c4 50%, #5fa8c4 100%); }
