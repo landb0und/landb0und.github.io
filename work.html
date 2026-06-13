@@ -203,13 +203,13 @@
      reads, even when the underlying frame is mostly shadow. */
   .rec-thumb { aspect-ratio: 16/9; border-radius: 4px; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--bg-3), var(--bg-2)); box-shadow: inset 0 0 0 1px var(--line); }
   .rec-thumb img { filter: brightness(1.18) saturate(1.08) contrast(1.02); }
-  /* Specific Bunny videos whose first-frame thumbnail comes through nearly
-     black (Director's Reel dim-theater opening, Bleed letterboxed dark plate,
-     Bby fade-from-black). Brighten + lift contrast much more aggressively for
-     these so the subject becomes visible. A subtle screen-blend gradient on
-     top adds extra mid-tone lift without crushing brights. */
-  .rec-thumb.brighten-hard img { filter: brightness(1.55) saturate(1.35) contrast(1.12); }
-  .rec-thumb.brighten-hard::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.02) 60%, transparent 100%); mix-blend-mode: screen; pointer-events: none; }
+  /* Specific Bunny videos whose first-frame thumbnail.jpg comes through nearly
+     black. Rather than fight the dark frame with a brightness filter, we
+     bypass thumbnail.jpg entirely and render the video element itself,
+     preload="metadata" + #t=N, so the browser shows a seeked frame as the
+     static poster. This pulls a representative bright frame from N seconds in
+     instead of the 0-second fade-from-black. */
+  .rec-thumb video.poster-seek { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #000; pointer-events: none; filter: brightness(1.05) saturate(1.05); }
   .rec-thumb::after { content: ''; position: absolute; right: 4px; bottom: 4px; padding: 1px 5px; background: rgba(0,0,0,0.85); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: #fff; border-radius: 2px; z-index: 2; }
   .rec-thumb[data-dur]::after { content: attr(data-dur); }
   .rec-info { padding-top: 2px; }
@@ -750,14 +750,18 @@
       'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
       'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
     };
-    // Bunny videos whose auto-generated first-frame thumbnail comes through
-    // nearly black. Tagged with the .brighten-hard class so the CSS lifts
-    // them. Add a GUID here when a new dark-opening video joins the list.
-    const KNOWN_DARK_THUMBS = new Set([
-      'e0374508-213f-47a2-ae0d-dd50d9df695d', // Director's Reel — dim theater opening
-      '9e6f327c-1d83-4545-b88c-3193d7dd4274', // Bleed — letterboxed dark plate
-      '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3'  // Bby — fade-from-black opening
-    ]);
+    // Bunny videos whose auto-generated first-frame thumbnail.jpg is basically
+    // pure black (fade-from-black openings, dark plates, letterboxed gates).
+    // For these, we skip thumbnail.jpg entirely and use the video itself with
+    // preload="metadata" + #t=N seconds, so the browser displays a seeked
+    // frame as the static poster. Map value is the seek time in seconds —
+    // tune per clip to land on a bright, representative frame. Add a GUID
+    // here when a new dark-opening video joins the list.
+    const DARK_THUMB_SEEK = {
+      'e0374508-213f-47a2-ae0d-dd50d9df695d': 6,  // Director's Reel — past dim theater into sizzle cuts
+      '9e6f327c-1d83-4545-b88c-3193d7dd4274': 10, // Bleed — past the dark plate into a lit beat
+      '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3': 8   // Bby — past fade-from-black into the drumkit shot
+    };
     // Helper — resolve the thumb URL for a single video entry
     function thumbFor(v) {
       const override = v.embedId ? THUMB_OVERRIDES[v.embedId] : null;
@@ -789,14 +793,41 @@
                   + '</div>';
       } else {
         const thumb = thumbFor(v);
-        const darkCls = (v.embedId && KNOWN_DARK_THUMBS.has(v.embedId)) ? ' brighten-hard' : '';
-        thumbHTML = thumb
-          ? '<div class="rec-thumb' + darkCls + '" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + thumb + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>'
-          : '<div class="rec-thumb ' + (v.palette || '') + darkCls + '" data-dur="' + (v.dur || '') + '"></div>';
+        const seekT = (v.embedId && v.bunny) ? DARK_THUMB_SEEK[v.embedId] : null;
+        if (seekT && v.embedId) {
+          // Video-as-poster: render the actual MP4 with preload=metadata + #t=N.
+          // The browser fetches only the moov atom + a tiny chunk near the
+          // seek point, then paints that frame as a static "poster" without
+          // playing. Falls back to the dark thumbnail.jpg img if the video
+          // element errors out.
+          const mp4 = 'https://' + CDN + '/' + v.embedId + '/play_720p.mp4#t=' + seekT;
+          thumbHTML = '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;">'
+                    + '<video class="poster-seek" src="' + mp4 + '" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" onerror="this.outerHTML=\'<img src=&quot;' + thumb + '&quot; alt=&quot;&quot; style=&quot;position:relative;width:100%;height:100%;object-fit:cover;display:block;&quot;>\'"></video>'
+                    + '</div>';
+        } else {
+          thumbHTML = thumb
+            ? '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + thumb + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>'
+            : '<div class="rec-thumb ' + (v.palette || '') + '" data-dur="' + (v.dur || '') + '"></div>';
+        }
       }
       const playlistCls = isPlaylist ? ' is-playlist' : '';
       return '<div class="rec' + (i === 0 ? ' active' : '') + playlistCls + '" data-filters="' + (v.filters || '') + '">' + thumbHTML + '<div class="rec-info"><div class="rec-title">' + v.title + '</div><div class="rec-meta">' + (v.meta || '') + '</div></div></div>';
     }).join('');
+    // Safari/WebKit don't reliably honor #t=N fragments on preload="metadata".
+    // After mount, force currentTime once metadata is loaded so the seeked
+    // frame becomes the visible poster on every browser.
+    mount.querySelectorAll('video.poster-seek').forEach(vid => {
+      const m = vid.src.match(/#t=([\d.]+)/);
+      const seekT = m ? parseFloat(m[1]) : 0;
+      const doSeek = () => {
+        try {
+          if (vid.duration && seekT < vid.duration) vid.currentTime = seekT;
+          else vid.currentTime = Math.max(0, (vid.duration || 1) * 0.25);
+        } catch(_) {}
+      };
+      if (vid.readyState >= 1) doSeek();
+      else vid.addEventListener('loadedmetadata', doSeek, { once: true });
+    });
   }
   renderRecs();
 
