@@ -116,11 +116,13 @@ html[data-theme="neonoir"] {
 
 /* =============================================================
    Theme switcher UI — injected by theme.js into .nav and pinned
-   at the bottom of the left nav. Small swatch row, hover label.
+   at the bottom of the left nav. Each palette is a labeled row
+   (color disc + name) so the user can read what they're picking
+   instead of guessing from tiny gradient dots.
    ============================================================= */
 .theme-switcher {
   margin-top: auto;
-  padding: 14px 16px 8px;
+  padding: 14px 14px 12px;
   border-top: 1px solid var(--line);
   display: flex;
   flex-direction: column;
@@ -133,51 +135,52 @@ html[data-theme="neonoir"] {
   font-family: 'SF Mono', Menlo, monospace;
   text-transform: uppercase;
   font-weight: 700;
+  margin-bottom: 2px;
 }
 .theme-switcher .ts-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 4px;
 }
 .theme-switcher .ts-sw {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
   cursor: pointer;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  transition: background .15s, border-color .15s;
+}
+.theme-switcher .ts-sw .ts-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+  flex: 0 0 auto;
   position: relative;
-  transition: transform .15s, border-color .15s;
-  padding: 0;
-  background: none;
 }
-.theme-switcher .ts-sw::before {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border-radius: 50%;
-}
-.theme-switcher .ts-sw:hover { transform: scale(1.12); border-color: rgba(255,255,255,0.5); }
-.theme-switcher .ts-sw.active { border-color: var(--amber); }
-.theme-switcher .ts-sw.active::after {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  border: 1px solid var(--amber);
-  opacity: 0.5;
-}
-/* Each swatch shows a tiny preview of its palette via gradient */
-.theme-switcher .ts-sw[data-theme="slate"]::before    { background: linear-gradient(135deg, #f5b042 0%, #f5b042 50%, #e8589a 50%, #e8589a 100%); }
-.theme-switcher .ts-sw[data-theme="noir"]::before     { background: linear-gradient(135deg, #6a9dc7 0%, #6a9dc7 50%, #ff8a52 50%, #ff8a52 100%); }
-.theme-switcher .ts-sw[data-theme="graphite"]::before { background: linear-gradient(135deg, #c75c46 0%, #c75c46 50%, #808080 50%, #808080 100%); }
-.theme-switcher .ts-sw[data-theme="ember"]::before    { background: linear-gradient(135deg, #ff4818 0%, #ff4818 50%, #c41818 50%, #c41818 100%); }
-.theme-switcher .ts-sw[data-theme="neonoir"]::before  { background: linear-gradient(135deg, #d957a8 0%, #d957a8 50%, #5fa8c4 50%, #5fa8c4 100%); }
-.theme-switcher .ts-name {
-  font-size: 9px;
-  color: var(--ink-3);
+.theme-switcher .ts-sw .ts-text {
+  font-size: 11px;
+  color: var(--ink-2);
   font-family: 'SF Mono', Menlo, monospace;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 700;
-  min-height: 11px;
+  line-height: 1;
 }
+.theme-switcher .ts-sw:hover { background: rgba(255,255,255,0.04); }
+.theme-switcher .ts-sw:hover .ts-text { color: var(--ink); }
+.theme-switcher .ts-sw.active { background: rgba(255,255,255,0.06); border-color: var(--amber); }
+.theme-switcher .ts-sw.active .ts-text { color: var(--amber); }
+.theme-switcher .ts-sw.active .ts-dot { border-color: var(--amber); box-shadow: 0 0 0 2px rgba(245,176,66,0.18); }
+/* Each dot shows a split-gradient preview of its palette so users can
+   compare looks at a glance — left half = primary accent, right = complement */
+.theme-switcher .ts-sw[data-theme="slate"]    .ts-dot { background: linear-gradient(135deg, #f5b042 0%, #f5b042 50%, #e8589a 50%, #e8589a 100%); }
+.theme-switcher .ts-sw[data-theme="noir"]     .ts-dot { background: linear-gradient(135deg, #6a9dc7 0%, #6a9dc7 50%, #ff8a52 50%, #ff8a52 100%); }
+.theme-switcher .ts-sw[data-theme="graphite"] .ts-dot { background: linear-gradient(135deg, #c75c46 0%, #c75c46 50%, #808080 50%, #808080 100%); }
+.theme-switcher .ts-sw[data-theme="ember"]    .ts-dot { background: linear-gradient(135deg, #ff4818 0%, #ff4818 50%, #c41818 50%, #c41818 100%); }
+.theme-switcher .ts-sw[data-theme="neonoir"]  .ts-dot { background: linear-gradient(135deg, #d957a8 0%, #d957a8 50%, #5fa8c4 50%, #5fa8c4 100%); }
