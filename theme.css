@@ -21,17 +21,17 @@ html[data-theme="slate"] {
   --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
 }
 
-/* NOIR — midnight steel blue. Pulls from late-night color grading bays:
-   cobalt-stained black ground, a clean steel-blue primary, warm rust as
-   the only warm contrast, soft slate as the tertiary neutral. Quieter
-   and more disciplined than the previous teal version. */
+/* NOIR — gunmetal / charcoal with a steel-blue cast. Closer to a graded
+   midnight-shadow grade than a saturated navy: bg desaturated toward
+   neutral charcoal, accents stay cool but quiet. Reads "post-production
+   bay" rather than "marine theme". */
 html[data-theme="noir"] {
-  --bg: #060b16; --bg-2: #0c1422; --bg-3: #142133;
-  --line: #1f2e46; --line-2: #182238;
-  --ink: #e4ecf6; --ink-2: #a8b6cc; --ink-3: #6e7e98; --ink-4: #44516a;
-  --amber: #5d9cd6;  /* steel blue — primary */
-  --rose:  #c97e5d;  /* warm rust — only warm note */
-  --leaf:  #7e92ad;  /* slate neutral */
+  --bg: #0b0d12; --bg-2: #14171d; --bg-3: #1c2028;
+  --line: #29303c; --line-2: #1f242e;
+  --ink: #e6ebf2; --ink-2: #afb8c5; --ink-3: #78818f; --ink-4: #4b5260;
+  --amber: #7398b8;  /* desaturated steel blue — primary */
+  --rose:  #c97e5d;  /* warm rust — the only warm note */
+  --leaf:  #8995a3;  /* mid slate neutral */
 }
 
 /* GRAPHITE — editorial monochrome. Neutral charcoal greys + a single

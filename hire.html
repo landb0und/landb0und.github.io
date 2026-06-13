@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>jacobboehme.com — Hire</title>
-<link rel="stylesheet" href="theme.css?v=4">
+<link rel="stylesheet" href="theme.css?v=5">
 <script src="theme.js?v=4"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -121,7 +121,7 @@
   .reps .v { font-size: 12px; color: var(--ink-2); line-height: 1.5; }
 
   /* Tour poster (matches home) */
-  .poster { background: #1d1812; border: 3px double var(--amber); border-radius: 4px; padding: 32px 36px 22px; position: relative; overflow: hidden; box-shadow: 0 0 0 8px var(--bg), 0 0 0 9px var(--line); margin-bottom: 48px; }
+  .poster { background: var(--bg-2); border: 3px double var(--amber); border-radius: 4px; padding: 32px 36px 22px; position: relative; overflow: hidden; box-shadow: 0 0 0 8px var(--bg), 0 0 0 9px var(--line); margin-bottom: 48px; }
   .poster::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle, rgba(245,176,66,0.16) 0.6px, transparent 1px); background-size: 4px 4px; opacity: 0.5; mix-blend-mode: screen; }
   .poster::after { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.7; mix-blend-mode: overlay; }
   .poster > * { position: relative; z-index: 2; }
