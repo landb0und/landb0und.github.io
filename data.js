@@ -277,7 +277,7 @@ window.CLIENTS = [
     short: 'TikTok',
     handle: '@landbound',
     role: 'Creator partner',
-    blurb: '100K+ followers, 45M+ views across short-form work.',
+    blurb: '100K+ followers, 110M+ views across short-form work.',
     palette: 'sa-10',
     thumb: null,
     media: []
@@ -639,16 +639,16 @@ window.VERTICALS = [
     caption: 'Claudia Valentina · Spotify Canvas'
   },
   {
-    id: 'claudia-how-u-been-1',
+    id: 'natalie-how-u-been-1',
     guid: '6f8f2d98-78dc-49d6-8576-9f6138d5e53f',
     title: 'how u been?',
-    client: 'claudia-valentina',
+    client: 'natalie-jane',
     type: 'music',
-    tag: 'Claudia Valentina · 2025',
-    role: 'Director · Editor',
-    music: '@claudia_valentina__ — how u been?',
+    tag: 'Natalie Jane · 2025',
+    role: 'Director · DP · Editor',
+    music: '@nataliejane — how u been?',
     label: 'how u been?',
-    caption: 'Claudia Valentina · social content for "how u been?"',
+    caption: 'Natalie Jane · social content for "how u been?"',
     views: '2M',
     likes: '83K'
   },
@@ -689,16 +689,16 @@ window.VERTICALS = [
     caption: 'Personal — VFX & cinematography'
   },
   {
-    id: 'claudia-how-u-been-2',
+    id: 'natalie-how-u-been-2',
     guid: '39fe2dc1-70f2-4826-8337-407a593292ef',
     title: 'how u been? (pt. 2)',
-    client: 'claudia-valentina',
+    client: 'natalie-jane',
     type: 'music',
-    tag: 'Claudia Valentina · 2025',
-    role: 'Director · Editor',
-    music: '@claudia_valentina__ — how u been?',
+    tag: 'Natalie Jane · 2025',
+    role: 'Director · DP · Editor',
+    music: '@nataliejane — how u been?',
     label: 'how u been? 2',
-    caption: 'Claudia Valentina · social content for "how u been?" — part 2'
+    caption: 'Natalie Jane · social content for "how u been?" — part 2'
   },
   {
     id: 'landon-barker-dodge',
