@@ -17,12 +17,12 @@ window.CLIENTS = [
     media: [
       { type: 'video', embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'] },
       { type: 'video', embedId: 'e8775058-272b-48b5-85a9-37410c6cbb25', bunny: true, title: 'HIGH SOCIAL', year: '2025', tags: ['Director','Editor','Vertical'] },
-      // Performance video series — YouTube placeholders until Bunny mirrors are up
-      { type: 'video', embedId: 't7WlAiX_q20', bunny: false, title: 'Proud (Performance Video)',                year: '2024', tags: ['Director','Editor'] },
-      { type: 'video', embedId: 'ggCloEnel3Y', bunny: false, title: 'Fade (Performance Video)',                 year: '2024', tags: ['Director','Editor'] },
-      { type: 'video', embedId: 'LIuSiZpGBGU', bunny: false, title: 'Behavioral Problems (Performance Video)',  year: '2024', tags: ['Director','Editor'] },
-      { type: 'video', embedId: 'Ggfg6q2N1l0', bunny: false, title: 'Homesick (Performance Video)',             year: '2024', tags: ['Director','Editor'] },
-      { type: 'video', embedId: 'SnZ13OfKdPg', bunny: false, title: 'Brand New (Performance Video)',            year: '2024', tags: ['Director','Editor'] }
+      // Performance video series — now on Bunny (official 4K mirrors)
+      { type: 'video', embedId: 'b054d114-131a-479e-88b2-184bdcb39600', bunny: true, title: 'Proud',                year: '2024', tags: ['Director','Editor'] },
+      { type: 'video', embedId: 'd097b1a0-4ce4-48c1-83d9-62275775e699', bunny: true, title: 'Fade',                 year: '2024', tags: ['Director','Editor'] },
+      { type: 'video', embedId: '99c82990-9379-4422-8f63-bc460ed4f713', bunny: true, title: 'Behavioral Problems',  year: '2024', tags: ['Director','Editor'] },
+      { type: 'video', embedId: '46e0e887-aeea-4441-8d10-dc0cc8acd536', bunny: true, title: 'Homesick',             year: '2024', tags: ['Director','Editor'] },
+      { type: 'video', embedId: 'f42fbabd-edbe-4bb0-9474-cb491726fbb1', bunny: true, title: 'Brand New',            year: '2024', tags: ['Director','Editor'] }
     ]
   },
   {
@@ -230,6 +230,7 @@ window.CLIENTS = [
     media: [
       { type: 'video', embedId: '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3', bunny: true, title: 'Bby', sub: '<strong>Two Feet</strong> · Performance · 2025', year: '2025', tags: ['Director','DP','Editor'] },
       { type: 'video', embedId: '9b89734d-ba4e-4a50-ba2e-d713b5795cac', bunny: true, title: 'Bathtub', sub: '<strong>Two Feet</strong> · Live Performance · 2025', year: '2025', tags: ['Director','Editor'] },
+      { type: 'video', embedId: '6fbfaef7-d5df-4e58-bf87-84436cb47cba', bunny: true, title: 'Reda', sub: '<strong>Two Feet</strong> · Live Performance · 2025', year: '2025', tags: ['Director','Editor'] },
       { type: 'photo', src: 'photos/clients/two-feet-1.jpg', title: 'Press portrait — 1', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/two-feet-2.jpg', title: 'Press portrait — 2', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/two-feet-3.jpg', title: 'Press portrait — 3', year: '2024', tags: ['Photographer'] },
@@ -434,7 +435,8 @@ window.CLIENTS = [
     palette: 'sa-10',
     thumb: null,
     media: [
-      { type: 'video', embedId: 'e183de5b-77e6-432a-ad2b-764062367acc', bunny: true, title: 'Canvas', year: '2025', tags: ['Director','Editor','Vertical'] }
+      { type: 'video', embedId: 'e183de5b-77e6-432a-ad2b-764062367acc', bunny: true, title: 'Canvas', year: '2025', tags: ['Director','Editor','Vertical'] },
+      { type: 'video', embedId: 'ae99920a-46b4-4765-9c3b-408a23eb8508', bunny: true, title: 'Live Performance', year: '2025', tags: ['Director','Editor'] }
     ]
   },
   {
@@ -740,6 +742,19 @@ window.VERTICALS = [
     music: '@landbound',
     label: "Ground Doesn't Want You",
     caption: "Cinematography test footage — for the short film Forgive & Forget",
+    relatedTo: { type: 'film', embedId: 'oD42T1md068', label: 'Forgive & Forget' }
+  },
+  {
+    id: 'forgive-forget-clip',
+    guid: '6381b5da-fa25-4a67-9105-0b3f6a12ff42',
+    title: 'Forgive & Forget — Clip',
+    client: 'landbound',
+    type: 'bts',
+    tag: 'Forgive & Forget · 2022',
+    role: 'Director · Writer · Editor · DP · VFX Sup',
+    music: '@landbound',
+    label: 'F&F Clip',
+    caption: 'Clip from the short film Forgive & Forget — directed, shot, edited & VFX by Landbound',
     relatedTo: { type: 'film', embedId: 'oD42T1md068', label: 'Forgive & Forget' }
   },
   {
