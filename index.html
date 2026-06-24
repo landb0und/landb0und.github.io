@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Desktop-on-mobile: render the full desktop layout scaled to fit, rather than
+     a broken device-width reflow. The site isn't a responsive mobile build. -->
+<meta name="viewport" content="width=1280">
 <title>Jacob Boehme — Director · VFX Editor · DP · Los Angeles</title>
 <link rel="stylesheet" href="theme.css?v=9">
 <script src="theme.js?v=6"></script>
@@ -1068,7 +1071,11 @@
       if (item.type === 'video') return renderVideoPost(item);
       return '';
     }).join('');
-    initFeedVideoPlayback(mount);
+    // Mobile Safari crashes when dozens of <video> elements decode at once (the
+    // feed builds ~50+). Skip the autoplay engine on mobile so each post just
+    // shows its static poster image instead — no decoding, no crash.
+    const IS_MOBILE = /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
+    if (!IS_MOBILE) initFeedVideoPlayback(mount);
   }
 
   // ============= FEED VIDEO PLAYBACK ENGINE =============

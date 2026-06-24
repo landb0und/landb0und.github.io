@@ -11,7 +11,7 @@ window.CLIENTS = [
     short: 'Grace V.',
     handle: '@gracevanderwaal',
     role: 'Director · Executive Producer',
-    blurb: 'CHILDSTAR album rollout — visual identity and music video direction. End-to-end Landbound shop.',
+    blurb: 'CHILDSTAR album rollout: visual identity and music video direction. End-to-end Landbound shop.',
     palette: 'sa-1',
     thumb: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
     media: [
@@ -49,7 +49,7 @@ window.CLIENTS = [
     short: 'Aporro',
     handle: '@aporrobrand',
     role: 'Director · Photographer',
-    blurb: 'Commercial campaign — jewelry product hero photography.',
+    blurb: 'Commercial campaign: jewelry product hero photography.',
     palette: 'sa-7',
     thumb: null,
     media: [
@@ -66,7 +66,7 @@ window.CLIENTS = [
     short: 'Max F.',
     handle: '@maxfrostmusic',
     role: 'Director · Photographer',
-    blurb: 'Press portraits — single source soft, mood-forward.',
+    blurb: 'Press portraits: single source soft, mood-forward.',
     palette: 'sa-8',
     thumb: 'photos/commercial/Max-Frost-2.jpeg',
     media: [
@@ -115,7 +115,7 @@ window.CLIENTS = [
     short: 'Surfaces',
     handle: '@surfaces',
     role: 'Director · DP · Editor · VFX · Photographer',
-    blurb: "Call Me When You're Home — music video + vertical cut. VFX and stills across the project.",
+    blurb: "Call Me When You're Home: music video + vertical cut. VFX and stills across the project.",
     palette: 'sa-5',
     thumb: null,
     media: [
@@ -142,7 +142,7 @@ window.CLIENTS = [
     short: 'Yungblud',
     handle: '@yungblud',
     role: 'Photographer',
-    blurb: 'BTS film stills from the Allison Hagendorf Show — Yungblud sit-down (w/ Billy Corgan).',
+    blurb: 'BTS film stills from the Allison Hagendorf Show: Yungblud sit-down (w/ Billy Corgan).',
     palette: 'sa-3',
     thumb: 'photos/clients/allison-yungblud-bts/yungblud-bts-10.jpg',
     media: [
@@ -191,7 +191,7 @@ window.CLIENTS = [
     short: 'Allison H.',
     handle: '@allisonhagendorf',
     role: 'Director · Editor · Photographer',
-    blurb: 'The Allison Hagendorf Show — S4 in production. Long-form artist interviews + BTS film stills.',
+    blurb: 'The Allison Hagendorf Show: S4 in production. Long-form artist interviews + BTS film stills.',
     palette: 'sa-6',
     thumb: 'photos/clients/allison-yungblud-bts/yungblud-bts-9.jpg',
     media: [
@@ -247,7 +247,7 @@ window.CLIENTS = [
     short: 'NYC Cinema',
     handle: 'Award · 2024',
     role: 'Cinematographer · Selection',
-    blurb: 'Selected work — NYC Cinematography Awards.',
+    blurb: 'Selected work: NYC Cinematography Awards.',
     palette: 'sa-9',
     thumb: null,
     media: []
@@ -269,7 +269,7 @@ window.CLIENTS = [
     short: 'SCREAMFEST',
     handle: 'Festival selection',
     role: 'Director · Writer',
-    blurb: 'Forgive & Forget — 2022 official selection.',
+    blurb: 'Forgive & Forget: 2022 official selection.',
     palette: 'sa-9',
     thumb: null,
     media: [
@@ -293,7 +293,7 @@ window.CLIENTS = [
     short: 'Landbound',
     handle: '@landbound',
     role: 'Director · DP · Editor · VFX · Photographer',
-    blurb: 'My own work — sizzle, TikTok edits, BTS, and personal projects under the Landbound banner.',
+    blurb: 'My own work: sizzle, TikTok edits, BTS, and personal projects under the Landbound banner.',
     palette: 'sa-1',
     thumb: 'headshot.jpg',
     media: [
@@ -306,7 +306,7 @@ window.CLIENTS = [
     short: 'Chloe S.',
     handle: '@chloestar',
     role: 'VFX · VFX Supervisor · Editor',
-    blurb: 'Stunt-driven content — VFX supervision and finishing for high-impact shots.',
+    blurb: 'Stunt-driven content: VFX supervision and finishing for high-impact shots.',
     palette: 'sa-1',
     thumb: null,
     media: []
@@ -317,7 +317,7 @@ window.CLIENTS = [
     short: 'Bahari',
     handle: '@bahari',
     role: 'Director · DP',
-    blurb: 'Music projects — direction and cinematography.',
+    blurb: 'Music projects: direction and cinematography.',
     palette: 'sa-3',
     thumb: null,
     media: []
@@ -328,7 +328,7 @@ window.CLIENTS = [
     short: 'Landon B.',
     handle: '@landonasherbarker',
     role: 'Director · Editor',
-    blurb: 'Music project — performance vertical, full Landbound shop.',
+    blurb: 'Music project: performance vertical, full Landbound shop.',
     palette: 'sa-4',
     thumb: null,
     media: []
@@ -339,7 +339,7 @@ window.CLIENTS = [
     short: 'Saint Motel',
     handle: '@saintmotel',
     role: 'Director · DP · Photographer',
-    blurb: 'Indie alt-rock — direction, cinematography, and press portraits.',
+    blurb: 'Indie alt-rock: direction, cinematography, and press portraits.',
     palette: 'sa-2',
     thumb: null,
     media: [
@@ -352,7 +352,7 @@ window.CLIENTS = [
     short: "Mowgli's",
     handle: '@themowglis',
     role: 'Director · DP · Photographer',
-    blurb: 'Indie band collaboration — direction, cinematography, and stills.',
+    blurb: 'Indie band collaboration: direction, cinematography, and stills.',
     palette: 'sa-4',
     thumb: null,
     media: [
@@ -365,7 +365,7 @@ window.CLIENTS = [
     short: 'YRS',
     handle: '@youngrisingsons',
     role: 'Director · DP',
-    blurb: 'Alt-rock collaboration — direction and cinematography.',
+    blurb: 'Alt-rock collaboration: direction and cinematography.',
     palette: 'sa-5',
     thumb: null,
     media: []
@@ -422,7 +422,7 @@ window.CLIENTS = [
     short: 'DYE',
     handle: '@dye_empty',
     role: 'Director · Editor',
-    blurb: 'Music video — direction and post.',
+    blurb: 'Music video: direction and post.',
     palette: 'sa-3',
     thumb: null,
     media: [
@@ -435,7 +435,7 @@ window.CLIENTS = [
     short: 'Claudia V.',
     handle: '@claudia_valentina__',
     role: 'Director · Editor',
-    blurb: 'Music video — direction and post.',
+    blurb: 'Music video: direction and post.',
     palette: 'sa-10',
     thumb: null,
     media: [
@@ -449,7 +449,7 @@ window.CLIENTS = [
     short: 'Natalie J.',
     handle: '@nataliejane',
     role: 'Director · DP · Editor',
-    blurb: 'Music video — direction, cinematography, post.',
+    blurb: 'Music video: direction, cinematography, post.',
     palette: 'sa-5',
     thumb: null,
     media: [
