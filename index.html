@@ -954,7 +954,10 @@
 
   // Bunny MP4 stream URL (same pattern used in work.html)
   function bunnyMp4(embedId) {
-    return 'https://vz-5dfccea4-b84.b-cdn.net/' + embedId + '/play_720p.mp4';
+    // A few clips only finished a single low rendition; pin the resolution that
+    // actually exists so the video isn't a dead 404 (Bleed only has 240p).
+    const RES = { '9e6f327c-1d83-4545-b88c-3193d7dd4274': '240p' };
+    return 'https://vz-5dfccea4-b84.b-cdn.net/' + embedId + '/play_' + (RES[embedId] || '720p') + '.mp4';
   }
 
   // SVG icons for the mute toggle

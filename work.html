@@ -811,6 +811,12 @@
       '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3': 8,  // Bby — past fade-from-black into the drumkit shot
       '9e6f327c-1d83-4545-b88c-3193d7dd4274': 5   // Bleed — past the black fade-in (static frame, no animation)
     };
+    // Some Bunny clips only finished a single low rendition. play_720p.mp4 404s
+    // for these (→ thumbnail falls back to the animated webp), so pin the
+    // resolution that actually exists. 240p is sharp enough for a 120px tile.
+    const SEEK_RES = {
+      '9e6f327c-1d83-4545-b88c-3193d7dd4274': '240p'  // Bleed — only 240p exists
+    };
     // Helper — resolve the thumb URL for a single video entry
     function thumbFor(v) {
       const override = v.embedId ? THUMB_OVERRIDES[v.embedId] : null;
@@ -852,7 +858,7 @@
           // animation), and on hover plays a multi-point scrub preview (a few
           // seconds at ~10s / 1m / 3m / etc., scaled to the clip's duration).
           // Falls back to a still image if the video element errors out.
-          const mp4   = 'https://' + CDN + '/' + v.embedId + '/play_720p.mp4';
+          const mp4   = 'https://' + CDN + '/' + v.embedId + '/play_' + (SEEK_RES[v.embedId] || '720p') + '.mp4';
           const seekT = DARK_THUMB_SEEK[v.embedId];
           const fb    = THUMB_OVERRIDES[v.embedId] || ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg');
           thumbHTML = '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;">'
