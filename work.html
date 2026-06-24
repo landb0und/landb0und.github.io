@@ -133,6 +133,9 @@
 
   /* YT layout */
   .yt { display: grid; grid-template-columns: 1fr 340px; gap: 22px; align-items: start; }
+  /* min-width:0 lets the 1fr column shrink so the horizontal Work Featured /
+     drawer strips scroll internally instead of blowing the grid out wide. */
+  .main { min-width: 0; }
   /* Up Next sidebar sticks once you scroll to it and scrolls INTERNALLY, so the
      page effectively "hits a wall" and further scroll runs through Up Next. */
   .side { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; padding-right: 4px; }

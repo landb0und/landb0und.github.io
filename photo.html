@@ -341,7 +341,6 @@
       <span class="tab" data-cat="bts">BTS <span class="count" data-cat-count="bts">0</span></span>
       <span class="tab" data-cat="editorial">Editorial <span class="count" data-cat-count="editorial">0</span></span>
       <span class="tab" data-cat="live">Live <span class="count" data-cat-count="live">0</span></span>
-      <span class="tab" data-cat="film">35mm <span class="count" data-cat-count="film">0</span></span>
       <span class="tab" data-cat="phone">Phone <span class="count" data-cat-count="phone">0</span></span>
       <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
       <span class="tab-shuffle" id="photoShuffle" title="Shuffle">
@@ -431,7 +430,7 @@
             src: p.src,
             authors: [], // collect all clients who share this image
             title: p.title || c.name,
-            camera: p.camera || 'Phase One',
+            camera: p.camera || '',
             location: p.location || '',
             year: p.year || '2024',
             tags: p.tags || [],
@@ -459,9 +458,8 @@
       if (tagLow.includes('bts')) cats.add('bts');
       if (tagLow.includes('editorial')) cats.add('editorial');
       if (tagLow.includes('live') || tagLow.includes('live event')) cats.add('live');
-      // Camera-based: 35mm Film tag, phone tag
+      // Camera-based: phone tag (35mm category removed)
       const cam = (photoCamera || '').toLowerCase();
-      if (cam.includes('35mm') || tagLow.includes('35mm')) cats.add('film');
       if (cam.includes('phone') || tagLow.includes('phone')) cats.add('phone');
       authors.forEach(a => {
         if (a.id === 'landbound') cats.add('personal');
@@ -594,7 +592,7 @@
         <div class="post-credit">📷 ${p.caption}</div>
         <div class="post-meta">
           <span>${p.tag}</span>
-          <span><strong>${p.camera}</strong></span>
+          ${p.camera ? '<span><strong>' + p.camera + '</strong></span>' : ''}
         </div>
       </div>
     `;}).join('');
@@ -623,7 +621,7 @@
         <div class="photo-cap">
           <span class="tag">${p.tag || ''}</span>
           <div class="t">${p.title || ''}</div>
-          <div class="m">${p.camera || ''} · ${p.location || ''}</div>
+          <div class="m">${[p.camera, p.location].filter(Boolean).join(' · ')}</div>
         </div>
       </div>
     `).join('');

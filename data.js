@@ -100,7 +100,7 @@ window.CLIENTS = [
     short: 'Gym Class H.',
     handle: '@gymclassheroes',
     role: 'Director · Photographer',
-    blurb: 'Reunion record promo. Phase One in studio.',
+    blurb: 'Reunion record promo. In studio.',
     palette: 'sa-4',
     thumb: null,
     media: [
