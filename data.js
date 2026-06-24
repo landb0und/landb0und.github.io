@@ -498,7 +498,14 @@ window.BUNNY = { LIB: '675985', CDN: 'vz-5dfccea4-b84.b-cdn.net' };
 // the moment Bunny's storage starts serving the file again.
 window.BUNNY_THUMB_OVERRIDES = {
   'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
-  'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
+  'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png',
+  // These videos' thumbnail.jpg 404s on Bunny's CDN (same bug as above). Their
+  // preview.webp serves reliably, so use it as the poster fallback.
+  '5e9277e4-debc-4491-bc5b-8fbbf8f56921': 'https://vz-5dfccea4-b84.b-cdn.net/5e9277e4-debc-4491-bc5b-8fbbf8f56921/preview.webp', // Better Than Us
+  'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5': 'https://vz-5dfccea4-b84.b-cdn.net/efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5/preview.webp', // CMWYH vertical
+  '6b38b59e-aedd-4208-a1fc-ff85adb30021': 'https://vz-5dfccea4-b84.b-cdn.net/6b38b59e-aedd-4208-a1fc-ff85adb30021/preview.webp', // Blame It All On Me
+  '85b07d51-f4b2-4ca0-b966-06f43b1a491c': 'https://vz-5dfccea4-b84.b-cdn.net/85b07d51-f4b2-4ca0-b966-06f43b1a491c/preview.webp', // Landon Barker x Dodge
+  '9e6f327c-1d83-4545-b88c-3193d7dd4274': 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp'  // Bleed
 };
 window.bunnyThumb = function(guid) {
   if (window.BUNNY_THUMB_OVERRIDES[guid]) return window.BUNNY_THUMB_OVERRIDES[guid];
@@ -799,7 +806,9 @@ window.VERTICALS = [
 ];
 
 window.verticalThumb = function(v) {
-  return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/thumbnail.jpg';
+  // Honor the override map so videos whose thumbnail.jpg 404s fall back to a
+  // working poster (e.g. preview.webp).
+  return window.bunnyThumb(v.guid);
 };
 window.verticalMp4 = function(v, quality) {
   return 'https://' + window.BUNNY.CDN + '/' + v.guid + '/play_' + (quality || '480p') + '.mp4';
