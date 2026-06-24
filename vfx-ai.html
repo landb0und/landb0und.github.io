@@ -497,10 +497,18 @@
   const bv = document.getElementById('baBeforeVid');
   const av = document.getElementById('baAfterVid');
   if (bv && av) {
-    [bv, av].forEach(v => { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); });
+    const tryPlay = () => [bv, av].forEach(v => { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); });
+    tryPlay();
     bv.addEventListener('timeupdate', () => {
       if (Math.abs(av.currentTime - bv.currentTime) > 0.25) { try { av.currentTime = bv.currentTime; } catch (_) {} }
     });
+    // Start (or resume) playback whenever the slider scrolls into view — covers
+    // browsers that defer muted autoplay until the element is visible.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) tryPlay(); }); }, { threshold: 0.2 }).observe(cont);
+    }
+    // Also kick playback on first interaction, as a final fallback.
+    ['pointerdown', 'touchstart', 'scroll'].forEach(ev => window.addEventListener(ev, tryPlay, { once: true, passive: true }));
   }
 })();
 
