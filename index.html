@@ -732,7 +732,8 @@
       return lb ? [lb, ...rest] : window.CLIENTS;
     })();
     const items = ordered.filter(cl => !cl.egg).map(cl => {
-      const t = window.clientThumb(cl);
+      let t = window.clientThumb(cl);
+      if (t && /\.webp(\?|$)/i.test(t)) t = null;  // letterboxed animated webp → use initials instead
       const initials = window.clientInitials(cl);
       const bgStyle = t ? 'style="background-image: url(\'' + t + '\');"' : '';
       const label = t ? '' : initials;

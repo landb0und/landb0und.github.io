@@ -135,7 +135,11 @@
     const clients = window.CLIENTS;
     counter.innerHTML = '<strong>' + clients.length + '</strong> clients<br>2022 — present';
     grid.innerHTML = clients.map(c => {
-      const t = window.clientThumb(c);
+      let t = window.clientThumb(c);
+      // Animated Bunny preview.webp avatars arrive letterboxed and never fill the
+      // circle (cover can't crop baked-in bars). Drop them so those cards fall back
+      // to the clean palette + initials instead. Applies uniformly to any webp avatar.
+      if (t && /\.webp(\?|$)/i.test(t)) t = null;
       const initials = window.clientInitials(c);
       const avatarBg = t ? 'style="background-image: url(\'' + t + '\');"' : '';
       const handle = c.handle || '';
@@ -144,7 +148,8 @@
       const stats = [];
       if (videoCount) stats.push('<span><strong>' + videoCount + '</strong> ' + (videoCount === 1 ? 'video' : 'videos') + '</span>');
       if (photoCount) stats.push('<span><strong>' + photoCount + '</strong> ' + (photoCount === 1 ? 'photo' : 'photos') + '</span>');
-      if (!stats.length) stats.push('<span>Coming soon</span>');
+      if (c.egg) stats.push('<span>▶ Try it now</span>');
+      else if (!stats.length) stats.push('<span>Coming soon</span>');
       return ''
         + '<a class="card" href="' + (c.href || ('client.html?id=' + c.id)) + '">'
         +   '<div class="card-head">'

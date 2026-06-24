@@ -223,7 +223,8 @@
     // Client profile uses the canonical order from data.js (no shuffle).
     // Photo IG feed + grid are the shuffled views; the artist's own page is curated.
     currentClient.displayMedia = (c.media || []).slice();
-    const thumb = window.clientThumb(c);
+    let thumb = window.clientThumb(c);
+    if (thumb && /\.webp(\?|$)/i.test(thumb)) thumb = null;  // letterboxed animated webp → use initials instead
     const initials = window.clientInitials(c);
     const avatarBg = thumb ? `style="background-image: url('${thumb}');"` : '';
     const avatarLabel = thumb ? '' : initials;
@@ -436,11 +437,12 @@
 
   function renderOtherStrip() {
     const others = window.CLIENTS.filter(x => x.id !== currentClient.id).slice(0, 14);
-    document.getElementById('otherStrip').innerHTML = others.map(o => {
-      const ot = window.clientThumb(o);
+    document.getElementById('otherStrip').innerHTML = others.filter(o => !o.egg).map(o => {
+      let ot = window.clientThumb(o);
+      if (ot && /\.webp(\?|$)/i.test(ot)) ot = null;  // letterboxed animated webp → use initials
       const olabel = ot ? '' : window.clientInitials(o);
       return `
-        <a class="oc" href="client.html?id=${o.id}">
+        <a class="oc" href="${o.href || ('client.html?id=' + o.id)}">
           <div class="oc-ring"><div class="oc-inner"><div class="oc-img ${ot ? '' : o.palette}" ${ot ? `style="background-image: url('${ot}');"` : ''}>${olabel}</div></div></div>
           <div class="oc-name">${o.short}</div>
         </a>`;
