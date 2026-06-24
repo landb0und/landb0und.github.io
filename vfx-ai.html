@@ -420,7 +420,7 @@
     .filter(({ v }) => ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx'));
   if (!items.length) { mount.style.display = 'none'; return; }
   mount.innerHTML = items.map(({ v, idx }) => {
-    const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+    const thumb = window.bunnyThumb ? window.bunnyThumb(v.guid) : 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
     const mp4   = 'https://' + CDN + '/' + v.guid + '/play_480p.mp4';
     const cap   = v.label || v.title || '';
     const tag   = (v.type === 'bts') ? 'BTS' : 'VFX';
@@ -502,7 +502,7 @@ const SHOTS = [
   },
   {
     tag: 'Particle FX', project: 'Bleed · Christian Gates · 2025', hrs: '4–6',
-    img: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/thumbnail.jpg',
+    img: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp',
     filters: ['saturate(0) brightness(1.0)', 'saturate(0.3) contrast(1.15)', 'saturate(0.7) brightness(1.05)', 'saturate(1)'],
     steps: ['Raw plate — no effects', 'Build particle system for that motion', 'Match lighting to footage', 'Comp at the right depth · done']
   },
@@ -571,9 +571,9 @@ setInterval(() => {
 // NOTE: curated selection — refactor to render from window.CLIENTS if needed
 const FILM_FRAMES = [
   { num: '001', title: 'LL Cool J — "Passion"',     detail: 'VFX SUP · 2024',   pg: 'linear-gradient(135deg,#1a0a08,#4a1a10,#c4533a)' },
-  { num: '002', title: 'CHILDSTAR: Final Act',      detail: '24 SHOTS · 2025',  src: 'https://vz-5dfccea4-b84.b-cdn.net/fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8/thumbnail.jpg' },
-  { num: '003', title: 'Secrets',                   detail: 'DIR+VFX · 2024',   src: 'https://vz-5dfccea4-b84.b-cdn.net/b58d5348-c997-4338-8a9d-f83302bf948a/thumbnail.jpg' },
-  { num: '004', title: 'Bleed',                     detail: '15 SHOTS · 2025',  src: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/thumbnail.jpg' },
+  { num: '002', title: 'CHILDSTAR: Final Act',      detail: '24 SHOTS · 2025',  src: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg' },
+  { num: '003', title: 'Secrets',                   detail: 'DIR+VFX · 2024',   src: 'photos/stills/secrets.png' },
+  { num: '004', title: 'Bleed',                     detail: '15 SHOTS · 2025',  src: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp' },
   { num: '005', title: "Call Me When You're Home",  detail: 'DIR+VFX · 2024',   src: 'https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg' },
   { num: '006', title: 'Forgive &amp; Forget',      detail: '42 SHOTS · 2022',  src: 'https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg' }
 ];

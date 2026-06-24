@@ -652,9 +652,13 @@
     }
     container.innerHTML = ordered.map(({ v, i }) => {
       const thumb = window.verticalThumb(v);
+      // CMWYH is a square master letterboxed inside a 9:16 file — zoom the home
+      // tile past the baked top/bottom dead space. Full playback is untouched.
+      const squareLetterboxed = /cmwyh/i.test(v.label || '') || v.guid === 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5';
+      const cropStyle = squareLetterboxed ? ' transform:scale(1.78);' : '';
       return `
       <a class="short" href="work.html#shorts/${i}" style="background: url('${thumb}') center/cover #000;">
-        <video data-vsrc="${window.verticalMp4(v)}" poster="${thumb}" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; opacity:0; transition:opacity .3s;"></video>
+        <video data-vsrc="${window.verticalMp4(v)}" poster="${thumb}" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; opacity:0; transition:opacity .3s;${cropStyle}"></video>
         <div class="short-overlay"></div>
         <span class="short-tag">▶</span>
         <div class="short-meta">
