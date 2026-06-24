@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O SUPERMAN — system</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=UnifrakturCook:wght@700&display=swap');
+
+  :root{
+    --face:#262229;
+    --hi:#4b4350;
+    --hi2:#37313c;
+    --sh:#0d0a10;
+    --dk:#000;
+    --bone:#d9cdbd;
+    --blood1:#3a0608;
+    --blood2:#7d1417;
+    --sans:Tahoma,"MS Sans Serif",Geneva,Verdana,sans-serif;
+    --black:'UnifrakturCook',serif;
+    --gothic:'Pirata One',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--sans);
+    background:#040305;
+    color:var(--bone);
+    overflow:hidden;
+    user-select:none;
+    -webkit-user-select:none;
+    cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='30'%20height='30'%3E%3Cpath%20d='M4%202L4%2022L9.5%2016.5L13%2024L16.5%2022.3L13%2015L20%2015Z'%20fill='%23140406'%20stroke='%23c12a22'%20stroke-width='1.4'%20stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, auto;
+  }
+  /* hot cursor for anything clickable / grabbable */
+  .tbar,.rsz,.btn,#track,#hint,#play{
+    cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='30'%20height='30'%3E%3Cpath%20d='M4%202L4%2022L9.5%2016.5L13%2024L16.5%2022.3L13%2015L20%2015Z'%20fill='%23c12a22'%20stroke='%23f3d9c8'%20stroke-width='1.4'%20stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, pointer;
+  }
+
+  /* ---------- desktop ---------- */
+  #desk{
+    position:fixed; inset:0; overflow:hidden;
+    background:radial-gradient(120% 90% at 50% 18%, #150307 0%, #0a040a 38%, #040204 70%, #000 100%);
+  }
+  #desk::before{
+    content:""; position:absolute; inset:-20%;
+    background:
+      radial-gradient(40% 30% at 30% 40%, rgba(120,20,30,.10), transparent 70%),
+      radial-gradient(35% 28% at 72% 65%, rgba(40,60,90,.08), transparent 70%);
+    animation:fog 26s ease-in-out infinite alternate; pointer-events:none;
+  }
+  @keyframes fog{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-3%,2%) scale(1.08)}}
+
+  /* spooky background layers */
+  #bgfx{position:absolute;inset:0;z-index:1;pointer-events:none;}
+  #sigil{position:absolute;left:50%;top:48%;z-index:1;pointer-events:none;
+    font-family:var(--black);font-size:70vh;line-height:1;color:#250407;
+    text-shadow:0 0 80px rgba(150,16,22,.4);
+    transform:translate(-50%,-50%);transform-origin:center;
+    animation:sigspin 140s linear infinite, sigpulse 9s ease-in-out infinite;}
+  @keyframes sigspin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+  @keyframes sigpulse{0%,100%{opacity:.05}50%{opacity:.11}}
+
+  /* ---------- panels ---------- */
+  .win{position:absolute;display:flex;flex-direction:column;
+    background:var(--face);padding:3px;min-width:150px;min-height:90px;
+    box-shadow:inset -1px -1px var(--dk),inset 1px 1px var(--hi),inset -2px -2px var(--sh),inset 2px 2px var(--hi2),
+      -2px 0 0 0 rgba(255,0,72,.5),    /* hard red edge offset left  */
+       2px 0 0 0 rgba(0,206,255,.45),  /* hard cyan edge offset right */
+       4px 8px 18px rgba(0,0,0,.68);}  /* drop shadow                 */
+  .tbar{display:flex;align-items:center;gap:6px;height:22px;padding:0 6px;flex-shrink:0;cursor:move;
+    background:linear-gradient(180deg,#8a181b 0%,var(--blood2) 12%,var(--blood1) 92%,#240305 100%);
+    color:var(--bone);}
+  .tbar .sig{font-family:var(--black);font-size:15px;line-height:1;color:#e9b9a0;text-shadow:0 0 6px rgba(255,80,40,.5);}
+  .tbar .ti{font-family:var(--gothic);font-size:13px;letter-spacing:.4px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;color:#f0e3d4;text-shadow:0 1px 1px #000;}
+
+  /* locked window: drag pans the video inside this window only (no color change) */
+  .win.locked .tbar{cursor:grab;}
+  .win.locked .tbar:active{cursor:grabbing;}
+  .win.locked .ti::after{content:' ⛓';opacity:.85;}
+
+  .content{position:relative;flex:1;min-height:0;margin:2px 2px 2px;overflow:hidden;
+    background:#000;box-shadow:inset 1px 1px var(--dk),inset -1px -1px var(--hi);}
+  .content canvas{position:absolute;left:0;top:0;display:block;}
+  /* per-panel scanlines + faint RGB fringe */
+  .content::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:.5;
+    background:
+      repeating-linear-gradient(0deg,rgba(255,0,40,.05) 0 1px,transparent 1px 2px),
+      repeating-linear-gradient(0deg,rgba(0,180,255,.05) 1px 2px,transparent 2px 3px);}
+  .content::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;
+    background:radial-gradient(120% 120% at 50% 50%, transparent 55%, rgba(0,0,0,.7) 100%);}
+  .content .scan{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.5;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0 1px,transparent 1px 3px);}
+
+  .rsz{position:absolute;right:1px;bottom:1px;width:16px;height:16px;cursor:nwse-resize;z-index:3;
+    background:linear-gradient(135deg,transparent 0 8px,var(--hi) 8px 9px,transparent 9px 11px,var(--hi) 11px 12px,transparent 12px 14px,var(--hi) 14px 15px,transparent 15px);}
+
+  .win.glitch .content canvas{animation:gj .22s steps(2) infinite;}
+  @keyframes gj{0%{filter:none;transform:translate(0,0)}
+    35%{filter:hue-rotate(40deg) saturate(1.6) contrast(1.3);transform:translate(-3px,1px)}
+    70%{filter:invert(.12) contrast(1.7);transform:translate(3px,-2px)}}
+
+  /* ---------- global CRT / vignette ---------- */
+  #crt{position:fixed;inset:0;z-index:600;pointer-events:none;
+    background:
+      repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px),
+      radial-gradient(130% 110% at 50% 50%,transparent 56%,rgba(0,0,0,.62) 100%);
+    mix-blend-mode:multiply;animation:crtflick 6s steps(60) infinite;}
+  /* rolling refresh band */
+  #crt::before{content:"";position:absolute;left:0;right:0;height:22%;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(255,255,255,.05),transparent);
+    animation:roll 7s linear infinite;}
+  /* aberration ghost edges across the whole screen */
+  #crt::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.35;
+    background:linear-gradient(90deg,rgba(255,0,40,.10),transparent 6%,transparent 94%,rgba(0,200,255,.10));}
+  @keyframes roll{0%{top:-25%}100%{top:105%}}
+  @keyframes crtflick{0%,100%{opacity:.92}47%{opacity:.96}48%{opacity:.8}49%{opacity:1}50%{opacity:.85}}
+  #crt.flick{animation:flick .14s steps(2) 2;}
+  @keyframes flick{0%{opacity:1}50%{opacity:.35;filter:invert(1) hue-rotate(40deg)}100%{opacity:1}}
+
+  /* ---------- scrubber ---------- */
+  #bar{position:fixed;left:0;right:0;bottom:0;height:40px;z-index:700;
+    display:flex;align-items:center;gap:12px;padding:0 16px;
+    background:linear-gradient(180deg,rgba(20,10,14,.86),rgba(6,4,8,.94));
+    border-top:1px solid #4a1015;box-shadow:0 -2px 14px rgba(120,10,16,.3);
+    backdrop-filter:blur(2px);}
+  #bar .btn{font-family:var(--gothic);font-size:15px;color:#e9b9a0;cursor:pointer;width:20px;text-align:center;
+    text-shadow:0 0 6px rgba(200,40,30,.5);}
+  #bar .btn:hover{color:#fff;}
+  #tc{font-family:var(--gothic);font-size:13px;letter-spacing:1px;color:#cdb4a3;min-width:96px;text-align:center;}
+  #track{position:relative;flex:1;height:14px;cursor:pointer;display:flex;align-items:center;}
+  #track .rail{position:absolute;left:0;right:0;height:4px;background:#2a1a1f;border-radius:2px;
+    box-shadow:inset 0 1px 2px #000;}
+  #track .fill{position:absolute;left:0;height:4px;border-radius:2px;
+    background:linear-gradient(90deg,#5a0e12,#c12a22);box-shadow:0 0 8px rgba(200,40,30,.6);}
+  #track .head{position:absolute;width:10px;height:16px;margin-left:-5px;border-radius:2px;
+    background:#e9b9a0;box-shadow:0 0 8px rgba(255,90,50,.7),inset 0 0 0 1px #3a0608;}
+  #hint{font-family:var(--gothic);font-size:12px;color:#a05a4a;letter-spacing:1px;cursor:pointer;
+    animation:bk 1.6s steps(2) infinite;white-space:nowrap;}
+  @keyframes bk{0%,55%{opacity:1}56%,100%{opacity:.25}}
+
+  /* ---------- intro rites (instructions overlay) ---------- */
+  #intro{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:radial-gradient(120% 90% at 50% 38%, rgba(22,3,7,.88), rgba(2,1,3,.96));
+    backdrop-filter:blur(3px);transition:opacity .9s ease;cursor:pointer;}
+  #intro.gone{opacity:0;pointer-events:none;}
+  .intro-card{max-width:540px;width:100%;padding:34px 40px 30px;text-align:center;
+    background:linear-gradient(180deg, rgba(42,6,9,.55), rgba(10,4,8,.66));
+    border:1px solid rgba(125,20,23,.55);
+    box-shadow:0 0 70px rgba(150,16,22,.22), inset 0 0 46px rgba(0,0,0,.6),
+      -2px 0 0 0 rgba(255,0,72,.4), 2px 0 0 0 rgba(0,206,255,.35);}
+  .intro-sig{font-family:var(--black);font-size:50px;line-height:1;color:#8a181b;
+    text-shadow:0 0 30px rgba(200,30,24,.55);margin-bottom:4px;}
+  .intro-h{font-family:var(--gothic);font-size:29px;letter-spacing:.6px;color:#f0e3d4;
+    text-shadow:0 1px 2px #000;margin-bottom:20px;}
+  .intro-list{list-style:none;text-align:left;display:flex;flex-direction:column;gap:13px;margin:0 auto 22px;max-width:430px;}
+  .intro-list li{font-family:var(--sans);font-size:13.5px;line-height:1.5;color:#cdb4a3;display:flex;gap:11px;}
+  .intro-list li b{color:#c41818;flex:0 0 auto;font-family:var(--gothic);font-size:15px;line-height:1.3;}
+  .intro-list em{color:#e9b9a0;font-style:normal;font-weight:700;}
+  .intro-go{font-family:var(--gothic);font-size:14px;letter-spacing:2.5px;color:#a05a4a;
+    text-transform:lowercase;animation:bk 1.6s steps(2) infinite;}
+</style>
+</head>
+<body>
+
+<div id="desk">
+  <canvas id="bgfx"></canvas>
+  <div id="sigil">⛧</div>
+</div>
+<div id="crt"></div>
+
+<!-- intro rites — instructions, shown once on open, dismissed on first click -->
+<div id="intro">
+  <div class="intro-card">
+    <div class="intro-sig">⛧</div>
+    <div class="intro-h">it knows you're here</div>
+    <ul class="intro-list">
+      <li><b>✛</b><span>Seize a window by its <em>crimson bar</em> and drag it through the dark.</span></li>
+      <li><b>✛</b><span>Pull the <em>lower-right corner</em> to stretch a window open or shut.</span></li>
+      <li><b>✛</b><span><em>Double-click</em> a window to bind the vision inside it — double-click again to set it loose.</span></li>
+    </ul>
+    <div class="intro-go">click anywhere to answer</div>
+  </div>
+</div>
+
+
+<!-- hidden master video; all panels draw from this.
+     SOURCE: Bunny "bonus" collection upload (osuperman.mp4 → GUID b205d685-b14e-4d75-ab2b-655aa15db102).
+     NOTE: this upload only rendered up to 480p (720p/1080p 404), so we point at
+     play_480p.mp4. To swap in a new cut later, replace the src URL below with the
+     new Bunny play URL (use whichever resolution that upload actually has). -->
+<video id="master" playsinline loop
+  style="position:fixed;width:2px;height:2px;opacity:0;pointer-events:none;left:-10px;top:-10px">
+  <source src="https://vz-5dfccea4-b84.b-cdn.net/b205d685-b14e-4d75-ab2b-655aa15db102/play_480p.mp4" type="video/mp4">
+</video>
+
+<!-- bottom scrubber -->
+<div id="bar">
+  <div class="btn" id="play">▮▮</div>
+  <div id="tc">--:-- / --:--</div>
+  <div id="track"><div class="rail"></div><div class="fill"></div><div class="head"></div></div>
+  <div id="hint" title="unmute">🔇 click to wake</div>
+</div>
+
+<script>
+const master = document.getElementById('master');
+const desk = document.getElementById('desk');
+
+/* ---------- faint drifting embers ---------- */
+const bgfx = document.getElementById('bgfx');
+const bgx = bgfx.getContext('2d');
+let embers=[];
+function sizeBg(){ bgfx.width=window.innerWidth; bgfx.height=window.innerHeight; }
+function newEmber(seed){
+  return { x:Math.random()*window.innerWidth,
+           y:seed?Math.random()*window.innerHeight:window.innerHeight+8,
+           r:0.5+Math.random()*1.6, vy:0.12+Math.random()*0.5,
+           drift:(Math.random()-0.5)*0.25, ph:Math.random()*6.28, sp:0.01+Math.random()*0.03 };
+}
+function initEmbers(){ embers=[]; for(let i=0;i<40;i++) embers.push(newEmber(true)); }
+function drawEmbers(){
+  const W=bgfx.width, H=bgfx.height;
+  bgx.clearRect(0,0,W,H);
+  bgx.globalCompositeOperation='lighter';
+  for(const e of embers){
+    e.y-=e.vy; e.x+=e.drift; e.ph+=e.sp;
+    if(e.y<-10){ Object.assign(e,newEmber(false)); }
+    const a=(0.18+0.16*Math.sin(e.ph))*0.9;
+    bgx.beginPath();
+    bgx.fillStyle='rgba(210,60,30,'+a+')';
+    bgx.shadowColor='rgba(220,70,30,'+a+')'; bgx.shadowBlur=6;
+    bgx.arc(e.x,e.y,e.r,0,6.2832); bgx.fill();
+  }
+  bgx.shadowBlur=0; bgx.globalCompositeOperation='source-over';
+}
+
+/* ---------- panels ---------- */
+const WINDOWS = [
+  {id:'w1', title:'hello?',               sig:'☎', x:120, y:60,  w:480, h:320},
+  {id:'w2', title:'this is your mother.',  sig:'🜨', x:660, y:120, w:380, h:460},
+  {id:'w3', title:'are you coming home?',  sig:'✝', x:260, y:300, w:560, h:300},
+  {id:'w4', title:'you dont know me',      sig:'▦', x:880, y:380, w:330, h:240},
+  {id:'w5', title:'I know you',            sig:'☠', x:520, y:150, w:300, h:210},
+];
+
+let zCounter = 100;
+const winEls = {};
+
+function buildWindow(def){
+  const win = document.createElement('div');
+  win.className = 'win'; win.id = def.id;
+  win.style.left=def.x+'px'; win.style.top=def.y+'px';
+  win.style.width=def.w+'px'; win.style.height=def.h+'px';
+  win.style.zIndex=++zCounter;
+  win.innerHTML = `
+    <div class="tbar"><span class="sig">${def.sig}</span><span class="ti">${def.title}</span></div>
+    <div class="content"><canvas></canvas><div class="scan"></div></div>
+    <div class="rsz"></div>`;
+  desk.appendChild(win);
+  win.canvas = win.querySelector('canvas');
+  win.ctx = win.canvas.getContext('2d');
+  winEls[def.id] = win;
+  win.addEventListener('mousedown',()=>raise(win));
+  makeDraggable(win, win.querySelector('.tbar'));
+  makeResizable(win, win.querySelector('.rsz'));
+  // double-click anywhere on the window locks/unlocks it
+  win.addEventListener('dblclick',e=>{ if(e.target.closest('.rsz')) return; toggleLock(win); });
+  return win;
+}
+function raise(win){ win.style.zIndex=++zCounter; }
+function toggleLock(win){
+  win.locked=!win.locked;
+  win.classList.toggle('locked', win.locked);
+}
+
+function makeDraggable(win, handle){
+  let sx,sy,ox,oy,sOffX,sOffY,drag=false;
+  handle.addEventListener('mousedown',e=>{
+    drag=true; sx=e.clientX; sy=e.clientY; ox=win.offsetLeft; oy=win.offsetTop;
+    sOffX=win.offX||0; sOffY=win.offY||0; raise(win); e.preventDefault();
+  });
+  window.addEventListener('mousemove',e=>{
+    if(!drag) return;
+    const dx=e.clientX-sx;
+    const newTop=Math.max(0,oy+(e.clientY-sy));
+    const dyApplied=newTop-oy;
+    win.style.left=(ox+dx)+'px';
+    win.style.top =newTop+'px';
+    // locked: the video is glued to the window — move both together so the slice stays put
+    if(win.locked){ win.offX=sOffX+dx; win.offY=sOffY+dyApplied; }
+  });
+  window.addEventListener('mouseup',()=>drag=false);
+}
+function makeResizable(win, grip){
+  let sx,sy,ow,oh,rz=false;
+  grip.addEventListener('mousedown',e=>{
+    rz=true; sx=e.clientX; sy=e.clientY; ow=win.offsetWidth; oh=win.offsetHeight; raise(win); e.preventDefault(); e.stopPropagation();
+  });
+  window.addEventListener('mousemove',e=>{
+    if(!rz) return;
+    win.style.width =Math.max(150, ow+e.clientX-sx)+'px';
+    win.style.height=Math.max(90,  oh+e.clientY-sy)+'px';
+  });
+  window.addEventListener('mouseup',()=>rz=false);
+}
+
+/* ---------- video-window draw loop ---------- */
+let vw=854, vh=480;
+master.addEventListener('loadedmetadata',()=>{ vw=master.videoWidth; vh=master.videoHeight; });
+
+function drawCover(ctx,W,H,ox,oy){
+  if(!vw||!vh||master.readyState<2) return;
+  const scale=Math.max(W/vw,H/vh);
+  const dw=vw*scale, dh=vh*scale;
+  ctx.drawImage(master,(W-dw)/2+ox,(H-dh)/2+oy,dw,dh);
+}
+function frame(){
+  const W=window.innerWidth, H=window.innerHeight;
+  for(const id in winEls){
+    const win=winEls[id];
+    const content=win.querySelector('.content');
+    const r=content.getBoundingClientRect();
+    if(r.width<1) continue;
+    const c=win.canvas;
+    if(c.width!==W) c.width=W;
+    if(c.height!==H) c.height=H;
+    c.style.left=(-r.left)+'px';
+    c.style.top =(-r.top)+'px';
+    c.style.width=W+'px';
+    c.style.height=H+'px';
+    drawCover(win.ctx,W,H, win.offX||0, win.offY||0);
+  }
+  drawEmbers();
+  updateScrub();
+  requestAnimationFrame(frame);
+}
+
+/* full song, loops naturally via the <video loop> attribute */
+
+/* ---------- scrubber ---------- */
+const track=document.getElementById('track');
+const fill=track.querySelector('.fill');
+const head=track.querySelector('.head');
+const tc=document.getElementById('tc');
+const playBtn=document.getElementById('play');
+const hint=document.getElementById('hint');
+let scrubbing=false;
+
+function fmt(t){ if(!isFinite(t)) return '--:--'; const m=Math.floor(t/60), s=Math.floor(t%60); return m+':'+String(s).padStart(2,'0'); }
+function updateScrub(){
+  const d=master.duration||0, t=master.currentTime||0;
+  const p=d?t/d:0;
+  fill.style.width=(p*100)+'%';
+  head.style.left=(p*100)+'%';
+  tc.textContent=fmt(t)+' / '+fmt(d);
+  playBtn.textContent=master.paused?'▶':'▮▮';
+}
+function seekFromEvent(e){
+  const r=track.getBoundingClientRect();
+  let p=(e.clientX-r.left)/r.width; p=Math.max(0,Math.min(1,p));
+  if(master.duration) master.currentTime=p*master.duration;
+  updateScrub();
+}
+track.addEventListener('mousedown',e=>{ scrubbing=true; seekFromEvent(e); e.preventDefault(); });
+window.addEventListener('mousemove',e=>{ if(scrubbing) seekFromEvent(e); });
+window.addEventListener('mouseup',()=>scrubbing=false);
+['click','touchend'].forEach(ev => playBtn.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); togglePlay(); }));
+
+/* ---------- transport (play / pause / mute) ---------- */
+function reflect(){ playBtn.textContent = master.paused ? '▶' : '▮▮'; }
+function togglePlay(){           // single source of truth for play/pause
+  if(master.paused){ master.muted=false; master.play().then(reflect).catch(()=>{}); }
+  else { master.pause(); reflect(); }
+  updateScrub();
+}
+// Mute / unmute chip
+hint.addEventListener('click',e=>{ e.stopPropagation();
+  master.muted=!master.muted;
+  hint.style.animation='none'; hint.style.opacity='1';
+  hint.textContent = master.muted ? '🔇 muted' : '🔊 sound on';
+});
+// First interaction anywhere lifts the mute (covers the autoplay-muted fallback)
+window.addEventListener('pointerdown',()=>{ if(master.muted){ master.muted=false; hint.textContent='🔊 sound on'; } },{once:true});
+// spacebar toggles every time (divs aren't focusable, so no double-trigger)
+window.addEventListener('keydown',e=>{
+  if(e.code==='Space'||e.key===' '){ e.preventDefault(); togglePlay(); }
+});
+
+/* ---------- ambient dread (glitch only, no popups) ---------- */
+const crt=document.getElementById('crt');
+function flick(){ crt.classList.remove('flick'); void crt.offsetWidth; crt.classList.add('flick'); }
+function ambient(){
+  const ids=Object.keys(winEls);
+  if(ids.length){
+    const w=winEls[ids[Math.floor(Math.random()*ids.length)]];
+    w.classList.add('glitch');
+    setTimeout(()=>w.classList.remove('glitch'), 280+Math.random()*460);
+  }
+  if(Math.random()<0.5) flick();
+  setTimeout(ambient, 5000+Math.random()*6000);
+}
+
+/* ---------- boot ---------- */
+sizeBg(); initEmbers();
+window.addEventListener('resize',sizeBg);
+WINDOWS.forEach(buildWindow);
+// Try to start UNMUTED right away; if the browser blocks unmuted autoplay,
+// fall back to muted playback and lift the mute on the first interaction.
+function boot(){
+  master.muted=false;
+  master.play().then(reflect).catch(()=>{
+    master.muted=true;
+    master.play().then(reflect).catch(()=>{});
+    hint.textContent='🔇 click to wake';
+  });
+}
+master.addEventListener('loadeddata',boot);
+if(master.readyState>=2) boot();
+
+// Intro rites — first click anywhere dismisses the overlay AND counts as the
+// user gesture that lets the video play with sound.
+const intro=document.getElementById('intro');
+function enterRites(){
+  if(!intro || intro.classList.contains('gone')) return;
+  intro.classList.add('gone');
+  master.muted=false;
+  master.play().then(reflect).catch(()=>{ master.muted=true; master.play().then(reflect).catch(()=>{}); });
+  if(hint){ hint.textContent='🔊 sound on'; hint.style.opacity='.5'; }
+  setTimeout(()=>{ if(intro) intro.style.display='none'; }, 950);
+}
+if(intro) intro.addEventListener('click', enterRites);
+requestAnimationFrame(frame);
+setTimeout(ambient, 4000);
+</script>
+</body>
+</html>
