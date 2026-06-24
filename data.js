@@ -601,14 +601,14 @@ window.VERTICALS = [
   {
     id: 'cmwyh-vertical',
     guid: 'efe3f41a-9ce2-49c6-bbf0-d879b2fbbcb5',
-    title: "Call Me When You're Home",
+    title: "Surfaces - Call Me When You're Home",
     client: 'surfaces',
     type: 'music',
     tag: 'Surfaces · 2024',
     role: 'Director · DP · Editor · VFX',
     aiNote: 'No AI',
     music: '@surfaces — Call Me When You\'re Home',
-    label: 'CMWYH',
+    label: "Surfaces · Call Me When You're Home",
     caption: 'Surfaces · Call Me When You\'re Home — VFX, no AI'
   },
   {
