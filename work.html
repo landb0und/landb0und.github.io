@@ -748,7 +748,11 @@
     // until/unless Bunny's storage is rebuilt for those two videos.
     const THUMB_OVERRIDES = {
       'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
-      'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
+      'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png',
+      // Bleed: thumbnail.jpg 404s and a seeked video frame won't paint on this
+      // browser, so use the (animated) preview.webp so it at least renders.
+      // TODO: swap to a committed still once Jacob picks a frame.
+      '9e6f327c-1d83-4545-b88c-3193d7dd4274': 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp'
     };
     // Bunny videos whose auto-generated first-frame thumbnail.jpg is basically
     // pure black (fade-from-black openings, dark plates, letterboxed gates).
@@ -791,7 +795,11 @@
                   + '<span class="rec-playlist-badge">▶ Playlist · ' + eps.length + '</span>'
                   + '</div>';
       } else {
-        if (v.embedId && v.bunny) {
+        if (v.embedId && v.bunny && THUMB_OVERRIDES[v.embedId]) {
+          // Reliable still override (CHILDSTAR / Secrets / Bleed) — a seeked
+          // video frame won't paint for these, so use the image directly.
+          thumbHTML = '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + THUMB_OVERRIDES[v.embedId] + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>';
+        } else if (v.embedId && v.bunny) {
           // Bunny rec: a muted <video> paints a STATIC seeked frame at rest (no
           // animation), and on hover plays a multi-point scrub preview (a few
           // seconds at ~10s / 1m / 3m / etc., scaled to the clip's duration).
