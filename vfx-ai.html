@@ -63,7 +63,7 @@
 
   .section { margin-bottom: 44px; }
   .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
-  .section-head .num { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; }
+  .section-head .num { display: none; }
   .section-head .label { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
   .section-head .hint { margin-left: auto; font-size: 11px; color: var(--ink-4); font-family: Georgia, serif; font-style: italic; }
 
@@ -228,7 +228,7 @@
   <div class="page-hero">
     <div>
       <h1>VFX <span class="amp">&amp;</span> AI</h1>
-      <div class="lede">Supervision, cleanup, comp, CG. With or without AI. The tool depends on the shot.</div>
+      <div class="lede">On set VFX supervision, cleanup, compositing, or CGi.</div>
     </div>
     <div class="stats-mini">
       <div class="stat-mini"><div class="v">250<span class="plus">+</span></div><div class="k">Feature Shots</div></div>
@@ -321,10 +321,9 @@
     </div>
   </div>
 
-  <!-- 04. THE LAYERS -->
-  <div class="section">
+  <!-- 04. THE LAYERS — hidden for now (Jacob will revisit) -->
+  <div class="section" style="display:none;">
     <div class="section-head">
-      <span class="num">04.</span>
       <span class="label">The Layers</span>
       <span class="hint">How a shot gets built</span>
     </div>
@@ -351,37 +350,24 @@
     </div>
   </div>
 
-  <!-- 06. THE STACK -->
+  <!-- 06. CGI · COMPOSITING · AI -->
   <div class="section">
     <div class="section-head">
-      <span class="num">06.</span>
-      <span class="label">The Stack</span>
+      <span class="label">CGI · Compositing · AI</span>
     </div>
-    <div class="stack">
-      <div class="stack-col"><h4>Comp</h4><ul>
-        <li>Nuke <span class="yr">8YR</span></li>
-        <li>After Effects <span class="yr">10YR</span></li>
-        <li>Mocha <span class="yr">6YR</span></li>
-        <li>Fusion <span class="yr">3YR</span></li>
-      </ul></div>
-      <div class="stack-col"><h4>3D / CG</h4><ul>
-        <li>Blender <span class="yr">5YR</span></li>
-        <li>Unreal <span class="yr">3YR</span></li>
-        <li>Cinema 4D <span class="yr">4YR</span></li>
-        <li>Houdini <span class="yr">1YR</span></li>
-      </ul></div>
-      <div class="stack-col"><h4>AI</h4><ul>
-        <li>Midjourney <span class="yr">3YR</span></li>
-        <li>Kling <span class="yr">1YR</span></li>
-        <li>Runway <span class="yr">2YR</span></li>
-        <li>Magnific <span class="yr">1YR</span></li>
-      </ul></div>
-      <div class="stack-col"><h4>Color / Finish</h4><ul>
-        <li>DaVinci Resolve <span class="yr">10YR</span></li>
-        <li>Baselight <span class="yr">2YR</span></li>
-        <li>Frame.io <span class="yr">6YR</span></li>
-        <li>ShotGrid <span class="yr">3YR</span></li>
-      </ul></div>
+    <div class="stack" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="stack-col">
+        <h4>CGI</h4>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.6; margin-top:2px;">Anything that wasn't on set, built in 3D and dropped in — creatures, vehicles, props, full environments and set extensions, plus simulated fire, water, smoke and destruction. Modeled, lit, rendered, then comped into the plate.</p>
+      </div>
+      <div class="stack-col">
+        <h4>Compositing</h4>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.6; margin-top:2px;">Combining and cleaning real footage so the seams vanish — wire and rig removal, sky and background replacement, screen inserts, green-screen keys, multi-plate blends, and color/grain matching. The shot was captured; comp makes it read.</p>
+      </div>
+      <div class="stack-col">
+        <h4>What AI Can Do</h4>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.6; margin-top:2px;">Accelerates the grunt work and opens options — rotoscoping, upscaling, denoise, gen-fill cleanup, style frames and previs, and generative plates or elements when a real shoot isn't feasible. A tool in the pipeline, not the whole pipeline.</p>
+      </div>
     </div>
   </div>
 
@@ -497,18 +483,27 @@
   const bv = document.getElementById('baBeforeVid');
   const av = document.getElementById('baAfterVid');
   if (bv && av) {
-    const tryPlay = () => [bv, av].forEach(v => { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); });
-    tryPlay();
-    bv.addEventListener('timeupdate', () => {
-      if (Math.abs(av.currentTime - bv.currentTime) > 0.25) { try { av.currentTime = bv.currentTime; } catch (_) {} }
-    });
-    // Start (or resume) playback whenever the slider scrolls into view — covers
-    // browsers that defer muted autoplay until the element is visible.
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) tryPlay(); }); }, { threshold: 0.2 }).observe(cont);
+    // PERFECT sync: "before" is the master. loop=false so BOTH restart at 0
+    // together on every loop (independent looping drifts); a per-frame lock
+    // pins the "after" clip to the master's exact time the whole way through.
+    bv.loop = false; av.loop = false; bv.muted = true; av.muted = true;
+    function startBoth() {
+      try { bv.currentTime = 0; av.currentTime = 0; } catch (_) {}
+      bv.play().catch(() => {}); av.play().catch(() => {});
     }
-    // Also kick playback on first interaction, as a final fallback.
-    ['pointerdown', 'touchstart', 'scroll'].forEach(ev => window.addEventListener(ev, tryPlay, { once: true, passive: true }));
+    bv.addEventListener('ended', startBoth);      // master loops → restart both
+    av.addEventListener('ended', () => av.pause()); // let the master drive the loop
+    (function lock() {
+      if (!bv.paused && Math.abs(av.currentTime - bv.currentTime) > 0.033) {
+        try { av.currentTime = bv.currentTime; } catch (_) {}
+      }
+      requestAnimationFrame(lock);
+    })();
+    const kick = () => { if (bv.paused) startBoth(); };
+    bv.addEventListener('canplay', startBoth, { once: true });
+    startBoth();
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) kick(); })).observe(cont);
+    ['pointerdown', 'touchstart'].forEach(ev => window.addEventListener(ev, kick, { once: true, passive: true }));
   }
 })();
 
@@ -589,16 +584,34 @@ setInterval(() => {
   updateLayers();
 }, 2400);
 
-// ── FILM STRIP ──
-// NOTE: curated selection — refactor to render from window.CLIENTS if needed
-const FILM_FRAMES = [
-  { num: '001', title: 'LL Cool J — "Passion"',     detail: 'VFX SUP · 2024',   pg: 'linear-gradient(135deg,#1a0a08,#4a1a10,#c4533a)' },
-  { num: '002', title: 'CHILDSTAR: Final Act',      detail: '24 SHOTS · 2025',  src: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg' },
-  { num: '003', title: 'Secrets',                   detail: 'DIR+VFX · 2024',   src: 'photos/stills/secrets.png' },
-  { num: '004', title: 'Bleed',                     detail: '15 SHOTS · 2025',  vsrc: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/play_720p.mp4', seek: 35 },
-  { num: '005', title: "Call Me When You're Home",  detail: 'DIR+VFX · 2024',   src: 'https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg' },
-  { num: '006', title: 'Forgive &amp; Forget',      detail: '42 SHOTS · 2022',  src: 'https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg' }
-];
+// ── FILM STRIP — auto-built from EVERY VFX-tagged project in data.js, so any
+// video tagged with VFX (in CLIENTS media or VERTICALS) lands in the reel. ──
+function buildFilmFrames() {
+  const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+  const frames = [], seen = new Set();
+  const isVfx = (role, tags) => /vfx/.test(((role || '') + ' ' + (tags || []).join(' ')).toLowerCase());
+  function push(embedId, bunny, title, year) {
+    if (!embedId || seen.has(embedId)) return;
+    seen.add(embedId);
+    const thumb = bunny
+      ? (window.bunnyThumb ? window.bunnyThumb(embedId) : 'https://' + CDN + '/' + embedId + '/thumbnail.jpg')
+      : 'https://img.youtube.com/vi/' + embedId + '/maxresdefault.jpg';
+    const f = { num: String(frames.length + 1).padStart(3, '0'), title: (title || '').replace(/\.(mp4|mov)$/i, ''), detail: (year || '') };
+    // If the only working thumb is an animated preview.webp, render a seeked
+    // <video> still instead so the frame doesn't loop.
+    if (bunny && /preview\.webp/.test(thumb)) { f.vsrc = 'https://' + CDN + '/' + embedId + '/play_720p.mp4'; f.seek = 4; }
+    else f.src = thumb;
+    frames.push(f);
+  }
+  (window.CLIENTS || []).forEach(c => (c.media || []).forEach(m => {
+    if (m.type === 'video' && isVfx('', m.tags)) push(m.embedId, m.bunny, m.title, m.year);
+  }));
+  (window.VERTICALS || []).forEach(v => {
+    if (isVfx(v.role, v.tags)) { const yr = (v.tag || '').match(/\d{4}/); push(v.guid, true, v.label || v.title, yr ? yr[0] : ''); }
+  });
+  return frames;
+}
+const FILM_FRAMES = buildFilmFrames();
 
 function makeFilmFrame(f) {
   // f.vsrc → a muted <video> seeked to a still frame (used when the Bunny
@@ -654,6 +667,13 @@ filmScroll.addEventListener('mouseenter', () => filmPaused = true);
 filmScroll.addEventListener('mouseleave', () => filmPaused = false);
 filmScroll.addEventListener('touchstart', () => { filmPaused = true; clearTimeout(filmTimer); }, { passive: true });
 filmScroll.addEventListener('touchend', () => { filmTimer = setTimeout(() => filmPaused = false, 1500); }, { passive: true });
+// Manual scroll also loops seamlessly — frames are duplicated, so wrap at the
+// halfway point in either direction when the user drags to an edge.
+filmScroll.addEventListener('scroll', () => {
+  const half = filmScroll.scrollWidth / 2;
+  if (filmScroll.scrollLeft >= half) filmScroll.scrollLeft -= half;
+  else if (filmScroll.scrollLeft <= 0) filmScroll.scrollLeft += half;
+}, { passive: true });
 </script>
 </body>
 </html>

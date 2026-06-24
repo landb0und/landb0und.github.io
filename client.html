@@ -298,12 +298,9 @@
       let vicon = '';
       if (m.type === 'video') {
         if (m.bunny) {
-          // CHILDSTAR + Secrets thumbnails 404 on Bunny — fall back to the released YouTube thumbs
-          const THUMB_OVERRIDES = {
-            'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
-            'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
-          };
-          tileImg = THUMB_OVERRIDES[m.embedId] || `https://vz-5dfccea4-b84.b-cdn.net/${m.embedId}/thumbnail.jpg`;
+          // Use the shared override map (data.js) so videos whose thumbnail.jpg
+          // 404s (CHILDSTAR, Secrets, Blame It All On Me, CMWYH, etc.) resolve.
+          tileImg = window.bunnyThumb ? window.bunnyThumb(m.embedId) : `https://vz-5dfccea4-b84.b-cdn.net/${m.embedId}/thumbnail.jpg`;
         } else {
           tileImg = `https://img.youtube.com/vi/${m.embedId}/maxresdefault.jpg`;
         }
@@ -315,9 +312,17 @@
       }
       // Find the index in displayMedia so lightbox arrow nav matches visual order
       const masterIdx = currentClient.displayMedia.indexOf(m);
+      // When the only working thumb is an animated preview.webp, show a seeked
+      // <video> still instead so the grid tile doesn't loop.
+      const animated = m.type === 'video' && m.bunny && /preview\.webp/.test(tileImg);
+      const mediaTag = !tileImg
+        ? '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:32px;">▶</div>'
+        : animated
+          ? `<video class="tile-seekvid" src="https://vz-5dfccea4-b84.b-cdn.net/${m.embedId}/play_720p.mp4#t=4" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"></video>`
+          : `<img src="${tileImg}" alt="${m.title || ''}" loading="lazy">`;
       return `
         <div class="tile" onclick="openLightbox(${masterIdx})" ${tileImg ? '' : 'style="background:linear-gradient(135deg,#2a1f15 0%,#6b3a1a 50%,#f5b042 100%);"'}>
-          ${tileImg ? `<img src="${tileImg}" alt="${m.title || ''}" loading="lazy">` : '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:32px;">▶</div>'}
+          ${mediaTag}
           ${badge}
           ${vicon}
           <div class="tile-overlay">
@@ -326,6 +331,11 @@
           </div>
         </div>`;
     }).join('')}</div>`;
+    // Paint a static seeked frame for any video-backed tiles (no animation).
+    mount.querySelectorAll('video.tile-seekvid').forEach(vid => {
+      const go = () => { try { vid.currentTime = Math.min(4, (vid.duration || 4) - 0.1); } catch (_) {} };
+      if (vid.readyState >= 1) go(); else vid.addEventListener('loadedmetadata', go, { once: true });
+    });
   }
 
   function setTab(tab) {
