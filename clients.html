@@ -77,6 +77,8 @@
   .sa-8 { background: linear-gradient(135deg, #5a2a10, #c4533a); }
   .sa-9 { background: linear-gradient(135deg, #6b3a1a, #c0aa70); }
   .sa-10 { background: linear-gradient(135deg, #1a0a18, #e8589a); }
+  /* Laurie Anderson easter egg — a pure black void where a face should be. */
+  .sa-black { background: #000; color: #000; }
 
   .card-id { flex: 1; min-width: 0; }
   .card-name { font-size: 14px; color: var(--ink); font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; }
@@ -124,7 +126,7 @@
   <div class="grid" id="clientGrid"></div>
 </main>
 
-<script src="data.js?v=3"></script>
+<script src="data.js?v=4"></script>
 <script>
   function render() {
     const grid = document.getElementById('clientGrid');

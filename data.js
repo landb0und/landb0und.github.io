@@ -485,12 +485,12 @@ window.CLIENTS = [
     name: 'Laurie Anderson',
     short: 'Laurie A.',
     handle: '@laurieanderson',
-    role: 'Interactive tribute',
-    blurb: '"O Superman." Hello? This is your mother. Pick up.',
-    palette: 'sa-1',
+    role: 'Interactive experience',
+    blurb: 'Hello? This is your mother.',
+    palette: 'sa-black',
     thumb: null,
     egg: true,
-    href: 'o-superman-interactive.html',
+    href: 'iknowyou/',
     media: []
   }
 ];
