@@ -926,6 +926,10 @@
     actionsEl.innerHTML = v.chips.map(([t, cls]) => `<span class="chip ${cls}">${t}</span>`).join('');
     creditsEl.innerHTML = v.credits.map(([k, val]) => `<div class="row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('');
     renderRelatedVerticals(v.embedId);
+    // Work Featured strip belongs ONLY under the default Director's Reel — hide it
+    // whenever another video is playing so it doesn't bleed over the episode drawer.
+    const wf = document.getElementById('workFeatured');
+    if (wf) wf.style.display = (v.embedId === 'e0374508-213f-47a2-ae0d-dd50d9df695d') ? '' : 'none';
   }
   window.__playVideo = playVideo;
 

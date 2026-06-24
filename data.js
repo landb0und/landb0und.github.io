@@ -565,6 +565,19 @@ window.VERTICALS = [
     caption: 'Stunt Fall VFX — no AI'
   },
   {
+    id: 'clair-de-lune',
+    guid: '0f23b9d9-1cb2-4cd7-a75f-1cabfddcdcb6',
+    title: 'Clair de Lune',
+    client: 'landbound',
+    type: 'edits',
+    tag: 'Landbound · 2025',
+    role: 'Director · DP · VFX',
+    aiNote: 'No AI',
+    music: '@landbound',
+    label: 'Clair de Lune',
+    caption: 'Personal project — directed, shot & VFX by Landbound'
+  },
+  {
     id: 'again-and-again',
     guid: '27445ba3-d8a3-45f7-b833-0e049e6274c9',
     title: 'Again & Again',

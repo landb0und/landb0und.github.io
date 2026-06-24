@@ -93,8 +93,9 @@
 
   /* BEFORE / AFTER */
   .ba-container { width: 100%; height: 380px; position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); cursor: ew-resize; user-select: none; }
-  .ba-before { position: absolute; inset: 0; background: url('https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg') center/cover; filter: saturate(0.1) contrast(0.85) brightness(1.1); }
-  .ba-after  { position: absolute; inset: 0; background: url('https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg') center/cover; clip-path: inset(0 50% 0 0); }
+  .ba-before { position: absolute; inset: 0; overflow: hidden; background: #000; }
+  .ba-after  { position: absolute; inset: 0; overflow: hidden; background: #000; clip-path: inset(0 50% 0 0); }
+  .ba-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .ba-scan { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); pointer-events: none; z-index: 2; }
   .ba-handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--amber); left: 50%; transform: translateX(-50%); z-index: 10; cursor: ew-resize; }
   .ba-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; }
@@ -253,8 +254,8 @@
       <span class="hint">Drag the handle</span>
     </div>
     <div class="ba-container" id="baContainer">
-      <div class="ba-before"></div>
-      <div class="ba-after" id="baAfter"></div>
+      <div class="ba-before"><video class="ba-vid" id="baBeforeVid" src="https://vz-5dfccea4-b84.b-cdn.net/6591f6cc-e4c2-43b1-aeee-ffe5c7bb7c24/play_720p.mp4" muted autoplay loop playsinline webkit-playsinline preload="auto" disablepictureinpicture></video></div>
+      <div class="ba-after" id="baAfter"><video class="ba-vid" id="baAfterVid" src="https://vz-5dfccea4-b84.b-cdn.net/68caab30-9fda-4898-98c8-ef81c0668668/play_720p.mp4" muted autoplay loop playsinline webkit-playsinline preload="auto" disablepictureinpicture></video></div>
       <div class="ba-scan"></div>
       <div class="ba-handle" id="baHandle">
         <div class="ba-grip">
@@ -490,6 +491,17 @@
   handle.addEventListener('touchstart', e => { drag = true; e.preventDefault(); }, { passive: false });
   document.addEventListener('touchend', () => drag = false);
   document.addEventListener('touchmove', e => { if (drag) pos(e.touches[0].clientX); }, { passive: true });
+
+  // Before/after VIDEOS — autoplay both muted and keep the "after" clip locked
+  // to the "before" clip's timeline so the reveal stays frame-aligned.
+  const bv = document.getElementById('baBeforeVid');
+  const av = document.getElementById('baAfterVid');
+  if (bv && av) {
+    [bv, av].forEach(v => { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); });
+    bv.addEventListener('timeupdate', () => {
+      if (Math.abs(av.currentTime - bv.currentTime) > 0.25) { try { av.currentTime = bv.currentTime; } catch (_) {} }
+    });
+  }
 })();
 
 // ── THE LAYERS ──
