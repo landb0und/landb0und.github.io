@@ -15,14 +15,18 @@ window.CLIENTS = [
     palette: 'sa-1',
     thumb: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
     media: [
-      { type: 'video', embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'] },
+      // Grace longforms share playlistId 'grace-show' so playing any one
+      // recommends the others below it (CHILDSTAR is the featured/cover). This
+      // group is rendered WITHOUT the 2x2 playlist tile/badge (only Allison's
+      // show gets that) — see the grace-show special-case in work.html.
+      { type: 'video', embedId: 'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny: true, title: 'CHILDSTAR: Final Act', year: '2025', tags: ['Director','EP','VFX','Editor'], playlistId: 'grace-show', featured: true },
       { type: 'video', embedId: 'e8775058-272b-48b5-85a9-37410c6cbb25', bunny: true, title: 'HIGH SOCIAL', year: '2025', tags: ['Director','Editor','Vertical'] },
       // Performance video series — now on Bunny (official 4K mirrors)
       { type: 'video', embedId: 'b054d114-131a-479e-88b2-184bdcb39600', bunny: true, title: 'Proud',                year: '2024', tags: ['Director','Editor','Vertical'] },
-      { type: 'video', embedId: 'd097b1a0-4ce4-48c1-83d9-62275775e699', bunny: true, title: 'Fade',                 year: '2024', tags: ['Director','Editor'] },
-      { type: 'video', embedId: '99c82990-9379-4422-8f63-bc460ed4f713', bunny: true, title: 'Behavioral Problems',  year: '2024', tags: ['Director','Editor'] },
-      { type: 'video', embedId: '46e0e887-aeea-4441-8d10-dc0cc8acd536', bunny: true, title: 'Homesick',             year: '2024', tags: ['Director','Editor'] },
-      { type: 'video', embedId: 'f42fbabd-edbe-4bb0-9474-cb491726fbb1', bunny: true, title: 'Brand New',            year: '2024', tags: ['Director','Editor'] }
+      { type: 'video', embedId: 'd097b1a0-4ce4-48c1-83d9-62275775e699', bunny: true, title: 'Fade',                 year: '2024', tags: ['Director','Editor'], playlistId: 'grace-show' },
+      { type: 'video', embedId: '99c82990-9379-4422-8f63-bc460ed4f713', bunny: true, title: 'Behavioral Problems',  year: '2024', tags: ['Director','Editor'], playlistId: 'grace-show' },
+      { type: 'video', embedId: '46e0e887-aeea-4441-8d10-dc0cc8acd536', bunny: true, title: 'Homesick',             year: '2024', tags: ['Director','Editor'], playlistId: 'grace-show' },
+      { type: 'video', embedId: 'f42fbabd-edbe-4bb0-9474-cb491726fbb1', bunny: true, title: 'Brand New',            year: '2024', tags: ['Director','Editor'], playlistId: 'grace-show' }
     ]
   },
   {

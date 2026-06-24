@@ -580,7 +580,13 @@
         <div class="row"><span class="k">Format</span><span class="v">Director sizzle</span></div>
         <div class="row"><span class="k">Year</span><span class="v">2025</span></div>
         <div class="row"><span class="k">Crew</span><span class="v">Landbound — Jacob Boehme</span></div>
-        <div class="row"><span class="k">Featured</span><span class="v">CHILDSTAR · Secrets · Bleed · First Circle</span></div>
+      </div>
+
+      <!-- WORK FEATURED — curated highlight reel under the player, styled like the
+           Allison episode drawer. Clicking a tile swaps the main player. -->
+      <div class="episode-drawer" id="workFeatured">
+        <div class="ed-head"><span class="ed-h">Work Featured</span></div>
+        <div class="ed-list" id="wfList"></div>
       </div>
 
       <!-- RELATED VERTICALS — surfaces verticals whose data.js relatedTo.embedId
@@ -677,7 +683,7 @@
       title: "Director's Reel",
       sub: '<strong>Landbound</strong> · Sizzle Reel · 2025',
       chips: [['Director','amber'],['VFX',''],['Editor',''],['DP','']],
-      credits: [['Format','Director sizzle'],['Year','2025'],['Crew','Landbound — Jacob Boehme'],['Featured','CHILDSTAR · Secrets · Bleed · First Circle']],
+      credits: [['Format','Director sizzle'],['Year','2025'],['Crew','Landbound — Jacob Boehme']],
       dur: '02:14', filters: 'direction vfx editing dp',
       meta: 'Landbound · Sizzle · 2025'
     });
@@ -725,6 +731,18 @@
     // Surface one card per playlist — the featured episode, with the full
     // episode list attached so the renderer can build a drawer below the player.
     playlistGroups.forEach((g, id) => {
+      // Grace show: NO grouped 2x2 tile/badge (only Allison gets that). Each
+      // longform is its own Up Next rec but carries `siblings` so it recommends
+      // the other Grace videos beneath it when played.
+      if (id === 'grace-show') {
+        g.members.forEach(m => {
+          const e = Object.assign({}, m);
+          e.siblings = g.members;
+          e.playlistLabel = g.client.name;
+          out.push(e);
+        });
+        return;
+      }
       const tile = Object.assign({}, g.featured);
       tile.playlistMembers = g.members;
       tile.title = g.client.name + ' Show — ' + g.members.length + ' episodes';
@@ -929,17 +947,22 @@
     const cnt  = document.getElementById('edCount');
     const list = document.getElementById('edList');
     if (!wrap || !head || !list) return;
-    if (!v || !v.playlistMembers || v.playlistMembers.length < 2) {
+    // Allison uses playlistMembers (grouped show); Grace longforms carry
+    // `siblings` (recommend the others, no grouped tile). Active video excluded.
+    const members = (v.playlistMembers || v.siblings || []).filter(ep => ep.embedId !== v.embedId);
+    if (!members.length) {
       wrap.style.display = 'none';
       return;
     }
     wrap.style.display = '';
-    head.textContent = (v.title.split('—')[0] || 'Episodes').trim() + ' — episodes';
-    cnt.textContent = v.playlistMembers.length + ' episodes';
-    list.innerHTML = v.playlistMembers.map(ep => {
-      const thumb = ep.bunny
+    head.textContent = v.playlistLabel
+      ? 'More from ' + v.playlistLabel
+      : (v.title.split('—')[0] || 'Episodes').trim() + ' — episodes';
+    cnt.textContent = members.length + (v.playlistLabel ? ' videos' : ' episodes');
+    list.innerHTML = members.map(ep => {
+      const thumb = THUMB_OVERRIDES[ep.embedId] || (ep.bunny
         ? 'https://vz-5dfccea4-b84.b-cdn.net/' + ep.embedId + '/thumbnail.jpg'
-        : 'https://img.youtube.com/vi/' + ep.embedId + '/maxresdefault.jpg';
+        : 'https://img.youtube.com/vi/' + ep.embedId + '/maxresdefault.jpg');
       const guestChip = ep.guest ? '<span class="ed-guest">' + ep.guest + '</span>' : '';
       return ''
         + '<a class="ed-tile" data-embed="' + ep.embedId + '" data-bunny="' + (ep.bunny ? '1' : '0') + '">'
@@ -950,17 +973,52 @@
     list.querySelectorAll('.ed-tile').forEach(tile => {
       tile.addEventListener('click', () => {
         const embedId = tile.dataset.embed;
-        const ep = v.playlistMembers.find(e => e.embedId === embedId);
+        const ep = members.find(e => e.embedId === embedId);
         if (!ep) return;
-        list.querySelectorAll('.ed-tile').forEach(t => t.classList.remove('active'));
-        tile.classList.add('active');
-        playVideo(ep);
+        // Carry the show/sibling context forward so the drawer keeps recommending.
+        const epCtx = Object.assign({}, ep, { siblings: v.siblings, playlistMembers: v.playlistMembers, playlistLabel: v.playlistLabel });
+        playVideo(epCtx);
+        renderEpisodeDrawer(epCtx);
         document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     });
   }
   // Initial render — if the default-active video is a playlist, build the drawer
   renderEpisodeDrawer(VIDEOS[0]);
+
+  // ===== WORK FEATURED — curated highlight strip under the player (Allison format) =====
+  const WF_IDS = [
+    '9e6f327c-1d83-4545-b88c-3193d7dd4274', // Bleed
+    'd097b1a0-4ce4-48c1-83d9-62275775e699', // Fade (Grace)
+    'b054d114-131a-479e-88b2-184bdcb39600', // Proud (Grace)
+    'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', // CHILDSTAR: Final Act (Grace — recommends others)
+    '4f84800d-811b-4218-83a4-56880a993486', // Broken Wings
+    'ae99920a-46b4-4765-9c3b-408a23eb8508', // Claudia Live Performance
+    'b58d5348-c997-4338-8a9d-f83302bf948a'  // Secrets
+  ];
+  // Proud is a vertical (not in the Up Next VIDEOS list) — minimal play entry.
+  const WF_FALLBACK = {
+    'b054d114-131a-479e-88b2-184bdcb39600': { embedId: 'b054d114-131a-479e-88b2-184bdcb39600', bunny: true, title: 'Proud', sub: '<strong>Grace VanderWaal</strong> · Performance · 2024', chips: [['Director','amber'],['Editor','']], credits: [['Artist','<strong>Grace VanderWaal</strong>'],['Released','2024'],['Crew','<strong>Landbound</strong> — Jacob Boehme']] }
+  };
+  function wfThumb(v) { return v.bunny ? (window.bunnyThumb ? window.bunnyThumb(v.embedId) : 'https://vz-5dfccea4-b84.b-cdn.net/' + v.embedId + '/thumbnail.jpg') : 'https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg'; }
+  function wfEntry(id) { return VIDEOS.find(x => x.embedId === id) || WF_FALLBACK[id]; }
+  function renderWorkFeatured() {
+    const mount = document.getElementById('wfList');
+    if (!mount) return;
+    mount.innerHTML = WF_IDS.map(id => {
+      const v = wfEntry(id); if (!v) return '';
+      return '<a class="ed-tile" data-embed="' + id + '"><div class="ed-thumb" style="background-image:url(\'' + wfThumb(v) + '\');"></div><div class="ed-title">' + (v.title || '') + '</div></a>';
+    }).join('');
+    mount.querySelectorAll('.ed-tile').forEach(tile => {
+      tile.addEventListener('click', () => {
+        const v = wfEntry(tile.dataset.embed); if (!v) return;
+        playVideo(v);
+        renderEpisodeDrawer(v);
+        document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  }
+  renderWorkFeatured();
 
   // Render verticals whose data.js relatedTo.embedId matches the current
   // main-player video. Hides the section when nothing matches.
