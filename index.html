@@ -1074,7 +1074,7 @@
     // Mobile Safari crashes when dozens of <video> elements decode at once (the
     // feed builds ~50+). Skip the autoplay engine on mobile so each post just
     // shows its static poster image instead — no decoding, no crash.
-    const IS_MOBILE = /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
+    const IS_MOBILE = navigator.maxTouchPoints > 1 || /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
     if (!IS_MOBILE) initFeedVideoPlayback(mount);
   }
 

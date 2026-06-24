@@ -793,7 +793,7 @@
     const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
     // Mobile Safari can't afford ~17 decoding <video> thumbnails at once — it
     // crashes. On mobile we render still images for the Up Next previews instead.
-    const IS_MOBILE = /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
+    const IS_MOBILE = navigator.maxTouchPoints > 1 || /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
     // CHILDSTAR + Secrets thumbnails 404 on Bunny's public CDN even after
     // re-uploading. Hard-overrides point to the released YouTube thumbnails
     // until/unless Bunny's storage is rebuilt for those two videos.
