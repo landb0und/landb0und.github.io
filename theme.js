@@ -51,7 +51,7 @@
     const wrap = document.createElement('div');
     wrap.className = 'theme-switcher';
     wrap.innerHTML = ''
-      + '<div class="ts-label">Theme</div>'
+      + '<div class="ts-label">Color Themes</div>'
       + '<div class="ts-row">'
       +   THEMES.map(t => '<button type="button" class="ts-sw' + (current === t.key ? ' active' : '') + '" data-theme="' + t.key + '" title="' + t.name + '" aria-label="Switch to ' + t.name + ' theme"><span class="ts-dot"></span><span class="ts-text">' + t.name + '</span></button>').join('')
       + '</div>';

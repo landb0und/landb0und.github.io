@@ -120,9 +120,10 @@
   .profile-handle .dot { color: var(--ink-4); margin: 0 6px; }
   .profile-bio { font-size: 13.5px; color: var(--ink); line-height: 1.6; margin-bottom: 14px; }
   .profile-bio .lane-1 { font-weight: 700; }
-  .profile-bio .lane-role { font-weight: 700; color: var(--amber); }
-  .profile-bio .lane-role a { color: var(--amber); text-decoration: none; }
+  .profile-bio .lane-role { font-weight: 700; color: #e0574f; }
+  .profile-bio .lane-role a { color: #e0574f; text-decoration: none; }
   .profile-bio .lane-role a:hover { text-decoration: underline; }
+  .profile-bio .lane-role .lane-x { color: #b8463f; font-weight: 700; margin: 0 3px; }
   .profile-bio .lane-2 { color: var(--ink-2); }
   .profile-bio .lane-ai { color: var(--ink-3); font-size: 12px; font-style: italic; }
   /* Proof line — short editorial run of credentials, sans-serif, sentence case */
@@ -225,7 +226,7 @@
   /* Floating back-to-top button — appears once the user has scrolled past the
      first feed post. Pinned left of the feed (where there's empty whitespace
      before the rail breakpoint kicks in). Hidden until needed. */
-  .feed-jump-top { position: fixed; left: 248px; bottom: 32px; width: 44px; height: 44px; border-radius: 50%; background: var(--amber); color: var(--bg); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s, transform .2s, background .15s; z-index: 80; }
+  .feed-jump-top { position: fixed; left: 248px; top: 96px; width: 44px; height: 44px; border-radius: 50%; background: var(--amber); color: var(--bg); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transform: translateY(-8px); transition: opacity .2s, transform .2s, background .15s; z-index: 80; }
   .feed-jump-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
   .feed-jump-top:hover { background: #ffc555; }
   .feed-jump-top svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
@@ -302,7 +303,7 @@
   .id-block .pills { display: flex; gap: 6px; flex-wrap: wrap; }
   .id-block .pill { padding: 4px 10px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.28); color: var(--amber); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; border-radius: 100px; }
 
-  /* UNIFIED STATS BAR — 45M+ + 4 social stats */
+  /* UNIFIED STATS BAR — 110M+ + 4 social stats */
   .stats-bar {
     margin-top: 18px;
     display: flex;
@@ -553,7 +554,7 @@
           <div class="profile-handle">@landbound<span class="dot">·</span>Los Angeles</div>
           <div class="profile-bio">
             <span class="lane-1">Director · DP · VFX Editor</span><br>
-            <span class="lane-role">Head of Creative · <a href="client.html?id=raw-material">Raw Material</a></span><br>
+            <span class="lane-role">Head of Creative · Raw Content <span class="lane-x">×</span> <a href="client.html?id=raw-material">Raw Material</a></span><br>
             <span class="lane-2">Music videos · commercials · short-form</span><br>
             <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
           </div>
@@ -635,7 +636,21 @@
   function renderVerticalsStrip() {
     const container = document.getElementById('verticalsStrip');
     if (!container || !window.VERTICALS || !window.BUNNY) return;
-    container.innerHTML = window.VERTICALS.map((v, i) => {
+    // Keep the priority lineup (everything up to & including DX7) pinned in
+    // front; shuffle everything after it on each load so the deeper cuts rotate.
+    // Carry each item's ORIGINAL index so the shorts-feed link still resolves.
+    let ordered = window.VERTICALS.map((v, i) => ({ v, i }));
+    const dxPos = ordered.findIndex(o => /dx7/i.test((o.v.label || '') + ' ' + (o.v.title || '')));
+    if (dxPos !== -1) {
+      const head = ordered.slice(0, dxPos + 1);
+      const tail = ordered.slice(dxPos + 1);
+      for (let k = tail.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [tail[k], tail[j]] = [tail[j], tail[k]];
+      }
+      ordered = head.concat(tail);
+    }
+    container.innerHTML = ordered.map(({ v, i }) => {
       const thumb = window.verticalThumb(v);
       return `
       <a class="short" href="work.html#shorts/${i}" style="background: url('${thumb}') center/cover #000;">
@@ -1144,39 +1159,20 @@
   // header stays in view. Uses IntersectionObserver to watch the first post —
   // when it leaves the viewport the button fades in.
   (function() {
-    const feed = document.getElementById('homeFeed');
-    if (!feed) return;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'feed-jump-top';
-    btn.setAttribute('aria-label', 'Back to top of feed');
+    btn.setAttribute('aria-label', 'Back to top');
     btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>';
     document.body.appendChild(btn);
+    // Always scrolls to the very top of the page.
     btn.addEventListener('click', () => {
-      const head = document.querySelector('.page-section-head .label');
-      // Find the "— Feed" section header to land just above the feed
-      const target = Array.from(document.querySelectorAll('.page-section-head')).find(el => /feed/i.test(el.textContent));
-      const top = target ? target.getBoundingClientRect().top + window.scrollY - 24 : 0;
-      window.scrollTo({ top, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    // Watch the first post; once it leaves the viewport, show the button
-    function attachObserver() {
-      const first = feed.querySelector('.post');
-      if (!first || !('IntersectionObserver' in window)) {
-        // Fallback to scroll-Y heuristic
-        const onScroll = () => btn.classList.toggle('visible', window.scrollY > 900);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-        return;
-      }
-      const io = new IntersectionObserver((entries) => {
-        const e = entries[0];
-        btn.classList.toggle('visible', !e.isIntersecting);
-      }, { threshold: 0 });
-      io.observe(first);
-    }
-    // Feed renders after DOM ready, so wait a tick
-    setTimeout(attachObserver, 100);
+    // Hidden at the top; fades in only once the user has scrolled down.
+    const onScroll = () => btn.classList.toggle('visible', window.scrollY > 620);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   })();
 
   // ============= HOME-FEED PHOTO LIGHTBOX =============
