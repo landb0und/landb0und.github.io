@@ -206,6 +206,15 @@
     return m ? decodeURIComponent(m[1]) : null;
   }
 
+  // Easter-egg clients (e.g. Laurie Anderson) carry their own href and have no
+  // profile page — bounce straight to their custom destination.
+  (function eggRedirect() {
+    const id = getQueryId();
+    if (!id || !window.CLIENTS) return;
+    const c = window.CLIENTS.find(x => x.id === id);
+    if (c && c.href) window.location.replace(c.href);
+  })();
+
   let currentClient = null;
   let currentTab = 'all';
 

@@ -144,7 +144,7 @@
       if (photoCount) stats.push('<span><strong>' + photoCount + '</strong> ' + (photoCount === 1 ? 'photo' : 'photos') + '</span>');
       if (!stats.length) stats.push('<span>Coming soon</span>');
       return ''
-        + '<a class="card" href="client.html?id=' + c.id + '">'
+        + '<a class="card" href="' + (c.href || ('client.html?id=' + c.id)) + '">'
         +   '<div class="card-head">'
         +     '<div class="av-ring"><div class="av-inner"><div class="av-img ' + (t ? '' : c.palette) + '" ' + avatarBg + '>' + (t ? '' : initials) + '</div></div></div>'
         +     '<div class="card-id"><div class="card-name">' + c.name + '</div><div class="card-handle">' + handle + '</div></div>'

@@ -473,6 +473,25 @@ window.CLIENTS = [
       { type: 'photo', src: 'photos/clients/scotty-sire-4.jpeg', title: 'Promo — 4', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients/scotty-sire-5.jpeg', title: 'Promo — 5', year: '2024', tags: ['Photographer'] }
     ]
+  },
+  // ─────────────────────────────────────────────────────────────────────────
+  // EASTER EGG — Laurie Anderson. Reads as a normal card in the full client
+  // roster (clients.html), but clicking it launches the O Superman interactive
+  // experience (o-superman-interactive.html) instead of a profile page. It has
+  // NO media and is flagged `egg`, so it never surfaces in any video feed, the
+  // VFX reel, the verticals, the home stories row, or the home post feed.
+  {
+    id: 'laurie-anderson',
+    name: 'Laurie Anderson',
+    short: 'Laurie A.',
+    handle: '@laurieanderson',
+    role: 'Interactive tribute',
+    blurb: '"O Superman." Hello? This is your mother. Pick up.',
+    palette: 'sa-1',
+    thumb: null,
+    egg: true,
+    href: 'o-superman-interactive.html',
+    media: []
   }
 ];
 

@@ -206,6 +206,10 @@
   .rec { display: grid; grid-template-columns: 120px 1fr; gap: 10px; cursor: pointer; padding: 4px; border-radius: 6px; transition: background .15s; }
   .rec:hover { background: rgba(255,255,255,0.03); }
   .rec.active { display: none; }
+  /* Pinned hero (Director's Reel) in Up Next — subtle amber importance ring. */
+  .rec.rec-pinned { position: relative; box-shadow: inset 0 0 0 1px rgba(245,176,66,0.5); background: rgba(245,176,66,0.04); }
+  .rec.rec-pinned .rec-thumb { box-shadow: inset 0 0 0 1px rgba(245,176,66,0.55); }
+  .rec-pin { position: absolute; top: 8px; left: 8px; z-index: 3; font-size: 10px; background: rgba(0,0,0,0.62); border-radius: 100px; padding: 1px 5px; line-height: 1.5; }
   /* Bunny's auto-generated thumbnail is the FIRST frame of the video — for
      anything with a fade-in or dark opening (Director's Reel, Bleed, Bby) it
      comes through nearly black. We lift the img with a brightness/saturate
@@ -690,6 +694,17 @@
       dur: '02:14', filters: 'direction vfx editing dp',
       meta: 'Landbound · Sizzle · 2025'
     });
+    // Commercial Cinematography Reel — pinned SECOND (right after Director's Reel),
+    // and floats to the TOP when the DP / cinematography filter is selected.
+    out.push({
+      embedId: 'a134b54c-bd99-4a06-b275-a5362aea33ee', bunny: true,
+      title: 'Commercial Cinematography Reel',
+      sub: '<strong>Landbound</strong> · Cinematography Reel · 2025',
+      chips: [['DP','amber'],['Director',''],['Editor',''],['Commercial','']],
+      credits: [['Format','Cinematography reel'],['Year','2025'],['Crew','Landbound — Jacob Boehme']],
+      dur: '', filters: 'dp commercial direction editing', cineReel: true,
+      meta: 'Landbound · Cinematography · 2025'
+    });
     // Pull horizontal videos out of every client. Verticals are excluded — they
     // already live in the shorts feed. Videos with the same playlistId collapse
     // into ONE Up-Next tile (the featured episode, falling back to first), with
@@ -700,7 +715,10 @@
         (c.media || []).filter(m => {
           if (m.type !== 'video') return false;
           const tags = m.tags || [];
-          return !tags.includes('Vertical');
+          if (tags.includes('Vertical')) return false;
+          // Skip any client copy of the Director's Reel — it's already pinned first.
+          if (m.embedId === 'e0374508-213f-47a2-ae0d-dd50d9df695d') return false;
+          return true;
         }).forEach(m => {
           const tags = m.tags || [];
           const buildEntry = () => ({
@@ -755,14 +773,14 @@
     });
     // (Removed The First Circle / Super Bowl Spot / Dreams placeholders —
     // Up Next now only carries entries with real Bunny or YouTube embeds.)
-    // Shuffle on each page load so Up Next varies between visits. Director's
-    // Reel stays pinned at the top (it's the default-playing video).
-    const first = out.shift();
+    // Shuffle on each page load so Up Next varies between visits. The first two
+    // (Director's Reel + Commercial Cinematography Reel) stay pinned at the top.
+    const pinned = out.splice(0, 2);
     for (let i = out.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [out[i], out[j]] = [out[j], out[i]];
     }
-    out.unshift(first);
+    out.unshift(...pinned);
     return out;
   })();
 
@@ -777,9 +795,8 @@
     const THUMB_OVERRIDES = {
       'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
       'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png',
-      // Bleed: thumbnail.jpg 404s and a seeked video frame won't paint on this
-      // browser, so use the (animated) preview.webp so it at least renders.
-      // TODO: swap to a committed still once Jacob picks a frame.
+      // Bleed: rendered via DARK_THUMB_SEEK (static seeked frame). This animated
+      // preview.webp is kept ONLY as the error fallback if that video can't load.
       '9e6f327c-1d83-4545-b88c-3193d7dd4274': 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp'
     };
     // Bunny videos whose auto-generated first-frame thumbnail.jpg is basically
@@ -791,7 +808,8 @@
     // here when a new dark-opening video joins the list.
     const DARK_THUMB_SEEK = {
       'e0374508-213f-47a2-ae0d-dd50d9df695d': 6,  // Director's Reel — past dim theater into sizzle cuts
-      '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3': 8   // Bby — past fade-from-black into the drumkit shot
+      '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3': 8,  // Bby — past fade-from-black into the drumkit shot
+      '9e6f327c-1d83-4545-b88c-3193d7dd4274': 5   // Bleed — past the black fade-in (static frame, no animation)
     };
     // Helper — resolve the thumb URL for a single video entry
     function thumbFor(v) {
@@ -823,9 +841,11 @@
                   + '<span class="rec-playlist-badge">▶ Playlist · ' + eps.length + '</span>'
                   + '</div>';
       } else {
-        if (v.embedId && v.bunny && THUMB_OVERRIDES[v.embedId]) {
-          // Reliable still override (CHILDSTAR / Secrets / Bleed) — a seeked
-          // video frame won't paint for these, so use the image directly.
+        if (v.embedId && v.bunny && THUMB_OVERRIDES[v.embedId] && DARK_THUMB_SEEK[v.embedId] == null) {
+          // Reliable still override (CHILDSTAR / Secrets) — a seeked video frame
+          // won't paint for these, so use the image directly. Videos that ALSO
+          // appear in DARK_THUMB_SEEK (e.g. Bleed) fall through to the seek
+          // branch instead, using the override only as an error fallback.
           thumbHTML = '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + THUMB_OVERRIDES[v.embedId] + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>';
         } else if (v.embedId && v.bunny) {
           // Bunny rec: a muted <video> paints a STATIC seeked frame at rest (no
@@ -850,7 +870,8 @@
         }
       }
       const playlistCls = isPlaylist ? ' is-playlist' : '';
-      return '<div class="rec' + (i === 0 ? ' active' : '') + playlistCls + '" data-filters="' + (v.filters || '') + '">' + thumbHTML + '<div class="rec-info"><div class="rec-title">' + v.title + '</div><div class="rec-meta">' + (v.meta || '') + '</div></div></div>';
+      const pinnedCls = (v.embedId === 'e0374508-213f-47a2-ae0d-dd50d9df695d') ? ' rec-pinned' : '';
+      return '<div class="rec' + (i === 0 ? ' active' : '') + pinnedCls + playlistCls + '" data-filters="' + (v.filters || '') + '"' + (v.cineReel ? ' data-cine="1"' : '') + '>' + thumbHTML + (pinnedCls ? '<span class="rec-pin">📌</span>' : '') + '<div class="rec-info"><div class="rec-title">' + v.title + '</div><div class="rec-meta">' + (v.meta || '') + '</div></div></div>';
     }).join('');
     // Each Up Next preview shows a STATIC seeked frame at rest and, on hover,
     // plays a multi-point scrub — a couple seconds at ~10s / 1m / 3m / etc.,
@@ -967,9 +988,9 @@
       : (v.title.split('—')[0] || 'Episodes').trim() + ' — episodes';
     cnt.textContent = members.length + (v.playlistLabel ? ' videos' : ' episodes');
     list.innerHTML = members.map(ep => {
-      const thumb = THUMB_OVERRIDES[ep.embedId] || (ep.bunny
-        ? 'https://vz-5dfccea4-b84.b-cdn.net/' + ep.embedId + '/thumbnail.jpg'
-        : 'https://img.youtube.com/vi/' + ep.embedId + '/maxresdefault.jpg');
+      const thumb = ep.bunny
+        ? (window.bunnyThumb ? window.bunnyThumb(ep.embedId) : 'https://vz-5dfccea4-b84.b-cdn.net/' + ep.embedId + '/thumbnail.jpg')
+        : 'https://img.youtube.com/vi/' + ep.embedId + '/maxresdefault.jpg';
       const guestChip = ep.guest ? '<span class="ed-guest">' + ep.guest + '</span>' : '';
       return ''
         + '<a class="ed-tile" data-embed="' + ep.embedId + '" data-bunny="' + (ep.bunny ? '1' : '0') + '">'
@@ -1069,6 +1090,18 @@
             rec.style.display = tags.includes(f) ? '' : 'none';
           }
         });
+        // Cinematography category (DP) → float the Commercial Cinematography Reel
+        // to the very top; otherwise keep it pinned in second place.
+        const mount = document.getElementById('recsMount');
+        const cine = mount && mount.querySelector('.rec[data-cine]');
+        if (mount && cine) {
+          if (f === 'dp') {
+            mount.insertBefore(cine, mount.firstChild);
+          } else {
+            const first = mount.firstElementChild;
+            if (first && first !== cine && first.nextElementSibling !== cine) mount.insertBefore(cine, first.nextElementSibling);
+          }
+        }
       });
     });
     // Random button — pick a playable VIDEOS entry (with embedId) at random and

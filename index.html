@@ -278,6 +278,12 @@
   .post-image-video { aspect-ratio: 16/9; background: #000 center/cover no-repeat; position: relative; display: block; overflow: hidden; }
   .post-image-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
   .post-image-video .feat-badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; background: var(--amber); color: var(--bg); font-size: 9px; letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; text-transform: uppercase; z-index: 3; }
+  /* Pinned hero post (Director's Reel) — an amber "pinned" ring + badge so it
+     reads as the important, always-top item in the feed. */
+  .post.post-pinned { border-color: rgba(245,176,66,0.6); box-shadow: 0 0 0 1px rgba(245,176,66,0.45), 0 12px 36px rgba(245,176,66,0.10); }
+  .post-image-video .pin-badge { position: absolute; top: 12px; left: 12px; padding: 4px 11px 4px 9px; background: var(--amber); color: var(--bg); font-size: 9px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; text-transform: uppercase; z-index: 3; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.45); }
+  .post-fs-btn { position: absolute; bottom: 12px; right: 56px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.65); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); z-index: 4; padding: 0; font-size: 15px; line-height: 1; transition: transform .15s, background .15s; }
+  .post-fs-btn:hover { background: rgba(0,0,0,0.85); transform: scale(1.08); }
 
   .post-actions { display: flex; align-items: center; padding: 12px 14px 4px; gap: 14px; }
   .post-actions .icn { font-size: 22px; color: var(--ink); cursor: pointer; transition: color .15s; }
@@ -725,7 +731,7 @@
       const rest = window.CLIENTS.filter(x => x.id !== 'landbound');
       return lb ? [lb, ...rest] : window.CLIENTS;
     })();
-    const items = ordered.map(cl => {
+    const items = ordered.filter(cl => !cl.egg).map(cl => {
       const t = window.clientThumb(cl);
       const initials = window.clientInitials(cl);
       const bgStyle = t ? 'style="background-image: url(\'' + t + '\');"' : '';
@@ -1023,20 +1029,21 @@
     // Only Bunny-hosted clips inline-play; YouTube embeds keep the click-thru poster.
     if (item.bunny) {
       const mp4 = bunnyMp4(item.embedId);
-      return '<div class="post">' + postHead(item)
+      return '<div class="post' + (featured ? ' post-pinned' : '') + '">' + postHead(item)
         + '<div class="post-image-video" style="background-image: url(\'' + thumb + '\');">'
         +   '<video data-src="' + mp4 + '" poster="' + thumb + '" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>'
         +   '<a class="post-open-link" href="' + href + '" aria-label="Open full player"></a>'
+        +   (featured ? '<button type="button" class="post-fs-btn" aria-label="Fullscreen" title="Fullscreen">⛶</button>' : '')
         +   '<button type="button" class="post-vol-btn" aria-label="Toggle sound">' + SVG_MUTE + '</button>'
-        +   (featured ? '<span class="feat-badge">★ Featured</span>' : '')
+        +   (featured ? '<span class="pin-badge">📌 Pinned</span>' : '')
         + '</div>'
         + commonFooter(item, '<strong>' + item.title + '</strong>' + (item.role ? ' — ' + item.role : ''))
         + '</div>';
     }
     // YouTube fallback — link-to-player tile with play badge
-    return '<div class="post">' + postHead(item)
+    return '<div class="post' + (featured ? ' post-pinned' : '') + '">' + postHead(item)
       + '<a class="post-image-video" href="' + href + '" style="background-image: url(\'' + thumb + '\');">'
-      +   (featured ? '<span class="feat-badge">★ Featured</span>' : '')
+      +   (featured ? '<span class="pin-badge">📌 Pinned</span>' : '')
       + '</a>'
       + commonFooter(item, '<strong>' + item.title + '</strong>' + (item.role ? ' — ' + item.role : ''))
       + '</div>';
@@ -1071,6 +1078,25 @@
     if (!('IntersectionObserver' in window)) return;
     const videos = Array.from(scope.querySelectorAll('video[data-src]'));
     if (!videos.length) return;
+
+    // Fullscreen button (pinned hero post) — bound once on the persistent mount.
+    if (!scope._fsBound) {
+      scope._fsBound = true;
+      scope.addEventListener('click', e => {
+        const fb = e.target.closest('.post-fs-btn');
+        if (!fb) return;
+        e.preventDefault(); e.stopPropagation();
+        const stage = fb.closest('.post-image-video');
+        const vid = stage ? stage.querySelector('video') : null;
+        if (vid && vid.src === '' && vid.dataset.src) { vid.src = vid.dataset.src; vid.load(); }
+        const tgt = vid || stage;
+        if (!tgt) return;
+        if (vid) { vid.muted = false; vid.play().catch(() => {}); }
+        if (tgt.requestFullscreen) tgt.requestFullscreen().catch(() => {});
+        else if (tgt.webkitRequestFullscreen) tgt.webkitRequestFullscreen();
+        else if (vid && vid.webkitEnterFullscreen) vid.webkitEnterFullscreen();
+      });
+    }
 
     // Global, persists across renders within this page load
     if (window.__feedAudio === undefined) window.__feedAudio = false; // sticky unmute flag

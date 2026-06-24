@@ -103,6 +103,12 @@
   .ba-label { position: absolute; bottom: 12px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 9px; background: rgba(0,0,0,0.65); border-radius: 3px; font-weight: 700; z-index: 4; }
   .ba-label.before { right: 14px; color: var(--ink-4); }
   .ba-label.after  { left: 14px; color: var(--amber); }
+  /* Make the slider read as interactive: pulsing grip + a fading "drag" hint. */
+  .ba-grip { animation: baPulse 1.8s ease-in-out infinite; }
+  @keyframes baPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(245,176,66,0.55); } 60% { box-shadow: 0 0 0 12px rgba(245,176,66,0); } }
+  .ba-drag-hint { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 11; font-size: 10px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber); background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 100px; pointer-events: none; transition: opacity .35s; }
+  .ba-container.ba-touched .ba-drag-hint { opacity: 0; }
+  .ba-container.ba-touched .ba-grip { animation: none; }
   .ba-credit { margin-top: 8px; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
 
   /* WHAT DO YOU NEED */
@@ -264,8 +270,8 @@
       </div>
       <span class="ba-label before">Raw</span>
       <span class="ba-label after">Finished</span>
+      <span class="ba-drag-hint">⟵ drag ⟶</span>
     </div>
-    <div class="ba-credit">Chloe Star — Stunt Fall · Wire removal · 2024 · Jacob Boehme / Landbound</div>
   </div>
 
   <!-- 03. WHAT DO YOU NEED -->
@@ -477,6 +483,23 @@
   handle.addEventListener('touchstart', e => { drag = true; e.preventDefault(); }, { passive: false });
   document.addEventListener('touchend', () => drag = false);
   document.addEventListener('touchmove', e => { if (drag) pos(e.touches[0].clientX); }, { passive: true });
+
+  // First interaction stops the pulse/hint; a one-time auto-wiggle on first view
+  // makes it obvious the divider is draggable.
+  ['mousedown', 'touchstart'].forEach(ev => cont.addEventListener(ev, () => cont.classList.add('ba-touched'), { once: true, passive: true }));
+  let wiggled = false;
+  function wiggle() {
+    if (wiggled || cont.classList.contains('ba-touched')) return; wiggled = true;
+    const seq = [50, 32, 68, 50]; let i = 0;
+    const set = p => { after.style.clipPath = 'inset(0 ' + (100 - p) + '% 0 0)'; handle.style.left = p + '%'; };
+    (function step() {
+      if (i >= seq.length || cont.classList.contains('ba-touched')) { set(50); return; }
+      set(seq[i++]); setTimeout(step, 460);
+    })();
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((es, ob) => es.forEach(e => { if (e.isIntersecting) { setTimeout(wiggle, 600); ob.disconnect(); } })).observe(cont);
+  }
 
   // Before/after VIDEOS — autoplay both muted and keep the "after" clip locked
   // to the "before" clip's timeline so the reveal stays frame-aligned.
