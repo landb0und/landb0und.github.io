@@ -502,7 +502,7 @@ const SHOTS = [
   },
   {
     tag: 'Particle FX', project: 'Bleed · Christian Gates · 2025', hrs: '4–6',
-    img: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp',
+    vsrc: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/play_720p.mp4', seek: 35,
     filters: ['saturate(0) brightness(1.0)', 'saturate(0.3) contrast(1.15)', 'saturate(0.7) brightness(1.05)', 'saturate(1)'],
     steps: ['Raw plate — no effects', 'Build particle system for that motion', 'Match lighting to footage', 'Comp at the right depth · done']
   },
@@ -531,9 +531,11 @@ let layerTick = 0;
 
 (function buildLayers() {
   document.getElementById('layersGrid').innerHTML = SHOTS.map((s, i) => {
-    const media = s.img
-      ? '<img class="lcard-cm" src="' + s.img + '" alt="" style="filter:' + s.filters[0] + '">'
-      : '<div class="lcard-cm lcard-ph" style="background:' + s.ph + ';filter:' + s.filters[0] + ';"></div>';
+    const media = s.vsrc
+      ? '<video class="lcard-cm frame-vid" src="' + s.vsrc + '#t=' + (s.seek || 5) + '" data-seek="' + (s.seek || 5) + '" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;display:block;filter:' + s.filters[0] + '"></video>'
+      : (s.img
+        ? '<img class="lcard-cm" src="' + s.img + '" alt="" style="filter:' + s.filters[0] + '">'
+        : '<div class="lcard-cm lcard-ph" style="background:' + s.ph + ';filter:' + s.filters[0] + ';"></div>');
     const steps = s.steps.map((t, j) =>
       '<div class="lstep ' + (j === 0 ? 'active' : 'inactive') + '"><span class="lstep-n">0' + (j + 1) + '</span><span class="lstep-t">' + t + '</span></div>'
     ).join('');
@@ -573,15 +575,19 @@ const FILM_FRAMES = [
   { num: '001', title: 'LL Cool J — "Passion"',     detail: 'VFX SUP · 2024',   pg: 'linear-gradient(135deg,#1a0a08,#4a1a10,#c4533a)' },
   { num: '002', title: 'CHILDSTAR: Final Act',      detail: '24 SHOTS · 2025',  src: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg' },
   { num: '003', title: 'Secrets',                   detail: 'DIR+VFX · 2024',   src: 'photos/stills/secrets.png' },
-  { num: '004', title: 'Bleed',                     detail: '15 SHOTS · 2025',  src: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp' },
+  { num: '004', title: 'Bleed',                     detail: '15 SHOTS · 2025',  vsrc: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/play_720p.mp4', seek: 35 },
   { num: '005', title: "Call Me When You're Home",  detail: 'DIR+VFX · 2024',   src: 'https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg' },
   { num: '006', title: 'Forgive &amp; Forget',      detail: '42 SHOTS · 2022',  src: 'https://img.youtube.com/vi/oD42T1md068/maxresdefault.jpg' }
 ];
 
 function makeFilmFrame(f) {
-  const img = f.src
-    ? '<img src="' + f.src + '" alt="">'
-    : '<div class="frame-pg" style="background:' + f.pg + '"></div>';
+  // f.vsrc → a muted <video> seeked to a still frame (used when the Bunny
+  // thumbnail.jpg 404s and the animated preview.webp would otherwise loop).
+  const img = f.vsrc
+    ? '<video class="frame-vid" src="' + f.vsrc + '#t=' + (f.seek || 5) + '" data-seek="' + (f.seek || 5) + '" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;display:block;"></video>'
+    : (f.src
+        ? '<img src="' + f.src + '" alt="">'
+        : '<div class="frame-pg" style="background:' + f.pg + '"></div>');
   return '<div class="frame">'
     + '<div class="frame-img">' + img + '</div>'
     + '<div class="frame-meta">'
@@ -592,6 +598,13 @@ function makeFilmFrame(f) {
 }
 
 document.getElementById('filmRow').innerHTML = [...FILM_FRAMES, ...FILM_FRAMES].map(makeFilmFrame).join('');
+// Paint a static seeked frame for any video-backed frames (film strip + layers)
+// so they show a still instead of looping an animated preview.
+document.querySelectorAll('video.frame-vid').forEach(vid => {
+  const t = parseFloat(vid.dataset.seek) || 5;
+  const go = () => { try { vid.currentTime = Math.min(t, (vid.duration || t) - 0.1); } catch (_) {} };
+  if (vid.readyState >= 1) go(); else vid.addEventListener('loadedmetadata', go, { once: true });
+});
 
 function renderPerfs() {
   const totalW = document.getElementById('filmRow').scrollWidth;

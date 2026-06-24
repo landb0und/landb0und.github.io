@@ -748,9 +748,7 @@
     // until/unless Bunny's storage is rebuilt for those two videos.
     const THUMB_OVERRIDES = {
       'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
-      'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png',
-      // Bleed's thumbnail.jpg 404s and its dark-seek frame read as broken — use preview.webp.
-      '9e6f327c-1d83-4545-b88c-3193d7dd4274': 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp'
+      'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png'
     };
     // Bunny videos whose auto-generated first-frame thumbnail.jpg is basically
     // pure black (fade-from-black openings, dark plates, letterboxed gates).
@@ -793,19 +791,23 @@
                   + '<span class="rec-playlist-badge">▶ Playlist · ' + eps.length + '</span>'
                   + '</div>';
       } else {
-        const thumb = thumbFor(v);
-        const seekT = (v.embedId && v.bunny) ? DARK_THUMB_SEEK[v.embedId] : null;
-        if (seekT && v.embedId) {
-          // Video-as-poster: render the actual MP4 with preload=metadata + #t=N.
-          // The browser fetches only the moov atom + a tiny chunk near the
-          // seek point, then paints that frame as a static "poster" without
-          // playing. Falls back to the dark thumbnail.jpg img if the video
-          // element errors out.
-          const mp4 = 'https://' + CDN + '/' + v.embedId + '/play_720p.mp4#t=' + seekT;
+        if (v.embedId && v.bunny) {
+          // Bunny rec: a muted <video> paints a STATIC seeked frame at rest (no
+          // animation), and on hover plays a multi-point scrub preview (a few
+          // seconds at ~10s / 1m / 3m / etc., scaled to the clip's duration).
+          // Falls back to a still image if the video element errors out.
+          const mp4   = 'https://' + CDN + '/' + v.embedId + '/play_720p.mp4';
+          const seekT = DARK_THUMB_SEEK[v.embedId];
+          const fb    = THUMB_OVERRIDES[v.embedId] || ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg');
           thumbHTML = '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;">'
-                    + '<video class="poster-seek" src="' + mp4 + '" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" onerror="this.outerHTML=\'<img src=&quot;' + thumb + '&quot; alt=&quot;&quot; style=&quot;position:relative;width:100%;height:100%;object-fit:cover;display:block;&quot;>\'"></video>'
-                    + '</div>';
+            + '<video class="rec-prev" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true"'
+            + (seekT != null ? ' data-seek="' + seekT + '"' : '')
+            + ' src="' + mp4 + (seekT != null ? '#t=' + seekT : '') + '"'
+            + ' style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"'
+            + ' onerror="this.outerHTML=\'<img src=&quot;' + fb + '&quot; alt=&quot;&quot; style=&quot;position:relative;width:100%;height:100%;object-fit:cover;display:block;&quot;>\'"></video>'
+            + '</div>';
         } else {
+          const thumb = thumbFor(v);
           thumbHTML = thumb
             ? '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + thumb + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>'
             : '<div class="rec-thumb ' + (v.palette || '') + '" data-dur="' + (v.dur || '') + '"></div>';
@@ -814,20 +816,51 @@
       const playlistCls = isPlaylist ? ' is-playlist' : '';
       return '<div class="rec' + (i === 0 ? ' active' : '') + playlistCls + '" data-filters="' + (v.filters || '') + '">' + thumbHTML + '<div class="rec-info"><div class="rec-title">' + v.title + '</div><div class="rec-meta">' + (v.meta || '') + '</div></div></div>';
     }).join('');
-    // Safari/WebKit don't reliably honor #t=N fragments on preload="metadata".
-    // After mount, force currentTime once metadata is loaded so the seeked
-    // frame becomes the visible poster on every browser.
-    mount.querySelectorAll('video.poster-seek').forEach(vid => {
-      const m = vid.src.match(/#t=([\d.]+)/);
-      const seekT = m ? parseFloat(m[1]) : 0;
-      const doSeek = () => {
+    // Each Up Next preview shows a STATIC seeked frame at rest and, on hover,
+    // plays a multi-point scrub — a couple seconds at ~10s / 1m / 3m / etc.,
+    // scaled to the clip's real duration so short clips just use spread points.
+    mount.querySelectorAll('video.rec-prev').forEach(vid => {
+      const tunedT = (vid.dataset.seek != null && vid.dataset.seek !== '') ? parseFloat(vid.dataset.seek) : null;
+      function staticFrame() {
         try {
-          if (vid.duration && seekT < vid.duration) vid.currentTime = seekT;
-          else vid.currentTime = Math.max(0, (vid.duration || 1) * 0.25);
-        } catch(_) {}
-      };
-      if (vid.readyState >= 1) doSeek();
-      else vid.addEventListener('loadedmetadata', doSeek, { once: true });
+          const d = vid.duration || 0;
+          let t = (tunedT != null) ? tunedT : (d ? d * 0.2 : 2);
+          if (d) t = Math.min(t, d - 0.1);
+          vid.currentTime = Math.max(0.05, t);
+        } catch (_) {}
+      }
+      function scrubPoints() {
+        const d = vid.duration || 0;
+        if (!d) return [];
+        const marks = [10, 60, 180, 300, 420].filter(t => t < d - 2);
+        if (marks.length >= 2) return marks;
+        return [0.15, 0.45, 0.75].map(f => +(d * f).toFixed(1)).filter(t => t > 0.3 && t < d - 0.4);
+      }
+      let hop = null, idx = 0;
+      function startHover() {
+        const pts = scrubPoints();
+        idx = 0;
+        if (!pts.length) { vid.play().catch(() => {}); return; }
+        const step = () => {
+          try { vid.currentTime = pts[idx]; } catch (_) {}
+          vid.play().catch(() => {});
+          idx = (idx + 1) % pts.length;
+          hop = setTimeout(step, 2200);
+        };
+        step();
+      }
+      function stopHover() {
+        if (hop) { clearTimeout(hop); hop = null; }
+        vid.pause();
+        staticFrame();
+      }
+      if (vid.readyState >= 1) staticFrame();
+      else vid.addEventListener('loadedmetadata', staticFrame, { once: true });
+      const card = vid.closest('.rec');
+      if (card) {
+        card.addEventListener('mouseenter', startHover);
+        card.addEventListener('mouseleave', stopHover);
+      }
     });
   }
   renderRecs();
@@ -1052,14 +1085,21 @@
     }).join('');
 
     railMount.innerHTML = verts.map((v, i) => {
-      const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+      const thumb = window.bunnyThumb ? window.bunnyThumb(v.guid) : 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
       const num = String(i + 1).padStart(2, '0');
       const isVfxRail = ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx');
+      // Where thumbnail.jpg 404s, bunnyThumb falls back to an ANIMATED preview.webp.
+      // Render a muted <video> seeked to a still frame for those so the rail
+      // doesn't loop; the working (still) thumbnails stay lightweight <img>.
+      const animated = /preview\.webp/.test(thumb);
+      const inner = animated
+        ? `<video class="sr-vid" src="https://${CDN}/${v.guid}/play_720p.mp4" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.outerHTML='<img src=&quot;${thumb}&quot; style=&quot;width:100%;height:100%;object-fit:cover;&quot;>'"></video>`
+        : `<img src="${thumb}" alt="" style="width:100%; height:100%; object-fit:cover;">`;
       return `
       <div class="sr-item${i === 0 ? ' active' : ''}" data-type="${v.type || ''}" data-vfx="${isVfxRail ? '1' : '0'}">
         <div class="sr-num">${num}</div>
         <div class="sr-thumb" style="background:#000; overflow:hidden;">
-          <img src="${thumb}" alt="" style="width:100%; height:100%; object-fit:cover;">
+          ${inner}
         </div>
         <div class="sr-info">
           <div class="sr-title">${v.title || ''}</div>
@@ -1067,6 +1107,12 @@
         </div>
       </div>`;
     }).join('');
+
+    // Paint a static seeked frame for the rail's fallback videos (no animation).
+    railMount.querySelectorAll('video.sr-vid').forEach(vid => {
+      const go = () => { try { const d = vid.duration || 0; vid.currentTime = d ? Math.min(d * 0.2, d - 0.1) : 2; } catch (_) {} };
+      if (vid.readyState >= 1) go(); else vid.addEventListener('loadedmetadata', go, { once: true });
+    });
 
     if (counter) counter.textContent = '// VERTICAL FEED — ' + verts.length + ' CLIPS';
   }
