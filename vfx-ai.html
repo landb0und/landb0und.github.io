@@ -489,46 +489,44 @@
   // the divider stays put at 50% until the user grabs it; the pulse is the cue.)
   ['mousedown', 'touchstart'].forEach(ev => cont.addEventListener(ev, () => cont.classList.add('ba-touched'), { once: true, passive: true }));
 
-  // Before/after VIDEOS — autoplay both muted and keep the "after" clip locked
-  // to the "before" clip's timeline so the reveal stays frame-aligned.
+  // Before/after VIDEOS — both autoplay muted and LOOP natively at their own
+  // native rate. We deliberately DON'T chase/seek/rate-adjust the "after" clip
+  // frame-by-frame anymore: that constant correction was thrashing its decoder,
+  // which is exactly why the Finished side played choppy while the untouched
+  // "before" stayed smooth. Both clips are the exact same length, framerate and
+  // encode, so starting them together keeps them aligned with ZERO per-frame
+  // manipulation — the after now decodes as smoothly as the before.
   const bv = document.getElementById('baBeforeVid');
   const av = document.getElementById('baAfterVid');
   if (bv && av) {
-    // PERFECT sync: "before" is the master. loop=false so BOTH restart at 0
-    // together on every loop (independent looping drifts); a per-frame lock
-    // pins the "after" clip to the master's exact time the whole way through.
-    bv.loop = false; av.loop = false; bv.muted = true; av.muted = true;
+    bv.muted = true;  av.muted = true;
+    bv.loop = true;   av.loop = true;   // native looping = smoothest possible
+    bv.playbackRate = 1; av.playbackRate = 1;
     function startBoth() {
-      try { bv.currentTime = 0; av.currentTime = 0; } catch (_) {}
+      try { if (Math.abs(av.currentTime - bv.currentTime) > 0.05) av.currentTime = bv.currentTime; } catch (_) {}
       bv.play().catch(() => {}); av.play().catch(() => {});
     }
-    bv.addEventListener('ended', startBoth);      // master loops → restart both
-    av.addEventListener('ended', () => av.pause()); // let the master drive the loop
-    // Soft-sync the "after" clip to the master via playbackRate — NOT per-frame
-    // currentTime seeks. Repeatedly seeking a playing H.264 clip forces decoder
-    // re-seeks every frame, which is what made the Finished video stutter/glitch.
-    // Only hard-seek on a big drift (after a stall or loop); otherwise nudge the
-    // speed ±4% (imperceptible) to ease it back into alignment.
-    (function lock() {
-      if (!bv.paused && !av.paused) {
-        const d = av.currentTime - bv.currentTime; // +: after is ahead of master
-        const ad = Math.abs(d);
-        if (ad > 0.30) {
-          try { av.currentTime = bv.currentTime; } catch (_) {}
-          av.playbackRate = 1;
-        } else if (ad > 0.045) {
-          av.playbackRate = d > 0 ? 0.96 : 1.04;
-        } else if (av.playbackRate !== 1) {
-          av.playbackRate = 1;
-        }
-      }
-      requestAnimationFrame(lock);
-    })();
-    const kick = () => { if (bv.paused) startBoth(); };
+    const kick = () => { if (bv.paused || av.paused) startBoth(); };
     bv.addEventListener('canplay', startBoth, { once: true });
+    av.addEventListener('canplay', () => { av.play().catch(() => {}); }, { once: true });
     startBoth();
     if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) kick(); })).observe(cont);
     ['pointerdown', 'touchstart'].forEach(ev => window.addEventListener(ev, kick, { once: true, passive: true }));
+
+    // LAZY drift safety only — checked twice a second (NOT per frame), and it
+    // NEVER seeks during playback. If the two ever drift far apart (e.g. a tab
+    // switch throttled one clip), ease the "after" back with a tiny ±2.5% speed
+    // nudge until realigned, then return to native 1.0. The drift math wraps at
+    // the loop boundary so it doesn't misfire when one clip loops a hair early.
+    setInterval(() => {
+      if (bv.paused || av.paused || !bv.duration) return;
+      const dur = bv.duration;
+      let d = av.currentTime - bv.currentTime;
+      if (d > dur / 2) d -= dur; else if (d < -dur / 2) d += dur; // loop-wrap aware
+      const ad = Math.abs(d);
+      if (ad > 0.34) av.playbackRate = d > 0 ? 0.975 : 1.025;
+      else if (ad < 0.10 && av.playbackRate !== 1) av.playbackRate = 1;
+    }, 500);
 
     // Once BOTH clips are actually playing (and the lock loop has aligned them),
     // do ONE smooth back-and-forth sweep of the divider so it's obvious it drags,
