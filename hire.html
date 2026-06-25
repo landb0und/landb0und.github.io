@@ -536,7 +536,7 @@
   // ─── THE ROTUNDA — vertical tiles pulled live from window.VERTICALS (data.js) ───
   const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net', LIB = '675985';
   const thumb = g => (window.bunnyThumb ? window.bunnyThumb(g) : `https://${CDN}/${g}/thumbnail.jpg`);
-  const vid   = g => `https://${CDN}/${g}/play_720p.mp4`;
+  const vid   = g => `https://${CDN}/${g}/play_360p.mp4`; // light rendition — tiles are ~150px, so 360p keeps many clips playing smoothly without choking the decoder
   const shuffle = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
 
   // Two DISJOINT pools — one per ring — so the same clip never appears in both.
@@ -562,8 +562,17 @@
   buildRing(rot1, HALVES[0]); buildRing(rot2, HALVES[1]);
   rot1.style.animationDuration = (small ? 60 : 80) + 's';
   rot2.style.animationDuration = (small ? 72 : 96) + 's'; rot2.style.animationDirection = 'reverse';
+  const FALLBACK = ['480p', '720p']; // if 360p is ever missing for a clip, step up
   [rot1, rot2].forEach(rot => {
     rot.querySelectorAll('.tile').forEach(t => { const v = t.querySelector('video');
+      let fi = -1;
+      v.addEventListener('error', () => {
+        if (fi < FALLBACK.length - 1) {
+          fi++; const wasPlay = t.classList.contains('play');
+          v.src = `https://${CDN}/${t.dataset.g}/play_${FALLBACK[fi]}.mp4`; v.load();
+          if (wasPlay) v.play().catch(() => {});
+        }
+      });
       t.addEventListener('mouseenter', () => { t.classList.add('play'); v.play().catch(() => {}); });
       t.addEventListener('mouseleave', () => { t.classList.remove('play'); v.pause(); });
     });
@@ -572,6 +581,13 @@
   // so it holds steady (no stop/go flicker) even in the gaps between clips.
   const stageEl = document.querySelector('.stage');
   stageEl.addEventListener('mousemove', e => {
+    // Only pause when the cursor is actually over the rotunda — NOT when it's over
+    // the center content (headline, stats, CTAs) or the scroll cue. Hovering the
+    // middle of the screen should leave the rings spinning.
+    if (e.target.closest('.pitch') || e.target.closest('.scrollcue')) {
+      rot1.classList.remove('paused'); rot2.classList.remove('paused');
+      return;
+    }
     const r = stageEl.getBoundingClientRect();
     const x = e.clientX - r.left, y = e.clientY - r.top, w = r.width, h = r.height;
     const inBand = x > w * 0.05 && x < w * 0.95;
