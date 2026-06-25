@@ -626,11 +626,16 @@
     // and scrollTo({behavior:'smooth'}) stall here, so we drive it frame by frame).
     function animateScroll(toY, dur) {
       const fromY = window.scrollY, d = toY - fromY, t0 = performance.now();
+      let done = false;
       (function step(now) {
+        if (done) return;
         const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
         window.scrollTo(0, Math.round(fromY + d * e));
-        if (p < 1) requestAnimationFrame(step);
+        if (p < 1) requestAnimationFrame(step); else done = true;
       })(t0);
+      // Safety net: if rAF stalls (throttled tab), jump to the target so the
+      // fold always completes.
+      setTimeout(() => { if (!done) { done = true; window.scrollTo(0, toY); } }, dur + 250);
     }
     function foldUp() { const y = sheet.getBoundingClientRect().top + window.scrollY; animateScroll(Math.round(y), 650); }
     if (cue) cue.addEventListener('click', foldUp);
