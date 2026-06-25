@@ -37,16 +37,24 @@
   /* ---------- HOME: profile / hero card ---------- */
   .hero-card { border-radius: 12px; }
   .hero-body { padding: 16px !important; }
-  .profile { gap: 14px !important; }
-  .profile-avatar { width: 76px !important; height: 76px !important; padding: 2px !important; }
-  .profile-name { font-size: 22px !important; }
+  /* Kill the desktop sidebar theme switcher on mobile — it was injected into
+     .nav and collided with the bottom tab bar. */
+  .theme-switcher { display: none !important; }
+
+  /* Profile: stack avatar OVER full-width info so the bio stops wrapping inside
+     a skinny right-hand column (was running 8+ lines). */
+  .profile { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+  .profile-avatar { width: 72px !important; height: 72px !important; padding: 2px !important; }
+  .profile-info { width: 100%; }
+  .profile-name { font-size: 23px !important; }
   .profile-handle { font-size: 12px; }
-  .profile-bio { font-size: 12.5px !important; line-height: 1.5 !important; }
-  .profile-bio .lane-ai { font-size: 11px !important; }
-  .profile-proof { font-size: 10px !important; }
-  .profile-stats { gap: 0; }
-  .profile-stats .stat { padding: 0 12px !important; }
-  .profile-stats .num { font-size: 18px !important; }
+  .profile-bio { font-size: 13px !important; line-height: 1.55 !important; margin-bottom: 10px !important; }
+  .profile-bio .lane-ai { font-size: 11.5px !important; }
+  .profile-proof { font-size: 10.5px !important; margin-top: 8px !important; }
+  /* Stats: tidy 2-col grid — the flex row was wrapping into cut-off cells */
+  .profile-stats { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px 10px !important; padding-top: 14px !important; }
+  .profile-stats .stat { padding: 0 !important; border-right: none !important; }
+  .profile-stats .num { font-size: 20px !important; }
   /* Hire / Email / Book a call → stack full-width and tappable */
   .profile-actions { grid-template-columns: 1fr !important; gap: 8px !important; }
   .pa-btn { padding: 12px 14px !important; }
