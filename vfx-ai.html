@@ -540,6 +540,17 @@
     }
     bv.addEventListener('playing', () => { bvPlaying = true; maybeSweep(); });
     av.addEventListener('playing', () => { avPlaying = true; maybeSweep(); });
+    // Robustness: if a clip is already playing by the time we attach (the 'playing'
+    // event may have fired first), seed the flag and re-check. Also poll briefly so
+    // a slightly-late autoplay still triggers the sweep exactly once.
+    let tries = 0;
+    (function poll() {
+      if (swept || cont.classList.contains('ba-touched')) return;
+      if (!bv.paused && bv.readyState >= 3) bvPlaying = true;
+      if (!av.paused && av.readyState >= 3) avPlaying = true;
+      maybeSweep();
+      if (!swept && tries++ < 30) setTimeout(poll, 300); // ~9s window for autoplay to kick in
+    })();
   }
 })();
 
