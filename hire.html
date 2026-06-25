@@ -58,7 +58,7 @@
   .corelight { position: absolute; inset: 0; z-index: 9; pointer-events: none; background: radial-gradient(circle 38% at 50% 47%, rgba(245,176,66,.18), rgba(232,88,154,.05) 40%, transparent 64%); animation: breathe 7s ease-in-out infinite; }
   @keyframes breathe { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
   .ring { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
-  .ring.r1 { top: 31%; } .ring.r2 { top: 69%; }
+  .ring.r1 { top: 26%; } .ring.r2 { top: 64%; } /* lifted ~5% so the gap reads centered and the bottom row clears the notch (gap unchanged at 38%) */
   .ring-rot { position: absolute; transform-style: preserve-3d; animation: spin linear infinite; }
   @keyframes spin { to { transform: rotateY(360deg); } }
   .ring-rot.paused { animation-play-state: paused; }
@@ -116,8 +116,10 @@
   /* Grab handle — click or drag it (or the scroll arrow) to fold the rotunda up */
   .sheet-grab { display: block; width: 100%; padding: 14px 0 5px; text-align: center; cursor: grab; -webkit-tap-highlight-color: transparent; touch-action: none; }
   .sheet-grab:active { cursor: grabbing; }
-  .sheet-grab span { display: inline-block; width: 48px; height: 5px; border-radius: 4px; background: var(--line); transition: background .15s, width .15s; }
-  .sheet-grab:hover span { background: var(--amber); width: 64px; }
+  .sheet-grab span { display: inline-block; width: 48px; height: 5px; border-radius: 4px; background: var(--ink-4); transition: background .15s, width .15s; animation: grabHint 1.9s ease-in-out infinite; }
+  @keyframes grabHint { 0%, 100% { transform: translateY(0); opacity: .6; } 50% { transform: translateY(4px); opacity: 1; } }
+  .sheet-grab:hover span { background: var(--amber); width: 64px; animation: none; transform: none; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .sheet-grab span { animation: none; } }
   .sheet-inner { max-width: 1240px; margin: 0 auto; padding: 30px 40px 50px; }
 
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1); }
