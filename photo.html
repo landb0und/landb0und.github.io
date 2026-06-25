@@ -107,7 +107,11 @@
   .tab.active .count { color: var(--amber); }
 
   /* ===== Auto-scrolling parallax photo wall (replaces static grid) ===== */
-  .photo-wall { position: relative; height: 80vh; min-height: 540px; overflow: hidden; border-radius: 8px; opacity: 0;
+  /* Tall runway gives the page scroll distance; the wall pins (sticky) and its
+     columns parallax as you scroll through it. */
+  .wall-scroll { height: 360vh; }
+  .wall-scroll.reduced { height: auto; }
+  .photo-wall { position: sticky; top: 14px; height: 86vh; min-height: 540px; overflow: hidden; border-radius: 8px; opacity: 0;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
             mask-image: linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%); }
   .photo-wall.ready { opacity: 1; transition: opacity .4s ease-out; }
@@ -355,7 +359,9 @@
     </div>
 
     <!-- MASONRY -->
-    <div class="photo-wall" id="photoGrid"><!-- auto-scrolling parallax columns built dynamically from PHOTOS --></div>
+    <div class="wall-scroll" id="wallScroll">
+      <div class="photo-wall" id="photoGrid"><!-- auto-scrolling parallax columns built dynamically from PHOTOS --></div>
+    </div>
 
     <div class="footer">
       <span class="clapper">
@@ -610,6 +616,7 @@
   // Hovering one column pauses ONLY that column. Tapping a tile opens the
   // existing feed at that photo (index into filteredPhotos — unchanged).
   let wallRAF = null;
+  let wallScrollHandler = null;
   const WALL_GAP = 12;
   const WALL_SPEEDS = [14, 22, 10, 18, 12]; // px/sec per column — intentionally uneven
   function escAttr(s) { return String(s == null ? '' : s).replace(/"/g, '&quot;'); }
@@ -619,6 +626,7 @@
     const wrap = document.getElementById('photoGrid');
     if (!wrap) return;
     if (wallRAF) { cancelAnimationFrame(wallRAF); wallRAF = null; }
+    if (wallScrollHandler) { window.removeEventListener('scroll', wallScrollHandler); wallScrollHandler = null; }
     wrap.classList.remove('ready', 'reduced');
     wrap.style.overflowY = '';
     const photos = filteredPhotos();
@@ -628,6 +636,8 @@
       return;
     }
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const runway = wrap.parentElement; // .wall-scroll — collapse its tall runway when reduced
+    if (runway) runway.classList.toggle('reduced', reduce);
     const w = window.innerWidth;
     const NCOL = w <= 460 ? 2 : (w <= 700 ? 3 : 5);
 
@@ -696,6 +706,22 @@
       img.addEventListener('load', measure, { once: true });
     });
     setTimeout(() => { measure(); wrap.classList.add('ready'); }, 1600); // safety reveal
+
+    // Scroll-driven parallax: scrolling the PAGE nudges each column by a
+    // different factor (same per-column speed feel as the drift), looping
+    // seamlessly so it never traps the page scroll. Drift continues as ambient.
+    const SCROLL_FACTOR = cols.map((_, i) => WALL_SPEEDS[i % WALL_SPEEDS.length] / 16);
+    let lastScrollY = window.scrollY || window.pageYOffset || 0;
+    wallScrollHandler = function () {
+      const y = window.scrollY || window.pageYOffset || 0;
+      const d = y - lastScrollY; lastScrollY = y;
+      for (let i = 0; i < cols.length; i++) {
+        if (!heights[i]) continue;
+        offs[i] = ((offs[i] + d * SCROLL_FACTOR[i]) % heights[i] + heights[i]) % heights[i];
+        cols[i].style.transform = 'translateY(' + (-offs[i]) + 'px)';
+      }
+    };
+    window.addEventListener('scroll', wallScrollHandler, { passive: true });
 
     let last = performance.now();
     function tick(now) {
