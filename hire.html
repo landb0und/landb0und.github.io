@@ -58,7 +58,7 @@
   .corelight { position: absolute; inset: 0; z-index: 9; pointer-events: none; background: radial-gradient(circle 38% at 50% 47%, rgba(245,176,66,.18), rgba(232,88,154,.05) 40%, transparent 64%); animation: breathe 7s ease-in-out infinite; }
   @keyframes breathe { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
   .ring { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
-  .ring.r1 { top: 27%; } .ring.r2 { top: 73%; }
+  .ring.r1 { top: 31%; } .ring.r2 { top: 69%; }
   .ring-rot { position: absolute; transform-style: preserve-3d; animation: spin linear infinite; }
   @keyframes spin { to { transform: rotateY(360deg); } }
   .ring-rot.paused { animation-play-state: paused; }
@@ -155,7 +155,10 @@
   /* Three tracks (Ways To Hire) */
   .tracks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .track { padding: 20px 20px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; transition: all .15s; }
-  .track:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .track:hover { transform: translateY(-2px); }
+  .track.t-project:hover  { border-color: var(--leaf); box-shadow: inset 0 0 0 1px rgba(140,175,58,.35), 0 0 26px rgba(140,175,58,.14); }
+  .track.t-retainer:hover { border-color: var(--amber); box-shadow: inset 0 0 0 1px rgba(245,176,66,.35), 0 0 26px rgba(245,176,66,.14); }
+  .track.t-staff:hover    { border-color: #b388f0; box-shadow: inset 0 0 0 1px rgba(179,136,240,.4), 0 0 26px rgba(179,136,240,.18); }
   .track .tk-eyebrow { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; margin-bottom: 8px; }
   .track.t-staff .tk-eyebrow { color: var(--rose); }
   .track.t-retainer .tk-eyebrow { color: var(--amber); }
@@ -208,15 +211,17 @@
   .service .nm { font-size: 14px; font-weight: 900; color: var(--ink); }
   .service .yr { margin-left: auto; font-size: 8px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; padding: 2px 7px; border: 1px solid rgba(245,176,66,0.25); border-radius: 100px; }
   .service .desc { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; font-family: Georgia, serif; }
-  /* One distinct, cohesive pop color per discipline (not just amber on everything) */
-  .svc-dir  { --c: #f5b042; } /* Direction — amber */
-  .svc-cine { --c: #46c8d8; } /* Cinematography — cyan */
-  .svc-edit { --c: #8caf3a; } /* Editing — leaf green */
-  .svc-vfx  { --c: #b388f0; } /* VFX Supervision — violet */
-  .svc-ai   { --c: #e8589a; } /* AI / AI-VFX — rose */
-  .svc-prod { --c: #6a9dc7; } /* Producing — steel blue */
+  /* One distinct, cohesive pop color per discipline (not just amber on everything).
+     The accent lives in a soft, full border that follows the panel's rounded
+     corners — no trimmed top-bar. */
+  .svc-dir  { --c: #f5b042; --cb: rgba(245,176,66,.42); }
+  .svc-cine { --c: #46c8d8; --cb: rgba(70,200,216,.42); }
+  .svc-edit { --c: #8caf3a; --cb: rgba(140,175,58,.42); }
+  .svc-vfx  { --c: #b388f0; --cb: rgba(179,136,240,.42); }
+  .svc-ai   { --c: #e8589a; --cb: rgba(232,88,154,.42); }
+  .svc-prod { --c: #6a9dc7; --cb: rgba(106,157,199,.42); }
   .service[class*="svc-"] .ic, .service[class*="svc-"] .nm { color: var(--c); }
-  .service[class*="svc-"] { box-shadow: inset 0 2px 0 var(--c); }
+  .service[class*="svc-"] { border-color: var(--cb); }
   .service[class*="svc-"]:hover { border-color: var(--c); }
   .service[class*="svc-"] .yr { color: var(--c); border-color: var(--c); }
 
@@ -230,7 +235,8 @@
   .scope-row.featured { background: rgba(245,176,66,0.05); border-left: 3px solid var(--amber); padding-left: 13px; }
   .scope-row .type { font-size: 12px; font-weight: 800; color: var(--ink); }
   .scope-row .type .badge { display: inline-block; margin-left: 6px; padding: 2px 7px; background: rgba(245,176,66,0.15); border: 1px solid rgba(245,176,66,0.35); color: var(--amber); font-size: 7px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; border-radius: 100px; vertical-align: middle; }
-  .scope-row .desc { font-size: 11px; color: var(--ink-3); line-height: 1.45; font-family: Georgia, serif; }
+  .scope-row .desc { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; font-family: Georgia, serif; }
+  .scope-row .desc b { color: var(--ink); font-weight: 800; }
   .fit-card { padding: 18px 18px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; }
   .fit-card.yes { border-color: rgba(140,175,58,0.35); }
   .fit-card.no { border-color: rgba(232,88,154,0.3); }
@@ -394,10 +400,10 @@
       <div class="tracks">
         <div class="track t-project">
           <div class="tk-eyebrow">Hire me per project</div>
-          <div class="tk-title">One-Off Gig</div>
+          <div class="tk-title">Single Project</div>
           <div class="tk-body">Music video, commercial, VFX supervision, or a single edit. Any combination of direction, camera, post, and VFX. Majors or independents, same care.</div>
           <div class="tk-for">Best for: a specific deliverable with a clear timeline and budget.</div>
-          <a href="mailto:jacob.t.boehme@gmail.com?subject=Project Inquiry" class="tk-cta">Pitch me a project →</a>
+          <a href="mailto:jacob.t.boehme@gmail.com?subject=Project Inquiry" class="tk-cta">Scope a project →</a>
         </div>
         <div class="track t-retainer">
           <div class="tk-eyebrow">Embed me monthly</div>
@@ -540,7 +546,7 @@
 
   const stageW = document.querySelector('.stage').clientWidth;
   const small = stageW < 760;
-  const N = small ? 10 : 16, TW = small ? 116 : 172, TH = Math.round(TW * 16 / 9);
+  const N = small ? 10 : 16, TW = small ? 112 : 156, TH = Math.round(TW * 16 / 9);
   const R = Math.round((TW / 2) / Math.tan(Math.PI / N)) + (small ? 40 : 90);
 
   function buildRing(rot, pool) {
