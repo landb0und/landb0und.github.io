@@ -6,7 +6,7 @@
      a broken device-width reflow. The site isn't a responsive mobile build. -->
 <meta name="viewport" content="width=1280">
 <title>Jacob Boehme — Director · VFX Editor · DP · Los Angeles</title>
-<link rel="stylesheet" href="theme.css?v=9">
+<link rel="stylesheet" href="theme.css?v=10">
 <script src="theme.js?v=6"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1060,7 +1060,12 @@
     const mount = document.getElementById('homeFeed');
     if (!mount) return;
     if (!HOME_FEED_ALL.length) HOME_FEED_ALL = buildHomeFeed();
-    const items = filteredHomeFeed();
+    // Mobile Safari crashes when dozens of <video> elements decode at once (the
+    // feed builds ~50+). Detect touch devices to (a) cap the feed length and
+    // (b) skip the autoplay engine so each post just shows its static poster.
+    const IS_MOBILE = navigator.maxTouchPoints > 1 || /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
+    let items = filteredHomeFeed();
+    if (IS_MOBILE) items = items.slice(0, 20);  // keep the DOM light on phones
     if (!items.length) {
       mount.innerHTML = '<div style="padding: 60px 20px; text-align: center; color: var(--ink-3); font-size: 13px;">No posts in this category yet.</div>';
       return;
@@ -1071,10 +1076,6 @@
       if (item.type === 'video') return renderVideoPost(item);
       return '';
     }).join('');
-    // Mobile Safari crashes when dozens of <video> elements decode at once (the
-    // feed builds ~50+). Skip the autoplay engine on mobile so each post just
-    // shows its static poster image instead — no decoding, no crash.
-    const IS_MOBILE = navigator.maxTouchPoints > 1 || /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
     if (!IS_MOBILE) initFeedVideoPlayback(mount);
   }
 

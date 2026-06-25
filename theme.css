@@ -188,3 +188,38 @@ html[data-theme="neonoir"] {
 .theme-switcher .ts-sw[data-theme="graphite"] .ts-dot { background: linear-gradient(135deg, #c75c46 0%, #c75c46 50%, #808080 50%, #808080 100%); }
 .theme-switcher .ts-sw[data-theme="ember"]    .ts-dot { background: linear-gradient(135deg, #ff4818 0%, #ff4818 50%, #c41818 50%, #c41818 100%); }
 .theme-switcher .ts-sw[data-theme="neonoir"]  .ts-dot { background: linear-gradient(135deg, #d957a8 0%, #d957a8 50%, #5fa8c4 50%, #5fa8c4 100%); }
+
+/* =============================================================
+   MOBILE (touch) CRASH MITIGATION
+   These long pages paint a full-screen fixed SVG grain overlay (feTurbulence)
+   blended over the whole document, plus several backdrop-blur panels. On a tall
+   page that compositing exceeds mobile Safari's memory and the tab crashes
+   ("a problem repeatedly occurred"). The effects are purely decorative, so we
+   strip them on touch devices.
+
+   Keyed on `pointer: coarse` (not a max-width breakpoint) on purpose: the pages
+   pin viewport `width=1280`, so width-based media queries never fire on phones.
+   pointer:coarse matches touchscreens (phone/tablet) regardless of that width,
+   and never matches a desktop mouse — so desktop is completely untouched.
+   ============================================================= */
+@media (pointer: coarse) {
+  /* The expensive full-screen grain / noise pseudo-element overlays */
+  body::before,
+  .poster::before,
+  .poster::after { display: none !important; }
+
+  /* The ember theme's animated, blended full-screen firelight overlay */
+  html[data-theme="ember"] body::after {
+    animation: none !important;
+    mix-blend-mode: normal !important;
+    opacity: 0.25 !important;
+  }
+
+  /* Neutralize every blend mode and backdrop blur (incl. pseudo-elements) —
+     these force whole-page recomposition that mobile Safari can't afford. */
+  *, *::before, *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    mix-blend-mode: normal !important;
+  }
+}

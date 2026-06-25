@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jacobboehme.com — Hire</title>
+<link rel="stylesheet" href="theme.css?v=10">
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="theme.js?v=4"></script>
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #12100c; --bg-2: #1a1612; --bg-3: #221c16;
+    --line: #2d251c; --line-2: #1f1a14;
+    --ink: #f1e6cd; --ink-2: #c7b893; --ink-3: #8a7a5e; --ink-4: #5d4f3a;
+    --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
+  }
+  body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.5; mix-blend-mode: overlay; }
+  body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%); }
+  a { color: inherit; text-decoration: none; }
+  input, textarea, select, button { font-family: inherit; }
+
+  /* NAV */
+  .nav { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg-2); border-right: 1px solid var(--line); padding: 24px 0; z-index: 20; display: flex; flex-direction: column; }
+  .nav-brand { padding: 0 22px 22px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
+  .nav-brand .logo { font-size: 15px; font-weight: 900; letter-spacing: 0.04em; color: var(--amber); }
+  .nav-brand .tag { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: 6px; }
+  .nav-items { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; font-size: 12px; color: var(--ink-2); cursor: pointer; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--ink); }
+  .nav-item.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .nav-socials { margin: 22px 14px 0; padding: 16px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 8px; }
+  .nav-socials-h { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 10px; }
+  .nav-soc { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+  .nav-soc:not(:last-child) { border-bottom: 1px solid var(--line-2); }
+  .nav-soc-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .nav-soc-icon svg { width: 16px; height: 16px; }
+  .nav-soc-icon.tt svg { color: #000; }
+  .nav-soc-icon.ig svg, .nav-soc-icon.li svg { color: #fff; }
+  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); color: #000; }
+  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); color: #fff; }
+  .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
+  .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
+  .nav-soc-info { flex: 1; min-width: 0; }
+  .nav-soc-h { font-size: 11px; color: var(--ink); font-weight: 700; line-height: 1.1; }
+  .nav-soc-m { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 1px; }
+  .nav-bottom { margin-top: auto; padding: 20px 22px 0; font-size: 10px; color: var(--ink-4); line-height: 1.6; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .nav-bottom .status { display: flex; align-items: center; gap: 6px; color: var(--leaf); margin-bottom: 4px; }
+  .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  .main { margin-left: 220px; padding: 34px 38px 56px; max-width: 1320px; position: relative; z-index: 2; }
+
+  /* ─── HERO (compact) ─── */
+  .hero { display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: stretch; margin-bottom: 24px; }
+  .hero h1 { font-size: 46px; font-weight: 900; letter-spacing: -0.03em; color: var(--ink); line-height: 0.95; margin-bottom: 12px; }
+  .hero h1 em { font-style: normal; color: var(--amber); }
+  .hero .lede { font-size: 14px; color: var(--ink-2); font-family: Georgia, 'Times New Roman', serif; font-style: italic; line-height: 1.55; max-width: 560px; margin-bottom: 16px; }
+  .hero-cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hero-cta { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 7px; font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; cursor: pointer; transition: all .15s; }
+  .hero-cta.primary { background: var(--amber); color: var(--bg); border: 1px solid var(--amber); }
+  .hero-cta.primary:hover { background: #ffc555; transform: translateY(-1px); }
+  .hero-cta.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .hero-cta.ghost:hover { border-color: var(--amber); color: var(--amber); }
+
+  /* Credibility card */
+  .cred { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; }
+  .cred-badges { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .badge-status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(140,175,58,0.12); border: 1px solid rgba(140,175,58,0.4); color: var(--leaf); border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; align-self: flex-start; }
+  .badge-status .d { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  .badge-w2 { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(232,88,154,0.10); border: 1px solid rgba(232,88,154,0.35); color: var(--rose); border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; align-self: flex-start; }
+  .cred-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-top: auto; }
+  .cred-stat { background: var(--bg-2); padding: 11px 12px; }
+  .cred-stat .n { font-size: 21px; font-weight: 900; color: var(--amber); letter-spacing: -0.03em; line-height: 1; }
+  .cred-stat .l { font-size: 8px; color: var(--ink-3); letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; margin-top: 4px; }
+
+  /* Section style */
+  .section { margin-bottom: 32px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; padding-bottom: 9px; border-bottom: 1px solid var(--line-2); }
+  .section-head .num { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; }
+  .section-head .label { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
+  .section-head .hint { margin-left: auto; font-size: 11px; color: var(--ink-4); font-family: Georgia, serif; font-style: italic; }
+
+  /* ─── THEATER ─── */
+  .theater { display: grid; grid-template-columns: 1.7fr 1fr; gap: 14px; align-items: stretch; }
+  .stage-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .stage-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .spill { display: inline-flex; align-items: center; gap: 7px; padding: 9px 15px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 100px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; color: var(--ink-3); cursor: pointer; transition: all .15s; }
+  .spill:hover { color: var(--ink); border-color: var(--ink-4); }
+  .spill.active { background: rgba(245,176,66,0.13); border-color: var(--amber); color: var(--amber); }
+  .spill .pdot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .stage { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+  .stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  /* before/after */
+  .ba { position: absolute; inset: 0; display: none; user-select: none; }
+  .ba.show { display: block; }
+  .ba video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ba-after-wrap { position: absolute; inset: 0; overflow: hidden; width: 50%; border-right: 2px solid var(--amber); }
+  .ba-after-wrap video { width: 200%; max-width: none; }
+  .ba-handle { position: absolute; top: 0; bottom: 0; left: 50%; width: 40px; transform: translateX(-50%); cursor: ew-resize; z-index: 5; display: flex; align-items: center; justify-content: center; }
+  .ba-knob { width: 36px; height: 36px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 14px; box-shadow: 0 4px 14px rgba(0,0,0,0.5); }
+  .ba-tag { position: absolute; top: 12px; padding: 5px 12px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; border-radius: 100px; background: rgba(0,0,0,0.7); color: #fff; z-index: 4; backdrop-filter: blur(4px); }
+  .ba-tag.l { left: 12px; color: var(--amber); }
+  .ba-tag.r { right: 12px; }
+  .stage-cap { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .stage-cap .sc-title { font-size: 14px; font-weight: 900; color: var(--ink); }
+  .stage-cap .sc-sub { font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; margin-top: 2px; }
+  .sc-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .sc-chip { padding: 3px 9px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.25); color: var(--amber); font-size: 8px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; border-radius: 100px; }
+
+  /* Rail */
+  .rail { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+  .rail-head { padding: 13px 16px; border-bottom: 1px solid var(--line-2); font-size: 10px; color: var(--ink); font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; display: flex; align-items: center; justify-content: space-between; }
+  .rail-head .ct { color: var(--ink-4); }
+  .rail-scroll { overflow-y: auto; flex: 1; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+  .rail-scroll::-webkit-scrollbar { width: 8px; }
+  .rail-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
+  .ritem { display: grid; grid-template-columns: 74px 1fr; gap: 10px; padding: 6px; border-radius: 8px; cursor: pointer; transition: background .15s; align-items: center; }
+  .ritem:hover { background: rgba(255,255,255,0.03); }
+  .ritem.active { background: rgba(245,176,66,0.1); }
+  .ritem .rthumb { position: relative; aspect-ratio: 16/10; border-radius: 5px; overflow: hidden; background: var(--bg-3); }
+  .ritem .rthumb img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85); }
+  .ritem .rthumb .pi { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .15s; }
+  .ritem:hover .rthumb .pi, .ritem.active .rthumb .pi { opacity: 1; }
+  .ritem .rthumb .pi svg { width: 18px; height: 18px; color: var(--amber); filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8)); }
+  .ritem .rmeta { min-width: 0; }
+  .ritem .rtitle { font-size: 12px; font-weight: 800; color: var(--ink); line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ritem .rartist { font-size: 9px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ritem .rrole { font-size: 8px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Hagendorf dropdown */
+  .hagen { border-top: 1px solid var(--line-2); }
+  .hagen-toggle { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; transition: background .15s; }
+  .hagen-toggle:hover { background: rgba(255,255,255,0.03); }
+  .hagen-toggle .hg-ic { font-size: 15px; }
+  .hagen-toggle .hg-txt { flex: 1; min-width: 0; }
+  .hagen-toggle .hg-h { font-size: 11px; font-weight: 800; color: var(--ink); letter-spacing: 0.02em; }
+  .hagen-toggle .hg-s { font-size: 8px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+  .hagen-toggle .hg-caret { color: var(--amber); font-size: 11px; transition: transform .2s; }
+  .hagen.open .hagen-toggle .hg-caret { transform: rotate(180deg); }
+  .hagen-list { max-height: 0; overflow: hidden; transition: max-height .3s ease; background: rgba(0,0,0,0.18); }
+  .hagen.open .hagen-list { max-height: 420px; overflow-y: auto; }
+  .hgitem { display: flex; align-items: center; gap: 9px; padding: 9px 16px; cursor: pointer; border-top: 1px solid var(--line-2); transition: background .15s; }
+  .hgitem:hover { background: rgba(245,176,66,0.06); }
+  .hgitem .hg-dot { color: var(--amber); font-size: 9px; }
+  .hgitem .hg-name { font-size: 11px; font-weight: 700; color: var(--ink-2); line-height: 1.2; }
+  .hgitem .hg-name b { color: var(--ink); font-weight: 800; }
+
+  /* ─── THREE TRACKS ─── */
+  .tracks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .track { padding: 20px 20px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; transition: all .15s; }
+  .track:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .track .tk-eyebrow { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; margin-bottom: 8px; }
+  .track.t-staff .tk-eyebrow { color: var(--rose); }
+  .track.t-retainer .tk-eyebrow { color: var(--amber); }
+  .track.t-project .tk-eyebrow { color: var(--leaf); }
+  .track .tk-title { font-size: 17px; font-weight: 900; color: var(--ink); letter-spacing: -0.01em; margin-bottom: 7px; }
+  .track .tk-body { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; line-height: 1.5; flex: 1; margin-bottom: 12px; }
+  .track .tk-for { font-size: 11px; color: var(--ink-2); font-family: Georgia, serif; font-style: italic; line-height: 1.4; margin-bottom: 14px; }
+  .track .tk-cta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; cursor: pointer; transition: all .15s; justify-content: center; }
+  .track.t-staff .tk-cta { background: rgba(232,88,154,0.12); border: 1px solid rgba(232,88,154,0.4); color: var(--rose); }
+  .track.t-staff .tk-cta:hover { background: rgba(232,88,154,0.2); }
+  .track.t-retainer .tk-cta { background: var(--amber); border: 1px solid var(--amber); color: var(--bg); }
+  .track.t-retainer .tk-cta:hover { background: #ffc555; }
+  .track.t-project .tk-cta { background: rgba(140,175,58,0.12); border: 1px solid rgba(140,175,58,0.4); color: var(--leaf); }
+  .track.t-project .tk-cta:hover { background: rgba(140,175,58,0.2); }
+
+  /* Services — compact two-column rows */
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .service { padding: 16px 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; transition: all .15s; }
+  .service:hover { border-color: var(--amber); }
+  .service .srow { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+  .service .ic { font-size: 17px; color: var(--amber); line-height: 1; }
+  .service .nm { font-size: 13px; font-weight: 900; color: var(--ink); }
+  .service .yr { margin-left: auto; font-size: 8px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; padding: 2px 7px; border: 1px solid rgba(245,176,66,0.25); border-radius: 100px; }
+  .service .desc { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; font-family: Georgia, serif; }
+
+  /* Lower grid: engagements + side */
+  .low-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; align-items: start; }
+  .scope { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .scope-row { display: grid; grid-template-columns: 150px 1fr 90px; gap: 12px; padding: 13px 16px; border-bottom: 1px solid var(--line-2); align-items: center; }
+  .scope-row:last-child { border-bottom: none; }
+  .scope-row.featured { background: rgba(245,176,66,0.05); border-left: 3px solid var(--amber); padding-left: 13px; }
+  .scope-row .type { font-size: 12px; font-weight: 800; color: var(--ink); }
+  .scope-row .type .badge { display: inline-block; margin-left: 6px; padding: 2px 7px; background: rgba(245,176,66,0.15); border: 1px solid rgba(245,176,66,0.35); color: var(--amber); font-size: 7px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; border-radius: 100px; vertical-align: middle; }
+  .scope-row .desc { font-size: 11px; color: var(--ink-3); line-height: 1.45; font-family: Georgia, serif; }
+  .scope-row .timing { font-size: 9px; color: var(--amber); letter-spacing: 0.12em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; text-align: right; }
+
+  /* Fit */
+  .fit-card { padding: 18px 18px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; }
+  .fit-card.yes { border-color: rgba(140,175,58,0.35); }
+  .fit-card.no { border-color: rgba(232,88,154,0.3); }
+  .fit-card .fc-head { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .fit-card.yes .fc-head { color: var(--leaf); }
+  .fit-card.no .fc-head { color: var(--rose); }
+  .fit-card .fc-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; }
+  .fit-card.yes .fc-icon { background: rgba(140,175,58,0.18); color: var(--leaf); }
+  .fit-card.no .fc-icon { background: rgba(232,88,154,0.16); color: var(--rose); }
+  .fit-card ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .fit-card li { font-size: 12px; color: var(--ink-2); font-family: Georgia, serif; line-height: 1.45; padding-left: 16px; position: relative; }
+  .fit-card.yes li::before { content: '→'; position: absolute; left: 0; color: var(--leaf); font-weight: 700; }
+  .fit-card.no li::before { content: '—'; position: absolute; left: 0; color: var(--rose); font-weight: 700; }
+
+  /* Recognition */
+  .recognition-strip { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+  .rec-pill { display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; }
+  .rec-pill .rec-label { font-size: 9px; color: var(--amber); letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; }
+  .rec-pill .rec-val { font-size: 12px; font-weight: 900; color: var(--ink); }
+
+  /* Contact */
+  .contact-split { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+  .form-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; }
+  .form-card h3 { font-size: 17px; font-weight: 900; color: var(--ink); margin-bottom: 3px; }
+  .form-card .form-sub { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; margin-bottom: 18px; line-height: 1.5; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 13px; }
+  .field label { font-size: 9px; color: var(--amber); letter-spacing: 0.2em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; }
+  .field input, .field select, .field textarea { padding: 11px 13px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; color: var(--ink); font-size: 13px; transition: border-color .15s; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--amber); }
+  .field textarea { resize: vertical; min-height: 88px; font-family: inherit; line-height: 1.5; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .submit-btn { width: 100%; padding: 15px; background: var(--amber); color: var(--bg); border: none; border-radius: 6px; font-weight: 800; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: all .15s; font-family: 'SF Mono', Menlo, monospace; margin-top: 2px; }
+  .submit-btn:hover { background: #ffc555; transform: translateY(-1px); }
+  .form-note { margin-top: 10px; font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-align: center; }
+  .direct-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 22px 22px; display: flex; flex-direction: column; gap: 12px; }
+  .direct-card h3 { font-size: 15px; font-weight: 900; color: var(--ink); }
+  .direct-card .sub { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; margin-bottom: 4px; }
+  .direct-btn, .cal-btn { display: flex; align-items: center; gap: 11px; padding: 13px 15px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.3); border-radius: 6px; cursor: pointer; transition: all .15s; }
+  .direct-btn:hover, .cal-btn:hover { background: rgba(245,176,66,0.14); border-color: var(--amber); }
+  .direct-btn .ic, .cal-btn .ic { width: 26px; height: 26px; border-radius: 50%; background: var(--amber); color: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .direct-btn .label, .cal-btn .label { font-size: 9px; color: var(--ink-4); letter-spacing: 0.18em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; margin-bottom: 2px; }
+  .direct-btn .val, .cal-btn .val { font-size: 12px; color: var(--ink); font-weight: 700; }
+
+  .footer { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
+  .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
+  .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(232,88,154,0.2); border: 1px solid rgba(232,88,154,0.5); border-radius: 6px; font-size: 10px; color: var(--rose); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── DYNAMIC TIMELINE ─── */
+  .timeline { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding-top: 6px; }
+  .tl-line { position: absolute; top: 27px; left: 12.5%; right: 12.5%; height: 2px; background: var(--line); overflow: hidden; }
+  .tl-line-fill { position: absolute; top: 0; left: 0; bottom: 0; right: 100%; background: linear-gradient(90deg, var(--amber), var(--rose)); box-shadow: 0 0 14px rgba(245,176,66,0.6); transition: right 1.9s cubic-bezier(.16,1,.3,1); }
+  .tl-section.visible .tl-line-fill { right: 0; }
+  .tl-node { position: relative; z-index: 2; text-align: center; }
+  .tl-dot { width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 14px; background: var(--bg-2); border: 2px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: 'SF Mono', Menlo, monospace; font-size: 13px; font-weight: 800; color: var(--ink-4); transition: transform .55s cubic-bezier(.34,1.56,.64,1), border-color .5s, color .5s, box-shadow .5s, background .5s; }
+  .tl-node .tl-pulse { position: absolute; top: 0; left: 50%; width: 54px; height: 54px; margin-left: -27px; border-radius: 50%; border: 2px solid var(--amber); opacity: 0; }
+  .tl-title { font-size: 14px; font-weight: 900; color: var(--ink-3); letter-spacing: -0.005em; margin-bottom: 6px; transition: color .5s; }
+  .tl-body { font-size: 11px; color: var(--ink-4); line-height: 1.5; font-family: Georgia, serif; max-width: 200px; margin: 0 auto; transition: color .5s; }
+  .tl-section.visible .tl-node .tl-dot { border-color: var(--amber); color: var(--amber); transform: scale(1.08); box-shadow: 0 0 0 4px rgba(245,176,66,0.08), 0 8px 22px rgba(0,0,0,0.4); }
+  .tl-section.visible .tl-node .tl-title { color: var(--ink); }
+  .tl-section.visible .tl-node .tl-body { color: var(--ink-3); }
+  .tl-section.visible .tl-node .tl-pulse { animation: tlpulse 1.6s ease-out 1; }
+  .tl-node:nth-child(2) .tl-dot, .tl-node:nth-child(2) .tl-title, .tl-node:nth-child(2) .tl-body { transition-delay: .15s; }
+  .tl-node:nth-child(3) .tl-dot, .tl-node:nth-child(3) .tl-title, .tl-node:nth-child(3) .tl-body { transition-delay: .65s; }
+  .tl-node:nth-child(4) .tl-dot, .tl-node:nth-child(4) .tl-title, .tl-node:nth-child(4) .tl-body { transition-delay: 1.15s; }
+  .tl-node:nth-child(5) .tl-dot, .tl-node:nth-child(5) .tl-title, .tl-node:nth-child(5) .tl-body { transition-delay: 1.6s; }
+  .tl-section.visible .tl-node:nth-child(2) .tl-pulse { animation-delay: .15s; }
+  .tl-section.visible .tl-node:nth-child(3) .tl-pulse { animation-delay: .65s; }
+  .tl-section.visible .tl-node:nth-child(4) .tl-pulse { animation-delay: 1.15s; }
+  .tl-section.visible .tl-node:nth-child(5) .tl-pulse { animation-delay: 1.6s; }
+  @keyframes tlpulse { 0% { opacity: 0.7; transform: scale(1); } 100% { opacity: 0; transform: scale(1.9); } }
+  @media (max-width: 1080px) {
+    .timeline { grid-template-columns: 1fr 1fr; gap: 28px 16px; }
+    .tl-line { display: none; }
+  }
+
+  @media (max-width: 1080px) {
+    .hero { grid-template-columns: 1fr; }
+    .theater { grid-template-columns: 1fr; }
+    .rail { height: 360px; }
+    .tracks, .services, .low-grid, .contact-split { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="logo">JACOB BOEHME</div>
+    <div class="tag">LANDBOUND · LA</div>
+  </div>
+  <div class="nav-items">
+    <a class="nav-item" href="index.html">Home</a>
+    <a class="nav-item" href="work.html">Work</a>
+    <a class="nav-item" href="photo.html">Photo</a>
+    <a class="nav-item" href="vfx-ai.html">VFX &amp; AI</a>
+    <a class="nav-item active" href="hire.html">Hire</a>
+  </div>
+  <div class="nav-socials">
+    <div class="nav-socials-h">Follow</div>
+    <a class="nav-soc" href="https://www.tiktok.com/@landbound" target="_blank" rel="noopener"><div class="nav-soc-icon tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></a>
+    <a class="nav-soc" href="https://www.instagram.com/landbound" target="_blank" rel="noopener"><div class="nav-soc-icon ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 11K</div></div></a>
+    <a class="nav-soc" href="https://www.linkedin.com/in/jacobtboehme" target="_blank" rel="noopener"><div class="nav-soc-icon li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></a>
+    <a class="nav-soc" href="https://www.imdb.com/name/nm13209955/" target="_blank" rel="noopener"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></a>
+  </div>
+  <div class="nav-bottom">
+    <div class="status"><div class="dot"></div> Available Now</div>
+    <div>Los Angeles, CA</div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ─── HERO ─── -->
+  <div class="hero">
+    <div>
+      <h1>I make it, I cut it,<br>I <em>deliver it.</em></h1>
+      <div class="lede">Director, DP, editor, and VFX supervisor. Directed for artists on Atlantic, RCA, and Columbia. Led 250+ VFX shots on a feature. Built and ran a content division from scratch. LA-based, available now.</div>
+      <div class="hero-cta-row">
+        <a class="hero-cta primary" href="#hire">How to hire me</a>
+        <a class="hero-cta ghost" href="mailto:jacob.t.boehme@gmail.com">Email me direct</a>
+      </div>
+    </div>
+    <div class="cred">
+      <div class="cred-badges">
+        <div class="badge-status"><span class="d"></span>Available · Freelance</div>
+        <div class="badge-w2">Open to Staff Roles</div>
+      </div>
+      <div class="cred-stats">
+        <div class="cred-stat"><div class="n">24</div><div class="l">IMDb Credits</div></div>
+        <div class="cred-stat"><div class="n">250+</div><div class="l">VFX Shots Led</div></div>
+        <div class="cred-stat"><div class="n">110M+</div><div class="l">Organic Views</div></div>
+        <div class="cred-stat"><div class="n">3</div><div class="l">Addy Awards</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── THEATER ─── -->
+  <div class="section" style="margin-bottom: 36px;">
+    <div class="theater">
+      <div class="stage-col">
+        <div class="stage-pills">
+          <div class="spill active" data-mode="video" data-id="e0374508-213f-47a2-ae0d-dd50d9df695d" data-bunny="1" data-title="Director's Reel" data-sub="Landbound — directed, shot, cut, finished" data-tags="Director|DP|Editor|VFX"><span class="pdot"></span>Director's Reel</div>
+          <div class="spill" data-mode="video" data-id="a134b54c-bd99-4a06-b275-a5362aea33ee" data-bunny="1" data-title="Commercial Cinematography Reel" data-sub="Landbound · Cinematography · 2025" data-tags="Cinematography|Commercial|DP"><span class="pdot"></span>Cinematography</div>
+          <div class="spill" data-mode="ba" data-title="VFX — Before / After" data-sub="Raw plate vs. finished comp — drag to compare" data-tags="VFX Supe|Comp|250+ shots"><span class="pdot"></span>VFX Before / After</div>
+        </div>
+        <div class="stage">
+          <iframe id="stagePlayer" src="https://iframe.mediadelivery.net/embed/675985/e0374508-213f-47a2-ae0d-dd50d9df695d?autoplay=false&loop=false&muted=false&preload=true&responsive=true" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="ba" id="baSlider">
+            <video id="baBefore" src="https://vz-5dfccea4-b84.b-cdn.net/68caab30-9fda-4898-98c8-ef81c0668668/play_720p.mp4" muted loop playsinline webkit-playsinline preload="metadata" disablepictureinpicture></video>
+            <div class="ba-after-wrap" id="baAfterWrap">
+              <video id="baAfter" src="https://vz-5dfccea4-b84.b-cdn.net/6591f6cc-e4c2-43b1-aeee-ffe5c7bb7c24/play_720p.mp4" muted loop playsinline webkit-playsinline preload="metadata" disablepictureinpicture></video>
+            </div>
+            <div class="ba-tag l">Final / Comp</div>
+            <div class="ba-tag r">Plate</div>
+            <div class="ba-handle" id="baHandle"><div class="ba-knob">⇄</div></div>
+          </div>
+        </div>
+        <div class="stage-cap">
+          <div>
+            <div class="sc-title" id="stTitle">Director's Reel</div>
+            <div class="sc-sub" id="stSub">Landbound — directed, shot, cut, finished</div>
+          </div>
+          <div class="sc-tags" id="stTags"></div>
+        </div>
+      </div>
+
+      <div class="rail">
+        <div class="rail-head"><span>Selected Work</span><span class="ct" id="railCt"></span></div>
+        <div class="rail-scroll" id="railScroll"></div>
+        <div class="hagen" id="hagen">
+          <div class="hagen-toggle" id="hagenToggle">
+            <span class="hg-ic">🎙</span>
+            <div class="hg-txt">
+              <div class="hg-h">The Allison Hagendorf Show</div>
+              <div class="hg-s">Director · Editor — full run</div>
+            </div>
+            <span class="hg-caret">▾</span>
+          </div>
+          <div class="hagen-list" id="hagenList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── HOW TO HIRE ─── -->
+  <div class="section reveal" id="hire">
+    <div class="section-head">
+      <span class="num">01.</span>
+      <span class="label">How To Hire Me</span>
+      <span class="hint">Three doors, one builder</span>
+    </div>
+    <div class="tracks">
+      <div class="track t-staff">
+        <div class="tk-eyebrow">Bring me in-house</div>
+        <div class="tk-title">Staff / Full-Time</div>
+        <div class="tk-body">Head of content, creative director, senior editor or VFX lead. I've done the job — built and ran a content division from scratch, with real budgets and accountability.</div>
+        <div class="tk-for">Best for: teams that need a creative leader who can also do the work.</div>
+        <a href="mailto:jacob.t.boehme@gmail.com?subject=Staff Role Inquiry" class="tk-cta">Talk about a role →</a>
+      </div>
+      <div class="track t-retainer">
+        <div class="tk-eyebrow">Embed me monthly</div>
+        <div class="tk-title">Freelance Retainer</div>
+        <div class="tk-body">I become your embedded director and editor on a flat monthly rate. Consistent output, no per-project overhead, in-house quality without the headcount.</div>
+        <div class="tk-for">Best for: labels, artists, brands with ongoing needs. From $X / month.</div>
+        <a href="mailto:jacob.t.boehme@gmail.com?subject=Retainer Inquiry" class="tk-cta">Start a retainer →</a>
+      </div>
+      <div class="track t-project">
+        <div class="tk-eyebrow">Hire me per project</div>
+        <div class="tk-title">Project / One-Off</div>
+        <div class="tk-body">Music video, commercial, VFX supervision, or a single edit. Any combination of direction, camera, post, and VFX. Majors or independents, same care.</div>
+        <div class="tk-for">Best for: a specific deliverable with a clear timeline and budget.</div>
+        <a href="mailto:jacob.t.boehme@gmail.com?subject=Project Inquiry" class="tk-cta">Pitch me a project →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SERVICES ─── -->
+  <div class="section reveal">
+    <div class="section-head">
+      <span class="num">02.</span>
+      <span class="label">What I Do</span>
+      <span class="hint">Often hired for combinations</span>
+    </div>
+    <div class="services">
+      <div class="service"><div class="srow"><span class="ic">◆</span><span class="nm">Direction</span><span class="yr">10 YR</span></div><div class="desc">Treatment, shoot, edit. I stay in it start to finish — not a creative who vanishes after the concept doc.</div></div>
+      <div class="service"><div class="srow"><span class="ic">✦</span><span class="nm">VFX Supervision</span><span class="yr">8 YR</span></div><div class="desc">Shot planning, on-set supe, comp delivery. Feature scale: 250+ shots on <em>The First Circle</em>.</div></div>
+      <div class="service"><div class="srow"><span class="ic">▣</span><span class="nm">Editing</span><span class="yr">10 YR</span></div><div class="desc">Music video, commercial, short form. Resolve &amp; Premiere. A real editor, not a render monkey.</div></div>
+      <div class="service"><div class="srow"><span class="ic">▤</span><span class="nm">Cinematography</span><span class="yr">8 YR</span></div><div class="desc">Arri &amp; Blackmagic. I pull my own package and work clean with any G&amp;E team.</div></div>
+      <div class="service"><div class="srow"><span class="ic">⌬</span><span class="nm">AI / AI-VFX</span><span class="yr">3 YR</span></div><div class="desc">Midjourney, Kling, custom pipelines. Done right, you can't tell. Built for tight budgets and timelines.</div></div>
+      <div class="service"><div class="srow"><span class="ic">▦</span><span class="nm">Content Leadership</span><span class="yr">3 YR</span></div><div class="desc">Built and ran a content op from scratch at Raw Material. Real budgets, real accountability.</div></div>
+    </div>
+  </div>
+
+  <!-- ─── ENGAGEMENTS + FIT ─── -->
+  <div class="section reveal">
+    <div class="section-head">
+      <span class="num">03.</span>
+      <span class="label">Engagements &amp; Fit</span>
+      <span class="hint">Reach out for anything not listed</span>
+    </div>
+    <div class="low-grid">
+      <div class="scope">
+        <div class="scope-row featured">
+          <div class="type">Retainer <span class="badge">Best Fit</span></div>
+          <div class="desc">Embedded director + editor. Flat monthly rate, consistent output, no per-project overhead.</div>
+          <div class="timing">Monthly</div>
+        </div>
+        <div class="scope-row">
+          <div class="type">Music Video</div>
+          <div class="desc">Direction, camera, edit, color, VFX — any combination. Majors or independents.</div>
+          <div class="timing">3–6 wks</div>
+        </div>
+        <div class="scope-row">
+          <div class="type">Commercial / Brand</div>
+          <div class="desc">Concept through delivery. Three Addy Awards. AI-assisted when the timeline demands.</div>
+          <div class="timing">2–4 wks</div>
+        </div>
+        <div class="scope-row">
+          <div class="type">VFX Supervision</div>
+          <div class="desc">Shot planning, on-set supe, comp delivery. 250 shots on <em>The First Circle</em>.</div>
+          <div class="timing">By project</div>
+        </div>
+        <div class="scope-row">
+          <div class="type">Edit Only</div>
+          <div class="desc">Music video, commercial, short-form. Resolve or Premiere. Independent once aligned.</div>
+          <div class="timing">1–3 wks</div>
+        </div>
+        <div class="scope-row">
+          <div class="type">Verticals / Short-Form</div>
+          <div class="desc">TikTok, Reels, Shorts. 110M+ organic views. I know the format beyond the specs.</div>
+          <div class="timing">1–2 wks</div>
+        </div>
+      </div>
+      <div>
+        <div class="fit-card yes">
+          <div class="fc-head"><span class="fc-icon">✓</span>Hire me when</div>
+          <ul>
+            <li>You want one person who can direct, shoot, cut, and finish — not four vendors stitched together.</li>
+            <li>You need an embedded creative who treats your channel like their own.</li>
+            <li>The timeline's tight, the budget's real, and you'd rather have taste than a render farm.</li>
+          </ul>
+        </div>
+        <div class="fit-card no">
+          <div class="fc-head"><span class="fc-icon">✕</span>Probably not me when</div>
+          <ul>
+            <li>You need a 60-person VFX house for a tentpole — I lead and supe, not a vendor at that scale.</li>
+            <li>You want the lowest bid with no creative input.</li>
+            <li>The brief is "just make it viral" with nothing behind it.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="recognition-strip">
+      <div class="rec-pill"><span class="rec-label">Awards</span><span class="rec-val">3 Addy Awards</span></div>
+      <div class="rec-pill"><span class="rec-label">Festival</span><span class="rec-val">Screamfest LA Qualifier</span></div>
+      <div class="rec-pill"><span class="rec-label">Premiered</span><span class="rec-val">Hollywood Chinese Theatre</span></div>
+      <div class="rec-pill"><span class="rec-label">Nominated</span><span class="rec-val">NYC Cinematography Awards</span></div>
+      <div class="rec-pill"><span class="rec-label">Broadcast</span><span class="rec-val">Super Bowl Sunday</span></div>
+      <div class="rec-pill"><span class="rec-label">Platform</span><span class="rec-val">TikTok Partner · 100K</span></div>
+    </div>
+  </div>
+
+  <!-- ─── HOW IT WORKS (dynamic timeline) ─── -->
+  <div class="section reveal tl-section">
+    <div class="section-head">
+      <span class="num">04.</span>
+      <span class="label">How It Works</span>
+      <span class="hint">Inquiry to delivery</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-line"><div class="tl-line-fill"></div></div>
+      <div class="tl-node">
+        <div class="tl-dot">01<span class="tl-pulse"></span></div>
+        <div class="tl-title">Inquiry</div>
+        <div class="tl-body">Tell me the project, timeline, and what you've got. Real details get a real answer.</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-dot">02<span class="tl-pulse"></span></div>
+        <div class="tl-title">Scope Call</div>
+        <div class="tl-body">15–30 min to align on creative direction, deliverables, and budget. You leave with clarity.</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-dot">03<span class="tl-pulse"></span></div>
+        <div class="tl-title">Proposal</div>
+        <div class="tl-body">Treatment, line items, timeline, price — in writing before anything starts. No surprises.</div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-dot">04<span class="tl-pulse"></span></div>
+        <div class="tl-title">Execute</div>
+        <div class="tl-body">Pre-pro through delivery. Updates at every real milestone.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CONTACT ─── -->
+  <div class="section reveal">
+    <div class="section-head">
+      <span class="num">05.</span>
+      <span class="label">Get In Touch</span>
+      <span class="hint">Reply within 24h</span>
+    </div>
+    <div class="contact-split">
+      <div class="form-card">
+        <h3>Project Inquiry</h3>
+        <div class="form-sub">The more you share, the faster I come back with a real answer.</div>
+        <form action="https://formspree.io/f/REPLACE_WITH_YOUR_ID" method="POST">
+          <div class="field-row">
+            <div class="field"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Your name" required></div>
+            <div class="field"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="you@company.com" required></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="type">Project Type</label>
+              <select id="type" name="project_type"><option>Retainer / Ongoing</option><option>Staff / In-House Role</option><option>Music Video</option><option>Commercial / Brand</option><option>VFX Supervision</option><option>Edit Only</option><option>Verticals / Short-Form</option><option>Other</option></select>
+            </div>
+            <div class="field"><label for="timeline">Timeline</label>
+              <select id="timeline" name="timeline"><option>ASAP (under 2 weeks)</option><option>This month</option><option>Next month</option><option>3+ months out</option><option>Flexible / TBD</option></select>
+            </div>
+          </div>
+          <div class="field"><label for="message">Tell me about it</label>
+            <textarea id="message" name="message" placeholder="Artist, brand, concept, references. For staff roles: company, role, what you're building." required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send Inquiry →</button>
+          <div class="form-note">Goes straight to my inbox · Reply within 24h</div>
+        </form>
+      </div>
+      <div class="direct-card">
+        <h3>Or skip the form.</h3>
+        <div class="sub">Rather just email or jump on a call? Works for me.</div>
+        <a href="mailto:jacob.t.boehme@gmail.com" class="direct-btn">
+          <div class="ic">@</div><div><div class="label">Email</div><div class="val">jacob.t.boehme@gmail.com</div></div>
+        </a>
+        <a href="" onclick="if(window.Calendly){Calendly.initPopupWidget({url:'https://calendly.com/jacob-boehme'});}return false;" class="cal-btn">
+          <div class="ic">📅</div><div><div class="label">Book via Calendly</div><div class="val">15 or 30 min, free</div></div>
+        </a>
+        <div style="padding: 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 6px;">
+          <div style="font-size: 9px; color: var(--amber); letter-spacing: 0.2em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 6px;">Based In</div>
+          <div style="font-size: 12px; color: var(--ink-2); line-height: 1.6;">Hollywood, Los Angeles<br><span style="color: var(--ink-4);">Remote or on-location anywhere in LA</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="clapper">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h18M3 8v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8M3 8l3-5h12l3 5M9 3L7 8M15 3l-2 5"/></svg>
+      © 2026 Landbound
+    </span>
+    <span>Los Angeles</span>
+  </div>
+
+</main>
+
+<div class="banner">V4 MOCK — hire-v4.html</div>
+
+<script>
+  const CDN = 'vz-5dfccea4-b84.b-cdn.net';
+  const BUNNY_LIB = '675985';
+  const bunnyThumb = id => `https://${CDN}/${id}/thumbnail.jpg`;
+  const ytThumb = id => `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+  const playSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  const embedUrl = (id, bunny) => bunny
+    ? `https://iframe.mediadelivery.net/embed/${BUNNY_LIB}/${id}?autoplay=true&preload=true&responsive=true`
+    : `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1&autoplay=1`;
+
+  // Selected work (music videos) — real projects, accurate roles
+  const WORK = [
+    { id:'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', bunny:true, title:'CHILDSTAR: Final Act', artist:'Grace VanderWaal', role:'Director · EP · VFX · Editor', thumb:ytThumb('wCQzcM3Z_bo') },
+    { id:'8d669bba-e779-4860-84b1-ffc3055d1b96', bunny:true, title:"Call Me When You're Home", artist:'Surfaces', role:'Director · DP · Editor · VFX' },
+    { id:'6b38b59e-aedd-4208-a1fc-ff85adb30021', bunny:true, title:'Blame It All On Me', artist:'Surfaces × Mike Posner', role:'Director · DP · Editor' },
+    { id:'b054d114-131a-479e-88b2-184bdcb39600', bunny:true, title:'Proud', artist:'Grace VanderWaal', role:'Director · Editor' },
+    { id:'35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3', bunny:true, title:'Bby', artist:'Two Feet', role:'Director · DP · Editor' },
+    { id:'9e6f327c-1d83-4545-b88c-3193d7dd4274', bunny:true, title:'Bleed', artist:'Music Video', role:'Director · Editor' },
+    { id:'4f84800d-811b-4218-83a4-56880a993486', bunny:true, title:'Broken Wings', artist:'No Love For The Middle Child', role:'Director · Editor' },
+    { id:'e8775058-272b-48b5-85a9-37410c6cbb25', bunny:true, title:'HIGH SOCIAL', artist:'Grace VanderWaal', role:'Director · Editor' },
+  ];
+
+  // Allison Hagendorf Show — A-list interviews (directed + edited)
+  const HAGEN = [
+    { id:'3aoeWVc5NHw', name:'<b>Keanu Reeves</b> · Dogstar' },
+    { id:'DduBlVnlOOM', name:'<b>Pete Wentz</b> · Fall Out Boy' },
+    { id:'tFUowdlsAqE', name:'<b>All Time Low</b>' },
+    { id:'26yi4nH3f6Y', name:'<b>Chris Daughtry</b>' },
+    { id:'AT9jAiQ7HIo', name:'<b>Zakk Wylde</b> · Ozzy / Black Label' },
+    { id:'4Z_VwUSr_4w', name:'<b>YUNGBLUD</b>' },
+  ];
+
+  const stagePlayer = document.getElementById('stagePlayer');
+  const baSlider = document.getElementById('baSlider');
+  const stTitle = document.getElementById('stTitle');
+  const stSub = document.getElementById('stSub');
+  const stTags = document.getElementById('stTags');
+  const baBefore = document.getElementById('baBefore');
+  const baAfter = document.getElementById('baAfter');
+
+  function setTags(str){ stTags.innerHTML = str.split('|').map(t => `<span class="sc-chip">${t}</span>`).join(''); }
+  function clearActives(){ document.querySelectorAll('.spill, .ritem, .hgitem').forEach(e => e.classList.remove('active')); }
+
+  function playVideo(id, bunny, title, sub, tags){
+    baSlider.classList.remove('show');
+    baBefore.pause(); baAfter.pause();
+    stagePlayer.style.display = '';
+    stagePlayer.src = embedUrl(id, bunny);
+    stTitle.textContent = title; stSub.textContent = sub; setTags(tags || 'Director|Editor');
+  }
+  function showBA(title, sub, tags){
+    stagePlayer.style.display = 'none';
+    stagePlayer.src = 'about:blank';
+    baSlider.classList.add('show');
+    baBefore.play().catch(()=>{}); baAfter.play().catch(()=>{});
+    stTitle.textContent = title; stSub.textContent = sub; setTags(tags);
+  }
+
+  // Pills
+  document.querySelectorAll('.spill').forEach(p => {
+    p.addEventListener('click', () => {
+      clearActives(); p.classList.add('active');
+      if (p.dataset.mode === 'ba') showBA(p.dataset.title, p.dataset.sub, p.dataset.tags);
+      else playVideo(p.dataset.id, p.dataset.bunny === '1', p.dataset.title, p.dataset.sub, p.dataset.tags);
+    });
+  });
+
+  // Rail (selected work)
+  const railScroll = document.getElementById('railScroll');
+  document.getElementById('railCt').textContent = WORK.length + ' films';
+  railScroll.innerHTML = WORK.map(w => `
+    <div class="ritem" data-id="${w.id}" data-bunny="${w.bunny?1:0}" data-title="${w.title}" data-sub="${w.artist}" data-tags="${w.role.split(' · ').join('|')}">
+      <div class="rthumb"><img src="${w.thumb || bunnyThumb(w.id)}" alt="${w.title}" loading="lazy"><div class="pi">${playSvg}</div></div>
+      <div class="rmeta"><div class="rtitle">${w.title}</div><div class="rartist">${w.artist}</div><div class="rrole">${w.role}</div></div>
+    </div>`).join('');
+  railScroll.querySelectorAll('.ritem').forEach(it => {
+    it.addEventListener('click', () => {
+      clearActives(); it.classList.add('active');
+      playVideo(it.dataset.id, it.dataset.bunny === '1', it.dataset.title, it.dataset.sub, it.dataset.tags);
+    });
+  });
+
+  // Hagendorf dropdown
+  const hagen = document.getElementById('hagen');
+  const hagenList = document.getElementById('hagenList');
+  hagenList.innerHTML = HAGEN.map(h => `
+    <div class="hgitem" data-id="${h.id}"><span class="hg-dot">▶</span><span class="hg-name">${h.name}</span></div>`).join('');
+  document.getElementById('hagenToggle').addEventListener('click', () => hagen.classList.toggle('open'));
+  hagenList.querySelectorAll('.hgitem').forEach(it => {
+    it.addEventListener('click', () => {
+      clearActives(); it.classList.add('active');
+      const h = HAGEN.find(x => x.id === it.dataset.id);
+      playVideo(it.dataset.id, false, 'The Allison Hagendorf Show', it.querySelector('.hg-name').textContent, 'Director|Editor|Interview');
+    });
+  });
+
+  // init tags
+  setTags('Director|DP|Editor|VFX');
+
+  // ── Before/After drag slider ──
+  (function(){
+    const wrap = document.getElementById('baAfterWrap');
+    const handle = document.getElementById('baHandle');
+    let dragging = false;
+    function setPos(clientX){
+      const rect = baSlider.getBoundingClientRect();
+      let pct = ((clientX - rect.left) / rect.width) * 100;
+      pct = Math.max(3, Math.min(97, pct));
+      wrap.style.width = pct + '%';
+      handle.style.left = pct + '%';
+      wrap.querySelector('video').style.width = (10000 / pct) + '%';
+    }
+    handle.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
+    window.addEventListener('mouseup', () => dragging = false);
+    window.addEventListener('mousemove', e => { if (dragging) setPos(e.clientX); });
+    handle.addEventListener('touchstart', () => dragging = true, {passive:true});
+    window.addEventListener('touchend', () => dragging = false);
+    window.addEventListener('touchmove', e => { if (dragging && e.touches[0]) setPos(e.touches[0].clientX); }, {passive:true});
+    baSlider.addEventListener('click', e => { if (e.target !== handle && !handle.contains(e.target) && baSlider.classList.contains('show')) setPos(e.clientX); });
+  })();
+
+  // ── Reveal + stat counter ──
+  const revealObserver = new IntersectionObserver((es) => {
+    es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>
