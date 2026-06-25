@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Landbound — Mobile Diagnostic</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; background: #111; color: #eee; padding: 16px 14px 60px; font-size: 15px; line-height: 1.5; margin: 0; }
+  h1 { font-size: 17px; margin: 0 0 4px; }
+  .sub { color: #888; font-size: 12px; margin-bottom: 14px; }
+  .row { padding: 7px 0; border-bottom: 1px solid #2a2a2a; word-break: break-word; }
+  .ok { color: #4ade80; font-weight: 700; }
+  .bad { color: #f87171; font-weight: 700; }
+  .lbl { color: #fff; }
+  .x { color: #9aa; }
+  pre { white-space: pre-wrap; word-break: break-word; background: #000; color: #f87171; padding: 10px; border-radius: 6px; font-size: 12px; margin-top: 14px; min-height: 18px; }
+  .done { margin-top: 16px; padding: 12px; background: #1a2e1a; border: 1px solid #2f5; border-radius: 8px; font-size: 13px; color: #cdebcd; }
+</style>
+</head>
+<body>
+<h1>Landbound mobile diagnostic</h1>
+<div class="sub">Screenshot this whole screen and send it back. It tells us exactly what's failing on your phone.</div>
+<div id="out">Starting&hellip;</div>
+<pre id="err">No JavaScript errors captured yet.</pre>
+
+<script>
+/* Deliberately ES5-only (var / function / string concat) so this page runs on
+   ANY Safari version, even very old ones. If THIS page fails, the problem is
+   below the app layer (network / cert / Safari config), not the site's code. */
+var out = document.getElementById('out');
+var errBox = document.getElementById('err');
+var rows = [];
+var firstErr = true;
+
+function line(label, ok, extra) {
+  var mark = (ok === null) ? '<span class="x">&bull;</span>' : '<span class="' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✓' : '✗') + '</span>';
+  rows.push('<div class="row">' + mark + ' <span class="lbl">' + label + '</span>' + (extra ? ' &mdash; ' + extra : '') + '</div>');
+  out.innerHTML = rows.join('');
+}
+function logErr(txt) {
+  if (firstErr) { errBox.textContent = ''; firstErr = false; }
+  errBox.textContent += txt + '\n';
+}
+window.onerror = function (m, src, l, c) {
+  logErr('JS ERROR: ' + m + '  [' + (src ? src.split('/').pop() : '?') + ':' + l + ':' + c + ']');
+  return false;
+};
+window.addEventListener('unhandledrejection', function (e) {
+  logErr('PROMISE REJECTION: ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
+});
+
+try {
+  line('Basic JavaScript runs', true);
+  line('User agent', null, navigator.userAgent);
+  line('Screen', null, screen.width + '×' + screen.height + ', dpr ' + (window.devicePixelRatio || 1));
+  line('maxTouchPoints', null, String(navigator.maxTouchPoints));
+
+  try {
+    localStorage.setItem('_diag', '1');
+    localStorage.removeItem('_diag');
+    line('localStorage read/write', true);
+  } catch (e) {
+    line('localStorage THROWS', false, e.name + ': ' + e.message + ' (this can crash theme.js)');
+  }
+
+  try {
+    document.createElement('video');
+    line('Can create a <video> element', true);
+  } catch (e) {
+    line('<video> creation throws', false, e.message);
+  }
+
+  if (window.performance && performance.memory) {
+    var used = Math.round(performance.memory.usedJSHeapSize / 1048576);
+    var lim = Math.round(performance.memory.jsHeapSizeLimit / 1048576);
+    line('JS heap', null, used + ' MB used / ' + lim + ' MB limit');
+  } else {
+    line('performance.memory', null, 'not exposed (normal on Safari)');
+  }
+
+  /* Does the real content file load + parse on this device? */
+  fetch('data.js?d=' + Date.now(), { cache: 'no-store' }).then(function (r) {
+    return r.ok ? r.text() : Promise.reject('HTTP ' + r.status);
+  }).then(function (t) {
+    line('data.js downloaded', true, Math.round(t.length / 1024) + ' KB');
+    try { new Function(t); line('data.js parses on this Safari', true); }
+    catch (e) { line('data.js PARSE FAILS here', false, e.message); }
+  }).catch(function (e) {
+    line('data.js download failed', false, String(e));
+  });
+
+  fetch('theme.js?d=' + Date.now(), { cache: 'no-store' }).then(function (r) {
+    return r.ok ? r.text() : Promise.reject('HTTP ' + r.status);
+  }).then(function (t) {
+    try { new Function(t); line('theme.js parses on this Safari', true); }
+    catch (e) { line('theme.js PARSE FAILS here', false, e.message); }
+  }).catch(function (e) {
+    line('theme.js download failed', false, String(e));
+  });
+
+  setTimeout(function () {
+    var d = document.createElement('div');
+    d.className = 'done';
+    d.innerHTML = 'Diagnostic finished. If you can read this, a basic page on landbound.mov loads fine on your phone — which points the problem at the heavier pages, not the connection. Screenshot and send.';
+    document.body.appendChild(d);
+  }, 2500);
+
+} catch (e) {
+  logErr('TOP-LEVEL FAILURE: ' + e.message);
+}
+</script>
+</body>
+</html>
