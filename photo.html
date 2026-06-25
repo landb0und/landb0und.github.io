@@ -107,13 +107,17 @@
   .tab.active .count { color: var(--amber); }
 
   /* ===== Auto-scrolling parallax photo wall (replaces static grid) ===== */
-  /* Tall runway gives the page scroll distance; the wall pins (sticky) and its
-     columns parallax as you scroll through it. */
-  .wall-scroll { height: 360vh; }
+  /* Tall runway gives the page scroll distance; the whole sticky block (stories
+     + photo-type tabs + wall) pins to the top, so the header stays visible and
+     scrolling only drives the wall's column parallax. */
+  .wall-scroll { height: 320vh; }
   .wall-scroll.reduced { height: auto; }
-  .photo-wall { position: sticky; top: 14px; height: 86vh; min-height: 540px; overflow: hidden; border-radius: 8px; opacity: 0;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%);
-            mask-image: linear-gradient(to bottom, transparent 0, #000 5%, #000 95%, transparent 100%); }
+  .wall-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding-top: 10px; background: var(--bg); }
+  .wall-sticky > .stories, .wall-sticky > .tabs { flex: 0 0 auto; }
+  .wall-scroll.reduced .wall-sticky { position: static; height: auto; display: block; }
+  .photo-wall { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; border-radius: 8px; opacity: 0;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 4%, #000 96%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 4%, #000 96%, transparent 100%); }
   .photo-wall.ready { opacity: 1; transition: opacity .4s ease-out; }
   .pcol { position: absolute; top: 0; display: flex; flex-direction: column; gap: 12px; will-change: transform; }
   .pw-tile { position: relative; width: 100%; overflow: hidden; border-radius: 6px; cursor: pointer; border: 1px solid var(--line);
@@ -338,29 +342,34 @@
       </div>
     </div>
 
-    <!-- CLIENTS STORIES (rendered from data.js) -->
-    <div class="stories" id="photoStories" style="margin-bottom: 4px;"></div>
-
-    <!-- TABS — filter by derived category, counts auto-update from PHOTOS -->
-    <div class="tabs" id="photoTabs">
-      <span class="tab active" data-cat="all">All <span class="count" data-cat-count="all">0</span></span>
-      <span class="tab" data-cat="music">Music <span class="count" data-cat-count="music">0</span></span>
-      <span class="tab" data-cat="commercial">Commercial <span class="count" data-cat-count="commercial">0</span></span>
-      <span class="tab" data-cat="collab">Collab <span class="count" data-cat-count="collab">0</span></span>
-      <span class="tab" data-cat="bts">BTS <span class="count" data-cat-count="bts">0</span></span>
-      <span class="tab" data-cat="editorial">Editorial <span class="count" data-cat-count="editorial">0</span></span>
-      <span class="tab" data-cat="live">Live <span class="count" data-cat-count="live">0</span></span>
-      <span class="tab" data-cat="phone">Phone <span class="count" data-cat-count="phone">0</span></span>
-      <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
-      <span class="tab-shuffle" id="photoShuffle" title="Shuffle">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
-        Shuffle
-      </span>
-    </div>
-
-    <!-- MASONRY -->
+    <!-- Stories + photo-type tabs + the wall live in ONE sticky block so the
+         header stays pinned at top while scrolling only drives the wall parallax. -->
     <div class="wall-scroll" id="wallScroll">
-      <div class="photo-wall" id="photoGrid"><!-- auto-scrolling parallax columns built dynamically from PHOTOS --></div>
+      <div class="wall-sticky" id="wallSticky">
+
+        <!-- CLIENTS STORIES (rendered from data.js) -->
+        <div class="stories" id="photoStories" style="margin-bottom: 4px;"></div>
+
+        <!-- TABS — filter by derived category, counts auto-update from PHOTOS -->
+        <div class="tabs" id="photoTabs">
+          <span class="tab active" data-cat="all">All <span class="count" data-cat-count="all">0</span></span>
+          <span class="tab" data-cat="music">Music <span class="count" data-cat-count="music">0</span></span>
+          <span class="tab" data-cat="commercial">Commercial <span class="count" data-cat-count="commercial">0</span></span>
+          <span class="tab" data-cat="collab">Collab <span class="count" data-cat-count="collab">0</span></span>
+          <span class="tab" data-cat="bts">BTS <span class="count" data-cat-count="bts">0</span></span>
+          <span class="tab" data-cat="editorial">Editorial <span class="count" data-cat-count="editorial">0</span></span>
+          <span class="tab" data-cat="live">Live <span class="count" data-cat-count="live">0</span></span>
+          <span class="tab" data-cat="phone">Phone <span class="count" data-cat-count="phone">0</span></span>
+          <span class="tab" data-cat="personal">Personal <span class="count" data-cat-count="personal">0</span></span>
+          <span class="tab-shuffle" id="photoShuffle" title="Shuffle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+            Shuffle
+          </span>
+        </div>
+
+        <!-- WALL -->
+        <div class="photo-wall" id="photoGrid"><!-- auto-scrolling parallax columns built dynamically from PHOTOS --></div>
+      </div>
     </div>
 
     <div class="footer">
@@ -636,7 +645,7 @@
       return;
     }
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const runway = wrap.parentElement; // .wall-scroll — collapse its tall runway when reduced
+    const runway = document.getElementById('wallScroll'); // collapse its tall runway when reduced
     if (runway) runway.classList.toggle('reduced', reduce);
     const w = window.innerWidth;
     const NCOL = w <= 460 ? 2 : (w <= 700 ? 3 : 5);
