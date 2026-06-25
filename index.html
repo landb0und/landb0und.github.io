@@ -154,6 +154,11 @@
   .pa-btn.secondary:hover { background: rgba(245,176,66,0.06); color: var(--amber); border-color: rgba(245,176,66,0.4); }
   .pa-btn .ic { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; opacity: 0.95; }
   .pa-btn .ic svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  /* Rotating label for the Hire me button — starts on "Hire me", cycles options */
+  .pa-rot-window { display: inline-block; height: 18px; overflow: hidden; vertical-align: middle; min-width: 124px; text-align: center; }
+  .pa-rot-strip { display: block; transition: transform .55s cubic-bezier(.7,0,.18,1); }
+  .pa-rot-strip.nojump { transition: none; }
+  .pa-rot-item { display: block; height: 18px; line-height: 18px; white-space: nowrap; }
 
   /* Quiet expand link — sentence case, sans-serif, not a CTA */
   .expand-toggle.quiet { background: transparent; border: none; border-top: 1px solid var(--line-2); padding: 14px 0 0; margin-top: 18px; border-radius: 0; width: 100%; color: var(--amber); font-size: 13px; letter-spacing: -0.005em; font-family: -apple-system, system-ui, 'SF Pro Text', sans-serif; font-weight: 700; text-transform: none; cursor: pointer; transition: color .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -594,7 +599,7 @@
       </div>
 
       <div class="profile-actions">
-        <a href="hire.html" class="pa-btn primary"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span> Hire me</a>
+        <a href="hire.html" class="pa-btn primary" aria-label="Hire me"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span><span class="pa-rot-window"><span class="pa-rot-strip" id="homeHireStrip"><span class="pa-rot-item">Hire me</span><span class="pa-rot-item">Start a retainer</span><span class="pa-rot-item">Scope a project</span><span class="pa-rot-item">Talk about a role</span><span class="pa-rot-item">Hire me</span></span></span></a>
         <a href="mailto:jacob.t.boehme@gmail.com" class="pa-btn secondary"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></span> Email</a>
         <a href="hire.html" class="pa-btn secondary"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg></span> Book a call</a>
       </div>
@@ -1251,6 +1256,26 @@
       cap.textContent = btn.dataset.lbCap || '';
       lb.classList.add('open');
     });
+  })();
+
+  // ============= ROTATING "HIRE ME" BUTTON =============
+  // Starts on "Hire me", then cycles the hire options (the 5th item is a copy of
+  // the first so the loop seam is invisible). Link still goes to hire.html.
+  (function () {
+    const strip = document.getElementById('homeHireStrip');
+    if (!strip) return;
+    const H = 18, count = 4; // unique items before the duplicate
+    let i = 0;
+    setInterval(() => {
+      i++;
+      strip.style.transform = 'translateY(' + (-i * H) + 'px)';
+      if (i === count) {
+        setTimeout(() => {
+          strip.classList.add('nojump'); i = 0; strip.style.transform = 'translateY(0)';
+          void strip.offsetWidth; strip.classList.remove('nojump');
+        }, 560);
+      }
+    }, 2800);
   })();
 </script>
 </body>
