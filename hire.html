@@ -58,7 +58,7 @@
   .corelight { position: absolute; inset: 0; z-index: 9; pointer-events: none; background: radial-gradient(circle 38% at 50% 47%, rgba(245,176,66,.18), rgba(232,88,154,.05) 40%, transparent 64%); animation: breathe 7s ease-in-out infinite; }
   @keyframes breathe { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
   .ring { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
-  .ring.r1 { top: 33%; } .ring.r2 { top: 67%; }
+  .ring.r1 { top: 27%; } .ring.r2 { top: 73%; }
   .ring-rot { position: absolute; transform-style: preserve-3d; animation: spin linear infinite; }
   @keyframes spin { to { transform: rotateY(360deg); } }
   .ring-rot.paused { animation-play-state: paused; }
@@ -103,8 +103,8 @@
   .scrollcue:hover .chev { background: rgba(245,176,66,.16); }
   @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
 
-  /* Glowing availability pills (top-right of the hero) */
-  .hero-badges { position: absolute; top: 24px; right: 32px; z-index: 22; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  /* Glowing availability pills (centered, above the headline) */
+  .hero-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
   .badge-status { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; background: rgba(140,175,58,0.2); border: 1px solid rgba(140,175,58,0.75); color: var(--leaf); border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; white-space: nowrap; text-shadow: 0 0 8px rgba(140,175,58,0.45); animation: glowLeaf 2.8s ease-in-out infinite; }
   .badge-status .d { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); box-shadow: 0 0 7px var(--leaf); animation: pulse 1.8s infinite; }
   .badge-w2 { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; background: rgba(232,88,154,0.18); border: 1px solid rgba(232,88,154,0.7); color: var(--rose); border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; white-space: nowrap; text-shadow: 0 0 8px rgba(232,88,154,0.4); animation: glowRose 2.8s ease-in-out infinite; }
@@ -320,11 +320,11 @@
     </div></div>
     <div class="corelight"></div>
     <div class="scrim"></div><div class="edge"></div>
-    <div class="hero-badges">
-      <div class="badge-status"><span class="d"></span>Available · Freelance</div>
-      <div class="badge-w2">Open to Staff Roles</div>
-    </div>
     <div class="pitch">
+      <div class="hero-badges">
+        <div class="badge-status"><span class="d"></span>Available · Freelance</div>
+        <div class="badge-w2">Open to Staff Roles</div>
+      </div>
       <div class="kick"><span class="d"></span>Step inside the catalog</div>
       <h1>I make it, I cut it,<br>I <em>deliver it.</em></h1>
       <div class="pitch-stats">
@@ -540,7 +540,7 @@
 
   const stageW = document.querySelector('.stage').clientWidth;
   const small = stageW < 760;
-  const N = small ? 10 : 16, TW = small ? 120 : 180, TH = Math.round(TW * 16 / 9);
+  const N = small ? 10 : 16, TW = small ? 116 : 172, TH = Math.round(TW * 16 / 9);
   const R = Math.round((TW / 2) / Math.tan(Math.PI / N)) + (small ? 40 : 90);
 
   function buildRing(rot, pool) {
