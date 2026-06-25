@@ -435,10 +435,22 @@
   rot2.style.animationDuration = (small ? 72 : 96) + 's'; rot2.style.animationDirection = 'reverse';
   [rot1, rot2].forEach(rot => {
     rot.querySelectorAll('.tile').forEach(t => { const v = t.querySelector('video');
-      t.addEventListener('mouseenter', () => { rot.classList.add('paused'); t.classList.add('play'); v.play().catch(() => {}); });
-      t.addEventListener('mouseleave', () => { rot.classList.remove('paused'); t.classList.remove('play'); v.pause(); });
+      t.addEventListener('mouseenter', () => { t.classList.add('play'); v.play().catch(() => {}); });
+      t.addEventListener('mouseleave', () => { t.classList.remove('play'); v.pause(); });
     });
   });
+  // Pause a ring whenever the cursor is over its half of the rotunda — POSITION
+  // based, not per-tile, so it holds steady (no stop/go flicker) even when the
+  // mouse sits in the gaps between clips. Leaving the stage resumes both rings.
+  const stageEl = document.querySelector('.stage');
+  stageEl.addEventListener('mousemove', e => {
+    const r = stageEl.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top, w = r.width, h = r.height;
+    const inBand = x > w * 0.05 && x < w * 0.95;
+    rot1.classList.toggle('paused', inBand && y < h * 0.56);
+    rot2.classList.toggle('paused', inBand && y > h * 0.44);
+  });
+  stageEl.addEventListener('mouseleave', () => { rot1.classList.remove('paused'); rot2.classList.remove('paused'); });
 
   // ambient — a few tiles drift in and out of playback (skip on touch to spare mobile)
   const IS_TOUCH = navigator.maxTouchPoints > 1 || /iPhone|iPad|iPod|Android|Mobile/i.test(navigator.userAgent);
