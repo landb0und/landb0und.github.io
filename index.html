@@ -148,7 +148,7 @@
   /* IG-style action buttons — sentence case, system sans, readable at any size */
   .profile-actions { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
   .pa-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; letter-spacing: -0.005em; text-transform: none; font-family: -apple-system, system-ui, 'SF Pro Text', sans-serif; text-decoration: none; transition: all .15s; }
-  .pa-btn.primary { background: var(--amber); color: var(--bg); border: 1px solid var(--amber); }
+  .pa-btn.primary { background: var(--amber); color: var(--bg); border: 1px solid var(--amber); transition: background .45s ease, box-shadow .45s ease, border-color .45s ease, color .45s ease, transform .15s ease; }
   .pa-btn.primary:hover { background: #ffc555; }
   .pa-btn.secondary { background: rgba(255,255,255,0.02); color: var(--ink); border: 1px solid var(--line); }
   .pa-btn.secondary:hover { background: rgba(245,176,66,0.06); color: var(--amber); border-color: rgba(245,176,66,0.4); }
@@ -1264,18 +1264,34 @@
   (function () {
     const strip = document.getElementById('homeHireStrip');
     if (!strip) return;
+    const btn = strip.closest('.pa-btn');
     const H = 18, count = 4; // unique items before the duplicate
-    let i = 0;
-    setInterval(() => {
+    // Same color shifts as the hire-tab CTA: retainer=amber, project=leaf, role=rose
+    const colors = ['#f5b042', '#f5b042', '#8caf3a', '#e8589a'];
+    let i = 0, paused = false;
+    function paint(idx) {
+      const c = colors[idx % colors.length];
+      if (!btn) return;
+      btn.style.background = c; btn.style.borderColor = c;
+      btn.style.color = '#12100c'; btn.style.boxShadow = '0 8px 26px ' + c + '55';
+    }
+    paint(0);
+    function adv() {
       i++;
       strip.style.transform = 'translateY(' + (-i * H) + 'px)';
+      paint(i);
       if (i === count) {
         setTimeout(() => {
           strip.classList.add('nojump'); i = 0; strip.style.transform = 'translateY(0)';
-          void strip.offsetWidth; strip.classList.remove('nojump');
+          void strip.offsetWidth; strip.classList.remove('nojump'); paint(0);
         }, 560);
       }
-    }, 2800);
+    }
+    setInterval(() => { if (!paused) adv(); }, 2800);
+    if (btn) {
+      btn.addEventListener('mouseenter', () => paused = true);
+      btn.addEventListener('mouseleave', () => paused = false);
+    }
   })();
 </script>
 </body>
