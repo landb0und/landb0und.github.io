@@ -575,7 +575,7 @@
             <span class="lane-1">Director · DP · VFX Editor</span><br>
             <span class="lane-role">Head of Creative · Raw Content <span class="lane-x">×</span> <a href="client.html?id=raw-material">Raw Material</a></span><br>
             <span class="lane-edu">B.A. Film Production · Advertising Minor</span><br>
-            <span class="lane-2">Music videos · commercials · short-form</span><br>
+            <span class="lane-2">Music content · commercials · short-form</span><br>
             <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
           </div>
           <div class="profile-proof">
@@ -626,7 +626,7 @@
 
   <!-- HOME FEED — unified IG-style feed mixing photos, verticals, and wide-screen video -->
   <div class="page-section-head" style="margin-top: 38px;"><span class="label">— Feed</span></div>
-  <div class="section-sub"><span>Recent work — photos, shorts, and music videos.</span><a href="work.html">FULL ARCHIVE →</a></div>
+  <div class="section-sub"><span>Recent work: photos, shorts, and music content.</span><a href="work.html">FULL ARCHIVE →</a></div>
   <div class="feed-layout">
     <div class="home-feed" id="homeFeed"></div>
     <aside class="feed-rail">
@@ -793,22 +793,34 @@
 
   // Map a feed item to a list of category keys. Single source of truth — the
   // rail derives its pill set + counts from these, and filter clicks reuse them.
+  // Talk-show / interview content (the Allison Hagendorf Show) → #podcast.
+  const PODCAST_CLIENTS = ['allison-hagendorf'];
   function deriveFeedCats(item) {
     const cats = new Set();
-    const tagSet = new Set((item._tags || []).map(t => String(t).toLowerCase()));
+    const primary = item.authors[0];
+    const isCommercial = primary && COMMERCIAL_CLIENTS.includes(primary.id);
+    const isPodcast = primary && PODCAST_CLIENTS.includes(primary.id);
+    // Search ALL the text we have on an item (tags + role + tag + title) so that
+    // a role like "VFX · Editor" or a tag like "VFX Sup" still counts toward #vfx
+    // — not just an exact 'vfx' tag (which was massively undercounting).
+    const text = ((item._tags || []).join(' ') + ' ' + (item.role || '') + ' ' +
+                  (item.tag || '') + ' ' + (item.title || '')).toLowerCase();
+
     if (item.type === 'photo') cats.add('photos');
     if (item.type === 'vertical') cats.add('verticals');
     if (item.type === 'video') {
-      // wide video — by default treat as music video unless it's a brand campaign
-      const primary = item.authors[0];
-      if (primary && COMMERCIAL_CLIENTS.includes(primary.id)) cats.add('commercial');
-      else cats.add('musicvideos');
+      if (isCommercial) cats.add('commercial');
+      else if (isPodcast || /podcast|interview/.test(text)) cats.add('podcast');
+      else cats.add('music');
     }
-    // VFX tag flows through from data.js media tags
-    if (tagSet.has('vfx')) cats.add('vfx');
-    // Commercial trumps when client is a brand even for non-video posts (e.g. Aporro stills)
-    const primary = item.authors[0];
-    if (primary && COMMERCIAL_CLIENTS.includes(primary.id)) cats.add('commercial');
+    // VFX — any mention of vfx anywhere in the item's text
+    if (/vfx/.test(text)) cats.add('vfx');
+    // Music content also covers music-driven verticals (most of the shorts)
+    if (item.type === 'vertical' && (item.music || /music/.test(text))) cats.add('music');
+    // Allison-show BTS stills count as podcast content too
+    if (isPodcast) cats.add('podcast');
+    // Commercial trumps for brand clients even on non-video posts (Aporro stills)
+    if (isCommercial) cats.add('commercial');
     return Array.from(cats);
   }
 
@@ -916,9 +928,10 @@
 
   // Rail metadata. Order = display order in the rail. Pills hide if count = 0.
   const HOME_RAIL_CATS = [
-    { key: 'musicvideos', label: '#musicvideos' },
+    { key: 'music',       label: '#music' },
     { key: 'verticals',   label: '#verticals' },
     { key: 'vfx',         label: '#vfx' },
+    { key: 'podcast',     label: '#podcast' },
     { key: 'photos',      label: '#photos' },
     { key: 'commercial',  label: '#commercial' }
   ];
@@ -937,6 +950,7 @@
       const active = homeFilter === cat.key ? ' active' : '';
       const word = (cat.key === 'photos') ? (n === 1 ? 'frame' : 'frames')
                  : (cat.key === 'verticals') ? (n === 1 ? 'reel' : 'reels')
+                 : (cat.key === 'podcast') ? (n === 1 ? 'episode' : 'episodes')
                  : (n === 1 ? 'post' : 'posts');
       return ''
         + '<div class="rail-cat' + active + '" data-cat="' + cat.key + '">'
@@ -1004,7 +1018,7 @@
     const primary = item.authors[0];
     const handle = primary.handle && primary.handle.startsWith('@') ? primary.handle.replace('@', '') : primary.id.replace(/-/g, '');
     return ''
-      + '<div class="post-actions"><span class="icn heart">♡</span><span class="icn">💬</span><span class="icn">↗</span><span class="icn save">⌐</span></div>'
+      + '<div class="post-actions"><span class="icn heart">♡</span><span class="icn">💬</span><span class="icn">↗</span></div>'
       + '<div class="post-likes"><strong>' + item.likes + '</strong> likes</div>'
       + '<div class="post-caption"><a class="nm" href="client.html?id=' + primary.id + '">' + handle + '</a> ' + (captionLine || '') + '</div>';
   }
