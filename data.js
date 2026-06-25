@@ -273,7 +273,13 @@ window.CLIENTS = [
     palette: 'sa-9',
     thumb: null,
     media: [
-      { type: 'video', embedId: 'oD42T1md068', title: 'Forgive & Forget — Horror Short Film', year: '2022', tags: ['Director','Writer','Editor','DP','VFX Sup'] }
+      { type: 'video', embedId: 'oD42T1md068', title: 'Forgive & Forget', year: '2022', tags: ['Director','Writer','Editor','DP','VFX Sup'],
+        sub: '<strong>Horror Short Film</strong> · 2022',
+        credits: [
+          ['Directed by', '<strong>Jacob Boehme</strong>'],
+          ['Year', '2022'],
+          ['Premiere', 'ScreamFest · Chinese Theatre, Hollywood Blvd']
+        ] }
     ]
   },
   {

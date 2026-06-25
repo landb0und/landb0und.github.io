@@ -588,7 +588,7 @@
       <div class="credits">
         <div class="row"><span class="k">Format</span><span class="v">Director sizzle</span></div>
         <div class="row"><span class="k">Year</span><span class="v">2025</span></div>
-        <div class="row"><span class="k">Crew</span><span class="v">Landbound — Jacob Boehme</span></div>
+        <div class="row"><span class="k">Role</span><span class="v">Director</span></div>
       </div>
 
       <!-- WORK FEATURED — curated highlight reel under the player, styled like the
@@ -692,7 +692,7 @@
       title: "Director's Reel",
       sub: '<strong>Landbound</strong> · Sizzle Reel · 2025',
       chips: [['Director','amber'],['VFX',''],['Editor',''],['DP','']],
-      credits: [['Format','Director sizzle'],['Year','2025'],['Crew','Landbound — Jacob Boehme']],
+      credits: [['Format','Director sizzle'],['Year','2025'],['Role','Director']],
       dur: '02:14', filters: 'direction vfx editing dp',
       meta: 'Landbound · Sizzle · 2025'
     });
@@ -703,7 +703,7 @@
       title: 'Commercial Cinematography Reel',
       sub: '<strong>Landbound</strong> · Cinematography Reel · 2025',
       chips: [['DP','amber'],['Director',''],['Editor',''],['Commercial','']],
-      credits: [['Format','Cinematography reel'],['Year','2025'],['Crew','Landbound — Jacob Boehme']],
+      credits: [['Format','Cinematography reel'],['Year','2025'],['Role','Director of Photography']],
       dur: '', filters: 'dp commercial direction editing', cineReel: true,
       meta: 'Landbound · Cinematography · 2025'
     });
@@ -728,10 +728,13 @@
             title: m.title,
             sub: m.sub || ('<strong>' + c.name + '</strong> · ' + (m.guest ? ('Guest: ' + m.guest) : 'Music Video') + ' · ' + (m.year || '')),
             chips: tags.map((t, i) => [t, i < 2 ? 'amber' : '']),
-            credits: [
+            // Per-project override (data.js media.credits) wins; otherwise show
+            // the artist, the year, and HIS MAIN ROLE — not "Crew: Jacob Boehme",
+            // which read like he was the whole crew.
+            credits: m.credits || [
               ['Artist', '<strong>' + c.name + '</strong>'],
               ['Released', m.year || ''],
-              ['Crew', '<strong>Landbound</strong> — Jacob Boehme']
+              ['Role', '<strong>' + ((m.tags && m.tags[0]) || 'Director') + '</strong>']
             ],
             dur: m.dur || '',
             filters: tags.map(t => t.toLowerCase().replace(/[^a-z]/g, '')).join(' '),
@@ -1043,7 +1046,7 @@
   ];
   // Proud is a vertical (not in the Up Next VIDEOS list) — minimal play entry.
   const WF_FALLBACK = {
-    'b054d114-131a-479e-88b2-184bdcb39600': { embedId: 'b054d114-131a-479e-88b2-184bdcb39600', bunny: true, title: 'Proud', sub: '<strong>Grace VanderWaal</strong> · Performance · 2024', chips: [['Director','amber'],['Editor','']], credits: [['Artist','<strong>Grace VanderWaal</strong>'],['Released','2024'],['Crew','<strong>Landbound</strong> — Jacob Boehme']] }
+    'b054d114-131a-479e-88b2-184bdcb39600': { embedId: 'b054d114-131a-479e-88b2-184bdcb39600', bunny: true, title: 'Proud', sub: '<strong>Grace VanderWaal</strong> · Performance · 2024', chips: [['Director','amber'],['Editor','']], credits: [['Artist','<strong>Grace VanderWaal</strong>'],['Released','2024'],['Role','<strong>Director</strong>']] }
   };
   function wfThumb(v) { return v.bunny ? (window.bunnyThumb ? window.bunnyThumb(v.embedId) : 'https://vz-5dfccea4-b84.b-cdn.net/' + v.embedId + '/thumbnail.jpg') : 'https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg'; }
   function wfEntry(id) { return VIDEOS.find(x => x.embedId === id) || WF_FALLBACK[id]; }
