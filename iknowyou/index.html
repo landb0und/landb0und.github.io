@@ -135,9 +135,12 @@
     background:linear-gradient(90deg,#5a0e12,#c12a22);box-shadow:0 0 8px rgba(200,40,30,.6);}
   #track .head{position:absolute;width:10px;height:16px;margin-left:-5px;border-radius:2px;
     background:#e9b9a0;box-shadow:0 0 8px rgba(255,90,50,.7),inset 0 0 0 1px #3a0608;}
-  #hint{font-family:var(--gothic);font-size:12px;color:#a05a4a;letter-spacing:1px;cursor:pointer;
-    animation:bk 1.6s steps(2) infinite;white-space:nowrap;}
-  @keyframes bk{0%,55%{opacity:1}56%,100%{opacity:.25}}
+  /* Mute button — a clear, static pill (no flicker). */
+  #hint{font-family:var(--sans);font-size:11px;font-weight:700;color:#e9b9a0;letter-spacing:.4px;cursor:pointer;
+    white-space:nowrap;background:rgba(125,20,23,.30);border:1px solid rgba(200,60,50,.5);
+    padding:4px 11px;border-radius:100px;transition:background .15s,color .15s;}
+  #hint:hover{background:rgba(165,32,28,.55);color:#fff;}
+  @keyframes softpulse{0%,100%{opacity:1}50%{opacity:.45}}
 
   /* ---------- intro rites (instructions overlay) ---------- */
   #intro{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;padding:24px;
@@ -148,12 +151,13 @@
     background:linear-gradient(180deg, rgba(18,8,10,.6), rgba(8,4,7,.72));
     border:1px solid rgba(80,30,30,.35);
     box-shadow:0 0 50px rgba(0,0,0,.5), inset 0 0 40px rgba(0,0,0,.5);}
-  .intro-h{font-family:var(--gothic);font-size:24px;letter-spacing:.5px;color:#e0d3c4;
-    text-shadow:0 1px 2px #000;margin-bottom:20px;opacity:.9;}
+  .intro-h{font-family:var(--gothic);font-size:27px;letter-spacing:.5px;color:#e6dac9;
+    text-shadow:0 1px 2px #000;margin-bottom:4px;opacity:.95;}
+  .intro-sub{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#b0524a;margin-bottom:20px;}
   .intro-list{list-style:none;text-align:left;display:flex;flex-direction:column;gap:12px;margin:0 auto 22px;max-width:400px;}
   .intro-list li{font-family:var(--sans);font-size:13px;line-height:1.55;color:#b3a497;}
-  .intro-go{font-family:var(--gothic);font-size:13px;letter-spacing:2px;color:#856053;
-    text-transform:lowercase;animation:bk 1.6s steps(2) infinite;}
+  .intro-go{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#c9a08f;
+    animation:softpulse 2.2s ease-in-out infinite;}
 </style>
 </head>
 <body>
@@ -167,11 +171,13 @@
 <!-- intro rites — instructions, shown once on open, dismissed on first click -->
 <div id="intro">
   <div class="intro-card">
-    <div class="intro-h">before you answer</div>
+    <div class="intro-h">O Superman</div>
+    <div class="intro-sub">Interactive · desktop only</div>
     <ul class="intro-list">
       <li>Drag a window by its top bar.</li>
       <li>Resize it from the bottom-right corner.</li>
       <li>Double-click a window to lock the video to it. Double-click again to release.</li>
+      <li>Scrub the timeline at the bottom. Spacebar pauses.</li>
     </ul>
     <div class="intro-go">click anywhere to begin</div>
   </div>
@@ -419,7 +425,7 @@ function enterRites(){
   intro.classList.add('gone');
   master.muted=false;
   master.play().then(reflect).catch(()=>{ master.muted=true; master.play().then(reflect).catch(()=>{}); });
-  if(hint){ hint.textContent='🔊 sound on'; hint.style.opacity='.5'; }
+  if(hint){ hint.textContent='🔊 sound on'; hint.style.opacity='1'; }
   setTimeout(()=>{ if(intro) intro.style.display='none'; }, 950);
 }
 if(intro) intro.addEventListener('click', enterRites);
