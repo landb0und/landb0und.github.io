@@ -110,7 +110,7 @@
   /* Tall runway gives the page scroll distance; the whole sticky block (stories
      + photo-type tabs + wall) pins to the top, so the header stays visible and
      scrolling only drives the wall's column parallax. */
-  .wall-scroll { height: 320vh; }
+  .wall-scroll { height: 600vh; }
   .wall-scroll.reduced { height: auto; }
   .wall-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding-top: 10px; background: var(--bg); }
   .wall-sticky > .stories, .wall-sticky > .tabs { flex: 0 0 auto; }
@@ -728,6 +728,21 @@
         if (!heights[i]) continue;
         offs[i] = ((offs[i] + d * SCROLL_FACTOR[i]) % heights[i] + heights[i]) % heights[i];
         cols[i].style.transform = 'translateY(' + (-offs[i]) + 'px)';
+      }
+      // INFINITE scroll-through: as you near the bottom of the runway while
+      // scrolling DOWN, loop the scroll position back up by half the runway.
+      // The columns are delta-driven, so the wall keeps moving smoothly with no
+      // jump (only the scrollbar repositions) — you can scroll through the photos
+      // forever instead of hitting the page bottom. Scrolling UP still lets you
+      // leave the wall and reach the top of the page normally.
+      if (runway && d > 0) {
+        const range = runway.offsetHeight - window.innerHeight;
+        const into = -runway.getBoundingClientRect().top; // distance past the runway top
+        if (range > 0 && into > range - 2) {
+          const jump = Math.floor(range * 0.5);
+          lastScrollY = y - jump;
+          window.scrollTo(0, y - jump);
+        }
       }
     };
     window.addEventListener('scroll', wallScrollHandler, { passive: true });

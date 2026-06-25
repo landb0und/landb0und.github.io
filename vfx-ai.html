@@ -513,20 +513,24 @@
     if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) kick(); })).observe(cont);
     ['pointerdown', 'touchstart'].forEach(ev => window.addEventListener(ev, kick, { once: true, passive: true }));
 
-    // LAZY drift safety only — checked twice a second (NOT per frame), and it
-    // NEVER seeks during playback. If the two ever drift far apart (e.g. a tab
-    // switch throttled one clip), ease the "after" back with a tiny ±2.5% speed
-    // nudge until realigned, then return to native 1.0. The drift math wraps at
-    // the loop boundary so it doesn't misfire when one clip loops a hair early.
+    // GENTLE phase aligner — closes the small startup offset between the two
+    // clips and holds them locked, WITHOUT ever seeking (seeking is what caused
+    // the choppiness). Checked a few times a second, it eases the "after" clip's
+    // speed by at most ±4% proportional to the drift — imperceptible on muted
+    // video and far too small to drop frames — then settles back to native 1.0
+    // once they're within ~half a frame. Drift math wraps at the loop boundary.
     setInterval(() => {
       if (bv.paused || av.paused || !bv.duration) return;
       const dur = bv.duration;
-      let d = av.currentTime - bv.currentTime;
+      let d = av.currentTime - bv.currentTime;            // +: after is ahead
       if (d > dur / 2) d -= dur; else if (d < -dur / 2) d += dur; // loop-wrap aware
-      const ad = Math.abs(d);
-      if (ad > 0.34) av.playbackRate = d > 0 ? 0.975 : 1.025;
-      else if (ad < 0.10 && av.playbackRate !== 1) av.playbackRate = 1;
-    }, 500);
+      if (Math.abs(d) < 0.02) {                           // within ~half a frame: lock
+        if (av.playbackRate !== 1) av.playbackRate = 1;
+      } else {
+        const rate = 1 - d * 0.2;                         // proportional pull toward sync
+        av.playbackRate = Math.max(0.96, Math.min(1.04, rate));
+      }
+    }, 250);
 
     // Once BOTH clips are actually playing (and the lock loop has aligned them),
     // do ONE smooth back-and-forth sweep of the divider so it's obvious it drags,
