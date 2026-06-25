@@ -485,22 +485,9 @@
   document.addEventListener('touchend', () => drag = false);
   document.addEventListener('touchmove', e => { if (drag) pos(e.touches[0].clientX); }, { passive: true });
 
-  // First interaction stops the pulse/hint; a one-time auto-wiggle on first view
-  // makes it obvious the divider is draggable.
+  // First interaction stops the pulsing grip + the "drag" hint. (No auto-wiggle —
+  // the divider stays put at 50% until the user grabs it; the pulse is the cue.)
   ['mousedown', 'touchstart'].forEach(ev => cont.addEventListener(ev, () => cont.classList.add('ba-touched'), { once: true, passive: true }));
-  let wiggled = false;
-  function wiggle() {
-    if (wiggled || cont.classList.contains('ba-touched')) return; wiggled = true;
-    const seq = [50, 32, 68, 50]; let i = 0;
-    const set = p => { after.style.clipPath = 'inset(0 ' + (100 - p) + '% 0 0)'; handle.style.left = p + '%'; };
-    (function step() {
-      if (i >= seq.length || cont.classList.contains('ba-touched')) { set(50); return; }
-      set(seq[i++]); setTimeout(step, 460);
-    })();
-  }
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver((es, ob) => es.forEach(e => { if (e.isIntersecting) { setTimeout(wiggle, 600); ob.disconnect(); } })).observe(cont);
-  }
 
   // Before/after VIDEOS — autoplay both muted and keep the "after" clip locked
   // to the "before" clip's timeline so the reveal stays frame-aligned.
@@ -528,6 +515,31 @@
     startBoth();
     if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) kick(); })).observe(cont);
     ['pointerdown', 'touchstart'].forEach(ev => window.addEventListener(ev, kick, { once: true, passive: true }));
+
+    // Once BOTH clips are actually playing (and the lock loop has aligned them),
+    // do ONE smooth back-and-forth sweep of the divider so it's obvious it drags,
+    // then leave it centered. Sine-eased = no jumpiness. Skipped if the user has
+    // already grabbed the handle; the grip keeps pulsing until they do.
+    let swept = false, bvPlaying = false, avPlaying = false;
+    function runSweep() {
+      if (cont.classList.contains('ba-touched')) return;
+      const amp = 26, dur = 2600, t0 = performance.now();
+      const setPos = p => { after.style.clipPath = 'inset(0 ' + (100 - p) + '% 0 0)'; handle.style.left = p + '%'; };
+      (function frame(now) {
+        if (cont.classList.contains('ba-touched')) { setPos(50); return; }
+        const t = (now - t0) / dur;
+        if (t >= 1) { setPos(50); return; }
+        setPos(50 + amp * Math.sin(t * Math.PI * 2)); // 50 → right → 50 → left → 50
+        requestAnimationFrame(frame);
+      })(t0);
+    }
+    function maybeSweep() {
+      if (swept || !bvPlaying || !avPlaying || cont.classList.contains('ba-touched')) return;
+      swept = true;
+      setTimeout(runSweep, 700); // let the sync lock settle both clips first
+    }
+    bv.addEventListener('playing', () => { bvPlaying = true; maybeSweep(); });
+    av.addEventListener('playing', () => { avPlaying = true; maybeSweep(); });
   }
 })();
 
