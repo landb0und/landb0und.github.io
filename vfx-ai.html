@@ -96,7 +96,8 @@
   .ba-container { width: 100%; height: 380px; position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); cursor: ew-resize; user-select: none; }
   .ba-before { position: absolute; inset: 0; overflow: hidden; background: #000; }
   .ba-after  { position: absolute; inset: 0; overflow: hidden; background: #000; clip-path: inset(0 50% 0 0); }
-  .ba-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ba-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .4s ease; }
+  .ba-container.ba-ready .ba-vid { opacity: 1; }
   .ba-scan { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); pointer-events: none; z-index: 2; }
   .ba-handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--amber); left: 50%; transform: translateX(-50%); z-index: 10; cursor: ew-resize; }
   .ba-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; }
@@ -512,6 +513,27 @@
     startBoth();
     if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) kick(); })).observe(cont);
     ['pointerdown', 'touchstart'].forEach(ev => window.addEventListener(ev, kick, { once: true, passive: true }));
+
+    // Hide BOTH clips (the panel stays solid black) until BOTH have a frame ready
+    // and are playing, THEN fade them in together. This hides the fact that the
+    // two videos decode/start a beat apart — instead of popping on separately,
+    // they appear as one.
+    let revealed = false;
+    function revealWhenReady() {
+      if (revealed) return;
+      if (bv.readyState >= 3 && av.readyState >= 3) {
+        revealed = true;
+        try { av.currentTime = bv.currentTime; } catch (_) {}   // align the first frame
+        bv.play().catch(() => {}); av.play().catch(() => {});
+        cont.classList.add('ba-ready');                          // fade both in at once
+      }
+    }
+    ['canplay', 'canplaythrough', 'playing', 'loadeddata'].forEach(ev => {
+      bv.addEventListener(ev, revealWhenReady);
+      av.addEventListener(ev, revealWhenReady);
+    });
+    revealWhenReady();
+    setTimeout(() => { if (!revealed) { revealed = true; cont.classList.add('ba-ready'); } }, 2000); // safety: never stay black
 
     // GENTLE phase aligner — closes the small startup offset between the two
     // clips and holds them locked, WITHOUT ever seeking (seeking is what caused
