@@ -39,6 +39,29 @@
   /* Hire's wrapper — drop the sidebar gap; the rotunda stage stays full-bleed */
   .hire-main { margin-left: 0 !important; max-width: 100% !important; }
 
+  /* HIRE hero: size to the DYNAMIC viewport (100dvh) so in-app browsers like
+     Instagram, which have shorter chrome-collapsed viewports, can't squeeze the
+     CTAs into the scroll cue. Lay the pitch out with flexbox and reserve room at
+     the bottom for the cue + the tab bar, instead of absolute-centering it
+     against 100vh (which overflowed on short viewports and overlapped). */
+  .stage {
+    height: 100dvh !important; min-height: 100dvh !important;
+    display: flex !important; flex-direction: column !important;
+    align-items: center !important; justify-content: center !important;
+    padding: 54px 14px calc(104px + env(safe-area-inset-bottom)) !important;
+    box-sizing: border-box !important;
+  }
+  .pitch {
+    position: static !important; transform: none !important;
+    left: auto !important; top: auto !important;
+    width: 100% !important; max-width: 460px !important;
+  }
+  .kick { margin-bottom: 12px !important; }
+  .pitch-stats { gap: 18px !important; margin: 16px auto 18px !important; padding: 11px 16px !important; }
+  /* Cue drops into the reserved bottom band, clearly below the buttons and above
+     the tab bar. */
+  .scrollcue { bottom: calc(58px + env(safe-area-inset-bottom)) !important; }
+
   /* ---------- HOME: profile / hero card ---------- */
   .hero-card { border-radius: 12px; }
   .hero-body { padding: 16px !important; }
