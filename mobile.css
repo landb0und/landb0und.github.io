@@ -16,9 +16,10 @@
     background: var(--bg-2); /* fully opaque so page content can't show through */
     z-index: 200;
   }
-  /* Solid backing that extends past the bottom safe-area, so nothing peeks under
-     the bar while iOS Safari's bottom toolbar collapses on scroll. */
-  .nav::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 60px; background: var(--bg-2); }
+  /* Solid backing that extends well past the bottom safe-area, so the page never
+     shows through behind the bar or in the strip above Safari's toolbar as it
+     expands/collapses on scroll. */
+  .nav::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 320px; background: var(--bg-2); z-index: -1; }
   .nav-brand, .nav-socials, .nav-bottom { display: none !important; }
   .nav-items {
     flex-direction: row; flex: 1; gap: 0; padding: 0; margin: 0; height: 54px;
@@ -46,26 +47,35 @@
      .nav and collided with the bottom tab bar. */
   .theme-switcher { display: none !important; }
 
-  /* Profile: stack avatar OVER full-width info so the bio stops wrapping inside
-     a skinny right-hand column (was running 8+ lines). */
-  .profile { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
-  .profile-avatar { width: 72px !important; height: 72px !important; padding: 2px !important; }
-  .profile-info { width: 100%; }
-  .profile-name { font-size: 23px !important; }
-  .profile-handle { font-size: 12px; }
-  .profile-bio { font-size: 13px !important; line-height: 1.55 !important; margin-bottom: 10px !important; }
-  .profile-bio .lane-ai { font-size: 11.5px !important; }
-  .profile-proof { font-size: 10.5px !important; margin-top: 8px !important; }
+  /* Profile: compact avatar-left / info-right (the proportional "hybrid" look),
+     just sized down for the phone so it reads balanced, not oversized. */
+  .profile { flex-direction: row !important; align-items: flex-start !important; gap: 13px !important; }
+  .profile-avatar { width: 60px !important; height: 60px !important; padding: 2px !important; flex-shrink: 0 !important; }
+  .profile-info { flex: 1 !important; min-width: 0 !important; }
+  .profile-name { font-size: 20px !important; }
+  .profile-handle { font-size: 11.5px !important; }
+  .profile-bio { font-size: 12px !important; line-height: 1.5 !important; margin-bottom: 9px !important; }
+  .profile-bio .lane-ai { font-size: 11px !important; }
+  .profile-proof { font-size: 10px !important; margin-top: 7px !important; }
   /* Stats: tidy 2-col grid — the flex row was wrapping into cut-off cells */
   .profile-stats { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 12px 10px !important; padding-top: 14px !important; }
   .profile-stats .stat { padding: 0 !important; border-right: none !important; }
   .profile-stats .num { font-size: 20px !important; }
   /* Hire / Email / Book a call → stack full-width and tappable */
   .profile-actions { grid-template-columns: 1fr !important; gap: 8px !important; }
-  .pa-btn { padding: 12px 14px !important; }
+  .pa-btn { padding: 13px 14px !important; font-size: 15px !important; }
+  .pa-rot-item { height: 20px !important; line-height: 20px !important; }
+  .pa-rot-window { height: 20px !important; }
 
   /* Stories + verticals + any horizontal strip: edge-to-edge, momentum scroll */
-  .stories, .shorts-row, .verticals-strip, .vfx-strip { -webkit-overflow-scrolling: touch; }
+  .stories, .shorts-row, .verticals-strip, .vfx-strip, .shorts-strip { -webkit-overflow-scrolling: touch; }
+  /* Bigger client-story circles on mobile (they were tiny). */
+  .story { width: 80px !important; }
+  .story-ring { width: 74px !important; height: 74px !important; }
+  .story-avatar { font-size: 18px !important; }
+  .story-name { max-width: 80px !important; font-size: 12px !important; }
+  /* Verticals row: size tiles so ~2.5 show — a clear "scroll right for more" cue. */
+  .shorts-strip .short, .shorts-strip .short-cta { flex: 0 0 38% !important; }
 
   /* ---------- HOME FEED: single column + filters as a top scroll bar ---------- */
   .feed-layout { display: flex !important; flex-direction: column !important; gap: 0 !important; max-width: 100% !important; margin: 6px 0 24px !important; }
