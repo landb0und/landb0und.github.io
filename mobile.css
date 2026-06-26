@@ -93,7 +93,9 @@
   .side, .recs, .feed-rail-col { width: 100% !important; max-width: 100% !important; }
 
   /* ---------- WORK page → mobile-YouTube layout ---------- */
-  .yt > .main, .yt > .side { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+  /* The inner Work column is ALSO class="main" — strip the page-wrapper padding
+     it wrongly inherited (that 74px bottom padding was the huge mystery gap). */
+  .yt > .main, .yt > .side { width: 100% !important; max-width: 100% !important; min-width: 0 !important; padding: 0 !important; }
   /* Full-bleed 16:9 player pinned to the top, edge-to-edge like the YouTube app */
   .player { max-height: none !important; border-radius: 0 !important; border-left: 0 !important; border-right: 0 !important;
     margin: 0 -12px !important; width: calc(100% + 24px) !important; }
@@ -109,9 +111,10 @@
   .rec { grid-template-columns: 150px 1fr !important; gap: 10px !important; }
   .rec-title { font-size: 13px !important; line-height: 1.3 !important; }
   .rec-meta { font-size: 11px !important; }
-  /* Floating "Open Verticals" button: keep it ABOVE the bottom tab bar so it
-     never dips under it (it was hiding behind the nav while scrolling). */
-  .toggle-btn { bottom: calc(64px + env(safe-area-inset-bottom)) !important; right: 14px !important; z-index: 150 !important; }
+  /* Hide the floating "Open Verticals" button on mobile — it duplicated the
+     Verticals card's "Open Shorts Feed" link, overlapped Up Next, and dipped
+     under the bottom tab bar while scrolling. The card covers the same action. */
+  .toggle-btn { display: none !important; }
   /* Tighten + even out the spacing between the player, Work Featured, the
      verticals promo, and Up Next so they read as one connected flow, and shrink
      the verticals card so it's not a giant separator. */
