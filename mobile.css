@@ -16,14 +16,9 @@
     background: var(--bg-2); /* fully opaque so page content can't show through */
     z-index: 200;
   }
-  /* Solid backing pinned to the REAL screen bottom (position:fixed, not absolute),
-     so when Safari's bottom toolbar slides in/out and the tab bar lifts, the strip
-     between the bar and the screen bottom stays filled with --bg-2 instead of
-     showing the page. Sits just behind the bar's own content. */
-  .nav::after {
-    content: ''; position: fixed; left: 0; right: 0; bottom: 0;
-    height: 180px; background: var(--bg-2); z-index: -1; pointer-events: none;
-  }
+  /* Solid backing that extends BELOW the bar only (never over page content above
+     it), so the strip beneath the bar can't show the page through it. */
+  .nav::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 320px; background: var(--bg-2); z-index: -1; }
   .nav-brand, .nav-socials, .nav-bottom { display: none !important; }
   .nav-items {
     flex-direction: row; flex: 1; gap: 0; padding: 0; margin: 0; height: 54px;
