@@ -271,6 +271,9 @@
     flex-shrink: 0;
   }
   .shorts-back:hover { background: #ffc555; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,176,66,0.65); }
+  /* Top-right menu button — mobile only (desktop already shows the rail). */
+  .shorts-menu { display: none; align-items: center; justify-content: center; width: 42px; height: 42px; margin-left: auto; border-radius: 50%; background: rgba(0,0,0,0.55); border: 1.5px solid rgba(255,255,255,0.28); color: #fff; cursor: pointer; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); flex-shrink: 0; }
+  .shorts-menu svg { width: 19px; height: 19px; }
 
   /* Category tabs */
   .cat-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -509,7 +512,7 @@
   .vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
   .vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
 </style>
-<link rel="stylesheet" href="mobile.css?v=6">
+<link rel="stylesheet" href="mobile.css?v=7">
 </head>
 <body>
 
@@ -648,6 +651,9 @@
 <div class="shorts" id="shorts">
   <div class="shorts-topbar">
     <button class="shorts-back" onclick="closeShorts()">← Back to Work</button>
+    <button class="shorts-menu" id="shortsMenu" aria-label="Show clip list">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
   </div>
 
   <div class="shorts-stage">
@@ -1482,6 +1488,8 @@
 
     // Global mute state — if user unmutes one video, all subsequent play unmuted
     let globalMuted = true;
+    const shortsEl = document.getElementById('shorts');
+    const isMobileUI = () => window.matchMedia('(max-width: 820px)').matches;
 
     function applyGlobalMute(muted) {
       globalMuted = muted;
@@ -1497,6 +1505,8 @@
 
     function showOverlayFor(slide, autoFade = true) {
       slide.classList.add('show-overlay');
+      // Mobile: the overlay (and the Back/menu topbar) stay up until tapped away.
+      if (isMobileUI()) { if (shortsEl) shortsEl.classList.add('ui-open'); autoFade = false; }
       if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
       if (autoFade) {
         const t = setTimeout(() => slide.classList.remove('show-overlay'), 3000);
@@ -1506,6 +1516,7 @@
     function hideOverlayFor(slide) {
       if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
       slide.classList.remove('show-overlay');
+      if (shortsEl) shortsEl.classList.remove('ui-open');
     }
 
     // Hover → show overlay; leave → fade
@@ -1518,11 +1529,34 @@
       });
     });
 
-    // Play/pause toggle
-    document.querySelectorAll('.phone-ctl[data-action="play"], .phone-tap').forEach(btn => {
+    // PLAY/PAUSE button — always toggles playback, keeps the overlay up.
+    document.querySelectorAll('.phone-ctl[data-action="play"]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const slide = btn.closest('.phone-slide');
+        const idx = btn.getAttribute('data-slide-idx');
+        const vid = document.getElementById('phone-video-' + idx);
+        if (!vid) return;
+        if (vid.paused) vid.play(); else vid.pause();
+        updatePlayIcon(slide, vid);
+        showOverlayFor(slide, !isMobileUI());
+      });
+    });
+    // TAP THE VIDEO —
+    //  mobile: reveal the overlay (Back / menu / pause / info); tap again or tap
+    //          empty space hides it; if the list is open, the tap just closes it.
+    //          Tapping does NOT pause — the user pauses from the revealed button.
+    //  desktop: classic tap-to-play/pause.
+    document.querySelectorAll('.phone-tap').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const slide = btn.closest('.phone-slide');
+        if (isMobileUI()) {
+          if (shortsEl && shortsEl.classList.contains('rail-open')) { shortsEl.classList.remove('rail-open'); return; }
+          if (slide.classList.contains('show-overlay')) hideOverlayFor(slide);
+          else showOverlayFor(slide, false);
+          return;
+        }
         const idx = btn.getAttribute('data-slide-idx');
         const vid = document.getElementById('phone-video-' + idx);
         if (!vid) return;
@@ -1542,8 +1576,15 @@
         if (!vid) return;
         const newMuted = !vid.muted;
         applyGlobalMute(newMuted); // propagate to all videos
-        showOverlayFor(slide, true);
+        showOverlayFor(slide, !isMobileUI());
       });
+    });
+
+    // Top-right menu button (mobile) — slides the clip list in / out.
+    const shortsMenuBtn = document.getElementById('shortsMenu');
+    if (shortsMenuBtn) shortsMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (shortsEl) shortsEl.classList.toggle('rail-open');
     });
 
     function updatePlayIcon(slide, vid) {

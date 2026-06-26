@@ -129,6 +129,20 @@
      the NEXT one clearly peeks in from the right edge ("one and a bit" visible). */
   .ed-list .ed-tile { flex: 0 0 74% !important; }
   .rv-strip { padding-right: 30px !important; }
+
+  /* ---------- VERTICAL FEED (shorts): tap-to-reveal overlay + slide-in list ---------- */
+  /* Back-to-Work + the menu button stay hidden until the user taps the video. */
+  .shorts-topbar { opacity: 0 !important; transition: opacity .25s ease; }
+  .shorts.ui-open .shorts-topbar { opacity: 1 !important; }
+  .shorts-menu { display: inline-flex !important; }
+  /* The clip list slides in from the right (it was cropped off-screen). */
+  .shorts-rail {
+    position: fixed !important; top: 0; right: 0; bottom: 0;
+    width: min(88%, 360px) !important; max-width: 88% !important;
+    transform: translateX(101%); transition: transform .3s cubic-bezier(.7,0,.2,1);
+    z-index: 30 !important; box-shadow: -14px 0 44px rgba(0,0,0,0.65);
+  }
+  .shorts.rail-open .shorts-rail { transform: translateX(0); }
   /* FILTER TAKEOVER (mobile only): when a category filter is active, hide the
      player/credits/featured and surface just that category's videos as a list
      pulled to the top — so the filter gives immediate, visible feedback. */
