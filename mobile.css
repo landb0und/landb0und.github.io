@@ -29,10 +29,12 @@
   .nav-item.active { background: transparent; color: var(--amber); box-shadow: inset 0 2px 0 var(--amber); }
 
   /* ---------- MAIN: full width, clear the bottom bar ---------- */
-  .main {
+  .main, .main-page {
     margin-left: 0 !important; max-width: 100% !important;
     padding: 14px 12px calc(74px + env(safe-area-inset-bottom)) !important;
   }
+  /* Hire's wrapper — drop the sidebar gap; the rotunda stage stays full-bleed */
+  .hire-main { margin-left: 0 !important; max-width: 100% !important; }
 
   /* ---------- HOME: profile / hero card ---------- */
   .hero-card { border-radius: 12px; }
@@ -86,6 +88,24 @@
   .page-hero h1 { font-size: 34px !important; }
   .yt, .feed-layout, .work-layout { display: block !important; }
   .side, .recs, .feed-rail-col { width: 100% !important; max-width: 100% !important; }
+
+  /* ---------- WORK page → mobile-YouTube layout ---------- */
+  .yt > .main, .yt > .side { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
+  /* Full-bleed 16:9 player pinned to the top, edge-to-edge like the YouTube app */
+  .player { max-height: none !important; border-radius: 0 !important; border-left: 0 !important; border-right: 0 !important;
+    margin: 0 -12px !important; width: calc(100% + 24px) !important; }
+  .meta { padding: 12px 0 2px !important; }
+  .meta .title { font-size: 17px !important; line-height: 1.3 !important; margin-bottom: 6px !important; }
+  .meta .sub { font-size: 12.5px !important; }
+  /* Role chips become a horizontal scroll strip (YouTube's action row) */
+  .actions { flex-wrap: nowrap !important; overflow-x: auto !important; scrollbar-width: none; padding-bottom: 2px; }
+  .actions::-webkit-scrollbar { display: none; }
+  .chip { flex: 0 0 auto; }
+  /* Up Next: full-width list of thumbnail-left / title-right rows */
+  .side { position: static !important; max-height: none !important; overflow: visible !important; padding-right: 0 !important; margin-top: 10px !important; }
+  .rec { grid-template-columns: 150px 1fr !important; gap: 10px !important; }
+  .rec-title { font-size: 13px !important; line-height: 1.3 !important; }
+  .rec-meta { font-size: 11px !important; }
 
   /* Reduce big desktop headings site-wide on phones */
   .id-block .name { font-size: 26px !important; }
