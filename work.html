@@ -509,7 +509,7 @@
   .vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
   .vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
 </style>
-<link rel="stylesheet" href="mobile.css?v=5">
+<link rel="stylesheet" href="mobile.css?v=6">
 </head>
 <body>
 
@@ -1123,7 +1123,19 @@
             if (first && first !== cine && first.nextElementSibling !== cine) mount.insertBefore(cine, first.nextElementSibling);
           }
         }
+        // Mobile only: a category filter TAKES OVER the view — hide the player and
+        // pull that category's videos to the top so the filter is obvious feedback.
+        // (Desktop keeps the existing in-place show/hide.)
+        if (window.matchMedia('(max-width: 820px)').matches) {
+          document.body.classList.toggle('work-filter-active', f !== 'all');
+          if (f !== 'all') window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       });
+    });
+    // Tapping any result exits the mobile filter-takeover (returns to the player).
+    const recsMountEl = document.getElementById('recsMount');
+    if (recsMountEl) recsMountEl.addEventListener('click', () => {
+      document.body.classList.remove('work-filter-active');
     });
     // Random button — pick a playable VIDEOS entry (with embedId) at random and
     // simulate a click on the matching .rec so the main player swaps. Skipping
