@@ -57,18 +57,22 @@
   .profile-bio { font-size: 12px !important; line-height: 1.5 !important; margin-bottom: 9px !important; }
   .profile-bio .lane-ai { font-size: 11px !important; }
   .profile-proof { font-size: 10px !important; margin-top: 7px !important; }
-  /* Stats: single horizontal row, scaled down to fit the info column — the
-     compact "all-on-one-line" look Jacob's reference shows. */
-  .profile-stats { display: flex !important; flex-wrap: nowrap !important; gap: 0 !important; padding-top: 13px !important; }
-  .profile-stats .stat { flex: 1 1 0 !important; min-width: 0 !important; padding: 0 7px !important; border-right: none !important; }
-  .profile-stats .stat:first-child { padding-left: 0 !important; }
-  .profile-stats .stat:last-child { padding-right: 0 !important; }
-  .profile-stats .num { font-size: 16px !important; }
-  .profile-stats .lbl { font-size: 7px !important; letter-spacing: 0.05em !important; margin-top: 3px !important; white-space: nowrap !important; }
-  /* Actions: keep all three on one row (Hire me wider), still big + tappable. */
-  .profile-actions { grid-template-columns: 1.6fr 1fr 1fr !important; gap: 6px !important; margin-top: 14px !important; }
-  .pa-btn { padding: 14px 6px !important; font-size: 12.5px !important; gap: 5px !important; }
-  .pa-rot-item { height: 18px !important; line-height: 18px !important; font-size: 12.5px !important; }
+  /* Stats: single horizontal row, left-grouped with even gaps (the compact
+     "all-on-one-line" look Jacob's reference shows). Content-width cells so the
+     numbers never collide. */
+  .profile-stats { display: flex !important; flex-wrap: nowrap !important; gap: 15px !important; justify-content: flex-start !important; padding-top: 13px !important; }
+  .profile-stats .stat { flex: 0 0 auto !important; min-width: 0 !important; padding: 0 !important; border-right: none !important; }
+  .profile-stats .num { font-size: 15px !important; }
+  .profile-stats .lbl { font-size: 6.5px !important; letter-spacing: 0.04em !important; margin-top: 3px !important; white-space: nowrap !important; }
+  /* Actions: keep all three on one row (Hire me wider), still big + tappable.
+     Smaller icon/text so "Book a call" and the rotating Hire label stay 1 line. */
+  .profile-actions { grid-template-columns: 1.5fr 1fr 1fr !important; gap: 6px !important; margin-top: 14px !important; }
+  .pa-btn { padding: 14px 6px !important; font-size: 12px !important; gap: 4px !important; }
+  .pa-btn .ic { width: 13px !important; height: 13px !important; }
+  .pa-btn .ic svg { width: 12px !important; height: 12px !important; }
+  .pa-rot-item { height: 18px !important; line-height: 18px !important; font-size: 12px !important; gap: 4px !important; }
+  .pa-rot-item .pa-ic { width: 13px !important; height: 13px !important; }
+  .pa-rot-item .pa-ic svg { width: 12px !important; height: 12px !important; }
   .pa-rot-window { height: 18px !important; }
 
   /* Stories + verticals + any horizontal strip: edge-to-edge, momentum scroll */
