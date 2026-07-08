@@ -997,6 +997,27 @@
   });
   registerVid('b054d114-131a-479e-88b2-184bdcb39600', 'Proud'); // Work Featured-only vertical
 
+  // Expose a flat list of every shareable video (Up Next + episodes) so the
+  // static /work/<slug> watch pages can be generated from the same source of
+  // truth. Harmless debug global.
+  try {
+    const _seen = {};
+    window.__WATCHDATA = [];
+    const _pushW = (v) => {
+      if (!v || !v.embedId || _seen[v.embedId]) return;
+      _seen[v.embedId] = 1;
+      window.__WATCHDATA.push({
+        slug: ID_TO_SLUG[v.embedId] || registerVid(v.embedId, v.title),
+        embedId: v.embedId, bunny: !!v.bunny, title: v.title || '',
+        sub: v.sub || '', chips: v.chips || [], credits: v.credits || [],
+        thumb: v.bunny
+          ? (window.bunnyThumb ? window.bunnyThumb(v.embedId) : ('https://vz-5dfccea4-b84.b-cdn.net/' + v.embedId + '/thumbnail.jpg'))
+          : ('https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg')
+      });
+    };
+    VIDEOS.forEach(v => { _pushW(v); (v.siblings || []).forEach(_pushW); (v.playlistMembers || []).forEach(_pushW); });
+  } catch (e) {}
+
   // Tracks the embedId currently in the main player so the "Copy link" button
   // and address bar always point at what's actually playing. Seeded with the
   // default Director's Reel below.
@@ -1035,7 +1056,8 @@
     const labelEl = shareLinkBtn.querySelector('.share-link-label');
     shareLinkBtn.addEventListener('click', async () => {
       const slug = ID_TO_SLUG[currentEmbedId] || currentEmbedId || '';
-      const url = location.origin + location.pathname + '#' + slug;
+      // Clean, real, shareable page: landbound.mov/work/<slug>
+      const url = location.origin + '/work/' + slug;
       try {
         await navigator.clipboard.writeText(url);
       } catch (e) {
