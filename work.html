@@ -963,6 +963,40 @@
 
   // Shared player-swap routine — reused by Up Next clicks AND by episode-drawer
   // clicks so playing an episode keeps the right surrounding chrome in sync.
+  // ---- Clean, title-based deep links --------------------------------------
+  // Videos are shared as work.html#<slug-of-title> (e.g. #commercial-
+  // cinematography-reel) instead of a raw GUID, so the URLs are tidy and
+  // readable. Maps are seeded from the Up Next list + every episode so a
+  // shared link still resolves after a fresh page load; each played clip is
+  // also registered on the fly as a safety net.
+  const SLUG_TO_ID = {};
+  const ID_TO_SLUG = {};
+  function slugify(s) {
+    return String(s || '')
+      .replace(/<[^>]*>/g, '')                 // strip any HTML
+      .replace(/&amp;/g, ' and ').replace(/&/g, ' and ')
+      .toLowerCase()
+      .replace(/[’'.]/g, '')                   // drop apostrophes / periods
+      .replace(/[^a-z0-9]+/g, '-')             // everything else -> hyphen
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60).replace(/-+$/, '');
+  }
+  function registerVid(id, title) {
+    if (!id) return null;
+    if (ID_TO_SLUG[id]) return ID_TO_SLUG[id];
+    let base = slugify(title) || 'video';
+    let slug = base, n = 2;
+    while (SLUG_TO_ID[slug] && SLUG_TO_ID[slug] !== id) { slug = base + '-' + n; n++; }
+    SLUG_TO_ID[slug] = id; ID_TO_SLUG[id] = slug;
+    return slug;
+  }
+  VIDEOS.forEach(v => {
+    registerVid(v.embedId, v.title);
+    (v.siblings || []).forEach(ep => registerVid(ep.embedId, ep.title));
+    (v.playlistMembers || []).forEach(ep => registerVid(ep.embedId, ep.title));
+  });
+  registerVid('b054d114-131a-479e-88b2-184bdcb39600', 'Proud'); // Work Featured-only vertical
+
   // Tracks the embedId currently in the main player so the "Copy link" button
   // and address bar always point at what's actually playing. Seeded with the
   // default Director's Reel below.
@@ -977,8 +1011,10 @@
       }
       mainPlayer.title = v.title;
       currentEmbedId = v.embedId;
-      // Reflect the playing video in the URL so it can be copied/shared.
-      try { history.replaceState(null, '', location.pathname + '#video/' + v.embedId); } catch (e) {}
+      // Reflect the playing video in the URL with a clean title slug so it can
+      // be copied/shared (e.g. work.html#commercial-cinematography-reel).
+      const slug = registerVid(v.embedId, v.title) || v.embedId;
+      try { history.replaceState(null, '', location.pathname + '#' + slug); } catch (e) {}
     }
     titleEl.innerHTML = v.title;
     subEl.innerHTML = v.sub;
@@ -998,7 +1034,8 @@
   if (shareLinkBtn) {
     const labelEl = shareLinkBtn.querySelector('.share-link-label');
     shareLinkBtn.addEventListener('click', async () => {
-      const url = location.origin + location.pathname + '#video/' + (currentEmbedId || '');
+      const slug = ID_TO_SLUG[currentEmbedId] || currentEmbedId || '';
+      const url = location.origin + location.pathname + '#' + slug;
       try {
         await navigator.clipboard.writeText(url);
       } catch (e) {
@@ -1443,10 +1480,17 @@
       const parts = h.split('/');
       const idx = parts.length > 1 ? parseInt(parts[1]) : 0;
       openShorts(isNaN(idx) ? 0 : idx);
-    } else if (h.startsWith('#video/')) {
-      // Deep-link to a specific Work video (shared via the Copy-link button or
-      // the home Featured tiles). Swap the main player to the requested embedId.
-      const embedId = h.split('/')[1];
+    } else if (h.length > 1 && !/cat=/.test(h)) {
+      // Deep-link to a specific Work video. Accepts a clean title slug
+      // (work.html#commercial-cinematography-reel) and still honors older
+      // links of the form #video/<guid> or a bare #<guid>.
+      let token = decodeURIComponent(h.slice(1));
+      if (token.startsWith('video/')) token = token.slice(6);
+      let embedId = SLUG_TO_ID[token] || (ID_TO_SLUG[token] ? token : null);
+      if (!embedId && typeof VIDEOS !== 'undefined') {
+        const direct = VIDEOS.find(x => x.embedId === token);
+        if (direct) embedId = token;
+      }
       if (embedId && embedId !== currentEmbedId) {
         const v = (typeof VIDEOS !== 'undefined') ? VIDEOS.find(x => x.embedId === embedId) : null;
         if (v) {
