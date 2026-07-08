@@ -587,6 +587,10 @@
           <span class="chip">Editor</span>
           <span class="chip">DP</span>
         </div>
+        <button class="share-link" id="shareLink" type="button" title="Copy a link to this video" style="margin-top:12px;display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;border:1px solid var(--line,#333);background:var(--bg-2,#1a1a1a);color:var(--text,#eee);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <span class="share-link-label">Copy link to this video</span>
+        </button>
       </div>
 
       <div class="credits">
@@ -959,6 +963,10 @@
 
   // Shared player-swap routine — reused by Up Next clicks AND by episode-drawer
   // clicks so playing an episode keeps the right surrounding chrome in sync.
+  // Tracks the embedId currently in the main player so the "Copy link" button
+  // and address bar always point at what's actually playing. Seeded with the
+  // default Director's Reel below.
+  let currentEmbedId = 'e0374508-213f-47a2-ae0d-dd50d9df695d';
   function playVideo(v) {
     if (!v) return;
     if (v.embedId && mainPlayer) {
@@ -968,6 +976,9 @@
         mainPlayer.src = `https://www.youtube.com/embed/${v.embedId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1`;
       }
       mainPlayer.title = v.title;
+      currentEmbedId = v.embedId;
+      // Reflect the playing video in the URL so it can be copied/shared.
+      try { history.replaceState(null, '', location.pathname + '#video/' + v.embedId); } catch (e) {}
     }
     titleEl.innerHTML = v.title;
     subEl.innerHTML = v.sub;
@@ -980,6 +991,31 @@
     if (wf) wf.style.display = (v.embedId === 'e0374508-213f-47a2-ae0d-dd50d9df695d') ? '' : 'none';
   }
   window.__playVideo = playVideo;
+
+  // "Copy link to this video" — writes a #video/<embedId> deep link to the
+  // clipboard so a specific Work video can be shared, not just the page.
+  const shareLinkBtn = document.getElementById('shareLink');
+  if (shareLinkBtn) {
+    const labelEl = shareLinkBtn.querySelector('.share-link-label');
+    shareLinkBtn.addEventListener('click', async () => {
+      const url = location.origin + location.pathname + '#video/' + (currentEmbedId || '');
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch (_) {}
+        ta.remove();
+      }
+      if (labelEl) {
+        const prev = labelEl.textContent;
+        labelEl.textContent = 'Link copied ✓';
+        shareLinkBtn.style.borderColor = 'var(--accent, #46c8d8)';
+        setTimeout(() => { labelEl.textContent = prev; shareLinkBtn.style.borderColor = ''; }, 1700);
+      }
+    });
+  }
 
   recs.forEach((rec, i) => {
     rec.addEventListener('click', () => {
@@ -1408,38 +1444,26 @@
       const idx = parts.length > 1 ? parseInt(parts[1]) : 0;
       openShorts(isNaN(idx) ? 0 : idx);
     } else if (h.startsWith('#video/')) {
-      // Deep-link from home Featured tiles — swap mainPlayer to the requested embedId
+      // Deep-link to a specific Work video (shared via the Copy-link button or
+      // the home Featured tiles). Swap the main player to the requested embedId.
       const embedId = h.split('/')[1];
-      if (embedId) {
-        const mp = document.getElementById('mainPlayer');
-        const vMatch = (typeof VIDEOS !== 'undefined') ? VIDEOS.find(x => x.embedId === embedId) : null;
-        if (mp) {
-          if (vMatch && vMatch.bunny) {
-            mp.src = `https://iframe.mediadelivery.net/embed/675985/${embedId}?autoplay=true&preload=true&responsive=true`;
-          } else {
-            mp.src = `https://www.youtube.com/embed/${embedId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1`;
-          }
-          // Sync sidebar Up Next + meta to the matching VIDEOS entry
-          const v = VIDEOS.find(x => x.embedId === embedId);
-          if (v) {
-            const recs = document.querySelectorAll('.rec');
-            recs.forEach((rec, i) => {
-              const vid = VIDEOS[i];
-              if (vid && vid.embedId === embedId) {
-                rec.classList.add('active');
-              } else {
-                rec.classList.remove('active');
-              }
-            });
-            const titleEl = document.querySelector('.meta .title');
-            const subEl = document.querySelector('.meta .sub');
-            const actionsEl = document.querySelector('.meta .actions');
-            const creditsEl = document.querySelector('.credits');
-            if (titleEl) titleEl.innerHTML = v.title;
-            if (subEl) subEl.innerHTML = v.sub;
-            if (actionsEl) actionsEl.innerHTML = v.chips.map(([t,cls]) => `<span class="chip ${cls}">${t}</span>`).join('');
-            if (creditsEl) creditsEl.innerHTML = v.credits.map(([k,val]) => `<div class="row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('');
-          }
+      if (embedId && embedId !== currentEmbedId) {
+        const v = (typeof VIDEOS !== 'undefined') ? VIDEOS.find(x => x.embedId === embedId) : null;
+        if (v) {
+          // Known Up Next entry — full sync (meta, drawer, active state).
+          const recs = document.querySelectorAll('.rec');
+          recs.forEach((rec, i) => rec.classList.toggle('active', VIDEOS[i] && VIDEOS[i].embedId === embedId));
+          playVideo(v);
+          if (typeof renderEpisodeDrawer === 'function') renderEpisodeDrawer(v);
+        } else if (mainPlayer) {
+          // Not in the Up Next list (e.g. an episode or featured clip). Detect
+          // Bunny GUIDs (36-char UUID w/ dashes) vs 11-char YouTube IDs. Swap
+          // only the player; leave the surrounding meta untouched.
+          const isBunny = /-/.test(embedId) && embedId.length > 20;
+          mainPlayer.src = isBunny
+            ? `https://iframe.mediadelivery.net/embed/675985/${embedId}?autoplay=true&preload=true&responsive=true`
+            : `https://www.youtube.com/embed/${embedId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1`;
+          currentEmbedId = embedId;
         }
       }
     }
