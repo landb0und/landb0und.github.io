@@ -208,15 +208,15 @@
 
 <nav class="nav">
   <div class="nav-brand">
-    <a class="logo" href="index.html" style="text-decoration:none;color:var(--amber);cursor:pointer;">JACOB BOEHME</a>
+    <a class="logo" href="/" style="text-decoration:none;color:var(--amber);cursor:pointer;">JACOB BOEHME</a>
     <div class="tag">LANDBOUND · LA</div>
   </div>
   <div class="nav-items">
-    <a class="nav-item" href="index.html">Home</a>
-    <a class="nav-item" href="work.html">Work</a>
-    <a class="nav-item" href="photo.html">Photo</a>
-    <a class="nav-item active" href="vfx-ai.html">VFX &amp; AI</a>
-    <a class="nav-item" href="hire.html">Hire</a>
+    <a class="nav-item" href="/">Home</a>
+    <a class="nav-item" href="/work/">Work</a>
+    <a class="nav-item" href="/photo">Photo</a>
+    <a class="nav-item active" href="/vfx-ai">VFX &amp; AI</a>
+    <a class="nav-item" href="/hire">Hire</a>
   </div>
   <div class="nav-socials">
     <div class="nav-socials-h">Follow</div>
@@ -251,7 +251,7 @@
     <span class="num">—</span>
     <span class="lbl">VFX Reels</span>
     <span class="sub">Verticals</span>
-    <a class="all" href="work.html#shorts/0?cat=vfx">Open VFX feed →</a>
+    <a class="all" href="/work/#shorts/0?cat=vfx">Open VFX feed →</a>
   </div>
   <div class="vfx-strip" id="vfxStrip"></div>
 
@@ -385,7 +385,7 @@
       <h3>Need VFX on a real timeline?</h3>
       <p>Music video, commercial, feature sup, or AI pipeline build. Send a brief and I'll tell you what it takes.</p>
     </div>
-    <a href="hire.html">Send a Brief →</a>
+    <a href="/hire">Send a Brief →</a>
   </div>
 
   <div class="footer">
@@ -420,14 +420,14 @@
     const mp4   = 'https://' + CDN + '/' + v.guid + '/play_480p.mp4';
     const cap   = v.label || v.title || '';
     const tag   = (v.type === 'bts') ? 'BTS' : 'VFX';
-    return '<a class="vfx-short" href="work.html#shorts/' + idx + '?cat=vfx" data-vsrc="' + mp4 + '" style="background-image: url(\'' + thumb + '\');">'
+    return '<a class="vfx-short" href="/work/#shorts/' + idx + '?cat=vfx" data-vsrc="' + mp4 + '" style="background-image: url(\'' + thumb + '\');">'
       + '<video poster="' + thumb + '" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>'
       + '<span class="vfx-tag">' + tag + '</span>'
       + '<div class="vfx-overlay"></div>'
       + '<div class="vfx-meta"><div class="cap">' + cap + '</div></div>'
       + '</a>';
   }).join('')
-  + '<a class="vfx-cta" href="work.html#shorts/0?cat=vfx"><span class="arr">↗</span><span class="t">Open VFX feed</span><span class="m">All clips</span></a>';
+  + '<a class="vfx-cta" href="/work/#shorts/0?cat=vfx"><span class="arr">↗</span><span class="t">Open VFX feed</span><span class="m">All clips</span></a>';
 
   // Safari-safe play helper — reasserts muted+playsinline and waits for
   // loadedmetadata/canplay before calling play() (iOS Safari rejects sync play
