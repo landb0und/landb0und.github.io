@@ -1,1 +1,1865 @@
-<!DOCTYPE html><meta http-equiv="refresh" content="0; url=/work.html"><a href="/work.html">Work</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Desktop-on-mobile: full desktop layout scaled to fit (not a responsive build). -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Work — YouTube + Shorts</title>
+<link rel="stylesheet" href="/theme.css?v=10">
+<script src="/theme.js?v=6"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #12100c; --bg-2: #1a1612; --bg-3: #221c16;
+    --line: #2d251c; --line-2: #1f1a14;
+    --ink: #f1e6cd; --ink-2: #c7b893; --ink-3: #8a7a5e; --ink-4: #5d4f3a;
+    --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
+  }
+
+  body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 998; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.45; mix-blend-mode: overlay; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ============= LEFT NAV (shared with home) ============= */
+  .nav { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg-2); border-right: 1px solid var(--line); padding: 24px 0; z-index: 50; display: flex; flex-direction: column; }
+  .nav-brand { padding: 0 22px 22px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
+  .nav-brand .logo { font-size: 15px; font-weight: 900; letter-spacing: 0.04em; color: var(--amber); }
+  .nav-brand .tag { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: 6px; }
+  .nav-items { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; font-size: 12px; color: var(--ink-2); cursor: pointer; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--ink); }
+  .nav-item.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .nav-socials { margin: 22px 14px 0; padding: 16px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 8px; }
+  .nav-socials-h { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 10px; }
+  .nav-soc { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+  .nav-soc:not(:last-child) { border-bottom: 1px solid var(--line-2); }
+  .nav-soc-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .nav-soc-icon svg { width: 16px; height: 16px; }
+  .nav-soc-icon.tt svg { color: #000; }
+  .nav-soc-icon.ig svg, .nav-soc-icon.li svg { color: #fff; }
+  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); color: #000; }
+  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); color: #fff; }
+  .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
+  .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
+  .nav-soc-info { flex: 1; min-width: 0; }
+  .nav-soc-h { font-size: 11px; color: var(--ink); font-weight: 700; line-height: 1.1; }
+  .nav-soc-m { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 1px; }
+  .nav-bottom { margin-top: auto; padding: 20px 22px 0; font-size: 10px; color: var(--ink-4); line-height: 1.6; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .nav-bottom .status { display: flex; align-items: center; gap: 6px; color: var(--leaf); margin-bottom: 4px; }
+  .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  /* ============= MAIN ============= */
+  .main-page { margin-left: 220px; padding: 32px 40px 60px; max-width: 1400px; position: relative; z-index: 2; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--line-2); margin-bottom: 22px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.2em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .section-h { font-size: 13px; letter-spacing: 0.26em; color: var(--ink); text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+  .section-h::before { content: '— '; color: var(--amber); }
+  .section-sub { font-size: 12px; color: var(--ink-4); margin-bottom: 20px; font-style: italic; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
+  /* Stories (IG-style client rail) */
+  .stories { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 2px 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line-2); scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .stories::-webkit-scrollbar { height: 4px; }
+  .stories::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .story { flex: 0 0 76px; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; }
+  /* Story ring with slowly-rotating conic gradient — quiet life, not flashy.
+     Pseudo-element rotates while the avatar inside stays still. Rows are
+     phase-staggered via nth-child so the sweep doesn't hit at once. */
+  /* All movement is on the gradient ring only. The avatar inside stays still. */
+  .story-ring { width: 64px; height: 64px; border-radius: 50%; padding: 2px; position: relative; transition: transform .15s; isolation: isolate; }
+  .story-ring::before {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--amber), var(--rose), var(--amber));
+    animation: storyRingSpin 2s linear infinite, storyRingPulse 2.4s ease-in-out infinite;
+    z-index: -1; transform-origin: center;
+  }
+  .story:nth-child(3n) .story-ring::before { animation-delay: -0.66s, -1.2s; }
+  .story:nth-child(3n+1) .story-ring::before { animation-delay: -1.33s, -0.4s; }
+  .story:hover .story-ring { transform: scale(1.08); }
+  .story:hover .story-ring::before { animation-duration: 0.9s, 1.4s; }
+  @keyframes storyRingSpin {
+    0%   { transform: rotate(0deg)   scale(1); }
+    50%  { transform: rotate(180deg) scale(1.08); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  @keyframes storyRingPulse {
+    0%, 100% { filter: brightness(1)   saturate(1); }
+    50%      { filter: brightness(1.15) saturate(1.2); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .story-ring::before { animation: none; }
+  }
+  .story-inner { width: 100%; height: 100%; border-radius: 50%; background: var(--bg); padding: 2px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .story-avatar { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 15px; }
+  .sa-1 { background: linear-gradient(135deg, #f5b042, #e8589a); }
+  .sa-2 { background: linear-gradient(135deg, #6b3a1a, #c084fc); }
+  .sa-3 { background: linear-gradient(135deg, #4a1838, #f5b042); }
+  .sa-4 { background: linear-gradient(135deg, #2a4a18, #6fbd5f); }
+  .sa-5 { background: linear-gradient(135deg, #f5b042, #c4533a); }
+  .sa-6 { background: linear-gradient(135deg, #2a1f15, #f5b042); }
+  .sa-7 { background: linear-gradient(135deg, #1f2a18, #6fbd5f); }
+  .sa-8 { background: linear-gradient(135deg, #5a2a10, #c4533a); }
+  .sa-9 { background: linear-gradient(135deg, #6b3a1a, #c0aa70); }
+  .sa-10 { background: linear-gradient(135deg, #1a0a18, #e8589a); }
+  .story-name { font-size: 10px; color: var(--ink-2); font-weight: 700; text-align: center; max-width: 76px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+
+  /* Filter bar — search-input-aesthetic */
+  .filter-bar { display: flex; align-items: center; gap: 14px; padding: 10px 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 22px; transition: border-color .15s; }
+  .filter-bar:hover { border-color: var(--ink-4); }
+  .filter-label { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-4); font-size: 10px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; padding-right: 14px; border-right: 1px solid var(--line); flex-shrink: 0; }
+  .filter-label svg { width: 12px; height: 12px; color: var(--ink-3); }
+  .filter-opts { display: flex; align-items: center; flex: 1; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+  .filter-opts::-webkit-scrollbar { display: none; }
+  .opt { padding: 6px 14px; color: var(--ink-2); font-size: 11px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; cursor: pointer; border-radius: 6px; transition: all .15s; white-space: nowrap; }
+  .opt:hover { background: rgba(255,255,255,0.04); color: var(--ink); }
+  .opt.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .opt-sep { width: 1px; height: 12px; background: var(--line-2); margin: 0 2px; flex-shrink: 0; }
+  /* Random pill — sits at the end of the filter row. Same weight as the
+     floating Open Shorts CTA (solid color, mono caps), different hue so it
+     reads as a peer action, not a louder one. */
+  .opt.opt-random {
+    margin-left: auto;
+    color: var(--bg);
+    background: var(--amber);
+    border: 1px solid var(--amber);
+    padding: 6px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    border-radius: 100px;
+  }
+  .opt.opt-random:hover { background: #ffc555; }
+  .opt.opt-random svg { width: 13px; height: 13px; }
+
+  /* YT layout */
+  .yt { display: grid; grid-template-columns: 1fr 340px; gap: 22px; align-items: start; }
+  /* min-width:0 lets the 1fr column shrink so the horizontal Work Featured /
+     drawer strips scroll internally instead of blowing the grid out wide. */
+  .main { min-width: 0; }
+  /* Up Next sidebar sticks once you scroll to it and scrolls INTERNALLY, so the
+     page effectively "hits a wall" and further scroll runs through Up Next. */
+  .side { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; padding-right: 4px; }
+  .side::-webkit-scrollbar { width: 6px; }
+  .side::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  @media (max-width: 900px) { .side { position: static; max-height: none; overflow: visible; } }
+
+  /* Player capped to ~70% of the viewport height so a wide 16:9 iframe never
+     pushes the meta + Up Next sidebar off-screen on smaller monitors. On wide
+     viewports the aspect-ratio governs; on tall+narrow ones max-height + the
+     auto width on the wrapper keep it in frame. */
+  .player { background: #000; aspect-ratio: 16/9; max-height: 70vh; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; position: relative; overflow: hidden; }
+  .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 5; }
+  .player::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(245,176,66,0.22) 0%, transparent 65%); }
+  .player::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.025) 3px 4px); pointer-events: none; }
+  .player .frame { position: absolute; inset: 0; background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); opacity: 0.55; }
+  .player .play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 84px; height: 84px; border-radius: 50%; background: rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; z-index: 3; cursor: pointer; }
+  .player .play::after { content: ''; width: 0; height: 0; border-left: 26px solid var(--bg); border-top: 16px solid transparent; border-bottom: 16px solid transparent; margin-left: 5px; }
+  .player .ctrl { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 14px; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.85) 100%); z-index: 4; }
+  .player .bar { height: 3px; background: rgba(255,255,255,0.2); border-radius: 100px; margin-bottom: 10px; overflow: hidden; }
+  .player .bar .fill { height: 100%; width: 38%; background: var(--amber); border-radius: 100px; }
+  .player .row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #d4c8ad; font-family: 'SF Mono', Menlo, monospace; }
+  .player .icons { display: flex; gap: 12px; align-items: center; }
+
+  .meta { padding: 18px 4px 12px; border-bottom: 1px solid var(--line-2); }
+  .meta .title { font-size: 26px; font-weight: 900; letter-spacing: -0.02em; color: var(--ink); line-height: 1.1; margin-bottom: 8px; }
+  .meta .sub { font-size: 12px; color: var(--ink-2); }
+  .meta .sub strong { color: var(--amber); }
+  .actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .chip { padding: 7px 15px; background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.28); color: var(--ink); font-size: 11.5px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 100px; font-weight: 800; transition: background .15s, border-color .15s, transform .15s; }
+  .chip:hover { background: rgba(245,176,66,0.16); transform: translateY(-1px); }
+  .chip.amber { background: rgba(245,176,66,0.2); border-color: rgba(245,176,66,0.55); color: var(--amber); box-shadow: 0 0 0 1px rgba(245,176,66,0.12); }
+
+  .credits { padding: 18px 4px; font-size: 12px; color: var(--ink-2); line-height: 1.7; border-bottom: 1px solid var(--line-2); }
+  .credits .row { display: flex; gap: 14px; padding: 4px 0; }
+  .credits .k { width: 100px; color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; }
+  .credits .v { color: var(--ink); flex: 1; }
+  .credits .v strong { color: var(--amber); }
+
+  .side-h { font-size: 11px; letter-spacing: 0.18em; color: var(--amber); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; font-family: 'SF Mono', Menlo, monospace; }
+
+  /* Verticals card with auto-cycling thumbnail */
+  .verticals-card { display: flex; gap: 12px; padding: 12px; background: linear-gradient(135deg, rgba(232,88,154,0.12) 0%, rgba(245,176,66,0.08) 100%); border: 1px solid rgba(232,88,154,0.35); border-radius: 8px; margin-bottom: 18px; cursor: pointer; transition: all .15s; position: relative; }
+  .verticals-card:hover { border-color: var(--rose); transform: translateY(-1px); }
+  .vc-thumb { width: 70px; aspect-ratio: 9/16; border-radius: 6px; flex-shrink: 0; position: relative; overflow: hidden; }
+  .vc-frames { position: absolute; inset: 0; overflow: hidden; }
+  .vc-thumb { flex: 0 0 110px; aspect-ratio: 9/16; border-radius: 6px; overflow: hidden; position: relative; background: #000; }
+  .vc-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.65) 100%); z-index: 2; }
+  .vc-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; z-index: 3; opacity: 0.85; }
+  .vc-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .vc-tag { font-size: 9px; color: var(--rose); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; }
+  .vc-title { font-size: 18px; color: var(--ink); font-weight: 900; letter-spacing: -0.01em; }
+  .vc-meta { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; }
+  .vc-cta { font-size: 10px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; margin-top: 4px; }
+
+  /* vc-frame transition handled by JS — no CSS animation */
+  .vc-frame { position: absolute; inset: 0; will-change: transform; }
+  .vc-frame:nth-child(1) { z-index: 2; transform: translateY(0%); }
+  .vc-frame:nth-child(2) { z-index: 1; transform: translateY(100%); }
+  .vc-thumb::after { content: '▶'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 18px; z-index: 4; text-shadow: 0 2px 6px rgba(0,0,0,0.5); }
+  .vc-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .vc-tag { font-size: 9px; color: var(--rose); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; }
+  .vc-title { font-size: 14px; color: var(--ink); font-weight: 800; line-height: 1.2; }
+  .vc-meta { font-size: 11px; color: var(--ink-2); }
+  .vc-cta { font-size: 10px; color: var(--rose); letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; margin-top: 2px; }
+
+  .recs { display: flex; flex-direction: column; gap: 10px; }
+  .rec { display: grid; grid-template-columns: 120px 1fr; gap: 10px; cursor: pointer; padding: 4px; border-radius: 6px; transition: background .15s; }
+  .rec:hover { background: rgba(255,255,255,0.03); }
+  .rec.active { display: none; }
+  /* Pinned hero (Director's Reel) in Up Next — subtle amber importance ring. */
+  .rec.rec-pinned { position: relative; box-shadow: inset 0 0 0 1px rgba(245,176,66,0.5); background: rgba(245,176,66,0.04); }
+  .rec.rec-pinned .rec-thumb { box-shadow: inset 0 0 0 1px rgba(245,176,66,0.55); }
+  .rec-pin { position: absolute; top: 8px; left: 8px; z-index: 3; font-size: 10px; background: rgba(0,0,0,0.62); border-radius: 100px; padding: 1px 5px; line-height: 1.5; }
+  /* Bunny's auto-generated thumbnail is the FIRST frame of the video — for
+     anything with a fade-in or dark opening (Director's Reel, Bleed, Bby) it
+     comes through nearly black. We lift the img with a brightness/saturate
+     filter and back it with a faint gunmetal gradient so the tile box always
+     reads, even when the underlying frame is mostly shadow. */
+  .rec-thumb { aspect-ratio: 16/9; border-radius: 4px; position: relative; overflow: hidden; background: linear-gradient(135deg, var(--bg-3), var(--bg-2)); box-shadow: inset 0 0 0 1px var(--line); }
+  .rec-thumb img { filter: brightness(1.18) saturate(1.08) contrast(1.02); }
+  /* Specific Bunny videos whose first-frame thumbnail.jpg comes through nearly
+     black. Rather than fight the dark frame with a brightness filter, we
+     bypass thumbnail.jpg entirely and render the video element itself,
+     preload="metadata" + #t=N, so the browser shows a seeked frame as the
+     static poster. This pulls a representative bright frame from N seconds in
+     instead of the 0-second fade-from-black. */
+  .rec-thumb video.poster-seek { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #000; pointer-events: none; filter: brightness(1.05) saturate(1.05); }
+  .rec-thumb::after { content: ''; position: absolute; right: 4px; bottom: 4px; padding: 1px 5px; background: rgba(0,0,0,0.85); font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: #fff; border-radius: 2px; z-index: 2; }
+  .rec-thumb[data-dur]::after { content: attr(data-dur); }
+  .rec-info { padding-top: 2px; }
+  .rec-title { font-size: 12px; color: var(--ink); font-weight: 700; line-height: 1.25; margin-bottom: 3px; }
+  .rec-meta { font-size: 10px; color: var(--ink-2); line-height: 1.4; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
+
+  .g1 { background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
+  .g2 { background: linear-gradient(160deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); }
+  .g3 { background: linear-gradient(45deg, #0a0806 0%, #2a1810 50%, #a82828 100%); }
+  .g4 { background: linear-gradient(180deg, #1f2a18 0%, #4a6a2a 60%, #c5e060 100%); }
+  .g5 { background: linear-gradient(120deg, #100808 0%, #3a1410 60%, var(--amber) 100%); }
+  .g6 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
+  .g7 { background: linear-gradient(180deg, #2a2018 0%, #b08040 100%); }
+  .g8 { background: linear-gradient(200deg, #1a0a0a 0%, #5a2a10 50%, #ff5f57 100%); }
+
+  /* ============= SHORTS OVERLAY ============= */
+  /* z-index above body::after vignette (999) so pills + content aren't dimmed */
+  .shorts { position: fixed; inset: 0; background: #000; z-index: 1001; display: none; }
+  .shorts.open { display: flex; }
+  .shorts-topbar {
+    position: absolute; top: 0; left: 0; right: 0;
+    padding: 18px 22px;
+    display: flex; align-items: center; gap: 14px;
+    z-index: 10;
+    /* No gradient — was darkening the pills + top of every video. The Back button
+       has its own amber bg so it stays legible without the overlay. */
+    background: transparent;
+    pointer-events: none;
+  }
+  .shorts-topbar > * { pointer-events: auto; }
+  .shorts-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px;
+    background: var(--amber);
+    border: none;
+    border-radius: 100px;
+    color: #0a0806;
+    font-size: 11px; font-weight: 900; letter-spacing: 0.18em; text-transform: uppercase;
+    font-family: 'SF Mono', Menlo, monospace;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(245,176,66,0.5);
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .shorts-back:hover { background: #ffc555; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,176,66,0.65); }
+  /* Top-right menu button — mobile only (desktop already shows the rail). */
+  .shorts-menu { display: none; align-items: center; justify-content: center; width: 42px; height: 42px; margin-left: auto; border-radius: 50%; background: rgba(0,0,0,0.55); border: 1.5px solid rgba(255,255,255,0.28); color: #fff; cursor: pointer; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); flex-shrink: 0; }
+  .shorts-menu svg { width: 19px; height: 19px; }
+
+  /* Category tabs */
+  .cat-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cat-tab {
+    padding: 8px 16px;
+    background: rgba(20,16,12,0.92);
+    border: 1.5px solid rgba(245,176,66,0.55);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    font-family: 'SF Mono', Menlo, monospace;
+    text-transform: uppercase;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all .15s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  }
+  .cat-tab:hover { background: rgba(245,176,66,0.18); border-color: var(--amber); color: #fff; }
+  .cat-tab.active { background: var(--amber); color: #000; border-color: var(--amber); }
+  .shorts-x { margin-left: auto; color: #fff; font-size: 22px; cursor: pointer; padding: 6px 10px; border-radius: 50%; transition: background .15s; }
+  .shorts-x:hover { background: rgba(255,255,255,0.15); }
+
+  /* Full-screen TikTok layout — the scroller spans the entire stage, the 9:16
+     content frame is just centered inside it. This means a wheel anywhere over
+     the stage (incl. the black margins flanking the video) targets the native
+     scroll container directly — same buttery scroll-snap behavior as scrolling
+     over the video itself. No JS wheel handler required. */
+  .shorts-stage { flex: 1; display: block; padding: 0; }
+  .phone {
+    height: 100dvh;
+    width: 100%;
+    background: #000;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+  }
+  .phone::-webkit-scrollbar { display: none; }
+
+  /* Credits overlay (replaces caption) */
+  .phone-overlay { position: absolute; left: 14px; right: 80px; bottom: 22px; z-index: 5; }
+  .po-credit-tag { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 6px; }
+  .po-title { font-size: 18px; color: #fff; font-weight: 900; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .po-credits { font-size: 12px; color: rgba(255,255,255,0.85); line-height: 1.5; margin-bottom: 4px; }
+  .po-credits strong { color: var(--amber); font-weight: 700; }
+  .po-music { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.18); font-size: 11px; color: rgba(255,255,255,0.85); }
+  .po-music::before { content: '♪'; font-size: 14px; color: var(--amber); }
+  /* Bio caption + meta row (views / AI note / related-film chip).
+     Sits between the role line and the music ticker. */
+  .po-caption { font-size: 12px; color: rgba(255,255,255,0.92); line-height: 1.45; margin-top: 6px; }
+  .po-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; font-family: 'SF Mono', Menlo, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .po-meta .po-views { color: var(--amber); font-weight: 800; }
+  .po-meta .po-ai { color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.18); padding: 2px 7px; border-radius: 100px; font-weight: 700; }
+  .po-meta .po-related { color: var(--bg); background: var(--amber); padding: 2px 9px; border-radius: 100px; text-decoration: none; font-weight: 800; letter-spacing: 0.06em; transition: background .15s; }
+  .po-meta .po-related:hover { background: #ffc555; }
+
+  .phone-actions { position: absolute; right: 12px; bottom: 30px; display: flex; flex-direction: column; gap: 16px; z-index: 5; align-items: center; }
+  .pa { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+  .pa-icon { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; backdrop-filter: blur(8px); }
+  .pa-icon.heart { background: rgba(232,88,154,0.25); }
+  .pa-lbl { font-size: 10px; color: #fff; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; }
+
+  .phone-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); z-index: 4; }
+  .phone-play::after { content: ''; width: 0; height: 0; border-left: 20px solid #fff; border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-left: 4px; }
+
+  .phone-progress { position: absolute; top: 70px; bottom: 70px; right: 6px; width: 3px; background: rgba(255,255,255,0.1); border-radius: 100px; z-index: 5; overflow: hidden; }
+  .phone-progress .fill { position: absolute; left: 0; right: 0; top: 0; height: 32%; background: var(--rose); border-radius: 100px; }
+  .swipe-hint { position: absolute; right: -56px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 16px; color: rgba(255,255,255,0.4); font-size: 24px; }
+
+  .shorts-rail { width: 300px; background: var(--bg); border-left: 1px solid var(--line); padding: 24px 18px 20px; overflow-y: auto; position: relative; }
+  /* Sticky cat-tabs — sit pinned to the top of the rail as the user scrolls
+     through clips. Background matches rail so it doesn't bleed through. */
+  .cat-tabs-sticky { position: sticky; top: -24px; z-index: 5; background: var(--bg); padding: 18px 0 12px; margin: -24px 0 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  /* Random pill mirrors the work-videos Random button — amber filled, mono caps */
+  .cat-tab.cat-random { margin-left: auto; color: var(--bg); background: var(--amber); border: 1px solid var(--amber); padding: 4px 11px; display: inline-flex; align-items: center; gap: 6px; font-weight: 800; letter-spacing: 0.12em; border-radius: 100px; }
+  .cat-tab.cat-random:hover { background: #ffc555; color: var(--bg); border-color: var(--amber); }
+  .cat-tab.cat-random svg { width: 11px; height: 11px; }
+  /* Related-verticals strip under the active main video. Auto-shown only when
+     the current embedId is the relatedTo target of one or more verticals. */
+  .related-verticals { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-2); }
+  .related-verticals .rv-head { font-size: 11px; color: var(--amber); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 14px; }
+  .related-verticals .rv-strip { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .related-verticals .rv-strip::-webkit-scrollbar { height: 6px; }
+  .related-verticals .rv-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .related-verticals .rv-tile { flex: 0 0 160px; aspect-ratio: 9/16; border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--line); background: #000 center/cover no-repeat; text-decoration: none; transition: border-color .15s, transform .15s; }
+  .related-verticals .rv-tile:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .related-verticals .rv-tile .rv-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); }
+  .related-verticals .rv-tile .rv-cap { position: absolute; left: 10px; right: 10px; bottom: 10px; font-size: 11px; color: #fff; font-weight: 700; line-height: 1.25; }
+  /* Playlist tile in Up Next — 2x2 thumbnail grid + episode-count chip so it
+     clearly reads as a series, not a single video. Each cell shows one
+     episode's thumb; the amber overlay badge anchors the "PLAYLIST · N" meta. */
+  .rec.is-playlist .rec-thumb { padding: 0; background: var(--bg-2); }
+  .rec.is-playlist .rec-thumb .pl-grid { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; padding: 0; }
+  .rec.is-playlist .rec-thumb .pl-cell { background: #000 center/cover no-repeat; position: relative; overflow: hidden; }
+  .rec.is-playlist .rec-thumb .pl-cell::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.35) 100%); }
+  .rec.is-playlist .rec-thumb .pl-more { display: flex; align-items: center; justify-content: center; background: var(--bg-3); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; }
+  .rec.is-playlist .rec-thumb .pl-more::before { content: '+'; margin-right: 2px; }
+  .rec-playlist-badge { position: absolute; left: 4px; bottom: 4px; padding: 2px 7px; background: var(--amber); color: var(--bg); font-size: 8px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; z-index: 4; display: inline-flex; align-items: center; gap: 3px; }
+  .rec.is-playlist .rec-info .rec-title::before { content: '▶ '; color: var(--amber); }
+  .rec.is-playlist .rec-info .rec-meta { color: var(--amber); }
+  /* Episode drawer below the player — appears when active video belongs to a playlist */
+  .episode-drawer { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-2); }
+  .episode-drawer .ed-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+  .episode-drawer .ed-h { font-size: 11px; color: var(--amber); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; }
+  .episode-drawer .ed-count { font-size: 11px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; }
+  .episode-drawer .ed-list { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .episode-drawer .ed-list::-webkit-scrollbar { height: 6px; }
+  .episode-drawer .ed-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .episode-drawer .ed-tile { flex: 0 0 220px; cursor: pointer; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); background: var(--bg-2); transition: border-color .15s, transform .15s; text-decoration: none; display: flex; flex-direction: column; }
+  .episode-drawer .ed-tile:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .episode-drawer .ed-tile.active { border-color: var(--amber); box-shadow: 0 0 0 1px var(--amber) inset; }
+  .episode-drawer .ed-thumb { aspect-ratio: 16/9; background: #000 center/cover no-repeat; position: relative; }
+  .episode-drawer .ed-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.85) 100%); }
+  .episode-drawer .ed-guest { position: absolute; left: 8px; bottom: 8px; z-index: 2; padding: 3px 8px; background: rgba(245,176,66,0.92); color: var(--bg); font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 800; border-radius: 100px; }
+  .episode-drawer .ed-title { padding: 10px 12px 12px; font-size: 12px; color: var(--ink); font-weight: 700; line-height: 1.3; }
+  /* Override cat-tab colors for the dark rail context */
+  /* override removed — generic .cat-tab styling now applies in the rail too */
+  .shorts-rail .cat-tab:hover { background: rgba(255,255,255,0.08); color: var(--ink); border-color: var(--ink-4); }
+  .shorts-rail .cat-tab.active { background: rgba(245,176,66,0.15); border-color: rgba(245,176,66,0.5); color: var(--amber); }
+  /* Editorial sidebar list — film-slate aesthetic, not chat-UI */
+  .sr-h { font-size: 11px; color: var(--rose); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sr-list { display: flex; flex-direction: column; gap: 0; }
+  .sr-item { display: grid; grid-template-columns: 28px 56px 1fr; gap: 12px; padding: 12px 4px 12px 0; border-radius: 0; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+  .sr-item:last-child { border-bottom: none; }
+  .sr-item:hover { background: rgba(255,255,255,0.025); }
+  .sr-num { font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; font-weight: 700; letter-spacing: 0.04em; text-align: right; }
+  .sr-thumb { aspect-ratio: 9/16; border-radius: 2px; }
+  .sr-info { padding-top: 0; }
+  .sr-title { font-size: 12.5px; color: var(--ink); font-weight: 600; line-height: 1.2; margin-bottom: 4px; letter-spacing: -0.005em; }
+  .sr-meta { font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .toggle-btn { position: fixed; bottom: 60px; right: 14px; padding: 10px 16px; background: var(--rose); border: none; color: var(--bg); font-weight: 800; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 100px; cursor: pointer; font-family: 'SF Mono', Menlo, monospace; z-index: 49; }
+
+
+  /* Each slide = full viewport height, 9:16 wide and centered, snaps to top.
+     Negative space to either side of the slide is just .phone background (#000),
+     so hovering it doesn't fire .phone-slide mouseenter — overlays stay hidden. */
+  .phone-slide {
+    position: relative;
+    width: calc(100dvh * 9 / 16);
+    max-width: 100%;
+    margin: 0 auto;
+    height: 100dvh;
+    min-height: 100dvh;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow: hidden;
+    border-radius: 0;
+  }
+  .phone-slide iframe.phone-video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1; }
+  .phone-slide.vg1 { background: linear-gradient(180deg, #1a0a10 0%, #501838 70%, var(--rose) 100%); }
+  .phone-slide.vg2 { background: linear-gradient(160deg, #0a0a18 0%, #2a2a4a 50%, #8a8acf 100%); }
+  .phone-slide.vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
+  .phone-slide.vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
+  .phone-slide.vg5 { background: linear-gradient(200deg, #1a0a0a 0%, #5a2a10 50%, #c4533a 100%); }
+  .phone-slide.vg6 { background: linear-gradient(180deg, #0a0806 0%, #1a2a18 60%, var(--leaf) 100%); }
+  .phone-slide.vg7 { background: linear-gradient(135deg, #100808 0%, #3a1410 60%, var(--amber) 100%); }
+  .phone-slide::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(232,88,154,0.22) 0%, transparent 60%); }
+  .phone-slide::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.025) 3px 4px); pointer-events: none; }
+  .phone-slide .phone-overlay,
+  .phone-slide .phone-actions,
+  .phone-slide .phone-play,
+  .phone-slide .phone-progress { z-index: 5; }
+  /* TikTok-style overlay system for verticals — opacity-fade controlled by JS via .show-overlay class */
+  .phone-slide .phone-overlay,
+  .phone-slide .phone-actions { opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+  .phone-slide.show-overlay .phone-overlay,
+  .phone-slide.show-overlay .phone-actions { opacity: 1; pointer-events: auto; }
+
+  /* Center controls — mute (small) above play (large), column layout, vertically centered */
+  .phone-controls {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity .25s ease;
+    pointer-events: none;
+  }
+  .phone-slide.show-overlay .phone-controls { opacity: 1; pointer-events: auto; }
+  .phone-ctl {
+    border-radius: 50%;
+    background: rgba(0,0,0,0.55);
+    border: 1.5px solid rgba(255,255,255,0.28);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all .15s;
+    width: 48px;
+    height: 48px;
+  }
+  .phone-ctl:hover { background: rgba(0,0,0,0.78); border-color: var(--amber); color: var(--amber); transform: scale(1.06); }
+  .phone-ctl svg { width: 18px; height: 18px; pointer-events: none; }
+  /* Mute button — smaller */
+  .phone-ctl[data-action="mute"] { width: 36px; height: 36px; border-color: rgba(255,255,255,0.2); }
+  .phone-ctl[data-action="mute"] svg { width: 14px; height: 14px; }
+  /* Play button — larger, primary */
+  .phone-ctl[data-action="play"] { width: 68px; height: 68px; background: rgba(0,0,0,0.7); border-width: 2px; }
+  .phone-ctl[data-action="play"] svg { width: 26px; height: 26px; }
+  .phone-ctl.primary { width: 68px; height: 68px; background: rgba(0,0,0,0.7); }
+  .phone-ctl.primary svg { width: 26px; height: 26px; }
+
+  /* Big tap target on the video itself — lets users click anywhere to toggle play/pause */
+  .phone-tap { position: absolute; inset: 0; z-index: 4; cursor: pointer; background: transparent; border: 0; }
+
+  /* Hide the default native video controls completely */
+  .phone-video::-webkit-media-controls { display: none !important; }
+  .phone-video::-webkit-media-controls-enclosure { display: none !important; }
+
+
+  /* Active row — film-slate marker. Numbered col + title go amber, thin amber thumb edge. */
+  .sr-item.active { background: transparent; }
+  .sr-item.active .sr-num { color: var(--amber); }
+  .sr-item.active .sr-title { color: var(--amber); }
+  .sr-item.active .sr-thumb { box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .sr-item { transition: background .15s; }
+
+  .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
+
+  /* Vertical gradients for cycling */
+  .vg1 { background: linear-gradient(180deg, #1a0a10 0%, #501838 70%, var(--rose) 100%); }
+  .vg2 { background: linear-gradient(160deg, #0a0a18 0%, #2a2a4a 50%, #8a8acf 100%); }
+  .vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
+  .vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
+</style>
+<link rel="stylesheet" href="/mobile.css?v=15">
+</head>
+<body>
+
+<!-- ========== LEFT NAV ========== -->
+<nav class="nav">
+  <div class="nav-brand">
+    <a class="logo" href="/" style="text-decoration:none;color:var(--amber);cursor:pointer;">JACOB BOEHME</a>
+    <div class="tag">LANDBOUND · LA</div>
+  </div>
+  <div class="nav-items">
+    <a class="nav-item" href="/">Home</a>
+    <a class="nav-item active" href="/work/">Work</a>
+    <a class="nav-item" href="/photo">Photo</a>
+    <a class="nav-item" href="/vfx-ai">VFX &amp; AI</a>
+    <a class="nav-item" href="/hire">Hire</a>
+  </div>
+  <div class="nav-socials">
+    <div class="nav-socials-h">Follow</div>
+    <a class="nav-soc" href="https://www.tiktok.com/@landbound" target="_blank" rel="noopener"><div class="nav-soc-icon tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></a>
+    <a class="nav-soc" href="https://www.instagram.com/landbound" target="_blank" rel="noopener"><div class="nav-soc-icon ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 11K</div></div></a>
+    <a class="nav-soc" href="https://www.linkedin.com/in/jacobtboehme" target="_blank" rel="noopener"><div class="nav-soc-icon li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></a>
+    <a class="nav-soc" href="https://www.imdb.com/name/nm13209955/" target="_blank" rel="noopener"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></a>
+  </div>
+  <div class="nav-bottom">
+    <div class="status"><div class="dot"></div> Available Now</div>
+    <div>Los Angeles, CA</div>
+  </div>
+</nav>
+
+<!-- ========== MAIN ========== -->
+<div class="main-page" id="main-view">
+  <!-- CLIENT STORIES (IG-style, rendered from data.js) -->
+  <div class="stories" id="workStories" style="margin-bottom: 20px;"></div>
+
+  <div class="filter-bar">
+    <div class="filter-label">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm3 5h12v2H6v-2zm4 5h4v2h-4v-2z"/></svg>
+      Filter
+    </div>
+    <div class="filter-opts">
+      <span class="opt active" data-filter="all">All</span>
+      <span class="opt-sep"></span>
+      <span class="opt" data-filter="direction">Direction</span>
+      <span class="opt-sep"></span>
+      <span class="opt" data-filter="vfx">VFX</span>
+      <span class="opt-sep"></span>
+      <span class="opt" data-filter="editing">Editing</span>
+      <span class="opt-sep"></span>
+      <span class="opt" data-filter="dp">DP</span>
+      <span class="opt-sep"></span>
+      <span class="opt" data-filter="commercial">Commercial</span>
+      <span class="opt-sep"></span>
+      <span class="opt opt-random" id="randomVideo" title="Surprise me">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        Random
+      </span>
+    </div>
+  </div>
+
+  <div class="yt">
+    <div class="main">
+      <div class="player">
+        <iframe id="mainPlayer" src="https://iframe.mediadelivery.net/embed/675985/e0374508-213f-47a2-ae0d-dd50d9df695d?autoplay=false&loop=false&muted=false&preload=true&responsive=true" title="Director's Reel" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <div class="meta">
+        <div class="title">Director's Reel</div>
+        <div class="sub"><strong>Landbound</strong> · Sizzle Reel · 2025</div>
+        <div class="actions">
+          <span class="chip amber">Director</span>
+          <span class="chip">VFX</span>
+          <span class="chip">Editor</span>
+          <span class="chip">DP</span>
+        </div>
+        <button class="share-link" id="shareLink" type="button" title="Copy a link to this video" style="margin-top:12px;display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;border:1px solid var(--line,#333);background:var(--bg-2,#1a1a1a);color:var(--text,#eee);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <span class="share-link-label">Copy link to this video</span>
+        </button>
+      </div>
+
+      <div class="credits">
+        <div class="row"><span class="k">Format</span><span class="v">Director sizzle</span></div>
+        <div class="row"><span class="k">Year</span><span class="v">2025</span></div>
+        <div class="row"><span class="k">Role</span><span class="v">Director</span></div>
+      </div>
+
+      <!-- WORK FEATURED — curated highlight reel under the player, styled like the
+           Allison episode drawer. Clicking a tile swaps the main player. -->
+      <div class="episode-drawer" id="workFeatured">
+        <div class="ed-head"><span class="ed-h">Work Featured</span></div>
+        <div class="ed-list" id="wfList"></div>
+      </div>
+
+      <!-- RELATED VERTICALS — surfaces verticals whose data.js relatedTo.embedId
+           matches the currently-active main player video. e.g. Forgive & Forget
+           gets Wire Removal + Ground Doesn't Want You under it. JS hides it when
+           no related verticals exist for the active video. -->
+      <div class="related-verticals" id="relatedVerticals" style="display:none;">
+        <div class="rv-head">Related verticals</div>
+        <div class="rv-strip" id="rvStrip"></div>
+      </div>
+
+      <!-- EPISODE DRAWER — appears when active video belongs to a playlist
+           (e.g. Allison Hagendorf Show). Lists all episodes; clicking swaps
+           the main player without re-rendering the page. -->
+      <div class="episode-drawer" id="episodeDrawer" style="display:none;">
+        <div class="ed-head">
+          <span class="ed-h" id="edHeading">Episodes</span>
+          <span class="ed-count" id="edCount"></span>
+        </div>
+        <div class="ed-list" id="edList"></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <!-- Verticals card with auto-cycling thumbnail (lazy + first 5s preview) -->
+      <div class="verticals-card" onclick="openShorts(0)">
+        <div class="vc-thumb" style="position:relative; overflow:hidden;">
+          <div class="vc-frames" id="vcFrames">
+            <!-- vc-frames rendered by JS — uses #t=0,5 media fragment for first-5s preview only -->
+          </div>
+          <div class="vc-overlay"></div>
+          <div class="vc-play">▶</div>
+        </div>
+        <div class="vc-info">
+          <div class="vc-tag">+ VERTICAL FEED</div>
+          <div class="vc-title">Verticals</div>
+          <div class="vc-meta">47 clips · 110M+ views</div>
+          <div class="vc-cta">OPEN SHORTS FEED →</div>
+        </div>
+      </div>
+
+      <div class="side-h">Up Next</div>
+      <div class="recs" id="recsMount"><!-- .rec items rendered by renderRecs() from VIDEOS --></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SHORTS OVERLAY ========== -->
+<div class="shorts" id="shorts">
+  <div class="shorts-topbar">
+    <button class="shorts-back" onclick="closeShorts()">← Back to Work</button>
+    <button class="shorts-menu" id="shortsMenu" aria-label="Show clip list">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+  </div>
+
+  <div class="shorts-stage">
+    <div class="phone" id="phoneScroll">
+      <!-- phone-slides rendered by renderShortsFeed() from window.VERTICALS -->
+    </div>
+    <div class="swipe-hint"><span>↑</span><span>↓</span></div>
+  </div>
+
+  <div class="shorts-rail">
+    <div class="cat-tabs cat-tabs-sticky">
+      <span class="cat-tab active" data-filter="all">All</span>
+      <span class="cat-tab" data-filter="vfx">VFX</span>
+      <span class="cat-tab" data-filter="bts">BTS</span>
+      <span class="cat-tab" data-filter="music">Music</span>
+      <span class="cat-tab" data-filter="commercial">Commercial</span>
+      <span class="cat-tab" data-filter="edits">Edits</span>
+      <span class="cat-tab cat-random" id="shortsRandom" title="Surprise me">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        Random
+      </span>
+    </div>
+    <div class="sr-h">// VERTICAL FEED</div>
+    <div class="sr-list">
+      <!-- sr-items rendered by renderShortsFeed() from window.VERTICALS -->
+    </div>
+  </div>
+</div>
+
+<button class="toggle-btn" onclick="openShorts()">↗ Open Verticals</button>
+
+<script src="/data.js?v=4"></script>
+<script>
+  // ============= WORK / YouTube — VIDEOS auto-populated from CLIENTS =============
+  // Auto-pulls horizontal (non-Vertical-tagged) video media from each client in
+  // data.js, prepended by Director's Reel and followed by in-progress placeholders.
+  // Add a video to a client's media[] in data.js → it shows up here automatically.
+  const VIDEOS = (function() {
+    const out = [];
+    // Director's Reel — Landbound's own sizzle, not in any client
+    out.push({
+      embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true,
+      title: "Director's Reel",
+      sub: '<strong>Landbound</strong> · Sizzle Reel · 2025',
+      chips: [['Director','amber'],['VFX',''],['Editor',''],['DP','']],
+      credits: [['Format','Director sizzle'],['Year','2025'],['Role','Director']],
+      dur: '02:14', filters: 'direction vfx editing dp',
+      meta: 'Landbound · Sizzle · 2025'
+    });
+    // Commercial Cinematography Reel — pinned SECOND (right after Director's Reel),
+    // and floats to the TOP when the DP / cinematography filter is selected.
+    out.push({
+      embedId: 'a134b54c-bd99-4a06-b275-a5362aea33ee', bunny: true,
+      title: 'Commercial Cinematography Reel',
+      sub: '<strong>Landbound</strong> · Cinematography Reel · 2025',
+      chips: [['DP','amber'],['Director',''],['Editor',''],['Commercial','']],
+      credits: [['Format','Cinematography reel'],['Year','2025'],['Role','Director of Photography']],
+      dur: '', filters: 'dp commercial direction editing', cineReel: true,
+      meta: 'Landbound · Cinematography · 2025'
+    });
+    // Pull horizontal videos out of every client. Verticals are excluded — they
+    // already live in the shorts feed. Videos with the same playlistId collapse
+    // into ONE Up-Next tile (the featured episode, falling back to first), with
+    // the rest surfaced as an episode drawer when that card is active.
+    const playlistGroups = new Map(); // playlistId -> { featured, members: [] }
+    if (window.CLIENTS) {
+      window.CLIENTS.forEach(c => {
+        (c.media || []).filter(m => {
+          if (m.type !== 'video') return false;
+          const tags = m.tags || [];
+          if (tags.includes('Vertical')) return false;
+          // Skip any client copy of the Director's Reel — it's already pinned first.
+          if (m.embedId === 'e0374508-213f-47a2-ae0d-dd50d9df695d') return false;
+          return true;
+        }).forEach(m => {
+          const tags = m.tags || [];
+          const buildEntry = () => ({
+            embedId: m.embedId, bunny: !!m.bunny,
+            title: m.title,
+            sub: m.sub || ('<strong>' + c.name + '</strong> · ' + (m.guest ? ('Guest: ' + m.guest) : 'Music Video') + ' · ' + (m.year || '')),
+            chips: tags.map((t, i) => [t, i < 2 ? 'amber' : '']),
+            // Per-project override (data.js media.credits) wins; otherwise show
+            // the artist, the year, and HIS MAIN ROLE — not "Crew: Jacob Boehme",
+            // which read like he was the whole crew.
+            credits: m.credits || [
+              ['Artist', '<strong>' + c.name + '</strong>'],
+              ['Released', m.year || ''],
+              ['Role', '<strong>' + ((m.tags && m.tags[0]) || 'Director') + '</strong>']
+            ],
+            dur: m.dur || '',
+            filters: tags.map(t => t.toLowerCase().replace(/[^a-z]/g, '')).join(' '),
+            meta: (c.short || c.name) + ' · ' + tags.slice(0, 4).map(t => t.toUpperCase()).join(' + ') + ' · ' + (m.year || ''),
+            guest: m.guest || null,
+            playlistId: m.playlistId || null
+          });
+          const entry = buildEntry();
+          if (m.playlistId) {
+            const g = playlistGroups.get(m.playlistId) || { featured: null, members: [], client: c };
+            g.members.push(entry);
+            if (m.featured || !g.featured) g.featured = entry;
+            playlistGroups.set(m.playlistId, g);
+          } else {
+            out.push(entry);
+          }
+        });
+      });
+    }
+    // Surface one card per playlist — the featured episode, with the full
+    // episode list attached so the renderer can build a drawer below the player.
+    playlistGroups.forEach((g, id) => {
+      // Grace show: NO grouped 2x2 tile/badge (only Allison gets that). Each
+      // longform is its own Up Next rec but carries `siblings` so it recommends
+      // the other Grace videos beneath it when played.
+      if (id === 'grace-show') {
+        g.members.forEach(m => {
+          const e = Object.assign({}, m);
+          e.siblings = g.members;
+          e.playlistLabel = g.client.name;
+          out.push(e);
+        });
+        return;
+      }
+      const tile = Object.assign({}, g.featured);
+      tile.playlistMembers = g.members;
+      tile.title = g.client.name + ' Show — ' + g.members.length + ' episodes';
+      tile.sub = (g.featured.guest ? '<strong>' + g.client.name + '</strong> · Featured guest: ' + g.featured.guest + ' · ' + (g.featured && g.featured.title ? '' : '') : '<strong>' + g.client.name + '</strong>') + ' · ' + g.members.length + ' episodes';
+      tile.meta = g.client.short + ' · ' + g.members.length + ' EPISODES · 2024';
+      out.push(tile);
+    });
+    // (Removed The First Circle / Super Bowl Spot / Dreams placeholders —
+    // Up Next now only carries entries with real Bunny or YouTube embeds.)
+    // Shuffle on each page load so Up Next varies between visits. The first two
+    // (Director's Reel + Commercial Cinematography Reel) stay pinned at the top.
+    const pinned = out.splice(0, 2);
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    out.unshift(...pinned);
+    return out;
+  })();
+
+  // Render the .recs sidebar from VIDEOS
+  function renderRecs() {
+    const mount = document.getElementById('recsMount');
+    if (!mount) return;
+    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+    // Mobile Safari can't afford ~17 decoding <video> thumbnails at once — it
+    // crashes. On mobile we render still images for the Up Next previews instead.
+    const IS_MOBILE = navigator.maxTouchPoints > 1 || /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
+    // CHILDSTAR + Secrets thumbnails 404 on Bunny's public CDN even after
+    // re-uploading. Hard-overrides point to the released YouTube thumbnails
+    // until/unless Bunny's storage is rebuilt for those two videos.
+    const THUMB_OVERRIDES = {
+      'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
+      'b58d5348-c997-4338-8a9d-f83302bf948a': '/photos/stills/secrets.png',
+      // Bleed: rendered via DARK_THUMB_SEEK (static seeked frame). This animated
+      // preview.webp is kept ONLY as the error fallback if that video can't load.
+      '9e6f327c-1d83-4545-b88c-3193d7dd4274': 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/preview.webp'
+    };
+    // Bunny videos whose auto-generated first-frame thumbnail.jpg is basically
+    // pure black (fade-from-black openings, dark plates, letterboxed gates).
+    // For these, we skip thumbnail.jpg entirely and use the video itself with
+    // preload="metadata" + #t=N seconds, so the browser displays a seeked
+    // frame as the static poster. Map value is the seek time in seconds —
+    // tune per clip to land on a bright, representative frame. Add a GUID
+    // here when a new dark-opening video joins the list.
+    const DARK_THUMB_SEEK = {
+      'e0374508-213f-47a2-ae0d-dd50d9df695d': 6,  // Director's Reel — past dim theater into sizzle cuts
+      '35ae0a01-878d-49b7-b0d7-3b7cc3e10bb3': 8,  // Bby — past fade-from-black into the drumkit shot
+      '9e6f327c-1d83-4545-b88c-3193d7dd4274': 5   // Bleed — past the black fade-in (static frame, no animation)
+    };
+    // Some Bunny clips only finished a single low rendition. play_720p.mp4 404s
+    // for these (→ thumbnail falls back to the animated webp), so pin the
+    // resolution that actually exists. 240p is sharp enough for a 120px tile.
+    const SEEK_RES = {
+      '9e6f327c-1d83-4545-b88c-3193d7dd4274': '240p'  // Bleed — only 240p exists
+    };
+    // Helper — resolve the thumb URL for a single video entry
+    function thumbFor(v) {
+      const override = v.embedId ? THUMB_OVERRIDES[v.embedId] : null;
+      if (override) return override;
+      if (v.embedId && v.bunny)  return 'https://' + CDN + '/' + v.embedId + '/thumbnail.jpg';
+      if (v.embedId && !v.bunny) return 'https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg';
+      return null;
+    }
+    mount.innerHTML = VIDEOS.map((v, i) => {
+      const isPlaylist = !!(v.playlistMembers && v.playlistMembers.length > 1);
+      let thumbHTML;
+      if (isPlaylist) {
+        // 2x2 grid: first 3 episode thumbs + a "+N" cell when there are more
+        const eps = v.playlistMembers;
+        const cells = [];
+        for (let k = 0; k < 3 && k < eps.length; k++) {
+          const t = thumbFor(eps[k]);
+          cells.push('<div class="pl-cell" style="background-image:url(\'' + t + '\');"></div>');
+        }
+        if (eps.length > 3) {
+          cells.push('<div class="pl-cell pl-more">' + (eps.length - 3) + ' more</div>');
+        } else if (eps.length === 3) {
+          // Fill the 4th cell with the featured thumb so the grid stays full
+          cells.push('<div class="pl-cell" style="background-image:url(\'' + thumbFor(eps[0]) + '\');"></div>');
+        }
+        thumbHTML = '<div class="rec-thumb is-playlist" data-dur="' + (v.dur || '') + '">'
+                  + '<div class="pl-grid">' + cells.join('') + '</div>'
+                  + '<span class="rec-playlist-badge">▶ Playlist · ' + eps.length + '</span>'
+                  + '</div>';
+      } else {
+        if (v.embedId && v.bunny && THUMB_OVERRIDES[v.embedId] && DARK_THUMB_SEEK[v.embedId] == null) {
+          // Reliable still override (CHILDSTAR / Secrets) — a seeked video frame
+          // won't paint for these, so use the image directly. Videos that ALSO
+          // appear in DARK_THUMB_SEEK (e.g. Bleed) fall through to the seek
+          // branch instead, using the override only as an error fallback.
+          thumbHTML = '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + THUMB_OVERRIDES[v.embedId] + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>';
+        } else if (v.embedId && v.bunny) {
+          // Bunny rec: a muted <video> paints a STATIC seeked frame at rest (no
+          // animation), and on hover plays a multi-point scrub preview (a few
+          // seconds at ~10s / 1m / 3m / etc., scaled to the clip's duration).
+          // Falls back to a still image if the video element errors out.
+          const mp4   = 'https://' + CDN + '/' + v.embedId + '/play_' + (SEEK_RES[v.embedId] || '720p') + '.mp4';
+          const seekT = DARK_THUMB_SEEK[v.embedId];
+          const fb    = THUMB_OVERRIDES[v.embedId] || ('https://' + CDN + '/' + v.embedId + '/thumbnail.jpg');
+          if (IS_MOBILE) {
+            // No <video> on mobile — use a still thumbnail to avoid the crash.
+            const mt = (window.bunnyThumb ? window.bunnyThumb(v.embedId) : fb);
+            thumbHTML = '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + mt + '" alt="" loading="lazy" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>';
+            return '<div class="rec' + (i === 0 ? ' active' : '') + ((v.embedId === 'e0374508-213f-47a2-ae0d-dd50d9df695d') ? ' rec-pinned' : '') + '" data-filters="' + (v.filters || '') + '"' + (v.cineReel ? ' data-cine="1"' : '') + '>' + thumbHTML + '<div class="rec-info"><div class="rec-title">' + v.title + '</div><div class="rec-meta">' + (v.meta || '') + '</div></div></div>';
+          }
+          thumbHTML = '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;">'
+            + '<video class="rec-prev" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true"'
+            + (seekT != null ? ' data-seek="' + seekT + '"' : '')
+            + ' src="' + mp4 + (seekT != null ? '#t=' + seekT : '') + '"'
+            + ' style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"'
+            + ' onerror="this.outerHTML=\'<img src=&quot;' + fb + '&quot; alt=&quot;&quot; style=&quot;position:relative;width:100%;height:100%;object-fit:cover;display:block;&quot;>\'"></video>'
+            + '</div>';
+        } else {
+          const thumb = thumbFor(v);
+          thumbHTML = thumb
+            ? '<div class="rec-thumb" data-dur="' + (v.dur || '') + '" style="background:#000; overflow:hidden;"><img src="' + thumb + '" alt="" style="position:relative; width:100%; height:100%; object-fit:cover; display:block;"></div>'
+            : '<div class="rec-thumb ' + (v.palette || '') + '" data-dur="' + (v.dur || '') + '"></div>';
+        }
+      }
+      const playlistCls = isPlaylist ? ' is-playlist' : '';
+      const pinnedCls = (v.embedId === 'e0374508-213f-47a2-ae0d-dd50d9df695d') ? ' rec-pinned' : '';
+      return '<div class="rec' + (i === 0 ? ' active' : '') + pinnedCls + playlistCls + '" data-filters="' + (v.filters || '') + '"' + (v.cineReel ? ' data-cine="1"' : '') + '>' + thumbHTML + (pinnedCls ? '<span class="rec-pin">📌</span>' : '') + '<div class="rec-info"><div class="rec-title">' + v.title + '</div><div class="rec-meta">' + (v.meta || '') + '</div></div></div>';
+    }).join('');
+    // Each Up Next preview shows a STATIC seeked frame at rest and, on hover,
+    // plays a multi-point scrub — a couple seconds at ~10s / 1m / 3m / etc.,
+    // scaled to the clip's real duration so short clips just use spread points.
+    mount.querySelectorAll('video.rec-prev').forEach(vid => {
+      const tunedT = (vid.dataset.seek != null && vid.dataset.seek !== '') ? parseFloat(vid.dataset.seek) : null;
+      function staticFrame() {
+        try {
+          const d = vid.duration || 0;
+          let t = (tunedT != null) ? tunedT : (d ? d * 0.2 : 2);
+          if (d) t = Math.min(t, d - 0.1);
+          vid.currentTime = Math.max(0.05, t);
+        } catch (_) {}
+      }
+      function scrubPoints() {
+        const d = vid.duration || 0;
+        if (!d) return [];
+        const marks = [10, 60, 180, 300, 420].filter(t => t < d - 2);
+        if (marks.length >= 2) return marks;
+        return [0.15, 0.45, 0.75].map(f => +(d * f).toFixed(1)).filter(t => t > 0.3 && t < d - 0.4);
+      }
+      let hop = null, idx = 0;
+      function startHover() {
+        const pts = scrubPoints();
+        idx = 0;
+        if (!pts.length) { vid.play().catch(() => {}); return; }
+        const step = () => {
+          try { vid.currentTime = pts[idx]; } catch (_) {}
+          vid.play().catch(() => {});
+          idx = (idx + 1) % pts.length;
+          hop = setTimeout(step, 2200);
+        };
+        step();
+      }
+      function stopHover() {
+        if (hop) { clearTimeout(hop); hop = null; }
+        vid.pause();
+        staticFrame();
+      }
+      if (vid.readyState >= 1) staticFrame();
+      else vid.addEventListener('loadedmetadata', staticFrame, { once: true });
+      const card = vid.closest('.rec');
+      if (card) {
+        card.addEventListener('mouseenter', startHover);
+        card.addEventListener('mouseleave', stopHover);
+      }
+    });
+  }
+  renderRecs();
+
+  const recs = document.querySelectorAll('.rec');
+    const titleEl = document.querySelector('.meta .title');
+  const subEl = document.querySelector('.meta .sub');
+  const actionsEl = document.querySelector('.meta .actions');
+  const creditsEl = document.querySelector('.credits');
+  
+  const mainPlayer = document.getElementById('mainPlayer');
+
+  // Shared player-swap routine — reused by Up Next clicks AND by episode-drawer
+  // clicks so playing an episode keeps the right surrounding chrome in sync.
+  // ---- Clean, title-based deep links --------------------------------------
+  // Videos are shared as work.html#<slug-of-title> (e.g. #commercial-
+  // cinematography-reel) instead of a raw GUID, so the URLs are tidy and
+  // readable. Maps are seeded from the Up Next list + every episode so a
+  // shared link still resolves after a fresh page load; each played clip is
+  // also registered on the fly as a safety net.
+  const SLUG_TO_ID = {};
+  const ID_TO_SLUG = {};
+  function slugify(s) {
+    return String(s || '')
+      .replace(/<[^>]*>/g, '')                 // strip any HTML
+      .replace(/&amp;/g, ' and ').replace(/&/g, ' and ')
+      .toLowerCase()
+      .replace(/[’'.]/g, '')                   // drop apostrophes / periods
+      .replace(/[^a-z0-9]+/g, '-')             // everything else -> hyphen
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60).replace(/-+$/, '');
+  }
+  function registerVid(id, title) {
+    if (!id) return null;
+    if (ID_TO_SLUG[id]) return ID_TO_SLUG[id];
+    let base = slugify(title) || 'video';
+    let slug = base, n = 2;
+    while (SLUG_TO_ID[slug] && SLUG_TO_ID[slug] !== id) { slug = base + '-' + n; n++; }
+    SLUG_TO_ID[slug] = id; ID_TO_SLUG[id] = slug;
+    return slug;
+  }
+  VIDEOS.forEach(v => {
+    registerVid(v.embedId, v.title);
+    (v.siblings || []).forEach(ep => registerVid(ep.embedId, ep.title));
+    (v.playlistMembers || []).forEach(ep => registerVid(ep.embedId, ep.title));
+  });
+  registerVid('b054d114-131a-479e-88b2-184bdcb39600', 'Proud'); // Work Featured-only vertical
+
+  // Expose a flat list of every shareable video (Up Next + episodes) so the
+  // static /work/<slug> watch pages can be generated from the same source of
+  // truth. Harmless debug global.
+  try {
+    const _seen = {};
+    window.__WATCHDATA = [];
+    const _pushW = (v) => {
+      if (!v || !v.embedId || _seen[v.embedId]) return;
+      _seen[v.embedId] = 1;
+      window.__WATCHDATA.push({
+        slug: ID_TO_SLUG[v.embedId] || registerVid(v.embedId, v.title),
+        embedId: v.embedId, bunny: !!v.bunny, title: v.title || '',
+        sub: v.sub || '', chips: v.chips || [], credits: v.credits || [],
+        thumb: v.bunny
+          ? (window.bunnyThumb ? window.bunnyThumb(v.embedId) : ('https://vz-5dfccea4-b84.b-cdn.net/' + v.embedId + '/thumbnail.jpg'))
+          : ('https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg')
+      });
+    };
+    VIDEOS.forEach(v => { _pushW(v); (v.siblings || []).forEach(_pushW); (v.playlistMembers || []).forEach(_pushW); });
+  } catch (e) {}
+
+  // Tracks the embedId currently in the main player so the "Copy link" button
+  // and address bar always point at what's actually playing. Seeded with the
+  // default Director's Reel below.
+  let currentEmbedId = 'e0374508-213f-47a2-ae0d-dd50d9df695d';
+  function playVideo(v) {
+    if (!v) return;
+    if (v.embedId && mainPlayer) {
+      if (v.bunny) {
+        mainPlayer.src = `https://iframe.mediadelivery.net/embed/675985/${v.embedId}?autoplay=true&preload=true&responsive=true`;
+      } else {
+        mainPlayer.src = `https://www.youtube.com/embed/${v.embedId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1`;
+      }
+      mainPlayer.title = v.title;
+      currentEmbedId = v.embedId;
+      // Reflect the playing video in the URL with a clean title slug so it can
+      // be copied/shared (e.g. work.html#commercial-cinematography-reel).
+      const slug = registerVid(v.embedId, v.title) || v.embedId;
+      try { history.replaceState(null, '', '/work/' + slug); } catch (e) {}
+    }
+    titleEl.innerHTML = v.title;
+    subEl.innerHTML = v.sub;
+    actionsEl.innerHTML = v.chips.map(([t, cls]) => `<span class="chip ${cls}">${t}</span>`).join('');
+    creditsEl.innerHTML = v.credits.map(([k, val]) => `<div class="row"><span class="k">${k}</span><span class="v">${val}</span></div>`).join('');
+    renderRelatedVerticals(v.embedId);
+    // Work Featured strip belongs ONLY under the default Director's Reel — hide it
+    // whenever another video is playing so it doesn't bleed over the episode drawer.
+    const wf = document.getElementById('workFeatured');
+    if (wf) wf.style.display = (v.embedId === 'e0374508-213f-47a2-ae0d-dd50d9df695d') ? '' : 'none';
+  }
+  window.__playVideo = playVideo;
+
+  // "Copy link to this video" — writes a #video/<embedId> deep link to the
+  // clipboard so a specific Work video can be shared, not just the page.
+  const shareLinkBtn = document.getElementById('shareLink');
+  if (shareLinkBtn) {
+    const labelEl = shareLinkBtn.querySelector('.share-link-label');
+    shareLinkBtn.addEventListener('click', async () => {
+      const slug = ID_TO_SLUG[currentEmbedId] || currentEmbedId || '';
+      // Clean, real, shareable page: landbound.mov/work/<slug>
+      const url = location.origin + '/work/' + slug;
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch (_) {}
+        ta.remove();
+      }
+      if (labelEl) {
+        const prev = labelEl.textContent;
+        labelEl.textContent = 'Link copied ✓';
+        shareLinkBtn.style.borderColor = 'var(--accent, #46c8d8)';
+        setTimeout(() => { labelEl.textContent = prev; shareLinkBtn.style.borderColor = ''; }, 1700);
+      }
+    });
+  }
+
+  recs.forEach((rec, i) => {
+    rec.addEventListener('click', () => {
+      const v = VIDEOS[i];
+      if (!v) return;
+      recs.forEach(r => r.classList.remove('active'));
+      rec.classList.add('active');
+      playVideo(v);
+      renderEpisodeDrawer(v);
+      document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  // Episode drawer — populated when the active video carries playlistMembers.
+  // Clicking an episode tile swaps the main player without re-rendering. The
+  // active episode gets an amber inset ring so users see what's playing.
+  function renderEpisodeDrawer(v) {
+    const wrap = document.getElementById('episodeDrawer');
+    const head = document.getElementById('edHeading');
+    const cnt  = document.getElementById('edCount');
+    const list = document.getElementById('edList');
+    if (!wrap || !head || !list) return;
+    // Allison uses playlistMembers (grouped show); Grace longforms carry
+    // `siblings` (recommend the others, no grouped tile). Active video excluded.
+    const members = (v.playlistMembers || v.siblings || []).filter(ep => ep.embedId !== v.embedId);
+    if (!members.length) {
+      wrap.style.display = 'none';
+      return;
+    }
+    wrap.style.display = '';
+    head.textContent = v.playlistLabel
+      ? 'More from ' + v.playlistLabel
+      : (v.title.split('—')[0] || 'Episodes').trim() + ' — episodes';
+    cnt.textContent = members.length + (v.playlistLabel ? ' videos' : ' episodes');
+    list.innerHTML = members.map(ep => {
+      const thumb = ep.bunny
+        ? (window.bunnyThumb ? window.bunnyThumb(ep.embedId) : 'https://vz-5dfccea4-b84.b-cdn.net/' + ep.embedId + '/thumbnail.jpg')
+        : 'https://img.youtube.com/vi/' + ep.embedId + '/maxresdefault.jpg';
+      const guestChip = ep.guest ? '<span class="ed-guest">' + ep.guest + '</span>' : '';
+      return ''
+        + '<a class="ed-tile" data-embed="' + ep.embedId + '" data-bunny="' + (ep.bunny ? '1' : '0') + '">'
+        +   '<div class="ed-thumb" style="background-image:url(\'' + thumb + '\');">' + guestChip + '</div>'
+        +   '<div class="ed-title">' + (ep.title.replace(/^[^—]+—\s*/, '')) + '</div>'
+        + '</a>';
+    }).join('');
+    list.querySelectorAll('.ed-tile').forEach(tile => {
+      tile.addEventListener('click', () => {
+        const embedId = tile.dataset.embed;
+        const ep = members.find(e => e.embedId === embedId);
+        if (!ep) return;
+        // Carry the show/sibling context forward so the drawer keeps recommending.
+        const epCtx = Object.assign({}, ep, { siblings: v.siblings, playlistMembers: v.playlistMembers, playlistLabel: v.playlistLabel });
+        playVideo(epCtx);
+        renderEpisodeDrawer(epCtx);
+        document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  }
+  // Initial render — if the default-active video is a playlist, build the drawer
+  renderEpisodeDrawer(VIDEOS[0]);
+
+  // ===== WORK FEATURED — curated highlight strip under the player (Allison format) =====
+  const WF_IDS = [
+    '9e6f327c-1d83-4545-b88c-3193d7dd4274', // Bleed
+    'd097b1a0-4ce4-48c1-83d9-62275775e699', // Fade (Grace)
+    'b054d114-131a-479e-88b2-184bdcb39600', // Proud (Grace)
+    'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', // CHILDSTAR: Final Act (Grace — recommends others)
+    '4f84800d-811b-4218-83a4-56880a993486', // Broken Wings
+    'ae99920a-46b4-4765-9c3b-408a23eb8508', // Claudia Live Performance
+    'b58d5348-c997-4338-8a9d-f83302bf948a'  // Secrets
+  ];
+  // Proud is a vertical (not in the Up Next VIDEOS list) — minimal play entry.
+  const WF_FALLBACK = {
+    'b054d114-131a-479e-88b2-184bdcb39600': { embedId: 'b054d114-131a-479e-88b2-184bdcb39600', bunny: true, title: 'Proud', sub: '<strong>Grace VanderWaal</strong> · Performance · 2024', chips: [['Director','amber'],['Editor','']], credits: [['Artist','<strong>Grace VanderWaal</strong>'],['Released','2024'],['Role','<strong>Director</strong>']] }
+  };
+  function wfThumb(v) { return v.bunny ? (window.bunnyThumb ? window.bunnyThumb(v.embedId) : 'https://vz-5dfccea4-b84.b-cdn.net/' + v.embedId + '/thumbnail.jpg') : 'https://img.youtube.com/vi/' + v.embedId + '/maxresdefault.jpg'; }
+  function wfEntry(id) { return VIDEOS.find(x => x.embedId === id) || WF_FALLBACK[id]; }
+  function renderWorkFeatured() {
+    const mount = document.getElementById('wfList');
+    if (!mount) return;
+    mount.innerHTML = WF_IDS.map(id => {
+      const v = wfEntry(id); if (!v) return '';
+      return '<a class="ed-tile" data-embed="' + id + '"><div class="ed-thumb" style="background-image:url(\'' + wfThumb(v) + '\');"></div><div class="ed-title">' + (v.title || '') + '</div></a>';
+    }).join('');
+    mount.querySelectorAll('.ed-tile').forEach(tile => {
+      tile.addEventListener('click', () => {
+        const v = wfEntry(tile.dataset.embed); if (!v) return;
+        playVideo(v);
+        renderEpisodeDrawer(v);
+        document.querySelector('.player').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  }
+  renderWorkFeatured();
+
+  // Render verticals whose data.js relatedTo.embedId matches the current
+  // main-player video. Hides the section when nothing matches.
+  function renderRelatedVerticals(activeEmbedId) {
+    const wrap  = document.getElementById('relatedVerticals');
+    const strip = document.getElementById('rvStrip');
+    if (!wrap || !strip || !window.VERTICALS) return;
+    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+    const matches = window.VERTICALS
+      .map((v, idx) => ({ v, idx }))
+      .filter(({ v }) => v.relatedTo && v.relatedTo.embedId === activeEmbedId);
+    if (!matches.length) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    strip.innerHTML = matches.map(({ v, idx }) => {
+      const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+      const cap = v.label || v.title || '';
+      return ''
+        + '<a class="rv-tile" href="#shorts/' + idx + '" onclick="openShorts(' + idx + ');return false;" style="background-image:url(\'' + thumb + '\');">'
+        +   '<div class="rv-overlay"></div>'
+        +   '<div class="rv-cap">' + cap + '</div>'
+        + '</a>';
+    }).join('');
+  }
+  // Initial render for whatever's loaded by default (CHILDSTAR sizzle reel)
+  renderRelatedVerticals('e0374508-213f-47a2-ae0d-dd50d9df695d');
+
+  // ============= FILTER BAR =============
+  (function() {
+    const filterOpts = document.querySelectorAll('.opt[data-filter]');
+    const allRecs = document.querySelectorAll('.rec');
+    filterOpts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        filterOpts.forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        const f = opt.dataset.filter;
+        allRecs.forEach(rec => {
+          if (f === 'all') {
+            rec.style.display = '';
+          } else {
+            const tags = (rec.dataset.filters || '').split(' ');
+            rec.style.display = tags.includes(f) ? '' : 'none';
+          }
+        });
+        // Cinematography category (DP) → float the Commercial Cinematography Reel
+        // to the very top; otherwise keep it pinned in second place.
+        const mount = document.getElementById('recsMount');
+        const cine = mount && mount.querySelector('.rec[data-cine]');
+        if (mount && cine) {
+          if (f === 'dp') {
+            mount.insertBefore(cine, mount.firstChild);
+          } else {
+            const first = mount.firstElementChild;
+            if (first && first !== cine && first.nextElementSibling !== cine) mount.insertBefore(cine, first.nextElementSibling);
+          }
+        }
+        // Mobile only: a category filter TAKES OVER the view — hide the player and
+        // pull that category's videos to the top so the filter is obvious feedback.
+        // (Desktop keeps the existing in-place show/hide.)
+        if (window.matchMedia('(max-width: 820px)').matches) {
+          document.body.classList.toggle('work-filter-active', f !== 'all');
+          if (f !== 'all') window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
+    // Tapping any result exits the mobile filter-takeover (returns to the player).
+    const recsMountEl = document.getElementById('recsMount');
+    if (recsMountEl) recsMountEl.addEventListener('click', () => {
+      document.body.classList.remove('work-filter-active');
+    });
+    // Random button — pick a playable VIDEOS entry (with embedId) at random and
+    // simulate a click on the matching .rec so the main player swaps. Skipping
+    // entries without embedId keeps it from landing on a gradient placeholder.
+    const randomBtn = document.getElementById('randomVideo');
+    if (randomBtn) {
+      randomBtn.addEventListener('click', () => {
+        const playable = VIDEOS
+          .map((v, i) => ({ v, i }))
+          .filter(({ v }) => !!v.embedId);
+        if (!playable.length) return;
+        const pick = playable[Math.floor(Math.random() * playable.length)];
+        const rec = allRecs[pick.i];
+        if (rec) rec.click();
+      });
+    }
+  })();
+
+  // Make .player .frame respect dynamic palette class (mirror .g1..g8 gradients)
+  const styles = document.createElement('style');
+  styles.textContent = `
+    .player .frame.g1 { background: linear-gradient(135deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); opacity: 0.55; }
+    .player .frame.g2 { background: linear-gradient(160deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); opacity: 0.55; }
+    .player .frame.g3 { background: linear-gradient(45deg, #0a0806 0%, #2a1810 50%, #a82828 100%); opacity: 0.55; }
+    .player .frame.g4 { background: linear-gradient(180deg, #1f2a18 0%, #4a6a2a 60%, #c5e060 100%); opacity: 0.55; }
+    .player .frame.g5 { background: linear-gradient(120deg, #100808 0%, #3a1410 60%, var(--amber) 100%); opacity: 0.55; }
+    .player .frame.g6 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); opacity: 0.55; }
+    .player .frame.g7 { background: linear-gradient(180deg, #2a2018 0%, #b08040 100%); opacity: 0.55; }
+    .player .frame.g8 { background: linear-gradient(200deg, #1a0a0a 0%, #5a2a10 50%, #ff5f57 100%); opacity: 0.55; }
+  `;
+  document.head.appendChild(styles);
+
+  // ============= SHORTS FEED — render from VERTICALS in data.js =============
+  // Single source of truth: window.VERTICALS. Adding a vertical there auto-builds
+  // both the phone-slide (with Bunny MP4) and the sidebar sr-item (with thumbnail).
+  function renderShortsFeed() {
+    const phoneMount = document.getElementById('phoneScroll');
+    const railMount = document.querySelector('.shorts-rail .sr-list');
+    const counter = document.querySelector('.shorts-rail .sr-h');
+    if (!phoneMount || !railMount || !window.VERTICALS) return;
+    const verts = window.VERTICALS;
+    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+
+    const muteIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+    const playIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>';
+
+    phoneMount.innerHTML = verts.map((v, i) => {
+      const c = window.clientById ? window.clientById(v.client) : null;
+      const clientName = c ? c.name : (v.client || '');
+      const mp4 = 'https://' + CDN + '/' + v.guid + '/play_720p.mp4';
+      const thumb = 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+      // poster + data-vsrc + preload=none — actual MP4 is fetched lazily by the
+      // IntersectionObserver below when the slide enters view. Loading 10 MP4s
+      // up-front froze the renderer.
+      // VFX flag — slide qualifies as #vfx if either the role line or the tag
+      // list mentions VFX. The vfx-ai page reads this same flag to build its strip.
+      const isVfx = ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx');
+      // IG-style overlay extras — only render when the data is present so we
+      // never show placeholder dashes. Views go in the caption meta line, AI
+      // note + Related-film chip slot in next to it. Likes float over the heart.
+      const metaBits = [];
+      if (v.views)  metaBits.push('<span class="po-views">' + v.views + ' views</span>');
+      if (v.aiNote) metaBits.push('<span class="po-ai">' + v.aiNote + '</span>');
+      if (v.relatedTo && v.relatedTo.embedId) {
+        metaBits.push('<a class="po-related" href="/work/#video/' + v.relatedTo.embedId + '">From ' + v.relatedTo.label + ' ↗</a>');
+      }
+      const metaLine = metaBits.length ? '<div class="po-meta">' + metaBits.join('') + '</div>' : '';
+      const captionLine = v.caption ? '<div class="po-caption">' + v.caption + '</div>' : '';
+      const likesChip = v.likes ? '<span class="pa-lbl">' + v.likes + '</span>' : '';
+      return `
+      <div class="phone-slide" data-clip="${i}" data-type="${v.type || ''}" data-vfx="${isVfx ? '1' : '0'}" style="background: #000;">
+        <video id="phone-video-${i}" class="phone-video" data-bunny-guid="${v.guid}" data-vsrc="${mp4}" poster="${thumb}" loop muted playsinline preload="none" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000; z-index:1;"></video>
+        <button class="phone-tap" data-slide-idx="${i}" aria-label="Toggle play/pause"></button>
+        <div class="phone-controls">
+          <button class="phone-ctl" data-action="mute" data-slide-idx="${i}" aria-label="Toggle mute">${muteIcon}</button>
+          <button class="phone-ctl primary" data-action="play" data-slide-idx="${i}" aria-label="Play/pause">${playIcon}</button>
+        </div>
+        <div class="phone-overlay">
+          <div class="po-credit-tag">${v.tag || ''}</div>
+          <div class="po-title">${v.title || ''}</div>
+          <div class="po-credits"><a href="/client?id=${v.client}" style="color:inherit; text-decoration:none;"><strong>${clientName}</strong></a><br>${v.role || ''}</div>
+          ${captionLine}
+          ${metaLine}
+          <div class="po-music">${v.music || ''}</div>
+        </div>
+        <div class="phone-actions">
+          <div class="pa"><div class="pa-icon heart">♥</div>${likesChip}</div>
+          <div class="pa"><div class="pa-icon">💬</div></div>
+          <div class="pa"><div class="pa-icon">↗</div></div>
+          <div class="pa"><div class="pa-icon">♫</div></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    railMount.innerHTML = verts.map((v, i) => {
+      const thumb = window.bunnyThumb ? window.bunnyThumb(v.guid) : 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+      const num = String(i + 1).padStart(2, '0');
+      const isVfxRail = ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx');
+      // Where thumbnail.jpg 404s, bunnyThumb falls back to an ANIMATED preview.webp.
+      // Render a muted <video> seeked to a still frame for those so the rail
+      // doesn't loop; the working (still) thumbnails stay lightweight <img>.
+      const animated = /preview\.webp/.test(thumb);
+      const inner = animated
+        ? `<video class="sr-vid" src="https://${CDN}/${v.guid}/play_720p.mp4" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" style="width:100%; height:100%; object-fit:cover; display:block;" onerror="this.outerHTML='<img src=&quot;${thumb}&quot; style=&quot;width:100%;height:100%;object-fit:cover;&quot;>'"></video>`
+        : `<img src="${thumb}" alt="" style="width:100%; height:100%; object-fit:cover;">`;
+      return `
+      <div class="sr-item${i === 0 ? ' active' : ''}" data-type="${v.type || ''}" data-vfx="${isVfxRail ? '1' : '0'}">
+        <div class="sr-num">${num}</div>
+        <div class="sr-thumb" style="background:#000; overflow:hidden;">
+          ${inner}
+        </div>
+        <div class="sr-info">
+          <div class="sr-title">${v.title || ''}</div>
+          <div class="sr-meta">${v.tag || ''}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Paint a static seeked frame for the rail's fallback videos (no animation).
+    railMount.querySelectorAll('video.sr-vid').forEach(vid => {
+      const go = () => { try { const d = vid.duration || 0; vid.currentTime = d ? Math.min(d * 0.2, d - 0.1) : 2; } catch (_) {} };
+      if (vid.readyState >= 1) go(); else vid.addEventListener('loadedmetadata', go, { once: true });
+    });
+
+    if (counter) counter.textContent = '// VERTICAL FEED — ' + verts.length + ' CLIPS';
+  }
+  renderShortsFeed();
+
+  // ============= SHORTS — TikTok-style scroll =============
+  function openShorts(slideIdx) {
+    document.getElementById('shorts').classList.add('open');
+    // Reset rail-scroll guard so the first IO firing actually scrolls the rail
+    window.__lastActiveSrIdx = -1;
+    // Scroll to target slide and explicitly start the video. We use <video>
+    // elements, not iframes — dead postMessage code removed.
+    setTimeout(() => {
+      const targetIdx = (typeof slideIdx === 'number') ? slideIdx : 0;
+      const targetSlide = document.querySelectorAll('.phone-slide')[targetIdx];
+      const scroller = document.getElementById('phoneScroll');
+      if (!targetSlide || !scroller) return;
+      // Hard-jump (no smooth) — first navigation should land instantly, the
+      // IntersectionObserver does the rest from there.
+      scroller.scrollTo({ top: targetSlide.offsetTop, behavior: 'auto' });
+      const vid = targetSlide.querySelector('video.phone-video');
+      if (vid && !vid.src && vid.dataset.vsrc) {
+        vid.src = vid.dataset.vsrc;
+        vid.load();
+      }
+      if (vid) vid.play().catch(() => {});
+    }, 80);
+  }
+  function closeShorts() {
+    // If came from home (referrer is index.html) and hash is #shorts → return home
+    const cameFromHome = window.location.hash === '#shorts' &&
+                         (document.referrer.endsWith('/') || document.referrer.includes('index.html'));
+    if (cameFromHome) {
+      window.location.href = '/';
+      return;
+    }
+    document.getElementById('shorts').classList.remove('open');
+    // Pause every video so they stop chewing bandwidth in the background
+    document.querySelectorAll('video.phone-video').forEach(v => { try { v.pause(); } catch (_) {} });
+    if (window.location.hash === '#shorts') {
+      history.replaceState(null, '', window.location.pathname);
+    }
+  }
+
+  const phoneScroll = document.getElementById('phoneScroll');
+  const slides = document.querySelectorAll('.phone-slide');
+  const srItems = document.querySelectorAll('.sr-item');
+
+  // Click sidebar item → scroll phone to that slide
+  srItems.forEach((item, i) => {
+    item.addEventListener('click', () => {
+      const slide = slides[i];
+      if (slide && phoneScroll) {
+        phoneScroll.scrollTop = slide.offsetTop;
+      }
+    });
+  });
+
+  // IntersectionObserver — sync active sidebar item with visible slide
+  // AND auto-play YouTube iframe videos when they enter view, pause when they leave
+  function postToFrame(iframe, func) {
+    // For Bunny iframes — swap src to toggle autoplay. For YouTube — postMessage.
+    if (!iframe) return;
+    const isBunny = iframe.src.includes('iframe.mediadelivery.net');
+    if (isBunny) {
+      const guid = iframe.getAttribute('data-bunny-guid');
+      if (!guid) return;
+      if (func === 'playVideo') {
+        if (!iframe.src.includes('autoplay=true')) {
+          iframe.src = `https://iframe.mediadelivery.net/embed/675985/${guid}?autoplay=true&muted=true&preload=true&responsive=true`;
+        }
+      } else if (func === 'pauseVideo') {
+        if (iframe.src.includes('autoplay=true')) {
+          iframe.src = `https://iframe.mediadelivery.net/embed/675985/${guid}?autoplay=false&muted=true&preload=true&responsive=true`;
+        }
+      }
+    } else {
+      if (!iframe.contentWindow) return;
+      iframe.contentWindow.postMessage(JSON.stringify({event:'command', func: func, args: []}), '*');
+    }
+  }
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const idx = parseInt(entry.target.dataset.clip);
+        const iframe = entry.target.querySelector('iframe.phone-video');
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          srItems.forEach(it => it.classList.remove('active'));
+          if (srItems[idx]) srItems[idx].classList.add('active');
+          if (iframe) postToFrame(iframe, 'playVideo');
+        } else if (entry.intersectionRatio < 0.3) {
+          if (iframe) postToFrame(iframe, 'pauseVideo');
+        }
+      });
+    }, { root: phoneScroll, threshold: [0.3, 0.5] });
+    slides.forEach(s => io.observe(s));
+  }
+
+  // Keyboard: arrows to navigate slides when shorts open
+  document.addEventListener('keydown', (e) => {
+    const shortsOpen = document.getElementById('shorts').classList.contains('open');
+    if (!shortsOpen) return;
+    if (e.key === 'Escape') closeShorts();
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const current = Array.from(slides).findIndex(s => {
+        const rect = s.getBoundingClientRect();
+        const phoneRect = phoneScroll.getBoundingClientRect();
+        return Math.abs(rect.top - phoneRect.top) < 50;
+      });
+      const next = slides[Math.min(current + 1, slides.length - 1)];
+      if (next) phoneScroll.scrollTop = next.offsetTop;
+    }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const current = Array.from(slides).findIndex(s => {
+        const rect = s.getBoundingClientRect();
+        const phoneRect = phoneScroll.getBoundingClientRect();
+        return Math.abs(rect.top - phoneRect.top) < 50;
+      });
+      const prev = slides[Math.max(current - 1, 0)];
+      if (prev) phoneScroll.scrollTop = prev.offsetTop;
+    }
+  });
+
+  // Deep link
+  if (window.location.hash === '#shorts') {
+    openShorts();
+  }
+
+  // (Wheel scroll handler removed — the .phone scroller now spans the entire
+  // .shorts-stage width, so the native browser scroll handles wheel events
+  // anywhere over the stage with byte-identical snap behavior. The 9:16 slide
+  // is just visually centered inside the wide scroll container.)
+
+  // Hash routing — #shorts opens shorts view, #shorts/N opens at slide N
+  function handleHash() {
+    const h = window.location.hash;
+    if (h.startsWith('#shorts')) {
+      const parts = h.split('/');
+      const idx = parts.length > 1 ? parseInt(parts[1]) : 0;
+      openShorts(isNaN(idx) ? 0 : idx);
+    } else if (h.length > 1 && !/cat=/.test(h)) {
+      // Deep-link to a specific Work video. Accepts a clean title slug
+      // (work.html#commercial-cinematography-reel) and still honors older
+      // links of the form #video/<guid> or a bare #<guid>.
+      let token = decodeURIComponent(h.slice(1));
+      if (token.startsWith('video/')) token = token.slice(6);
+      let embedId = SLUG_TO_ID[token] || (ID_TO_SLUG[token] ? token : null);
+      if (!embedId && typeof VIDEOS !== 'undefined') {
+        const direct = VIDEOS.find(x => x.embedId === token);
+        if (direct) embedId = token;
+      }
+      if (embedId && embedId !== currentEmbedId) {
+        const v = (typeof VIDEOS !== 'undefined') ? VIDEOS.find(x => x.embedId === embedId) : null;
+        if (v) {
+          // Known Up Next entry — full sync (meta, drawer, active state).
+          const recs = document.querySelectorAll('.rec');
+          recs.forEach((rec, i) => rec.classList.toggle('active', VIDEOS[i] && VIDEOS[i].embedId === embedId));
+          playVideo(v);
+          if (typeof renderEpisodeDrawer === 'function') renderEpisodeDrawer(v);
+        } else if (mainPlayer) {
+          // Not in the Up Next list (e.g. an episode or featured clip). Detect
+          // Bunny GUIDs (36-char UUID w/ dashes) vs 11-char YouTube IDs. Swap
+          // only the player; leave the surrounding meta untouched.
+          const isBunny = /-/.test(embedId) && embedId.length > 20;
+          mainPlayer.src = isBunny
+            ? `https://iframe.mediadelivery.net/embed/675985/${embedId}?autoplay=true&preload=true&responsive=true`
+            : `https://www.youtube.com/embed/${embedId}?rel=0&modestbranding=1&enablejsapi=1&autoplay=1`;
+          currentEmbedId = embedId;
+        }
+      }
+    }
+  }
+  // Run on initial load AND when hash changes (within-page navigation)
+  handleHash();
+  window.addEventListener('hashchange', handleHash);
+
+
+  // ============= CLIENT STORIES (renders from data.js CLIENTS) =============
+  // First tile is "All clients" linking to clients.html
+  function renderStories(containerId) {
+    const c = document.getElementById(containerId);
+    if (!c || !window.CLIENTS) return;
+    const allTile = `
+        <a class="story" href="/clients">
+          <div class="story-ring"><div class="story-inner"><div class="story-avatar" style="background: linear-gradient(135deg, var(--amber), var(--rose)); font-size: 16px;">All</div></div></div>
+          <div class="story-name" style="font-weight: 800; color: var(--amber);">All clients</div>
+        </a>`;
+    // Pin Landbound right after "All clients" — it's Jacob's own brand, should
+    // read first instead of being lost in the middle of the alphabetical-ish list.
+    const ordered = (function() {
+      const lb = window.CLIENTS.find(x => x.id === 'landbound');
+      const rest = window.CLIENTS.filter(x => x.id !== 'landbound');
+      return lb ? [lb, ...rest] : window.CLIENTS;
+    })();
+    const items = ordered.map(cl => {
+      const t = window.clientThumb(cl);
+      const initials = window.clientInitials(cl);
+      const bgStyle = t ? `style="background-image: url('${t}');"` : '';
+      const label = t ? '' : initials;
+      return `
+        <a class="story" href="/client?id=${cl.id}">
+          <div class="story-ring"><div class="story-inner"><div class="story-avatar ${t ? '' : cl.palette}" ${bgStyle}>${label}</div></div></div>
+          <div class="story-name">${cl.short}</div>
+        </a>`;
+    }).join('');
+    c.innerHTML = allTile + items;
+  }
+  renderStories('workStories');
+
+  // ============= TIKTOK-STYLE OVERLAY + CONTROLS =============
+  (function() {
+    const slidesAll = document.querySelectorAll('.phone-slide');
+    const fadeTimers = new WeakMap();
+
+    // Global mute state — if user unmutes one video, all subsequent play unmuted
+    let globalMuted = true;
+    const shortsEl = document.getElementById('shorts');
+    const isMobileUI = () => window.matchMedia('(max-width: 820px)').matches;
+
+    function applyGlobalMute(muted) {
+      globalMuted = muted;
+      // Apply to all video elements immediately
+      document.querySelectorAll('.phone-video').forEach(v => { v.muted = muted; });
+      // Update all mute button icons
+      document.querySelectorAll('.phone-ctl[data-action="mute"]').forEach(btn => {
+        const idx = btn.getAttribute('data-slide-idx');
+        const vid = document.getElementById('phone-video-' + idx);
+        if (vid) updateMuteIcon(btn, vid);
+      });
+    }
+
+    function showOverlayFor(slide, autoFade = true) {
+      slide.classList.add('show-overlay');
+      // Mobile: the overlay (and the Back/menu topbar) stay up until tapped away.
+      if (isMobileUI()) { if (shortsEl) shortsEl.classList.add('ui-open'); autoFade = false; }
+      if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
+      if (autoFade) {
+        const t = setTimeout(() => slide.classList.remove('show-overlay'), 3000);
+        fadeTimers.set(slide, t);
+      }
+    }
+    function hideOverlayFor(slide) {
+      if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
+      slide.classList.remove('show-overlay');
+      if (shortsEl) shortsEl.classList.remove('ui-open');
+    }
+
+    // Hover → show overlay; leave → fade
+    slidesAll.forEach(slide => {
+      slide.addEventListener('mouseenter', () => showOverlayFor(slide, false));
+      slide.addEventListener('mouseleave', () => {
+        if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
+        const t = setTimeout(() => slide.classList.remove('show-overlay'), 600);
+        fadeTimers.set(slide, t);
+      });
+    });
+
+    // PLAY/PAUSE button — always toggles playback, keeps the overlay up.
+    document.querySelectorAll('.phone-ctl[data-action="play"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const slide = btn.closest('.phone-slide');
+        const idx = btn.getAttribute('data-slide-idx');
+        const vid = document.getElementById('phone-video-' + idx);
+        if (!vid) return;
+        if (vid.paused) vid.play(); else vid.pause();
+        updatePlayIcon(slide, vid);
+        showOverlayFor(slide, !isMobileUI());
+      });
+    });
+    // TAP THE VIDEO —
+    //  mobile: reveal the overlay (Back / menu / pause / info); tap again or tap
+    //          empty space hides it; if the list is open, the tap just closes it.
+    //          Tapping does NOT pause — the user pauses from the revealed button.
+    //  desktop: classic tap-to-play/pause.
+    document.querySelectorAll('.phone-tap').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const slide = btn.closest('.phone-slide');
+        if (isMobileUI()) {
+          if (shortsEl && shortsEl.classList.contains('rail-open')) { shortsEl.classList.remove('rail-open'); return; }
+          if (slide.classList.contains('show-overlay')) hideOverlayFor(slide);
+          else showOverlayFor(slide, false);
+          return;
+        }
+        const idx = btn.getAttribute('data-slide-idx');
+        const vid = document.getElementById('phone-video-' + idx);
+        if (!vid) return;
+        if (vid.paused) vid.play(); else vid.pause();
+        updatePlayIcon(slide, vid);
+        showOverlayFor(slide, true);
+      });
+    });
+
+    // Mute toggle — syncs globally
+    document.querySelectorAll('.phone-ctl[data-action="mute"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const slide = btn.closest('.phone-slide');
+        const idx = btn.getAttribute('data-slide-idx');
+        const vid = document.getElementById('phone-video-' + idx);
+        if (!vid) return;
+        const newMuted = !vid.muted;
+        applyGlobalMute(newMuted); // propagate to all videos
+        showOverlayFor(slide, !isMobileUI());
+      });
+    });
+
+    // Top-right menu button (mobile) — slides the clip list in / out.
+    const shortsMenuBtn = document.getElementById('shortsMenu');
+    if (shortsMenuBtn) shortsMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (shortsEl) shortsEl.classList.toggle('rail-open');
+    });
+
+    function updatePlayIcon(slide, vid) {
+      const btn = slide.querySelector('.phone-ctl[data-action="play"] svg');
+      if (!btn) return;
+      btn.innerHTML = vid.paused
+        ? '<polygon points="6,4 20,12 6,20"/>'
+        : '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    }
+    function updateMuteIcon(btn, vid) {
+      const svg = btn.querySelector('svg');
+      if (!svg) return;
+      svg.innerHTML = vid.muted
+        ? '<path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>'
+        : '<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+    }
+
+    // IntersectionObserver — auto-play/pause at 50% threshold, mute state preserved
+    if ('IntersectionObserver' in window) {
+      const phoneScroll = document.getElementById('phoneScroll');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const slide = entry.target;
+          const idx = slide.dataset.clip;
+          const vid = slide.querySelector('.phone-video');
+
+          if (entry.intersectionRatio >= 0.5) {
+            // More than half visible → assign src (lazy), apply mute, play
+            if (vid && vid.tagName === 'VIDEO') {
+              if (!vid.src && vid.dataset.vsrc) {
+                vid.src = vid.dataset.vsrc;
+                vid.load();
+              }
+              vid.muted = globalMuted;
+              vid.play().catch(() => {});
+              updatePlayIcon(slide, vid);
+              const muteBtn = slide.querySelector('.phone-ctl[data-action="mute"]');
+              if (muteBtn) updateMuteIcon(muteBtn, vid);
+            }
+            showOverlayFor(slide, true);
+            // Sync sidebar + auto-scroll the rail so the active item stays in view.
+            // GUARDED on lastActiveSrIdx — without this, the IO fires for every
+            // slide it intersects during fast scrolling and queues smooth-scroll
+            // calls, sending the rail flying through every item at once.
+            const idxNum = parseInt(idx);
+            if (window.__lastActiveSrIdx !== idxNum) {
+              window.__lastActiveSrIdx = idxNum;
+              document.querySelectorAll('.sr-item').forEach(it => it.classList.remove('active'));
+              const sr = document.querySelectorAll('.sr-item')[idxNum];
+              if (sr) {
+                sr.classList.add('active');
+                // Only scroll if it's actually out of the rail's viewport
+                const rail = document.querySelector('.shorts-rail');
+                if (rail) {
+                  const sBox = sr.getBoundingClientRect();
+                  const rBox = rail.getBoundingClientRect();
+                  if (sBox.top < rBox.top || sBox.bottom > rBox.bottom) {
+                    sr.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                  }
+                }
+              }
+            }
+          } else {
+            // Less than half visible → pause immediately
+            if (vid && vid.tagName === 'VIDEO') vid.pause();
+            hideOverlayFor(slide);
+          }
+        });
+      }, { root: phoneScroll, threshold: [0.5] });
+      slidesAll.forEach(s => io.observe(s));
+    }
+  })();
+
+
+  // ============= VC-CARD: rotate through ALL verticals, first 5s each =============
+  // Renders 2 vc-frame slots (the cycle animates between them) and rotates the
+  // source through every entry in window.VERTICALS. Uses #t=0,5 media fragment
+  // so the browser only fetches the first 5 seconds of each clip — much lighter
+  // than the prior "preload entire MP4" pattern.
+  (function() {
+    const mount = document.getElementById('vcFrames');
+    if (!mount || !window.VERTICALS || window.VERTICALS.length === 0) return;
+    const verts = window.VERTICALS;
+    const CDN = window.BUNNY.CDN;
+    mount.innerHTML = `
+      <div class="vc-frame" style="background:#000 center/cover no-repeat;">
+        <video class="vc-video" muted loop playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+      </div>
+      <div class="vc-frame" style="background:#000 center/cover no-repeat;">
+        <video class="vc-video" muted loop playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"></video>
+      </div>
+    `;
+    const frames = mount.querySelectorAll('.vc-frame');
+    const vids = mount.querySelectorAll('.vc-video');
+    function applyVert(vidEl, vIdx) {
+      const v = verts[vIdx % verts.length];
+      const thumb = window.verticalThumb(v);
+      vidEl.poster = thumb;
+      // Also set the frame's background to the poster so during src swap there's
+      // still an image visible instead of a black void.
+      const frame = vidEl.parentElement;
+      if (frame) frame.style.backgroundImage = "url('" + thumb + "')";
+      vidEl.src = window.verticalMp4(v, '480p');
+      vidEl.load();
+      vidEl.play().catch(() => {});
+    }
+    // Initial: frame 0 visible with VERTICALS[0], frame 1 below with VERTICALS[1]
+    let visibleIdx = 0;  // which vert is in frame 0
+    let hiddenIdx = 1;   // which vert is in frame 1
+    let currentFrame = 0; // 0 or 1 — which frame is currently visible
+    applyVert(vids[0], visibleIdx);
+    applyVert(vids[1], hiddenIdx);
+    frames[0].style.transform = 'translateY(0%)';
+    frames[1].style.transform = 'translateY(100%)';
+    const DURATION = 480;
+    setInterval(() => {
+      const nextFrame = (currentFrame + 1) % 2;
+      // Animate: current frame up out, next frame slides up into view
+      frames[currentFrame].style.transition = `transform ${DURATION}ms cubic-bezier(0.4,0,0.2,1)`;
+      frames[nextFrame].style.transition    = `transform ${DURATION}ms cubic-bezier(0.4,0,0.2,1)`;
+      frames[currentFrame].style.transform  = 'translateY(-100%)';
+      frames[nextFrame].style.transform     = 'translateY(0%)';
+      setTimeout(() => {
+        // Reposition hidden frame below, swap its source to the NEXT vert in line
+        frames[currentFrame].style.transition = 'none';
+        frames[currentFrame].style.transform  = 'translateY(100%)';
+        const nextVertIdx = (Math.max(visibleIdx, hiddenIdx) + 1) % verts.length;
+        applyVert(vids[currentFrame], nextVertIdx);
+        if (currentFrame === 0) visibleIdx = nextVertIdx; else hiddenIdx = nextVertIdx;
+        currentFrame = nextFrame;
+      }, DURATION + 30);
+    }, 5000);
+  })();
+
+  // ============= SHORTS FILTER PILLS =============
+  // 'vfx' filter reads data-vfx="1" (derived from role + tags), others match
+  // data-type. applyShortsFilter is also exported so the hash router below can
+  // auto-select a filter when arriving from a deep link (vfx-ai page does this).
+  function applyShortsFilter(f) {
+    const catTabs = document.querySelectorAll('.cat-tab[data-filter]');
+    catTabs.forEach(t => t.classList.toggle('active', t.dataset.filter === f));
+    const allSlides = document.querySelectorAll('.phone-slide');
+    const allSrItems = document.querySelectorAll('.sr-item');
+    allSlides.forEach((slide, i) => {
+      const matches = (f === 'all')
+        ? true
+        : (f === 'vfx')
+          ? slide.dataset.vfx === '1'
+          : (slide.dataset.type || '') === f;
+      slide.style.display = matches ? '' : 'none';
+      if (allSrItems[i]) allSrItems[i].style.display = matches ? '' : 'none';
+    });
+    const firstVisible = Array.from(allSlides).find(s => s.style.display !== 'none');
+    const scroller = document.getElementById('phoneScroll');
+    if (firstVisible && scroller) scroller.scrollTop = firstVisible.offsetTop;
+  }
+  window.applyShortsFilter = applyShortsFilter;
+  (function() {
+    document.querySelectorAll('.cat-tab[data-filter]').forEach(tab => {
+      tab.addEventListener('click', () => applyShortsFilter(tab.dataset.filter));
+    });
+    // Honor ?cat=vfx (or any future cat) from the hash query — fired by the
+    // vfx-ai page when a strip tile is clicked.
+    function applyCatFromHash() {
+      const m = (window.location.hash || '').match(/[?&]cat=([a-z]+)/i);
+      if (m) applyShortsFilter(m[1]);
+    }
+    applyCatFromHash();
+    window.addEventListener('hashchange', applyCatFromHash);
+
+    // Random button — pick a random VISIBLE slide and scroll to it. Respects
+    // whatever cat filter is currently active (so #vfx Random stays in VFX).
+    const rndBtn = document.getElementById('shortsRandom');
+    if (rndBtn) {
+      rndBtn.addEventListener('click', () => {
+        const visible = Array.from(document.querySelectorAll('.phone-slide'))
+          .filter(s => s.style.display !== 'none');
+        if (!visible.length) return;
+        const pick = visible[Math.floor(Math.random() * visible.length)];
+        const scroller = document.getElementById('phoneScroll');
+        if (scroller && pick) scroller.scrollTo({ top: pick.offsetTop, behavior: 'smooth' });
+      });
+    }
+  })();
+
+</script>
+</body>
+</html>
