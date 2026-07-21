@@ -129,6 +129,12 @@
   .onset-badge { display: inline-flex; align-items: center; gap: 5px; margin-top: 9px; padding: 3px 9px; background: rgba(245,176,66,0.06); border: 1px solid rgba(245,176,66,0.2); color: var(--ink-3); border-radius: 100px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; }
   .onset-badge::before { content: '●'; color: var(--amber); font-size: 7px; }
 
+  /* Small proof clip inside the "I'm On Set" card — a real supervised shot.
+     Floated so the copy wraps beside it instead of stacking tall. */
+  .onset-clip { float: right; width: 82px; aspect-ratio: 9/16; margin: 2px 0 6px 12px; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid var(--line); background: #000; }
+  .onset-clip video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .onset-clip .cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; font-size: 7.5px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,0.88)); padding: 12px 5px 4px; line-height: 1.25; }
+
   .svc-plus { display: none; }
 
   /* On mobile six 3-up cards become an unreadable pile. Collapse them into a
@@ -149,23 +155,43 @@
     .svc-card.onset .svc-name { color: var(--ink); }
     .svc-card.open .svc-name { color: var(--amber); }
 
-    /* + rotates into a — when open */
-    .svc-plus { display: block; position: absolute; right: 4px; top: 50%; width: 13px; height: 13px; margin-top: -7px; opacity: 0.5; transition: opacity .25s; }
-    .svc-plus::before, .svc-plus::after {
-      content: ''; position: absolute; left: 0; right: 0; top: 6px; height: 1.5px;
-      background: var(--amber); transition: transform .3s cubic-bezier(.25,.9,.3,1);
+    /* Down chevron; rotates to point up when the card is open. */
+    .svc-plus {
+      display: block; position: absolute; right: 7px; top: 50%; width: 10px; height: 10px;
+      margin-top: -8px; opacity: 0.55; box-sizing: border-box;
+      border-right: 1.6px solid var(--amber); border-bottom: 1.6px solid var(--amber);
+      transform: rotate(45deg);
+      transition: opacity .25s, transform .32s cubic-bezier(.25,.9,.3,1), margin-top .32s cubic-bezier(.25,.9,.3,1);
     }
-    .svc-plus::after { transform: rotate(90deg); }
-    .svc-card.open .svc-plus { opacity: 1; }
-    .svc-card.open .svc-plus::after { transform: rotate(0deg); }
+    .svc-card.open .svc-plus { opacity: 1; transform: rotate(-135deg); margin-top: -3px; }
 
     .svc-body {
       max-height: 0; opacity: 0; overflow: hidden; padding: 0 2px;
       transition: max-height .38s cubic-bezier(.25,.9,.3,1), opacity .26s ease, padding .38s ease;
     }
-    .svc-card.open .svc-body { max-height: 320px; opacity: 1; padding: 0 2px 16px; }
+    .svc-card.open .svc-body { max-height: 420px; opacity: 1; padding: 0 2px 16px; }
+
+    /* First-scroll cascade hint: JS ripples .svc-peek across the cards in
+       sequence so the menu visibly opens-and-closes once, signalling it's
+       interactive. A shallow peek keeps the motion subtle. */
+    .svc-card.svc-peek .svc-body { max-height: 46px; opacity: 0.85; padding: 0 2px 6px; }
+    .svc-card.svc-peek .svc-plus { opacity: 1; }
     .svc-desc { font-size: 12.5px; margin-bottom: 9px; }
     .svc-tech { font-size: 9.5px; line-height: 1.6; }
+  }
+
+  /* ---- MOBILE: VFX reels peek + CGI/Compositing/AI stacking ---- */
+  @media (max-width: 820px) {
+    /* One big vertical with the next clearly peeking in from the right, so the
+       strip obviously reads as swipeable. Snap gives it a clean rest position. */
+    .vfx-strip { scroll-snap-type: x mandatory; scroll-padding-left: 2px; gap: 12px; -webkit-overflow-scrolling: touch; }
+    .vfx-strip .vfx-short, .vfx-strip .vfx-cta { flex: 0 0 60vw; max-width: 250px; scroll-snap-align: start; }
+
+    /* CGI · Compositing · AI: three dense text columns are unreadable on a
+       phone. Stack them full-width with real breathing room. (Beats the inline
+       repeat(3) via !important.) */
+    .stack { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .stack-col { padding: 15px 16px; }
   }
 
   /* THE LAYERS */
@@ -241,7 +267,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=33">
+<link rel="stylesheet" href="mobile.css?v=34">
 </head>
 <body>
 
@@ -391,9 +417,13 @@
           <span class="svc-plus"></span>
         </div>
         <div class="svc-body">
-          <div class="svc-desc">Problems found on set are cheap. Problems found in post are expensive.</div>
-          <div class="svc-tech">Seen in: The First Circle · LL Cool J · 2023–24</div>
-          <div class="onset-badge">Physical Production</div>
+          <div class="onset-clip">
+            <video src="https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/play_480p.mp4" poster="https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
+            <span class="cap">Chloe Star · Stunt Fall · VFX sup</span>
+          </div>
+          <div class="svc-desc">Problems found on set are cheap. Problems found in post are expensive. I'm in pre-production too — planning the shots with you before the camera rolls, so the fix is designed in, not bolted on.</div>
+          <div class="svc-tech">Seen in: Chloe Star "Stunt Fall" · The First Circle · LL Cool J · 2023–24</div>
+          <div class="onset-badge">Pre-Production → Set</div>
         </div>
       </div>
     </div>
@@ -872,31 +902,59 @@ filmScroll.addEventListener('scroll', () => {
 </script>
 <script>
 /* Service index accordion — mobile only. Desktop keeps all six cards open,
-   so the click handler no-ops above 820px. */
+   so the click handler no-ops above 820px. All cards start CLOSED; a one-time
+   cascade on first scroll-in shows they open. */
 (function () {
   var cards = [].slice.call(document.querySelectorAll('.svc-card'));
   if (!cards.length) return;
   var mq = '(max-width: 820px)';
+  var isMobile = function () { return window.matchMedia && window.matchMedia(mq).matches; };
+
+  // Play the proof clip only while its card is open; pause it when closed so a
+  // collapsed card isn't decoding video off-screen.
+  function syncClip(card) {
+    var v = card.querySelector('.onset-clip video');
+    if (!v) return;
+    if (card.classList.contains('open') || card.classList.contains('svc-peek')) {
+      v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {});
+    } else { try { v.pause(); } catch (e) {} }
+  }
+
   cards.forEach(function (card) {
     var head = card.querySelector('.svc-head');
     if (!head) return;
     head.addEventListener('click', function () {
-      if (!window.matchMedia || !window.matchMedia(mq).matches) return;
+      if (!isMobile()) return;
       var isOpen = card.classList.contains('open');
-      cards.forEach(function (c) { c.classList.remove('open'); });
-      if (!isOpen) card.classList.add('open');
+      cards.forEach(function (c) { c.classList.remove('open'); syncClip(c); });
+      if (!isOpen) { card.classList.add('open'); syncClip(card); }
     });
   });
-  // Open the first one so the interaction is legible at a glance.
-  function initOpen() {
-    if (window.matchMedia && window.matchMedia(mq).matches) {
-      if (!document.querySelector('.svc-card.open')) cards[0].classList.add('open');
-    } else {
-      cards.forEach(function (c) { c.classList.remove('open'); });
-    }
+
+  // Default: nothing open. On desktop the CSS shows every body regardless.
+  function initClosed() { cards.forEach(function (c) { c.classList.remove('open'); syncClip(c); }); }
+  initClosed();
+  window.addEventListener('resize', initClosed);
+
+  // One-time cascade hint: as the menu first scrolls into view on mobile,
+  // ripple each card open→closed in turn so the accordion reads as interactive.
+  var grid = document.querySelector('.svc-grid');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (grid && !reduce && 'IntersectionObserver' in window) {
+    var fired = false;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting || fired) return;
+        fired = true; io.disconnect();
+        if (!isMobile()) return;
+        cards.forEach(function (c, i) {
+          setTimeout(function () { c.classList.add('svc-peek'); syncClip(c); }, 170 * i);
+          setTimeout(function () { c.classList.remove('svc-peek'); syncClip(c); }, 170 * i + 500);
+        });
+      });
+    }, { threshold: 0.4 });
+    io.observe(grid);
   }
-  initOpen();
-  window.addEventListener('resize', initOpen);
 })();
 </script>
 </body>

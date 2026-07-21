@@ -262,7 +262,7 @@
     .spot-empty { padding: 26px 18px; text-align: center; font-family: 'SF Mono', Menlo, monospace; font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.14em; text-transform: uppercase; }
   }
 </style>
-<link rel="stylesheet" href="mobile.css?v=33">
+<link rel="stylesheet" href="mobile.css?v=34">
 </head>
 <body>
 <nav class="nav">
@@ -422,11 +422,28 @@
     var rb = isNotable(b) ? NOTABLE.indexOf(b.id) : 100 + window.CLIENTS.indexOf(b);
     return ra - rb;
   });
+  // Laurie Anderson is the black-void easter egg — keep her in the full sheet
+  // list (pinned to the very bottom) but OUT of the swipeable panels + dots.
+  var LIST_ORDER = CL.filter(function (c) { return c.id !== 'laurie-anderson'; })
+                     .concat(CL.filter(function (c) { return c.id === 'laurie-anderson'; }));
+  CL = CL.filter(function (c) { return c.id !== 'laurie-anderson'; });  // reel list
+
   document.getElementById('spotTotal').textContent = CL.length;
 
   function hue(n) { var h = 0; for (var i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 360; return h; }
 
-  /* ---- build reel cards + dots + list rows ---- */
+  /* ---- build the full sheet list first (keyed by id), then reel cards ---- */
+  var rowById = {};
+  LIST_ORDER.forEach(function (c) {
+    var w = document.createElement('div');
+    w.innerHTML = cardHTML(c);
+    var r = w.firstChild;
+    listEl.appendChild(r);
+    rowById[c.id] = r;
+  });
+  var listItems = LIST_ORDER.map(function (c) { return { c: c, row: rowById[c.id] }; });
+
+  /* ---- build reel cards + dots (Laurie excluded) ---- */
   var cards = CL.map(function (c, i) {
     var t = window.clientThumb(c);   // cards are rectangular: webp posters are fine here
     var el = document.createElement('div');
@@ -459,13 +476,7 @@
     dot.addEventListener('click', function () { go(i); });
     dotsEl.appendChild(dot);
 
-    // List row: the site's existing card markup, unchanged.
-    var wrap = document.createElement('div');
-    wrap.innerHTML = cardHTML(c);
-    var row = wrap.firstChild;
-    listEl.appendChild(row);
-
-    return { el: el, dot: dot, row: row, c: c };
+    return { el: el, dot: dot, row: rowById[c.id], c: c };
   });
 
   var empty = document.createElement('div');
@@ -512,7 +523,7 @@
   });
   function applyFilter() {
     var n = 0;
-    cards.forEach(function (cd) {
+    listItems.forEach(function (cd) {
       var ok = hasRole(cd.c, activeRole);
       cd.row.style.display = ok ? 'flex' : 'none';
       if (ok) n++;

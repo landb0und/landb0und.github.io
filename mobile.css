@@ -249,18 +249,27 @@
 
   /* ---------- CLIENT PROFILE: dock BACK next to the menu FAB ----------
      Desktop keeps BACK at the top-left of the profile. On a phone it moves to
-     a floating pill in the bottom-left, immediately to the RIGHT of the 58px
-     menu FAB (left:14 + 58 wide => a 12px gap puts it at left:84). The FAB's
-     centre sits at bottom+45 (16 + 58/2); this ~31px pill therefore needs
-     bottom+29 to line up centre-to-centre. Hidden while the menu is open so it
-     never floats over the dimmed panel. */
+     a floating control in the bottom-left, immediately to the RIGHT of the 58px
+     menu FAB (left:14 + 58 wide + 12 gap => left:84). Styled to READ AS A SIBLING
+     of the FAB: same dark glass gradient, amber hairline border and blur, light
+     text, and a fully-rounded 58px-tall shape that echoes the round button next
+     to it. Hidden while the menu is open so it never floats over the panel. */
   .back-btn {
     position: fixed !important; top: auto !important; right: auto !important;
     left: calc(14px + 58px + 12px) !important;
-    bottom: calc(env(safe-area-inset-bottom) + 29px) !important;
-    margin: 0 !important; z-index: 640 !important;
-    transition: opacity .2s ease, transform .2s ease, background .15s !important;
+    bottom: calc(env(safe-area-inset-bottom) + 16px) !important;
+    height: 58px !important; padding: 0 22px !important; margin: 0 !important;
+    display: inline-flex !important; align-items: center !important; gap: 8px !important;
+    border-radius: 29px !important;
+    background: linear-gradient(150deg, rgba(32,32,37,0.97), rgba(14,14,17,0.97)) !important;
+    border: 1px solid color-mix(in srgb, var(--amber) 42%, transparent) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(170%); backdrop-filter: blur(18px) saturate(170%);
+    color: rgba(255,255,255,0.92) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important;
+    z-index: 640 !important;
+    transition: opacity .2s ease, transform .2s ease, border-color .2s !important;
   }
+  .back-btn:active { transform: scale(0.95) !important; }
   body.nav-open .back-btn { opacity: 0 !important; pointer-events: none !important; transform: translateY(6px) !important; }
 
   /* ---------- PHOTO FEED: floating GRID VIEW button ----------
