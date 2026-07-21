@@ -200,7 +200,7 @@
   <div class="lb-inner" id="lbInner"></div>
 </div>
 
-<script src="data.js?v=6"></script>
+<script src="data.js?v=7"></script>
 <script>
   function getQueryId() {
     const m = window.location.search.match(/[?&]id=([^&]+)/);
@@ -253,7 +253,8 @@
           </div>
           <div class="ph-row2">
             <div class="ph-stat"><strong>${totalCount}</strong> posts</div>
-            ${videoCount > 0 && photoCount > 0 ? `<div class="ph-stat"><strong>${videoCount}</strong> videos</div><div class="ph-stat"><strong>${photoCount}</strong> photos</div>` : ''}
+            <div class="ph-stat"><strong>${videoCount}</strong> ${videoCount === 1 ? 'video' : 'videos'}</div>
+            <div class="ph-stat"><strong>${photoCount}</strong> ${photoCount === 1 ? 'photo' : 'photos'}</div>
           </div>
           <div>
             <div class="ph-name">${c.name}</div>
