@@ -148,14 +148,14 @@
   .profile-bio .lane-ai { font-size: 11px; font-style: italic; color: var(--ink-4); margin-top: 9px; padding-top: 9px; border-top: 1px solid rgba(255,255,255,0.07); }
 
   /* ---- Credentials as chips: scannable badges, not a blue paragraph ---- */
-  .profile-proof { display: flex; flex-wrap: wrap; gap: 10px 9px; margin: 4px 0 15px; line-height: 1; }
+  .profile-proof { display: flex; flex-wrap: wrap; gap: 0; margin: 6px 0 12px; line-height: 1; }
   .profile-proof .sep { display: none; }
   .profile-proof .pf {
     display: inline-flex; align-items: center;
     font-size: 9.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
     color: var(--ink-2); background: rgba(255,255,255,0.045);
     border: 1px solid rgba(255,255,255,0.09);
-    padding: 6px 11px; border-radius: 8px; white-space: nowrap;
+    padding: 6px 11px; border-radius: 8px; white-space: nowrap; margin: 0 10px 10px 0;
   }
   .profile-proof .pf.hero { color: var(--amber); background: rgba(245,176,66,0.11); border-color: rgba(245,176,66,0.34); }
 
@@ -163,13 +163,13 @@
      carry the weight in near-white and a single amber "+" keeps it alive. ---- */
   .profile-stats .num { color: var(--ink); }
   .profile-stats .num .plus { color: var(--amber); opacity: 0.95; }
-  .profile-stats .lbl { color: var(--ink-3); display: inline-flex; align-items: center; gap: 5px; }
-  /* A small accent dot per metric — colour, but quiet. */
-  .profile-stats .lbl::before { content: ""; width: 5px; height: 5px; border-radius: 50%; flex: 0 0 auto; }
-  .profile-stats .stat:nth-child(1) .lbl::before { background: var(--amber); }
-  .profile-stats .stat:nth-child(2) .lbl::before { background: #46c8d8; }
-  .profile-stats .stat:nth-child(3) .lbl::before { background: #e8589a; }
-  .profile-stats .stat:nth-child(4) .lbl::before { background: #f5c518; }
+  /* Quiet colour: the LABEL carries the accent. No pseudo-elements, no flex,
+     so the original stats spacing is preserved exactly. */
+  .profile-stats .lbl { color: var(--ink-4); }
+  .profile-stats .stat:nth-child(1) .lbl { color: rgba(245,176,66,0.85); }
+  .profile-stats .stat:nth-child(2) .lbl { color: rgba(70,200,216,0.85); }
+  .profile-stats .stat:nth-child(3) .lbl { color: rgba(232,88,154,0.85); }
+  .profile-stats .stat:nth-child(4) .lbl { color: rgba(245,197,24,0.85); }
   .profile-proof .sep { color: rgba(245,176,66,0.45); margin: 0 7px; font-weight: 400; }
   .profile-proof strong { color: var(--amber); font-weight: 800; }
 
@@ -561,7 +561,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=24">
+<link rel="stylesheet" href="mobile.css?v=25">
 </head>
 <body>
 
