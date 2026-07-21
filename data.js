@@ -250,17 +250,6 @@ window.CLIENTS = [
     ]
   },
   {
-    id: 'nyc-cinematography-awards',
-    name: 'NYC Cinematography Awards',
-    short: 'NYC Cinema',
-    handle: 'Award · 2024',
-    role: 'Cinematographer · Selection',
-    blurb: 'Selected work: NYC Cinematography Awards.',
-    palette: 'sa-9',
-    thumb: null,
-    media: []
-  },
-  {
     id: 'raw-material',
     name: 'Raw Material',
     short: 'Raw Material',
@@ -372,17 +361,6 @@ window.CLIENTS = [
     media: [
       { type: 'photo', src: 'photos/clients-flat/the-mowglis-1.jpeg', title: 'Band session', year: '2024', tags: ['Photographer'] }
     ]
-  },
-  {
-    id: 'young-rising-sons',
-    name: 'Young Rising Sons',
-    short: 'YRS',
-    handle: '@youngrisingsons',
-    role: 'Director · DP',
-    blurb: 'Alt-rock collaboration: direction and cinematography.',
-    palette: 'sa-5',
-    thumb: null,
-    media: []
   },
   {
     id: 'allen-stone',
