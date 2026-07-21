@@ -199,7 +199,12 @@
       border-radius: 20px 20px 0 0; box-shadow: 0 -22px 60px rgba(0,0,0,0.6);
       display: flex; flex-direction: column; will-change: transform;
     }
-    .spot-grab { padding: 9px 18px 10px; touch-action: none; flex: none; }
+    .spot-grab { padding: 9px 18px 10px; touch-action: none; flex: none; transition: padding-top .3s ease; }
+    /* At full height the sheet is the whole screen, so it loses its rounded
+       shoulders and makes room for the status bar / notch. */
+    body.sheet-full .spot-grab { padding-top: calc(env(safe-area-inset-top) + 10px); }
+    body.sheet-full .spot-sheet { border-radius: 0; border-top-color: transparent; }
+    .spot-sheet { transition: border-radius .3s ease; }
     .spot-grab .bar { width: 40px; height: 4px; border-radius: 3px; background: var(--ink-4); margin: 2px auto 11px; transition: background .2s; }
     body.spot-drag .spot-grab .bar { background: var(--amber); }
     .spot-hd { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -220,6 +225,8 @@
       transition: .16s; flex: none; -webkit-appearance: none;
     }
     .spot-chip:active { transform: scale(0.96); }
+    /* Divides "what it is" from "what I did" without shouting about it. */
+    .spot-sep { flex: none; width: 1px; align-self: stretch; margin: 4px 3px; background: var(--line); }
     .spot-chip.on { color: #1a1408; background: var(--amber); border-color: var(--amber); }
 
     /* The list itself keeps the existing card formatting, verbatim. */
@@ -294,7 +301,7 @@
   </div>
 </div>
 
-<script src="data.js?v=4"></script>
+<script src="data.js?v=5"></script>
 <script>
   /* ---------------------------------------------------------------
      Shared helpers — used by BOTH the desktop grid and the mobile
@@ -401,7 +408,7 @@
 
   /* ---- build reel cards + dots + list rows ---- */
   var cards = CL.map(function (c, i) {
-    var t = clientPhoto(c);
+    var t = window.clientThumb(c);   // cards are rectangular: webp posters are fine here
     var el = document.createElement('div');
     el.className = 'spot-card';
     el.innerHTML =
@@ -447,17 +454,29 @@
   listEl.appendChild(empty);
 
   /* ---- role chips ---- */
-  var ROLES = ['All', 'Director', 'DP', 'Editor', 'VFX', 'Photographer', 'Writer'];
+  // Two kinds of filter share one rail: what the work IS, then what Jacob DID.
+  var FILTERS = ['All', 'Videos', 'Photos', '|', 'Director', 'DP', 'Editor', 'VFX', 'Photographer', 'Writer'];
   var activeRole = 'All';
+  function hasType(c, kind) {
+    return (c.media || []).some(function (m) { return m.type === kind; });
+  }
   function hasRole(c, role) {
     if (role === 'All') return true;
+    if (role === 'Videos') return hasType(c, 'video');
+    if (role === 'Photos') return hasType(c, 'photo');
     var r = (c.role || '').toLowerCase();
     if (role === 'Photographer') return /photo/.test(r);
     if (role === 'Director') return /director/.test(r);
     if (role === 'DP') return /\bdp\b|cinematograph/.test(r);
     return r.indexOf(role.toLowerCase()) !== -1;
   }
-  ROLES.forEach(function (r) {
+  FILTERS.forEach(function (r) {
+    if (r === '|') {
+      var sep = document.createElement('span');
+      sep.className = 'spot-sep';
+      chipsEl.appendChild(sep);
+      return;
+    }
     var b = document.createElement('button');
     b.className = 'spot-chip' + (r === 'All' ? ' on' : '');
     b.textContent = r;
@@ -488,9 +507,11 @@
   function sizeReel() {
     var vw = window.innerWidth;
     var vh = window.innerHeight;
-    CARD_W = Math.min(256, Math.round(vw * 0.66));
-    STEP = Math.round(CARD_W * 0.766);          // same card-to-step ratio as the mock
-    hero.style.height = Math.round(Math.min(452, Math.max(300, vh * 0.50))) + 'px';
+    // Narrower + taller than the mock: a poster/story shape reads better for
+    // this work than the mock's squat card.
+    CARD_W = Math.min(232, Math.round(vw * 0.60));
+    STEP = Math.round(CARD_W * 0.80);
+    hero.style.height = Math.round(Math.min(510, Math.max(340, vh * 0.57))) + 'px';
     cards.forEach(function (cd) {
       cd.el.style.width = CARD_W + 'px';
       cd.el.style.marginLeft = (-CARD_W / 2) + 'px';
@@ -532,7 +553,7 @@
   function measure() {
     sizeReel();
     var H = window.innerHeight;
-    var OPEN_TOP = Math.round(Math.max(96, H * 0.15));   // sheet top when fully open
+    var OPEN_TOP = 0;                                    // fully open == full screen
     var sheetH = H - OPEN_TOP;
     sheet.style.height = sheetH + 'px';
     OPEN = 0;
@@ -541,7 +562,7 @@
     // the fixed 208px only if the rail hasn't laid out yet.
     var railBottom = dotsEl.getBoundingClientRect().bottom;
     var peekTop = railBottom > 0
-      ? Math.min(H - 150, Math.round(railBottom) + 14)
+      ? Math.min(H - 132, Math.round(railBottom) + 26)
       : H - 208;
     PEEK = Math.max(120, Math.min(sheetH, peekTop - (H - sheetH)));
     if (!opened) sheetY = PEEK;
@@ -557,13 +578,24 @@
     dim.style.transition = anim ? 'opacity .4s' : 'none';
     dim.style.opacity = (prog * 0.5).toFixed(3);
     opened = sheetY < PEEK * 0.5;
+    document.body.classList.toggle('sheet-full', sheetY < PEEK * 0.12);
     if (sheetY > PEEK * 0.85) play(); else pause();
   }
   function snapTo(target) { setSheet(target, true); }
 
   /* ---- one unified gesture handler for the whole surface ---- */
   var sx = 0, sy = 0, sy0 = 0, decided = false, axis = null;
-  var lastY = 0, vy = 0, moved = 0, inList = false, onGrab = false, inChips = false;
+  var lastY = 0, vy = 0, moved = 0, inList = false, onGrab = false, inChips = false, inDots = false;
+
+  // The dot rail doubles as a scrubber: drag across it to fly through the reel.
+  function scrubTo(clientX) {
+    var b = dotsEl.getBoundingClientRect();
+    var pad = 34;                                  // matches .spot-dots padding
+    var usable = Math.max(1, b.width - pad * 2);
+    var frac = (clientX - b.left - pad) / usable;
+    var i = Math.round(Math.max(0, Math.min(1, frac)) * (CL.length - 1));
+    if (i !== active) { active = i; dragX = 0; renderReel(true); }
+  }
 
   function pt(e) { return e.touches ? e.touches[0] : e; }
 
@@ -576,7 +608,9 @@
     inList = !!(e.target.closest && e.target.closest('.spot-list'));
     onGrab  = !!(e.target.closest && e.target.closest('.spot-grab'));
     inChips = !!(e.target.closest && e.target.closest('.spot-chips'));
+    inDots  = !!(e.target.closest && e.target.closest('.spot-dots'));
     pause();
+    if (inDots) { decided = true; axis = 'scrub'; scrubTo(p.clientX); }
   }, { passive: true });
 
   spot.addEventListener('touchmove', function (e) {
@@ -598,7 +632,8 @@
       if (axis !== 'native') suppressClick = true;
     }
 
-    if (axis === 'x') { e.preventDefault(); dragX = dx; renderReel(false); }
+    if (axis === 'scrub') { e.preventDefault(); scrubTo(p.clientX); }
+    else if (axis === 'x') { e.preventDefault(); dragX = dx; renderReel(false); }
     else if (axis === 'y') { e.preventDefault(); document.body.classList.add('spot-drag'); setSheet(sy0 + dy, false); }
   }, { passive: false });
 

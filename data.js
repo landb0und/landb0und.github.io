@@ -280,17 +280,6 @@ window.CLIENTS = [
     ]
   },
   {
-    id: 'tiktok',
-    name: 'TikTok',
-    short: 'TikTok',
-    handle: '@landbound',
-    role: 'Creator partner',
-    blurb: '100K+ followers, 110M+ views across short-form work.',
-    palette: 'sa-10',
-    thumb: null,
-    media: []
-  },
-  {
     id: 'landbound',
     name: 'Landbound',
     short: 'Landbound',
@@ -497,6 +486,13 @@ window.clientThumb = function(c) {
   if (firstVid) {
     if (firstVid.bunny) return window.bunnyThumb(firstVid.embedId);
     return 'https://img.youtube.com/vi/' + firstVid.embedId + '/maxresdefault.jpg';
+  }
+  // Last resort: a vertical credited to this client. Bahari and Landon Barker
+  // carry no media[] of their own but do have shorts in VERTICALS, and a
+  // faceless client card looks broken rather than minimal.
+  if (window.VERTICALS) {
+    const v = window.VERTICALS.find(x => x.client === c.id && x.guid);
+    if (v) return window.bunnyThumb(v.guid);
   }
   return null;
 };
