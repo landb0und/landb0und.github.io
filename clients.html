@@ -165,15 +165,19 @@
       font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.12em;
       color: var(--amber); text-transform: uppercase; font-weight: 700; margin-top: 9px; line-height: 1.6;
     }
+    /* Blurbs vary wildly in length. Clamp to four lines with a real ellipsis
+       so a long bio truncates gracefully instead of squashing the layout. */
     .spot-card .cd {
       color: var(--ink-2); font-size: 12px; line-height: 1.45; margin-top: 8px;
-      max-height: 0; opacity: 0; overflow: hidden; transition: max-height .4s ease, opacity .4s ease;
+      max-height: 0; opacity: 0; overflow: hidden;
+      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4;
+      transition: max-height .4s ease, opacity .4s ease;
     }
     .spot-card .cc {
       font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.18em;
       color: var(--ink-4); text-transform: uppercase; margin-top: 10px;
     }
-    .spot-card.active .cd { max-height: 92px; opacity: 1; }
+    .spot-card.active .cd { max-height: 76px; opacity: 1; }
     .spot-card.active { box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,176,66,0.28); }
     .spot-ribbon {
       position: absolute; top: 12px; left: 12px; z-index: 3;
@@ -301,7 +305,7 @@
   </div>
 </div>
 
-<script src="data.js?v=7"></script>
+<script src="data.js?v=8"></script>
 <script>
   /* ---------------------------------------------------------------
      Shared helpers — used by BOTH the desktop grid and the mobile
@@ -562,7 +566,7 @@
     // the fixed 208px only if the rail hasn't laid out yet.
     var railBottom = dotsEl.getBoundingClientRect().bottom;
     var peekTop = railBottom > 0
-      ? Math.min(H - 132, Math.round(railBottom) + 26)
+      ? Math.min(H - 118, Math.round(railBottom) + 54)
       : H - 208;
     PEEK = Math.max(120, Math.min(sheetH, peekTop - (H - sheetH)));
     if (!opened) sheetY = PEEK;

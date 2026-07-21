@@ -102,11 +102,17 @@ window.CLIENTS = [
     role: 'Director · Photographer',
     blurb: 'Reunion record promo. In studio.',
     palette: 'sa-4',
-    thumb: null,
+    thumb: 'photos/clients-flat/gym-class-heroes-rooftop-1.jpg',
     media: [
       { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-1.jpg', title: 'Studio session — 1', year: '2024', tags: ['Photographer'] },
       { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-2.jpg', title: 'Studio session — 2', year: '2024', tags: ['Photographer'] },
-      { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-3.jpg', title: 'Studio session — 3', year: '2024', tags: ['Photographer'] }
+      { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-3.jpg', title: 'Studio session — 3', year: '2024', tags: ['Photographer'] },
+      { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-rooftop-1.jpg', title: 'Rooftop — Travie', year: '2026', tags: ['Photographer'], aiNote: 'No AI' },
+      { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-rooftop-2.jpg', title: 'Rooftop — 2', year: '2026', tags: ['Photographer'], aiNote: 'No AI' },
+      { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-rooftop-3.jpg', title: 'Rooftop — 3', year: '2026', tags: ['Photographer'], aiNote: 'No AI' },
+      { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-rooftop-4.jpg', title: 'Rooftop — 4', year: '2026', tags: ['Photographer'], aiNote: 'No AI' },
+      { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-rooftop-5.jpg', title: 'Rooftop — 5', year: '2026', tags: ['Photographer'], aiNote: 'No AI' },
+      { type: 'photo', src: 'photos/clients-flat/gym-class-heroes-rooftop-6.jpg', title: 'Rooftop — 6', year: '2026', tags: ['Photographer'], aiNote: 'No AI' }
     ]
   },
   {
