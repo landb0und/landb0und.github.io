@@ -49,36 +49,38 @@
   /* First-time affordance: gentle bob, an expanding ring, and a MENU tag.
      All of it stops permanently once the button has been opened once. */
   @media (prefers-reduced-motion: no-preference) {
-    body:not(.nav-seen) .nav-fab { animation: fabAttn 5s ease-in-out infinite; }
+    body:not(.nav-seen) .nav-fab { animation: fabAttn 3.4s ease-in-out infinite; }
     body:not(.nav-seen) .nav-fab::after {
       content: ''; position: absolute; inset: -3px; border-radius: 50%;
-      border: 2px solid rgba(245,176,66,0.5); pointer-events: none;
-      animation: fabRipple 5s ease-out infinite;
+      border: 2.5px solid rgba(245,176,66,0.9); pointer-events: none;
+      animation: fabRipple 3.4s ease-out infinite;
     }
     body:not(.nav-seen) .nav-fab::before {
       content: 'MENU'; position: absolute; left: 66px; white-space: nowrap;
-      font-size: 9px; font-weight: 700; letter-spacing: 0.2em; color: rgba(255,255,255,0.8);
-      background: rgba(14,14,17,0.94); padding: 6px 10px; border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1); pointer-events: none;
-      animation: fabHint 5s ease-in-out infinite;
+      font-size: 9px; font-weight: 800; letter-spacing: 0.2em; color: var(--amber);
+      background: rgba(20,16,8,0.96); padding: 7px 11px; border-radius: 8px;
+      border: 1px solid rgba(245,176,66,0.45); pointer-events: none;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      animation: fabHint 3.4s ease-in-out infinite;
     }
   }
   @keyframes fabAttn {
-    0%, 64%, 100% { transform: translateY(0); }
-    70%           { transform: translateY(-6px); }
-    76%           { transform: translateY(0); }
-    81%           { transform: translateY(-2.5px); }
-    86%           { transform: translateY(0); }
+    0%, 46%, 100% { transform: translateY(0) scale(1); }
+    54%           { transform: translateY(-13px) scale(1.10); }
+    63%           { transform: translateY(0) scale(0.96); }
+    71%           { transform: translateY(-7px) scale(1.05); }
+    79%           { transform: translateY(0) scale(0.99); }
+    86%           { transform: translateY(-3px) scale(1.02); }
   }
   @keyframes fabRipple {
-    0%, 60% { transform: scale(1); opacity: 0; }
-    66%     { opacity: 0.75; }
-    92%     { transform: scale(1.85); opacity: 0; }
+    0%, 42% { transform: scale(1); opacity: 0; }
+    50%     { opacity: 0.95; }
+    92%     { transform: scale(2.35); opacity: 0; }
     100%    { transform: scale(1); opacity: 0; }
   }
   @keyframes fabHint {
-    0%, 62%, 100% { opacity: 0; transform: translateX(-8px); }
-    72%, 88%      { opacity: 1; transform: translateX(0); }
+    0%, 44%, 100% { opacity: 0; transform: translateX(-10px) scale(0.94); }
+    54%, 90%      { opacity: 1; transform: translateX(0) scale(1); }
   }
 
   /* Dim + blur the page behind the open menu; tap it to dismiss */
@@ -97,9 +99,9 @@
     top: auto !important; right: auto !important;
     bottom: calc(env(safe-area-inset-bottom) + 82px) !important;
     left: 14px !important;
-    width: auto !important; min-width: 196px; height: auto !important;
+    width: max-content !important; min-width: 0 !important; max-width: calc(100vw - 28px) !important; height: auto !important;
     flex-direction: column !important;
-    padding: 7px !important; margin: 0 !important;
+    padding: 6px !important; margin: 0 !important;
     border: 1px solid rgba(255,255,255,0.1) !important;
     border-right: 1px solid rgba(255,255,255,0.1) !important;
     border-radius: 18px !important;
@@ -115,7 +117,7 @@
   }
   body.nav-open .nav { opacity: 1; visibility: visible; transform: none; }
   .nav::after { display: none !important; }
-  .nav-brand, .nav-socials, .nav-bottom, .theme-switcher { display: none !important; }
+  .nav-brand, .nav-socials, .nav-bottom { display: none !important; }
 
   .nav-items {
     flex-direction: column !important; flex: none !important;
@@ -124,11 +126,11 @@
   }
   .nav-item {
     position: relative;
-    flex: none !important; flex-direction: row !important; gap: 12px !important;
+    flex: none !important; flex-direction: row !important; gap: 11px !important;
     justify-content: flex-start !important; align-items: center !important; text-align: left !important;
-    padding: 11px 14px !important; border-radius: 12px !important;
-    font-size: 11.5px !important; font-weight: 600 !important;
-    letter-spacing: 0.1em !important; text-transform: uppercase !important;
+    padding: 10px 13px !important; border-radius: 11px !important;
+    font-size: 11px !important; font-weight: 700 !important;
+    letter-spacing: 0.13em !important; text-transform: uppercase !important;
     color: rgba(255,255,255,0.6) !important;
     -webkit-tap-highlight-color: transparent;
   }
@@ -156,10 +158,34 @@
   .profile-bio .lane-edu { font-size: 10.5px !important; margin-bottom: 4px !important; }
   .profile-bio .lane-2 { font-size: 11px !important; }
   .profile-bio .lane-ai { font-size: 10px !important; margin-top: 8px !important; padding-top: 8px !important; }
-  .profile-proof { gap: 4px !important; margin-bottom: 0 !important; }
+  .profile-proof { gap: 7px 6px !important; margin-bottom: 0 !important; }
   .profile-proof .pf { font-size: 8.5px !important; padding: 4px 7px !important; letter-spacing: 0.05em !important; }
   .profile-stats .num { font-size: 15px !important; }
   .profile-stats .lbl { font-size: 6.5px !important; color: var(--ink-4) !important; }
+
+  /* ---- THEME SWITCHER — inside the menu, reduced to a swatch row ---- */
+  .theme-switcher {
+    display: block !important; width: auto !important;
+    margin: 5px 3px 1px !important; padding: 9px 10px 4px !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    background: none !important; border-radius: 0 !important;
+  }
+  .theme-switcher .ts-label {
+    font-size: 7.5px !important; font-weight: 700 !important;
+    letter-spacing: 0.24em !important; text-transform: uppercase !important;
+    color: rgba(255,255,255,0.34) !important; margin: 0 0 9px !important;
+  }
+  .theme-switcher .ts-row { display: flex !important; gap: 9px !important; flex-wrap: nowrap !important; }
+  .theme-switcher .ts-sw {
+    width: 20px !important; height: 20px !important; padding: 0 !important; margin: 0 !important;
+    border-radius: 50% !important; background: transparent !important;
+    border: 1.5px solid rgba(255,255,255,0.18) !important;
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    transition: border-color .18s ease, transform .18s ease;
+  }
+  .theme-switcher .ts-sw .ts-text { display: none !important; }
+  .theme-switcher .ts-sw .ts-dot { width: 12px !important; height: 12px !important; border-radius: 50% !important; }
+  .theme-switcher .ts-sw.active { border-color: var(--amber) !important; transform: scale(1.1); }
 
   /* ---------- MAIN: full width, clear the bottom bar ---------- */
   .main, .main-page {

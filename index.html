@@ -144,7 +144,7 @@
   .profile-bio .lane-ai { font-size: 11px; font-style: italic; color: var(--ink-4); margin-top: 9px; padding-top: 9px; border-top: 1px solid rgba(255,255,255,0.07); }
 
   /* ---- Credentials as chips: scannable badges, not a blue paragraph ---- */
-  .profile-proof { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; line-height: 1; }
+  .profile-proof { display: flex; flex-wrap: wrap; gap: 8px 7px; margin-bottom: 14px; line-height: 1; }
   .profile-proof .sep { display: none; }
   .profile-proof .pf {
     display: inline-flex; align-items: center;
@@ -155,12 +155,10 @@
   }
   .profile-proof .pf.hero { color: var(--amber); background: rgba(245,176,66,0.11); border-color: rgba(245,176,66,0.34); }
 
-  /* ---- Stats: one accent per metric so the row has life ---- */
-  .profile-stats .stat:nth-child(1) .num { color: var(--amber); }
-  .profile-stats .stat:nth-child(2) .num { color: #46c8d8; }
-  .profile-stats .stat:nth-child(3) .num { color: #e8589a; }
-  .profile-stats .stat:nth-child(4) .num { color: #f5c518; }
-  .profile-stats .num .plus { color: inherit; opacity: 0.6; }
+  /* ---- Stats: restrained. Four accent colours read as noise; the numbers
+     carry the weight in near-white and a single amber "+" keeps it alive. ---- */
+  .profile-stats .num { color: var(--ink); }
+  .profile-stats .num .plus { color: var(--amber); opacity: 0.95; }
   .profile-stats .lbl { color: var(--ink-4); }
   .profile-proof .sep { color: rgba(245,176,66,0.45); margin: 0 7px; font-weight: 400; }
   .profile-proof strong { color: var(--amber); font-weight: 800; }
@@ -553,7 +551,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=22">
+<link rel="stylesheet" href="mobile.css?v=23">
 </head>
 <body>
 
@@ -610,7 +608,7 @@
             <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
           </div>
           <div class="profile-proof">
-<span class="pf hero">3× ADDY</span><span class="pf">ScreamFest</span><span class="pf">Super Bowl Rotation</span><span class="pf">TikTok Partner</span><span class="pf">Chinese Theatre Premiere</span>
+<span class="pf hero">3× ADDY</span><span class="pf">ScreamFest</span><span class="pf">TikTok Partner</span><span class="pf">Chinese Theatre Premiere</span>
           </div>
           <div class="profile-stats">
             <div class="stat">
