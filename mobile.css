@@ -10,6 +10,9 @@
 
 @media (max-width: 820px) {
 
+  /* Nothing should ever scroll the page sideways on a phone. */
+  html, body { max-width: 100%; overflow-x: hidden; }
+
   /* ---------- NAV: solo floating menu button (bottom-left) ----------
      A small FAB replaces the full-width bar. Bottom-LEFT on purpose: iOS 26
      Safari floats its URL pill centred at the bottom, which was pushing a
@@ -174,6 +177,29 @@
   #homeStories .story-name, #workStories .story-name, #photoStories .story-name, #feedStories .story-name {
     max-width: 58px !important; font-size: 10px !important;
   }
+
+
+  /* ---------- CLIENTS LIST: stop the grid blowout ----------
+     clients.html uses `grid-template-columns: repeat(2, 1fr)`. In CSS Grid a
+     `1fr` track is really `minmax(auto, 1fr)`, so columns refuse to shrink
+     below their content's min-content width and burst out of the container —
+     the page measured 524px inside a 390px viewport. `minmax(0, 1fr)` lets the
+     tracks actually shrink; the rest just re-scales the card for phone width. */
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .card { padding: 12px !important; gap: 10px !important; min-width: 0 !important; }
+  .card-head { gap: 9px !important; }
+  .av-ring { width: 44px !important; height: 44px !important; }
+  .card-id, .card-name, .card-handle, .card-role, .card-blurb, .card-meta {
+    min-width: 0 !important; overflow-wrap: anywhere; word-break: break-word;
+  }
+  .card-name { font-size: 13px !important; line-height: 1.2 !important; }
+  .card-handle { font-size: 10.5px !important; }
+  .card-role, .card-blurb { font-size: 11px !important; }
+  .card-meta { font-size: 9.5px !important; }
+  .ph { margin-bottom: 20px !important; padding-bottom: 14px !important; gap: 8px !important; }
+  .ph-l h1 { font-size: 30px !important; }
+  .ph-l p { font-size: 12px !important; }
+  .ph-r { text-align: left !important; font-size: 9px !important; letter-spacing: 0.14em !important; }
 
   /* ---------- MAIN: full width, clear the bottom bar ---------- */
   .main, .main-page {
