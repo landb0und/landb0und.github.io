@@ -135,6 +135,14 @@
   .profile-name-row { display: flex; align-items: center; gap: 7px; line-height: 1.1; margin: 0 0 4px; }
   .profile-handle { line-height: 1.25; margin: 0 0 11px; }
 
+  /* Verticals header: title and CTA share one baseline instead of stacking */
+  .vert-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .vert-head .section-cta {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--amber); text-decoration: none; white-space: nowrap; opacity: 0.9;
+  }
+  .vert-head .section-cta:hover { opacity: 1; }
+
   /* ---- Profile bio: stepped hierarchy instead of five equal-weight lines.
      The <br>s are hidden and each lane becomes a block, so spacing is
      controlled properly and every line has one clear job. ---- */
@@ -163,13 +171,15 @@
      carry the weight in near-white and a single amber "+" keeps it alive. ---- */
   .profile-stats .num { color: var(--ink); }
   .profile-stats .num .plus { color: var(--amber); opacity: 0.95; }
-  /* Quiet colour: the LABEL carries the accent. No pseudo-elements, no flex,
-     so the original stats spacing is preserved exactly. */
-  .profile-stats .lbl { color: var(--ink-4); }
-  .profile-stats .stat:nth-child(1) .lbl { color: rgba(245,176,66,0.85); }
-  .profile-stats .stat:nth-child(2) .lbl { color: rgba(70,200,216,0.85); }
-  .profile-stats .stat:nth-child(3) .lbl { color: rgba(232,88,154,0.85); }
-  .profile-stats .stat:nth-child(4) .lbl { color: rgba(245,197,24,0.85); }
+  /* Colour rides on the UNIT glyphs (M / K / the decimal point) — a small pop
+     inside the number itself. Labels stay plain and centred, so nothing about
+     the row's alignment changes. */
+  .profile-stats .lbl { color: var(--ink-4); display: block; text-align: center; }
+  .profile-stats .num { text-align: center; }
+  .profile-stats .stat:nth-child(1) .num .u { color: var(--amber); }
+  .profile-stats .stat:nth-child(2) .num .u { color: #46c8d8; }
+  .profile-stats .stat:nth-child(3) .num .u { color: #e8589a; }
+  .profile-stats .stat:nth-child(4) .num .u { color: #f5c518; }
   .profile-proof .sep { color: rgba(245,176,66,0.45); margin: 0 7px; font-weight: 400; }
   .profile-proof strong { color: var(--amber); font-weight: 800; }
 
@@ -561,7 +571,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=25">
+<link rel="stylesheet" href="mobile.css?v=26">
 </head>
 <body>
 
@@ -622,15 +632,15 @@
           </div>
           <div class="profile-stats">
             <div class="stat">
-              <div class="num">110M<span class="plus">+</span></div>
+              <div class="num">110<span class="u">M</span><span class="plus">+</span></div>
               <div class="lbl">Total Views</div>
             </div>
             <div class="stat">
-              <div class="num">100K</div>
+              <div class="num">100<span class="u">K</span></div>
               <div class="lbl">TikTok</div>
             </div>
             <a class="stat" href="https://instagram.com/landbound" target="_blank" rel="noopener" style="text-decoration:none; color:inherit;">
-              <div class="num">12.1K</div>
+              <div class="num">12<span class="u">.</span>1<span class="u">K</span></div>
               <div class="lbl">Instagram</div>
             </a>
             <div class="stat">
@@ -651,10 +661,9 @@
   </div>
 
   <!-- SHORTS -->
-  <div class="page-section-head"><span class="label">Verticals · @landbound</span></div>
-  <div class="section-sub">
-    <span>Short-form work — 47 clips, 110M+ views.</span>
-    <a href="/work/#shorts">OPEN SHORTS FEED →</a>
+  <div class="page-section-head vert-head">
+    <span class="label">Verticals · @landbound</span>
+    <a class="section-cta" href="/work/#shorts">OPEN SHORTS FEED →</a>
   </div>
   <div class="shorts-strip">
     <!-- All vertical tiles render dynamically into #verticalsStrip from data.js VERTICALS.
