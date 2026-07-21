@@ -13,7 +13,7 @@ window.CLIENTS = [
     role: 'Director · Executive Producer',
     blurb: 'CHILDSTAR album rollout: visual identity and music video direction. End-to-end Landbound shop.',
     palette: 'sa-1',
-    thumb: 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
+    thumb: 'https://vz-5dfccea4-b84.b-cdn.net/f42fbabd-edbe-4bb0-9474-cb491726fbb1/thumbnail.jpg', // Brand New MV frame
     media: [
       // Grace longforms share playlistId 'grace-show' so playing any one
       // recommends the others below it (CHILDSTAR is the featured/cover). This
@@ -158,7 +158,7 @@ window.CLIENTS = [
     role: 'Photographer',
     blurb: 'BTS film stills from the Allison Hagendorf Show: Yungblud sit-down (w/ Billy Corgan).',
     palette: 'sa-3',
-    thumb: 'photos/clients/allison-yungblud-bts/yungblud-bts-10.jpg',
+    thumb: 'photos/clients/allison-yungblud-bts/yungblud-bts-3.jpg',
     media: [
       // Multi-subject frames (Yungblud + Allison + Smashing Pumpkins / Billy Corgan)
       { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-1.jpg', title: 'Hagendorf Show BTS — 01', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Allison Hagendorf, Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },

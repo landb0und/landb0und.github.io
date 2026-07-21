@@ -199,7 +199,11 @@
 
     .spot-dots {
       position: relative; z-index: 2; display: flex; justify-content: center; align-items: center;
-      flex-wrap: nowrap; padding: 18px 24px 0; max-height: 34px; overflow: hidden;
+      /* Bottom padding leaves room for the active dot's 1.5x scale — without it
+         the enlarged hero dot was shaved ~2px by this rail's own overflow clip,
+         which read as the sheet cutting it off. The sheet peek is derived from
+         railBottom, so it slides down in step and the gap is preserved. */
+      flex-wrap: nowrap; padding: 18px 24px 7px; max-height: 40px; overflow: hidden;
       gap: var(--dotgap, 5px); touch-action: none;
     }
     /* One continuous amber-to-rose gradient across the whole rail. Position in
@@ -258,7 +262,7 @@
     .spot-empty { padding: 26px 18px; text-align: center; font-family: 'SF Mono', Menlo, monospace; font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.14em; text-transform: uppercase; }
   }
 </style>
-<link rel="stylesheet" href="mobile.css?v=32">
+<link rel="stylesheet" href="mobile.css?v=33">
 </head>
 <body>
 <nav class="nav">
@@ -317,7 +321,7 @@
   </div>
 </div>
 
-<script src="data.js?v=8"></script>
+<script src="data.js?v=9"></script>
 <script>
   /* ---------------------------------------------------------------
      Shared helpers — used by BOTH the desktop grid and the mobile
@@ -409,7 +413,7 @@
 
   /* Reel order: the strongest names lead. Curation only — every client
      still appears, and nothing here invents a credit. */
-  var NOTABLE = ['yungblud', 'grace-vanderwaal', 'surfaces',
+  var NOTABLE = ['surfaces', 'yungblud', 'grace-vanderwaal',
                  'gym-class-heroes', 'mike-posner', 'two-feet', 'saint-motel', 'landbound'];
   var isNotable = function (c) { return NOTABLE.indexOf(c.id) !== -1; };
 

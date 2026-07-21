@@ -38,7 +38,8 @@
   .nav-fab-bars { position: relative; display: block; width: 22px; height: 15px; }
   .nav-fab-bars i {
     position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px;
-    background: var(--amber);
+    /* Brighter than the flat accent so the control reads clearly in the corner */
+    background: color-mix(in srgb, var(--amber) 72%, #ffffff);
     transition: transform .3s cubic-bezier(.2,.9,.25,1), opacity .18s ease;
   }
   .nav-fab-bars i:nth-child(1) { top: 0; }
@@ -57,6 +58,17 @@
   @keyframes fabGlow {
     0%, 100% { box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 1px color-mix(in srgb, var(--amber) 14%, transparent), 0 0 9px 0 color-mix(in srgb, var(--amber) 26%, transparent); }
     50%      { box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 2px color-mix(in srgb, var(--amber) 10%, transparent), 0 0 15px 1px color-mix(in srgb, var(--amber) 42%, transparent); }
+  }
+
+  /* Subtle life on the hamburger bars themselves — a gentle brighten + glow
+     that breathes in sync with fabGlow. Paused while the menu is open so it
+     never fights the bars morphing into an X. Reduced-motion users opt out. */
+  @media (prefers-reduced-motion: no-preference) {
+    body:not(.nav-open) .nav-fab-bars { animation: barPulse 2.6s ease-in-out infinite; }
+  }
+  @keyframes barPulse {
+    0%, 100% { opacity: 0.9; filter: none; }
+    50%      { opacity: 1; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--amber) 60%, transparent)); }
   }
   @keyframes fabAttn {
     0%, 55%, 100% { transform: translateY(0) scale(1); }
@@ -234,6 +246,22 @@
   .oc-ring { width: 56px !important; height: 56px !important; }
   .oc-img { font-size: 13px !important; }
   .oc-name { font-size: 10px !important; max-width: 64px !important; }
+
+  /* ---------- CLIENT PROFILE: dock BACK next to the menu FAB ----------
+     Desktop keeps BACK at the top-left of the profile. On a phone it moves to
+     a floating pill in the bottom-left, immediately to the RIGHT of the 58px
+     menu FAB (left:14 + 58 wide => a 12px gap puts it at left:84). The FAB's
+     centre sits at bottom+45 (16 + 58/2); this ~31px pill therefore needs
+     bottom+29 to line up centre-to-centre. Hidden while the menu is open so it
+     never floats over the dimmed panel. */
+  .back-btn {
+    position: fixed !important; top: auto !important; right: auto !important;
+    left: calc(14px + 58px + 12px) !important;
+    bottom: calc(env(safe-area-inset-bottom) + 29px) !important;
+    margin: 0 !important; z-index: 640 !important;
+    transition: opacity .2s ease, transform .2s ease, background .15s !important;
+  }
+  body.nav-open .back-btn { opacity: 0 !important; pointer-events: none !important; transform: translateY(6px) !important; }
 
   /* ---------- PHOTO FEED: floating GRID VIEW button ----------
      In feed view the button becomes a floating pill in the bottom-right,
