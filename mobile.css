@@ -235,6 +235,27 @@
   .oc-img { font-size: 13px !important; }
   .oc-name { font-size: 10px !important; max-width: 64px !important; }
 
+  /* ---------- PHOTO FEED: floating GRID VIEW button ----------
+     In feed view the button becomes a floating pill in the bottom-right,
+     centre-aligned with the menu button on the left (58px FAB at
+     bottom+16 => its centre sits at bottom+45; a 44px pill therefore
+     needs bottom+23). It fades in once the user scrolls into the feed. */
+  body.feed-mode .feed-back-wrap {
+    position: fixed !important; top: auto !important;
+    right: 14px !important; left: auto !important;
+    bottom: calc(env(safe-area-inset-bottom) + 23px) !important;
+    margin: 0 !important; z-index: 640 !important;
+    justify-content: flex-end !important; width: auto !important;
+    opacity: 0; transform: translateY(8px);
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  body.feed-mode.feed-scrolled .feed-back-wrap { opacity: 1; transform: none; }
+  body.feed-mode .feed-back {
+    height: 44px !important; padding: 0 16px !important;
+    font-size: 10px !important; letter-spacing: 0.14em !important;
+    border-radius: 100px !important;
+  }
+
   /* ---------- MAIN: full width, clear the bottom bar ---------- */
   .main, .main-page {
     /* width matters as much as margin here: client.html sets an explicit

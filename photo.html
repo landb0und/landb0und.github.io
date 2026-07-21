@@ -298,7 +298,7 @@
 
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=31">
+<link rel="stylesheet" href="mobile.css?v=32">
 </head>
 <body>
 
@@ -335,7 +335,6 @@
     <div class="page-hero">
       <div>
         <h1>Professional photos &amp; retouching</h1>
-        <div class="lede">Stills from sets, editorial, and personal frames. Shot on Arri, Blackmagic, 35mm, and phone.</div>
       </div>
       <div class="meta">
         <strong>247</strong> frames<br>
@@ -525,13 +524,26 @@
   })();
 
   // ============= IG FEED MODE =============
+  // Reveal the floating GRID VIEW button once the user scrolls into the feed.
+  let feedScrollHandler = null;
+  function watchFeedScroll() {
+    if (feedScrollHandler) return;
+    feedScrollHandler = function () {
+      const y = window.scrollY || window.pageYOffset || 0;
+      document.body.classList.toggle('feed-scrolled', y > 120);
+    };
+    window.addEventListener('scroll', feedScrollHandler, { passive: true });
+    feedScrollHandler();
+  }
+
   function enterFeed(startIdx) {
     document.body.classList.add('feed-mode');
+    watchFeedScroll();
     window.scrollTo(0, 0);
     renderFeed(startIdx);
   }
   function exitFeed() {
-    document.body.classList.remove('feed-mode');
+    document.body.classList.remove('feed-mode', 'feed-scrolled');
     window.scrollTo(0, 0);
     // Hide grid during the column-layout reflow (lazy images reshuffle into columns
     // as they load — this caused the "glitches for a second" flash). Fade in once
@@ -627,6 +639,9 @@
   let wallScrollHandler = null;
   const WALL_GAP = 12;
   const WALL_SPEEDS = [14, 22, 10, 18, 12]; // px/sec per column — intentionally uneven
+  // Mobile: closer speeds + alternating directions => true omnidirectional drift.
+  const WALL_SPEEDS_M = [13, 15, 12, 14];
+  const WALL_DIRS_M   = [1, -1, 1, -1];   // +1 drifts up, -1 drifts down
   function escAttr(s) { return String(s == null ? '' : s).replace(/"/g, '&quot;'); }
   function escHtml(s) { return String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
 
@@ -647,7 +662,9 @@
     const runway = document.getElementById('wallScroll'); // collapse its tall runway when reduced
     if (runway) runway.classList.toggle('reduced', reduce);
     const w = window.innerWidth;
-    const NCOL = w <= 460 ? 2 : (w <= 700 ? 3 : 5);
+    // Mobile gets 4 columns (desktop stays exactly as it was at 5).
+    const IS_MOBILE_WALL = w <= 700;
+    const NCOL = IS_MOBILE_WALL ? 4 : 5;
 
     // round-robin into columns, preserving each photo's feed index
     const buckets = Array.from({ length: NCOL }, () => []);
@@ -718,7 +735,13 @@
     // Scroll-driven parallax: scrolling the PAGE nudges each column by a
     // different factor (same per-column speed feel as the drift), looping
     // seamlessly so it never traps the page scroll. Drift continues as ambient.
-    const SCROLL_FACTOR = cols.map((_, i) => WALL_SPEEDS[i % WALL_SPEEDS.length] / 16);
+    // Speed + direction per column. On mobile every other column runs the
+    // opposite way; on desktop everything keeps its original single-direction feel.
+    const SPEED = cols.map((_, i) => IS_MOBILE_WALL
+      ? WALL_SPEEDS_M[i % WALL_SPEEDS_M.length]
+      : WALL_SPEEDS[i % WALL_SPEEDS.length]);
+    const DIR = cols.map((_, i) => IS_MOBILE_WALL ? WALL_DIRS_M[i % WALL_DIRS_M.length] : 1);
+    const SCROLL_FACTOR = cols.map((_, i) => (SPEED[i] / 16) * DIR[i]);
     let lastScrollY = window.scrollY || window.pageYOffset || 0;
     wallScrollHandler = function () {
       const y = window.scrollY || window.pageYOffset || 0;
@@ -737,7 +760,7 @@
       if (runway && d > 0) {
         const range = runway.offsetHeight - window.innerHeight;
         const into = -runway.getBoundingClientRect().top; // distance past the runway top
-        if (range > 0 && into > range - 2) {
+        if (range > 0 && into > range * 0.85) {
           const jump = Math.floor(range * 0.5);
           lastScrollY = y - jump;
           window.scrollTo(0, y - jump);
@@ -751,7 +774,7 @@
       const dt = Math.min((now - last) / 1000, 0.05); last = now;
       for (let i = 0; i < cols.length; i++) {
         if (!paused[i] && heights[i]) {
-          offs[i] = (offs[i] + WALL_SPEEDS[i % WALL_SPEEDS.length] * dt) % heights[i];
+          offs[i] = ((offs[i] + SPEED[i] * DIR[i] * dt) % heights[i] + heights[i]) % heights[i];
           cols[i].style.transform = 'translateY(' + (-offs[i]) + 'px)';
         }
       }
