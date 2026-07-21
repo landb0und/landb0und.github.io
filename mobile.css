@@ -5,113 +5,154 @@
    specificity desktop rules still need !important; those are marked.
    Active under 820px (phones + small tablets in portrait).
    ============================================================ */
+/* Floating mobile menu button — desktop keeps the sidebar, so hide it there. */
+.nav-fab, .nav-scrim { display: none; }
+
 @media (max-width: 820px) {
 
-  /* ---------- NAV: left sidebar → bottom tab bar (frosted glass) ----------
-     Sealed to the bottom edge: the bar itself carries the safe-area padding, and
-     a solid ::after extends below it. The old rule used z-index:-1 there, which
-     dropped the mask BEHIND page content — that's why the page showed through
-     under the bar. It now shares the bar's stacking context instead. */
+  /* ---------- NAV: solo floating menu button (bottom-left) ----------
+     A small FAB replaces the full-width bar. Bottom-LEFT on purpose: iOS 26
+     Safari floats its URL pill centred at the bottom, which was pushing a
+     full-width bar up and exposing the page beneath it. A compact button in
+     the corner sidesteps that entirely. Tap to expand the tabs upward. */
+  .nav-fab {
+    display: flex !important; align-items: center; justify-content: center;
+    position: fixed; left: 14px; bottom: calc(env(safe-area-inset-bottom) + 16px);
+    width: 56px; height: 56px; padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.13);
+    background: linear-gradient(150deg, rgba(30,30,35,0.97), rgba(13,13,16,0.97));
+    -webkit-backdrop-filter: blur(18px) saturate(170%);
+    backdrop-filter: blur(18px) saturate(170%);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.62);
+    z-index: 650; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .25s cubic-bezier(.2,.9,.25,1), border-color .25s;
+  }
+  .nav-fab:active { transform: scale(0.93); }
+  body.nav-open .nav-fab { border-color: rgba(245,176,66,0.45); }
+
+  /* Hamburger that morphs into an X when open */
+  .nav-fab-bars { position: relative; display: block; width: 20px; height: 14px; }
+  .nav-fab-bars i {
+    position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px;
+    background: var(--amber);
+    transition: transform .3s cubic-bezier(.2,.9,.25,1), opacity .18s ease;
+  }
+  .nav-fab-bars i:nth-child(1) { top: 0; }
+  .nav-fab-bars i:nth-child(2) { top: 6px; }
+  .nav-fab-bars i:nth-child(3) { top: 12px; }
+  body.nav-open .nav-fab-bars i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  body.nav-open .nav-fab-bars i:nth-child(2) { opacity: 0; }
+  body.nav-open .nav-fab-bars i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  /* First-time affordance: gentle bob, an expanding ring, and a MENU tag.
+     All of it stops permanently once the button has been opened once. */
+  @media (prefers-reduced-motion: no-preference) {
+    body:not(.nav-seen) .nav-fab { animation: fabAttn 5s ease-in-out infinite; }
+    body:not(.nav-seen) .nav-fab::after {
+      content: ''; position: absolute; inset: -3px; border-radius: 50%;
+      border: 2px solid rgba(245,176,66,0.5); pointer-events: none;
+      animation: fabRipple 5s ease-out infinite;
+    }
+    body:not(.nav-seen) .nav-fab::before {
+      content: 'MENU'; position: absolute; left: 66px; white-space: nowrap;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.2em; color: rgba(255,255,255,0.8);
+      background: rgba(14,14,17,0.94); padding: 6px 10px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1); pointer-events: none;
+      animation: fabHint 5s ease-in-out infinite;
+    }
+  }
+  @keyframes fabAttn {
+    0%, 64%, 100% { transform: translateY(0); }
+    70%           { transform: translateY(-6px); }
+    76%           { transform: translateY(0); }
+    81%           { transform: translateY(-2.5px); }
+    86%           { transform: translateY(0); }
+  }
+  @keyframes fabRipple {
+    0%, 60% { transform: scale(1); opacity: 0; }
+    66%     { opacity: 0.75; }
+    92%     { transform: scale(1.85); opacity: 0; }
+    100%    { transform: scale(1); opacity: 0; }
+  }
+  @keyframes fabHint {
+    0%, 62%, 100% { opacity: 0; transform: translateX(-8px); }
+    72%, 88%      { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Dim + blur the page behind the open menu; tap it to dismiss */
+  .nav-scrim {
+    display: block !important; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.52);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    opacity: 0; visibility: hidden; z-index: 590;
+    transition: opacity .25s ease, visibility .25s ease;
+  }
+  body.nav-open .nav-scrim { opacity: 1; visibility: visible; }
+
+  /* The tab panel itself — springs up from the button */
   .nav {
-    top: auto; bottom: 0; left: 0; right: 0;
-    width: 100%; height: auto; min-height: 0;
-    flex-direction: row; padding: 0;
-    padding-bottom: max(env(safe-area-inset-bottom), 6px);
-    border-right: none;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    background: rgba(10,10,12,0.86);
-    -webkit-backdrop-filter: blur(22px) saturate(180%);
-    backdrop-filter: blur(22px) saturate(180%);
-    /* Two shadows: the lift above the bar, plus a SOLID block that starts at the
-       bar and extends far past the screen bottom. A box-shadow is painted at the
-       element's own stacking level and is never clipped by an ancestor's
-       overflow, so unlike a pseudo-element it cannot be cut off. This is what
-       seals the strip under iOS 26 Safari's floating URL pill, which anchors
-       fixed elements above itself and exposed the page beneath. */
-    box-shadow: 0 -12px 34px rgba(0,0,0,0.55), 0 60vh 0 60vh #0a0a0c;
-    overflow: visible !important;
-    z-index: 500;
+    position: fixed !important;
+    top: auto !important; right: auto !important;
+    bottom: calc(env(safe-area-inset-bottom) + 82px) !important;
+    left: 14px !important;
+    width: auto !important; min-width: 196px; height: auto !important;
+    flex-direction: column !important;
+    padding: 7px !important; margin: 0 !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-right: 1px solid rgba(255,255,255,0.1) !important;
+    border-radius: 18px !important;
+    background: rgba(14,14,17,0.94) !important;
+    -webkit-backdrop-filter: blur(26px) saturate(180%);
+    backdrop-filter: blur(26px) saturate(180%);
+    box-shadow: 0 20px 54px rgba(0,0,0,0.66) !important;
+    z-index: 600 !important;
+    opacity: 0; visibility: hidden;
+    transform: translateY(12px) scale(0.92);
+    transform-origin: 24px 100%;
+    transition: opacity .2s ease, transform .3s cubic-bezier(.2,.9,.25,1), visibility .3s;
   }
-  /* Solid block filling everything BELOW the bar (home-indicator strip), so no
-     page content can ever peek through. Same stacking context as .nav. */
-  .nav::after {
-    content: ''; position: absolute; left: 0; right: 0; top: 100%;
-    height: 60vh; background: #0a0a0c;
-  }
-  .nav-brand, .nav-socials, .nav-bottom { display: none !important; }
+  body.nav-open .nav { opacity: 1; visibility: visible; transform: none; }
+  .nav::after { display: none !important; }
+  .nav-brand, .nav-socials, .nav-bottom, .theme-switcher { display: none !important; }
+
   .nav-items {
-    flex-direction: row; flex: 1; gap: 0; padding: 0; margin: 0; height: 56px;
-    justify-content: space-around; align-items: stretch;
+    flex-direction: column !important; flex: none !important;
+    gap: 2px !important; height: auto !important;
+    padding: 0 !important; margin: 0 !important; align-items: stretch !important;
   }
   .nav-item {
     position: relative;
-    flex: 1 1 0; min-width: 0; flex-direction: column; gap: 4px;
-    justify-content: center; align-items: center; text-align: center;
-    padding: 7px 2px 6px; border-radius: 0;
-    font-size: 9px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-    color: rgba(255,255,255,0.46);
-    transition: color .2s ease;
+    flex: none !important; flex-direction: row !important; gap: 12px !important;
+    justify-content: flex-start !important; align-items: center !important; text-align: left !important;
+    padding: 11px 14px !important; border-radius: 12px !important;
+    font-size: 11.5px !important; font-weight: 600 !important;
+    letter-spacing: 0.1em !important; text-transform: uppercase !important;
+    color: rgba(255,255,255,0.6) !important;
     -webkit-tap-highlight-color: transparent;
   }
-  /* Line icons, masked so they inherit the item's colour (incl. the amber
-     active state). Matched on href so no page markup has to change — both the
-     clean paths and the legacy .html paths are covered. */
-  .nav-item::before {
-    content: ''; display: block; width: 21px; height: 21px;
-    background-color: currentColor;
-    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-    -webkit-mask-position: center; mask-position: center;
-    -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
-    transition: transform .2s ease;
+  .nav-item::before { width: 19px !important; height: 19px !important; }
+  .nav-item.active { color: var(--amber) !important; background: rgba(245,176,66,0.13) !important; }
+  .nav-item.active::before { transform: none; filter: none; }
+  .nav-item.active::after { display: none !important; }
+  .nav-item:active { background: rgba(255,255,255,0.07) !important; }
+
+  /* Items stagger in so the expand reads as one motion */
+  @media (prefers-reduced-motion: no-preference) {
+    body.nav-open .nav-item { animation: navItemIn .3s cubic-bezier(.2,.9,.25,1) backwards; }
+    body.nav-open .nav-item:nth-child(1) { animation-delay: .03s; }
+    body.nav-open .nav-item:nth-child(2) { animation-delay: .06s; }
+    body.nav-open .nav-item:nth-child(3) { animation-delay: .09s; }
+    body.nav-open .nav-item:nth-child(4) { animation-delay: .12s; }
+    body.nav-open .nav-item:nth-child(5) { animation-delay: .15s; }
   }
-  .nav-item[href="/"]::before,
-  .nav-item[href="index.html"]::before {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10.6 12 3.2l9 7.4'/%3E%3Cpath d='M5.4 9.8V20.8h13.2V9.8'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10.6 12 3.2l9 7.4'/%3E%3Cpath d='M5.4 9.8V20.8h13.2V9.8'/%3E%3C/svg%3E");
-  }
-  .nav-item[href="/work"]::before,
-  .nav-item[href="/work/"]::before,
-  .nav-item[href="work.html"]::before {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.8' y='5' width='18.4' height='14' rx='3.2'/%3E%3Cpath d='M10.3 9.5l4.7 2.5-4.7 2.5z'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2.8' y='5' width='18.4' height='14' rx='3.2'/%3E%3Cpath d='M10.3 9.5l4.7 2.5-4.7 2.5z'/%3E%3C/svg%3E");
-  }
-  .nav-item[href="/photo"]::before,
-  .nav-item[href="photo.html"]::before {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.4 8.7h3.3l1.5-2.2h7.6l1.5 2.2h3.3v10.8H3.4z'/%3E%3Ccircle cx='12' cy='13.7' r='3.1'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.4 8.7h3.3l1.5-2.2h7.6l1.5 2.2h3.3v10.8H3.4z'/%3E%3Ccircle cx='12' cy='13.7' r='3.1'/%3E%3C/svg%3E");
-  }
-  .nav-item[href="/vfx-ai"]::before,
-  .nav-item[href="vfx-ai.html"]::before {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 3.4l1.7 4.4 4.4 1.7-4.4 1.7L11 15.6l-1.7-4.4-4.4-1.7 4.4-1.7z'/%3E%3Cpath d='M17.8 14.6l.75 1.9 1.9.75-1.9.75-.75 1.9-.75-1.9-1.9-.75 1.9-.75z'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 3.4l1.7 4.4 4.4 1.7-4.4 1.7L11 15.6l-1.7-4.4-4.4-1.7 4.4-1.7z'/%3E%3Cpath d='M17.8 14.6l.75 1.9 1.9.75-1.9.75-.75 1.9-.75-1.9-1.9-.75 1.9-.75z'/%3E%3C/svg%3E");
-  }
-  .nav-item[href="/hire"]::before,
-  .nav-item[href="hire.html"]::before {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='7.6' width='18' height='12.4' rx='2.4'/%3E%3Cpath d='M9 7.6V5.7a1.3 1.3 0 0 1 1.3-1.3h3.4A1.3 1.3 0 0 1 15 5.7v1.9'/%3E%3Cpath d='M3 12.4h18'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='7.6' width='18' height='12.4' rx='2.4'/%3E%3Cpath d='M9 7.6V5.7a1.3 1.3 0 0 1 1.3-1.3h3.4A1.3 1.3 0 0 1 15 5.7v1.9'/%3E%3Cpath d='M3 12.4h18'/%3E%3C/svg%3E");
-  }
-  /* Active: amber, lifted icon, soft glow — no hard inset bar */
-  .nav-item.active {
-    background: transparent;
-    color: var(--amber);
-    box-shadow: none;
-  }
-  .nav-item.active::before {
-    transform: translateY(-1px);
-    filter: drop-shadow(0 0 7px rgba(245,176,66,0.55));
-  }
-  /* Small amber dot marking the current tab */
-  .nav-item.active::after {
-    content: ''; position: absolute; bottom: 1px; left: 50%;
-    width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%;
-    background: var(--amber); box-shadow: 0 0 6px rgba(245,176,66,0.8);
-  }
-  .nav-item:active { color: rgba(255,255,255,0.85); }
+  @keyframes navItemIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
 
   /* ---------- MAIN: full width, clear the bottom bar ---------- */
   .main, .main-page {
     margin-left: 0 !important; max-width: 100% !important;
-    padding: 14px 12px calc(74px + env(safe-area-inset-bottom)) !important;
+    padding: 14px 12px calc(30px + env(safe-area-inset-bottom)) !important;
   }
   /* Hire's wrapper — drop the sidebar gap; the rotunda stage stays full-bleed */
   .hire-main { margin-left: 0 !important; max-width: 100% !important; }
@@ -224,7 +265,7 @@
   .rail-cat-action { display: none !important; }
 
   /* Back-to-top: above the bottom nav, out of the way */
-  .feed-jump-top { left: auto !important; right: 14px !important; top: auto !important; bottom: calc(70px + env(safe-area-inset-bottom)) !important; }
+  .feed-jump-top { left: auto !important; right: 14px !important; top: auto !important; bottom: calc(74px + env(safe-area-inset-bottom)) !important; }
 
   /* ---------- GENERIC: any two-column page layout → single column ---------- */
   .page-hero { grid-template-columns: 1fr !important; gap: 10px !important; margin-bottom: 14px !important; padding-bottom: 12px !important; }
@@ -255,7 +296,7 @@
   .rec-meta { font-size: 11px !important; }
   /* Floating "Open Verticals" pill — keep it, but pin it clearly ABOVE the bottom
      tab bar (with a higher z-index than the nav) so it can't dip behind it. */
-  .toggle-btn { display: inline-block !important; bottom: calc(72px + env(safe-area-inset-bottom)) !important; right: 14px !important; z-index: 210 !important; }
+  .toggle-btn { display: inline-block !important; bottom: calc(22px + env(safe-area-inset-bottom)) !important; right: 14px !important; z-index: 210 !important; }
   /* Attention cue: a small lift + a light sweep every ~7s. Subtle, not busy. */
   .toggle-btn { overflow: hidden !important; }
   .toggle-btn::after {

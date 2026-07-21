@@ -67,9 +67,58 @@
     });
   }
 
+
+  /* ---- Mobile floating menu button (bottom-left) --------------------------
+     Injected on every page so no page markup has to change. Toggles
+     body.nav-open, which mobile.css turns into an expanding tab panel.
+     Styling/visibility is entirely CSS — hidden above 820px. */
+  function buildNavFab() {
+    if (document.querySelector(".nav-fab")) return;
+    var nav = document.querySelector(".nav");
+    if (!nav) return;
+
+    var scrim = document.createElement("div");
+    scrim.className = "nav-scrim";
+
+    var fab = document.createElement("button");
+    fab.className = "nav-fab";
+    fab.type = "button";
+    fab.setAttribute("aria-label", "Open menu");
+    fab.setAttribute("aria-expanded", "false");
+    fab.innerHTML = '<span class="nav-fab-bars"><i></i><i></i><i></i></span>';
+
+    document.body.appendChild(scrim);
+    document.body.appendChild(fab);
+
+    function close() {
+      document.body.classList.remove("nav-open");
+      fab.setAttribute("aria-expanded", "false");
+      fab.setAttribute("aria-label", "Open menu");
+    }
+    function open() {
+      document.body.classList.add("nav-open");
+      fab.setAttribute("aria-expanded", "true");
+      fab.setAttribute("aria-label", "Close menu");
+      // Once used, stop the attention animation for good.
+      document.body.classList.add("nav-seen");
+      try { localStorage.setItem("navSeen", "1"); } catch (e) {}
+    }
+    fab.addEventListener("click", function (e) {
+      e.stopPropagation();
+      document.body.classList.contains("nav-open") ? close() : open();
+    });
+    scrim.addEventListener("click", close);
+    nav.addEventListener("click", function (e) { if (e.target.closest(".nav-item")) close(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+
+    try { if (localStorage.getItem("navSeen")) document.body.classList.add("nav-seen"); } catch (e) {}
+  }
+
+  function initChrome() { buildSwitcher(); buildNavFab(); }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', buildSwitcher);
+    document.addEventListener('DOMContentLoaded', initChrome);
   } else {
-    buildSwitcher();
+    initChrome();
   }
 })();
