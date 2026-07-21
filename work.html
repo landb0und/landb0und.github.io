@@ -104,10 +104,10 @@
 
 
   /* Filter bar — search-input-aesthetic */
-  .filter-bar { display: flex; align-items: center; gap: 14px; padding: 10px 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 22px; transition: border-color .15s; }
+  .filter-bar { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 22px; transition: border-color .15s; }
   .filter-bar:hover { border-color: var(--ink-4); }
-  .filter-label { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-4); font-size: 10px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 800; padding-right: 14px; border-right: 1px solid var(--line); flex-shrink: 0; }
-  .filter-label svg { width: 12px; height: 12px; color: var(--ink-3); }
+  .filter-label { display: inline-flex; align-items: center; color: var(--ink-4); padding-right: 10px; border-right: 1px solid var(--line); flex-shrink: 0; }
+  .filter-label svg { width: 14px; height: 14px; color: var(--ink-3); display: block; }
   .filter-opts { display: flex; align-items: center; flex: 1; gap: 2px; overflow-x: auto; scrollbar-width: none; }
   .filter-opts::-webkit-scrollbar { display: none; }
   .opt { padding: 6px 14px; color: var(--ink-2); font-size: 11px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 700; cursor: pointer; border-radius: 6px; transition: all .15s; white-space: nowrap; }
@@ -512,7 +512,7 @@
   .vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
   .vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
 </style>
-<link rel="stylesheet" href="/mobile.css?v=16">
+<link rel="stylesheet" href="/mobile.css?v=17">
 </head>
 <body>
 
@@ -548,10 +548,7 @@
   <div class="stories" id="workStories" style="margin-bottom: 20px;"></div>
 
   <div class="filter-bar">
-    <div class="filter-label">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm3 5h12v2H6v-2zm4 5h4v2h-4v-2z"/></svg>
-      Filter
-    </div>
+    <div class="filter-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm3 5h12v2H6v-2zm4 5h4v2h-4v-2z"/></svg></div>
     <div class="filter-opts">
       <span class="opt active" data-filter="all">All</span>
       <span class="opt-sep"></span>
@@ -587,9 +584,9 @@
           <span class="chip">Editor</span>
           <span class="chip">DP</span>
         </div>
-        <button class="share-link" id="shareLink" type="button" title="Copy a link to this video" style="margin-top:12px;display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;border:1px solid var(--line,#333);background:var(--bg-2,#1a1a1a);color:var(--text,#eee);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          <span class="share-link-label">Copy link to this video</span>
+        <button class="share-link" id="shareLink" type="button" title="Copy a link to this video" style="margin:10px 0 20px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid var(--line,#333);background:var(--bg-2,#1a1a1a);color:var(--text,#eee);font:inherit;font-size:11.5px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <span class="share-link-label">Copy link</span>
         </button>
       </div>
 
