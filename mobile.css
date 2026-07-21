@@ -149,6 +149,18 @@
   }
   @keyframes navItemIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
 
+  /* ---- PROFILE TYPE — mobile scale for the stepped bio + chips ---- */
+  .profile-bio { font-size: 11.5px !important; line-height: 1.4 !important; margin-bottom: 10px !important; }
+  .profile-bio .lane-1 { font-size: 13.5px !important; margin-bottom: 6px !important; }
+  .profile-bio .lane-role { font-size: 11.5px !important; margin-bottom: 4px !important; }
+  .profile-bio .lane-edu { font-size: 10.5px !important; margin-bottom: 4px !important; }
+  .profile-bio .lane-2 { font-size: 11px !important; }
+  .profile-bio .lane-ai { font-size: 10px !important; margin-top: 8px !important; padding-top: 8px !important; }
+  .profile-proof { gap: 4px !important; margin-bottom: 0 !important; }
+  .profile-proof .pf { font-size: 8.5px !important; padding: 4px 7px !important; letter-spacing: 0.05em !important; }
+  .profile-stats .num { font-size: 15px !important; }
+  .profile-stats .lbl { font-size: 6.5px !important; color: var(--ink-4) !important; }
+
   /* ---------- MAIN: full width, clear the bottom bar ---------- */
   .main, .main-page {
     margin-left: 0 !important; max-width: 100% !important;
@@ -265,7 +277,11 @@
   .rail-cat-action { display: none !important; }
 
   /* Back-to-top: above the bottom nav, out of the way */
-  .feed-jump-top { left: auto !important; right: 14px !important; top: auto !important; bottom: calc(74px + env(safe-area-inset-bottom)) !important; }
+  .feed-jump-top {
+    left: auto !important; top: auto !important;
+    right: 14px !important;
+    bottom: calc(env(safe-area-inset-bottom) + 22px) !important;
+  }
 
   /* ---------- GENERIC: any two-column page layout → single column ---------- */
   .page-hero { grid-template-columns: 1fr !important; gap: 10px !important; margin-bottom: 14px !important; padding-bottom: 12px !important; }
@@ -296,7 +312,13 @@
   .rec-meta { font-size: 11px !important; }
   /* Floating "Open Verticals" pill — keep it, but pin it clearly ABOVE the bottom
      tab bar (with a higher z-index than the nav) so it can't dip behind it. */
-  .toggle-btn { display: inline-block !important; bottom: calc(22px + env(safe-area-inset-bottom)) !important; right: 14px !important; z-index: 210 !important; }
+  .toggle-btn {
+    display: inline-flex !important; align-items: center !important;
+    height: 44px !important; padding: 0 16px !important;
+    right: 14px !important;
+    bottom: calc(env(safe-area-inset-bottom) + 22px) !important;
+    z-index: 210 !important;
+  }
   /* Attention cue: a small lift + a light sweep every ~7s. Subtle, not busy. */
   .toggle-btn { overflow: hidden !important; }
   .toggle-btn::after {
