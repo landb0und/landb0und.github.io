@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>O SUPERMAN — system</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=UnifrakturCook:wght@700&display=swap');
@@ -29,6 +29,10 @@
     overflow:hidden;
     user-select:none;
     -webkit-user-select:none;
+    touch-action:none;                    /* no scroll/zoom fighting the drags */
+    overscroll-behavior:none;
+    -webkit-touch-callout:none;
+    -webkit-tap-highlight-color:transparent;
     cursor:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='30'%20height='30'%3E%3Cpath%20d='M4%202L4%2022L9.5%2016.5L13%2024L16.5%2022.3L13%2015L20%2015Z'%20fill='%23140406'%20stroke='%23c12a22'%20stroke-width='1.4'%20stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, auto;
   }
   /* hot cursor for anything clickable / grabbable */
@@ -74,10 +78,19 @@
   .tbar .ti{font-family:var(--gothic);font-size:13px;letter-spacing:.4px;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;color:#f0e3d4;text-shadow:0 1px 1px #000;}
 
-  /* locked window: drag pans the video inside this window only (no color change) */
+  /* locked window: drag glues the video to the window (no color change) */
   .win.locked .tbar{cursor:grab;}
   .win.locked .tbar:active{cursor:grabbing;}
   .win.locked .ti::after{content:' ⛓';opacity:.85;}
+
+  /* title-bar buttons (freeze / close) */
+  .tbtns{display:flex;gap:3px;margin-left:6px;flex-shrink:0;}
+  .tbtns b{width:16px;height:14px;display:flex;align-items:center;justify-content:center;font-size:9px;
+    color:#e9d9c8;cursor:pointer;background:rgba(255,255,255,.05);
+    box-shadow:inset -1px -1px var(--dk),inset 1px 1px rgba(255,255,255,.12);}
+  .tbtns b:hover{background:rgba(255,255,255,.12);}
+  .tbtns b:active{box-shadow:inset 1px 1px var(--dk),inset -1px -1px rgba(255,255,255,.12);}
+  .win.frozen .frz{box-shadow:inset 1px 1px var(--dk),inset -1px -1px rgba(255,255,255,.12);background:rgba(255,255,255,.14);}
 
   .content{position:relative;flex:1;min-height:0;margin:2px 2px 2px;overflow:hidden;
     background:#000;box-shadow:inset 1px 1px var(--dk),inset -1px -1px var(--hi);}
@@ -118,6 +131,14 @@
   #crt.flick{animation:flick .14s steps(2) 2;}
   @keyframes flick{0%{opacity:1}50%{opacity:.35;filter:invert(1) hue-rotate(40deg)}100%{opacity:1}}
 
+  /* film grain — subtle moving noise over everything */
+  #grain{position:fixed;inset:-60%;z-index:610;pointer-events:none;opacity:.06;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain .5s steps(5) infinite;}
+  @keyframes grain{
+    0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-4%)}
+    60%{transform:translate(-3%,-2%)}80%{transform:translate(4%,2%)}100%{transform:translate(-2%,3%)}}
+
   /* ---------- scrubber ---------- */
   #bar{position:fixed;left:0;right:0;bottom:0;height:40px;z-index:700;
     display:flex;align-items:center;gap:12px;padding:0 16px;
@@ -138,6 +159,28 @@
   #hint{font-family:var(--gothic);font-size:12px;color:#a05a4a;letter-spacing:1px;cursor:pointer;
     animation:bk 1.6s steps(2) infinite;white-space:nowrap;}
   @keyframes bk{0%,55%{opacity:1}56%,100%{opacity:.25}}
+
+  /* ---------- touch / small screens ---------- */
+  .win,#bar,#track{touch-action:none;}
+  @media (max-width:768px),(pointer:coarse){
+    .tbar{height:30px;padding:0 6px;}
+    .tbar .ti{font-size:15px;}
+    .tbar .sig{font-size:17px;}
+    .tbtns{gap:5px;margin-left:8px;}
+    .tbtns b{width:26px;height:22px;font-size:12px;}
+    .rsz{width:30px;height:30px;
+      background:linear-gradient(135deg,transparent 0 16px,var(--hi) 16px 17px,transparent 17px 21px,var(--hi) 21px 22px,transparent 22px 26px,var(--hi) 26px 27px,transparent 27px);}
+    #bar{height:58px;gap:10px;padding:0 12px calc(env(safe-area-inset-bottom)) 12px;}
+    #bar .btn{font-size:22px;width:30px;}
+    #tc{font-size:14px;min-width:88px;}
+    #track{height:30px;}
+    #track .rail,#track .fill{height:5px;}
+    #track .head{width:14px;height:24px;margin-left:-7px;}
+    #hint{font-size:13px;}
+    #sigil{font-size:46vh;}
+    /* no hover states on touch */
+    .tbtns b:hover{background:rgba(255,255,255,.05);}
+  }
 </style>
 </head>
 <body>
@@ -147,14 +190,12 @@
   <div id="sigil">⛧</div>
 </div>
 <div id="crt"></div>
+<div id="grain"></div>
 
-
-<!-- hidden master video; all panels draw from this.
-     SOURCE: Bunny "bonus" collection upload (osuperman.mp4 → GUID b205d685-b14e-4d75-ab2b-655aa15db102).
-     To swap in a new cut later, just replace the src URL below with the new Bunny play_720p.mp4 URL. -->
+<!-- hidden master video; all panels draw from this -->
 <video id="master" playsinline muted loop
   style="position:fixed;width:2px;height:2px;opacity:0;pointer-events:none;left:-10px;top:-10px">
-  <source src="https://vz-5dfccea4-b84.b-cdn.net/b205d685-b14e-4d75-ab2b-655aa15db102/play_720p.mp4" type="video/mp4">
+  <source src="https://vz-5dfccea4-b84.b-cdn.net/b205d685-b14e-4d75-ab2b-655aa15db102/play_480p.mp4" type="video/mp4">
 </video>
 
 <!-- bottom scrubber -->
@@ -180,7 +221,10 @@ function newEmber(seed){
            r:0.5+Math.random()*1.6, vy:0.12+Math.random()*0.5,
            drift:(Math.random()-0.5)*0.25, ph:Math.random()*6.28, sp:0.01+Math.random()*0.03 };
 }
-function initEmbers(){ embers=[]; for(let i=0;i<40;i++) embers.push(newEmber(true)); }
+function initEmbers(){
+  const n = window.innerWidth<768 ? 18 : 40;   // lighter load on phones
+  embers=[]; for(let i=0;i<n;i++) embers.push(newEmber(true));
+}
 function drawEmbers(){
   const W=bgfx.width, H=bgfx.height;
   bgx.clearRect(0,0,W,H);
@@ -198,13 +242,24 @@ function drawEmbers(){
 }
 
 /* ---------- panels ---------- */
-const WINDOWS = [
-  {id:'w1', title:'hello?',               sig:'☎', x:120, y:60,  w:480, h:320},
-  {id:'w2', title:'this is your mother.',  sig:'🜨', x:660, y:120, w:380, h:460},
-  {id:'w3', title:'are you coming home?',  sig:'✝', x:260, y:300, w:560, h:300},
-  {id:'w4', title:'you dont know me',      sig:'▦', x:880, y:380, w:330, h:240},
-  {id:'w5', title:'I know you',            sig:'☠', x:520, y:150, w:300, h:210},
-];
+const R = n => Math.round(n);
+function defaultWindows(){
+  const W=window.innerWidth, H=window.innerHeight;
+  if(W<768){   // phone: fewer, smaller, all on-screen
+    return [
+      {id:'w1', title:'hello?',              sig:'☎', x:R(W*.05), y:R(H*.05), w:R(W*.74), h:R(H*.21)},
+      {id:'w2', title:'this is your mother.', sig:'🜨', x:R(W*.20), y:R(H*.30), w:R(W*.75), h:R(H*.23)},
+      {id:'w3', title:'are you coming home?', sig:'✝', x:R(W*.04), y:R(H*.57), w:R(W*.80), h:R(H*.19)},
+    ];
+  }
+  return [
+    {id:'w1', title:'hello?',               sig:'☎', x:120, y:60,  w:480, h:320},
+    {id:'w2', title:'this is your mother.',  sig:'🜨', x:660, y:120, w:380, h:460},
+    {id:'w3', title:'are you coming home?',  sig:'✝', x:260, y:300, w:560, h:300},
+    {id:'w4', title:'you dont know me',      sig:'▦', x:880, y:380, w:330, h:240},
+    {id:'w5', title:'I know you',            sig:'☠', x:520, y:150, w:300, h:210},
+  ];
+}
 
 let zCounter = 100;
 const winEls = {};
@@ -216,18 +271,29 @@ function buildWindow(def){
   win.style.width=def.w+'px'; win.style.height=def.h+'px';
   win.style.zIndex=++zCounter;
   win.innerHTML = `
-    <div class="tbar"><span class="sig">${def.sig}</span><span class="ti">${def.title}</span></div>
+    <div class="tbar"><span class="sig">${def.sig}</span><span class="ti">${def.title}</span>
+      <div class="tbtns"><b class="frz" title="freeze frame">❄</b><b class="cls" title="close">✕</b></div></div>
     <div class="content"><canvas></canvas><div class="scan"></div></div>
     <div class="rsz"></div>`;
   desk.appendChild(win);
   win.canvas = win.querySelector('canvas');
   win.ctx = win.canvas.getContext('2d');
   winEls[def.id] = win;
-  win.addEventListener('mousedown',()=>raise(win));
+  win.addEventListener('pointerdown',()=>raise(win));
   makeDraggable(win, win.querySelector('.tbar'));
   makeResizable(win, win.querySelector('.rsz'));
-  // double-click anywhere on the window locks/unlocks it
-  win.addEventListener('dblclick',e=>{ if(e.target.closest('.rsz')) return; toggleLock(win); });
+  // double-click / double-tap locks & unlocks (works for mouse and touch alike)
+  let lastTap=0;
+  win.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.rsz')||e.target.closest('.tbtns')) return;
+    const now=Date.now();
+    if(now-lastTap<320){ toggleLock(win); lastTap=0; } else lastTap=now;
+  });
+  // title buttons
+  win.querySelector('.frz').addEventListener('click',e=>{ e.stopPropagation(); toggleFreeze(win); });
+  win.querySelector('.cls').addEventListener('click',e=>{ e.stopPropagation(); removeWindow(win); });
+  // right-click anywhere on the window deletes it
+  win.addEventListener('contextmenu',e=>{ e.preventDefault(); removeWindow(win); });
   return win;
 }
 function raise(win){ win.style.zIndex=++zCounter; }
@@ -235,15 +301,40 @@ function toggleLock(win){
   win.locked=!win.locked;
   win.classList.toggle('locked', win.locked);
 }
+function toggleFreeze(win){
+  win.frozen=!win.frozen;
+  win.classList.toggle('frozen', win.frozen);
+}
+function removeWindow(win){
+  delete winEls[win.id];
+  win.remove();
+}
+
+/* ---------- spawn new windows ---------- */
+let spawnSeq=1;
+const TITLES=['pick up.','where are you','it’s me','come closer','dont look','i see you','still here','answer the phone','are you alone?','o, superman','hello?','mom?'];
+const SIGS=['☎','🜨','✝','▦','☠','⛧','✶','☓','♱','⚰'];
+function spawnWindow(cx,cy){
+  const w=340+Math.floor(Math.random()*120), h=210+Math.floor(Math.random()*120);
+  const def={ id:'wx'+(spawnSeq++),
+    sig:SIGS[Math.floor(Math.random()*SIGS.length)],
+    title:TITLES[Math.floor(Math.random()*TITLES.length)],
+    x:Math.max(4,Math.min((cx||window.innerWidth/2)-w/2, window.innerWidth-w-4)),
+    y:Math.max(4,Math.min((cy||window.innerHeight/2)-12, window.innerHeight-h-44)),
+    w, h };
+  const win=buildWindow(def); raise(win); return win;
+}
 
 function makeDraggable(win, handle){
-  let sx,sy,ox,oy,sOffX,sOffY,drag=false;
-  handle.addEventListener('mousedown',e=>{
-    drag=true; sx=e.clientX; sy=e.clientY; ox=win.offsetLeft; oy=win.offsetTop;
+  let sx,sy,ox,oy,sOffX,sOffY,pid=null;
+  handle.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.tbtns')) return;   // let title buttons handle their own taps
+    pid=e.pointerId; try{ handle.setPointerCapture(pid); }catch(_){}
+    sx=e.clientX; sy=e.clientY; ox=win.offsetLeft; oy=win.offsetTop;
     sOffX=win.offX||0; sOffY=win.offY||0; raise(win); e.preventDefault();
   });
-  window.addEventListener('mousemove',e=>{
-    if(!drag) return;
+  handle.addEventListener('pointermove',e=>{
+    if(pid===null||e.pointerId!==pid) return;
     const dx=e.clientX-sx;
     const newTop=Math.max(0,oy+(e.clientY-sy));
     const dyApplied=newTop-oy;
@@ -252,46 +343,77 @@ function makeDraggable(win, handle){
     // locked: the video is glued to the window — move both together so the slice stays put
     if(win.locked){ win.offX=sOffX+dx; win.offY=sOffY+dyApplied; }
   });
-  window.addEventListener('mouseup',()=>drag=false);
+  const end=e=>{ if(e.pointerId===pid) pid=null; };
+  handle.addEventListener('pointerup',end);
+  handle.addEventListener('pointercancel',end);
 }
 function makeResizable(win, grip){
-  let sx,sy,ow,oh,rz=false;
-  grip.addEventListener('mousedown',e=>{
-    rz=true; sx=e.clientX; sy=e.clientY; ow=win.offsetWidth; oh=win.offsetHeight; raise(win); e.preventDefault(); e.stopPropagation();
+  let sx,sy,ow,oh,pid=null;
+  grip.addEventListener('pointerdown',e=>{
+    pid=e.pointerId; try{ grip.setPointerCapture(pid); }catch(_){}
+    sx=e.clientX; sy=e.clientY; ow=win.offsetWidth; oh=win.offsetHeight;
+    raise(win); e.preventDefault(); e.stopPropagation();
   });
-  window.addEventListener('mousemove',e=>{
-    if(!rz) return;
-    win.style.width =Math.max(150, ow+e.clientX-sx)+'px';
-    win.style.height=Math.max(90,  oh+e.clientY-sy)+'px';
+  grip.addEventListener('pointermove',e=>{
+    if(pid===null||e.pointerId!==pid) return;
+    win.style.width =Math.max(140, ow+e.clientX-sx)+'px';
+    win.style.height=Math.max(80,  oh+e.clientY-sy)+'px';
   });
-  window.addEventListener('mouseup',()=>rz=false);
+  const end=e=>{ if(e.pointerId===pid) pid=null; };
+  grip.addEventListener('pointerup',end);
+  grip.addEventListener('pointercancel',end);
 }
 
 /* ---------- video-window draw loop ---------- */
 let vw=854, vh=480;
 master.addEventListener('loadedmetadata',()=>{ vw=master.videoWidth; vh=master.videoHeight; });
 
+/* shared per-frame analog imperfections (same across all windows = like a bad source signal) */
+const art={jx:0,jy:0,tear:null,tearTTL:0};
+function computeArtifacts(){
+  const t=performance.now();
+  art.jx=Math.sin(t*0.0013)*0.5 + (Math.random()<0.03?(Math.random()*4-2):0);   // horizontal wobble + rare nudge
+  art.jy=Math.sin(t*0.0009)*0.3 + (Math.random()<0.02?(Math.random()*2.4-1.2):0);// vertical drift
+  if(art.tearTTL>0){ art.tearTTL--; if(art.tearTTL===0) art.tear=null; }
+  else if(Math.random()<0.015){                                                  // occasional horizontal tear band
+    art.tear={y:Math.random()*0.88, h:0.03+Math.random()*0.07, dx:Math.random()*18-9};
+    art.tearTTL=2+Math.floor(Math.random()*3);
+  }
+}
+
 function drawCover(ctx,W,H,ox,oy){
   if(!vw||!vh||master.readyState<2) return;
   const scale=Math.max(W/vw,H/vh);
   const dw=vw*scale, dh=vh*scale;
-  ctx.drawImage(master,(W-dw)/2+ox,(H-dh)/2+oy,dw,dh);
+  const dx=(W-dw)/2+ox+art.jx, dy=(H-dh)/2+oy+art.jy;
+  ctx.drawImage(master,dx,dy,dw,dh);
+  const tr=art.tear;
+  if(tr){
+    const by=tr.y*H, bh=tr.h*H;
+    let sy=(by-dy)/dh*vh, sh=bh/dh*vh;
+    sy=Math.max(0,Math.min(vh-1,sy)); sh=Math.max(1,Math.min(vh-sy,sh));
+    ctx.drawImage(master,0,sy,vw,sh, dx+tr.dx,by,dw,bh);   // shifted slice = signal tear
+  }
 }
 function frame(){
   const W=window.innerWidth, H=window.innerHeight;
+  computeArtifacts();
   for(const id in winEls){
     const win=winEls[id];
     const content=win.querySelector('.content');
     const r=content.getBoundingClientRect();
     if(r.width<1) continue;
     const c=win.canvas;
-    if(c.width!==W) c.width=W;
-    if(c.height!==H) c.height=H;
+    // frozen windows keep their last drawn frame (don't resize-clear or redraw)
+    if(!win.frozen){
+      if(c.width!==W) c.width=W;
+      if(c.height!==H) c.height=H;
+    }
     c.style.left=(-r.left)+'px';
     c.style.top =(-r.top)+'px';
     c.style.width=W+'px';
     c.style.height=H+'px';
-    drawCover(win.ctx,W,H, win.offX||0, win.offY||0);
+    if(!win.frozen) drawCover(win.ctx,W,H, win.offX||0, win.offY||0);
   }
   drawEmbers();
   updateScrub();
@@ -324,9 +446,13 @@ function seekFromEvent(e){
   if(master.duration) master.currentTime=p*master.duration;
   updateScrub();
 }
-track.addEventListener('mousedown',e=>{ scrubbing=true; seekFromEvent(e); e.preventDefault(); });
-window.addEventListener('mousemove',e=>{ if(scrubbing) seekFromEvent(e); });
-window.addEventListener('mouseup',()=>scrubbing=false);
+track.addEventListener('pointerdown',e=>{
+  scrubbing=true; try{ track.setPointerCapture(e.pointerId); }catch(_){}
+  seekFromEvent(e); e.preventDefault();
+});
+track.addEventListener('pointermove',e=>{ if(scrubbing) seekFromEvent(e); });
+track.addEventListener('pointerup',()=>scrubbing=false);
+track.addEventListener('pointercancel',()=>scrubbing=false);
 playBtn.addEventListener('click',e=>{ e.stopPropagation(); togglePlay(); });
 
 /* ---------- wake (unmute only) + transport ---------- */
@@ -371,7 +497,24 @@ function ambient(){
 /* ---------- boot ---------- */
 sizeBg(); initEmbers();
 window.addEventListener('resize',sizeBg);
-WINDOWS.forEach(buildWindow);
+defaultWindows().forEach(buildWindow);
+// keep windows reachable after rotation / resize
+window.addEventListener('resize',()=>{
+  for(const id in winEls){
+    const w=winEls[id];
+    w.style.left=Math.max(0,Math.min(parseFloat(w.style.left)||0, window.innerWidth -60))+'px';
+    w.style.top =Math.max(0,Math.min(parseFloat(w.style.top) ||0, window.innerHeight-60))+'px';
+  }
+});
+// double-click / double-tap empty desktop spawns a new window there
+let lastDeskTap=0;
+desk.addEventListener('pointerdown',e=>{
+  if(e.target.closest('.win')) return;
+  const now=Date.now();
+  if(now-lastDeskTap<320){ spawnWindow(e.clientX,e.clientY); lastDeskTap=0; } else lastDeskTap=now;
+});
+// don't let the desktop show a browser context menu
+desk.addEventListener('contextmenu',e=>{ if(!e.target.closest('.win')) e.preventDefault(); });
 master.addEventListener('loadeddata',()=>{ master.play().catch(()=>{}); });
 if(master.readyState>=2){ master.play().catch(()=>{}); }
 requestAnimationFrame(frame);
