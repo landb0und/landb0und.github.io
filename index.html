@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jacob Boehme — Director · VFX Editor · DP · Los Angeles</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=7"></script>
+<script src="theme.js?v=8"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -176,10 +176,11 @@
      the row's alignment changes. */
   .profile-stats .lbl { color: var(--ink-4); display: block; text-align: center; }
   .profile-stats .num { text-align: center; }
-  .profile-stats .stat:nth-child(1) .num .u { color: var(--amber); }
-  .profile-stats .stat:nth-child(2) .num .u { color: #46c8d8; }
-  .profile-stats .stat:nth-child(3) .num .u { color: #e8589a; }
-  .profile-stats .stat:nth-child(4) .num .u { color: #f5c518; }
+  /* One accent, used consistently. Four different colours read as a rainbow;
+     a single brand tone on the unit glyphs (M / K / the decimal) gives the row
+     life while staying cohesive. The units also sit slightly lighter so the
+     figures themselves stay dominant. */
+  .profile-stats .num .u { color: var(--amber); opacity: 0.78; font-weight: 600; }
   .profile-proof .sep { color: rgba(245,176,66,0.45); margin: 0 7px; font-weight: 400; }
   .profile-proof strong { color: var(--amber); font-weight: 800; }
 
@@ -571,7 +572,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=26">
+<link rel="stylesheet" href="mobile.css?v=27">
 </head>
 <body>
 
@@ -767,7 +768,7 @@
             v.pause();
           }
         });
-      }, { threshold: 0.25 });
+      }, { threshold: 0, rootMargin: '250px 0px 250px 0px' });
       container.querySelectorAll('video[data-vsrc]').forEach(v => io.observe(v));
     } else {
       container.querySelectorAll('video[data-vsrc]').forEach(v => { v.src = v.dataset.vsrc; v.load(); safariSafePlay(v); });

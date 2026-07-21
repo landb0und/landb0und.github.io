@@ -112,6 +112,25 @@
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
 
     try { if (localStorage.getItem("navSeen")) document.body.classList.add("nav-seen"); } catch (e) {}
+
+    // First load of a visit: briefly EXPAND the menu then collapse it, so a new
+    // visitor sees what the button does instead of guessing at a bobbing icon.
+    function demoNav() {
+      var seen = false;
+      try { seen = !!sessionStorage.getItem("navDemo"); } catch (e) {}
+      if (seen) return;
+      try { sessionStorage.setItem("navDemo", "1"); } catch (e) {}
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!window.matchMedia || !window.matchMedia("(max-width: 820px)").matches) return;
+      setTimeout(function () {
+        if (document.body.classList.contains("nav-open")) return;
+        document.body.classList.add("nav-open", "nav-demo");
+        setTimeout(function () {
+          document.body.classList.remove("nav-open", "nav-demo");
+        }, 900);
+      }, 500);
+    }
+    demoNav();
   }
 
   function initChrome() { buildSwitcher(); buildNavFab(); }

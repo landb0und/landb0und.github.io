@@ -47,22 +47,9 @@
 
   /* First-time affordance: gentle bob, an expanding ring, and a MENU tag.
      All of it stops permanently once the button has been opened once. */
-  @media (prefers-reduced-motion: no-preference) {
-    body:not(.nav-seen) .nav-fab { animation: fabGlow 2.6s ease-in-out infinite, fabAttn 3s ease-in-out 3; }
-    body:not(.nav-seen) .nav-fab::after {
-      content: ''; position: absolute; inset: -3px; border-radius: 50%;
-      border: 2px solid color-mix(in srgb, var(--amber) 85%, transparent); pointer-events: none;
-      animation: fabRipple 3s ease-out 3;
-    }
-    body:not(.nav-seen) .nav-fab::before {
-      content: 'MENU'; position: absolute; left: 66px; white-space: nowrap;
-      font-size: 9px; font-weight: 800; letter-spacing: 0.2em; color: var(--amber);
-      background: rgba(20,16,8,0.96); padding: 7px 11px; border-radius: 8px;
-      border: 1px solid color-mix(in srgb, var(--amber) 45%, transparent); pointer-events: none;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-      animation: fabHint 3s ease-in-out 3 forwards;
-    }
-  }
+  /* The old bob + ripple + MENU tag are gone: theme.js now demonstrates the
+     control directly by expanding and collapsing the menu once per visit.
+     Only the steady glow remains so the button stays findable. */
   .nav-fab { animation: fabGlow 2.6s ease-in-out infinite; }
   @keyframes fabGlow {
     0%, 100% { box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 1px color-mix(in srgb, var(--amber) 14%, transparent), 0 0 9px 0 color-mix(in srgb, var(--amber) 26%, transparent); }
@@ -96,6 +83,7 @@
     transition: opacity .25s ease, visibility .25s ease;
   }
   body.nav-open .nav-scrim { opacity: 1; visibility: visible; }
+  body.nav-demo .nav-scrim { opacity: 0.45; }
 
   /* The tab panel itself — springs up from the button */
   .nav {
@@ -117,7 +105,7 @@
     opacity: 0; visibility: hidden;
     transform: translateY(12px) scale(0.92);
     transform-origin: 24px 100%;
-    transition: opacity .2s ease, transform .3s cubic-bezier(.2,.9,.25,1), visibility .3s;
+    transition: opacity .18s ease, transform .26s cubic-bezier(.2,.9,.25,1), visibility .26s;
   }
   body.nav-open .nav { opacity: 1; visibility: visible; transform: none; }
   .nav::after { display: none !important; }
