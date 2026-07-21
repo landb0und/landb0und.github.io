@@ -151,6 +151,16 @@
       position: absolute; inset: 0;
       background: linear-gradient(to top, rgba(10,8,6,0.96) 12%, rgba(10,8,6,0.35) 48%, transparent 70%);
     }
+    .spot-card .frost {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 52%;
+      z-index: 1; pointer-events: none;
+      -webkit-mask-image: linear-gradient(to top, #000 0%, #000 46%, transparent 100%);
+              mask-image: linear-gradient(to top, #000 0%, #000 46%, transparent 100%);
+    }
+    .spot-card.active .frost {
+      -webkit-backdrop-filter: blur(13px) saturate(0.85);
+              backdrop-filter: blur(13px) saturate(0.85);
+    }
     .spot-card .info { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 17px; z-index: 2; }
     .spot-card .cn {
       font-size: 19px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1;
@@ -422,7 +432,7 @@
         (t ? ' style="background-image:url(\'' + t + '\')"' : '') + '>' +
         (t ? '' : window.clientInitials(c)) + '</div>' +
       (isNotable(c) ? '<div class="spot-ribbon">◆ Notable</div>' : '') +
-      '<div class="scrim"></div>' +
+      '<div class="scrim"></div><div class="frost"></div>' +
       '<div class="info">' +
         '<div class="cn">' + c.name + (isNotable(c) ? ' <span class="spot-star">◆</span>' : '') + '</div>' +
         '<div class="ch">' + (c.handle || '') + '</div>' +
