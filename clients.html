@@ -188,13 +188,15 @@
     .spot-star { color: var(--amber); font-size: 0.6em; }
 
     .spot-dots {
-      position: relative; z-index: 2; display: flex; gap: 5px; justify-content: center;
-      flex-wrap: wrap; padding: 4px 34px 8px; max-height: 24px; overflow: hidden;
+      position: relative; z-index: 2; display: flex; justify-content: center; align-items: center;
+      flex-wrap: nowrap; padding: 18px 24px 0; max-height: 34px; overflow: hidden;
+      gap: var(--dotgap, 5px); touch-action: none;
     }
-    .spot-dots { touch-action: none; }
-    .spot-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-4); opacity: 0.5; transition: .25s; flex: none; }
-    .spot-dots i.star { background: rgba(245,176,66,0.4); opacity: 1; }
-    .spot-dots i.on { background: var(--amber); opacity: 1; transform: scale(1.5); }
+    /* One continuous amber-to-rose gradient across the whole rail. Position in
+       the reel is carried by opacity + scale, not by a second colour, so the
+       row reads as one object instead of two groups. */
+    .spot-dots i { width: var(--dot, 7px); height: var(--dot, 7px); border-radius: 50%; opacity: 0.3; transition: opacity .25s, transform .25s; flex: none; }
+    .spot-dots i.on { opacity: 1; transform: scale(1.5); }
 
     /* ---- the sheet ---- */
     .spot-sheet {
@@ -438,7 +440,8 @@
     track.appendChild(el);
 
     var dot = document.createElement('i');
-    if (isNotable(c)) dot.className = 'star';
+    var stop = CL.length > 1 ? Math.round((1 - i / (CL.length - 1)) * 100) : 100;
+    dot.style.background = 'color-mix(in srgb, var(--amber) ' + stop + '%, var(--rose))';
     dot.addEventListener('click', function () { go(i); });
     dotsEl.appendChild(dot);
 
@@ -513,9 +516,20 @@
     var vh = window.innerHeight;
     // Narrower + taller than the mock: a poster/story shape reads better for
     // this work than the mock's squat card.
-    CARD_W = Math.min(232, Math.round(vw * 0.60));
-    STEP = Math.round(CARD_W * 0.80);
-    hero.style.height = Math.round(Math.min(510, Math.max(340, vh * 0.57))) + 'px';
+    CARD_W = Math.min(214, Math.round(vw * 0.55));
+    STEP = Math.round(CARD_W * 0.83);
+    hero.style.height = Math.round(Math.min(560, Math.max(360, vh * 0.62))) + 'px';
+
+    // Fit the whole dot rail on one line at any width: pick the largest dot
+    // (capped at 7px) that leaves room for the gaps, then shrink the gap if
+    // even the minimum dot won't fit.
+    var railAvail = vw - 48;
+    var gap = 5;
+    var dotPx = Math.floor((railAvail - (CL.length - 1) * gap) / CL.length);
+    if (dotPx < 4) { gap = 3; dotPx = Math.floor((railAvail - (CL.length - 1) * gap) / CL.length); }
+    dotPx = Math.max(3, Math.min(7, dotPx));
+    dotsEl.style.setProperty('--dot', dotPx + 'px');
+    dotsEl.style.setProperty('--dotgap', gap + 'px');
     cards.forEach(function (cd) {
       cd.el.style.width = CARD_W + 'px';
       cd.el.style.marginLeft = (-CARD_W / 2) + 'px';
@@ -566,7 +580,7 @@
     // the fixed 208px only if the rail hasn't laid out yet.
     var railBottom = dotsEl.getBoundingClientRect().bottom;
     var peekTop = railBottom > 0
-      ? Math.min(H - 118, Math.round(railBottom) + 54)
+      ? Math.min(H - 118, Math.round(railBottom) + 18)
       : H - 208;
     PEEK = Math.max(120, Math.min(sheetH, peekTop - (H - sheetH)));
     if (!opened) sheetY = PEEK;

@@ -146,6 +146,46 @@
   .lb-close { position: absolute; top: 22px; right: 22px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; border: none; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all .15s; }
   .lb-close:hover { background: rgba(255,255,255,0.2); }
 
+  /* The desktop lightbox is a 2-column grid with a fixed 360px sidebar. On a
+     390px phone that sidebar alone is wider than the screen, so the grid blew
+     out sideways and pushed the media column off-frame — which read as "the
+     post is blank and off-centre". Stack it instead. */
+  @media (max-width: 820px) {
+    .lb { padding: 0; align-items: stretch; justify-content: stretch; }
+    .lb-inner {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      width: 100%; max-width: 100%; height: 100%; max-height: 100%;
+      border: 0; border-radius: 0;
+      overflow-y: auto; overscroll-behavior: contain;
+    }
+    .lb-media {
+      min-height: 0;                 /* the 480px floor forced the media off-screen */
+      height: 58vh; max-height: 58vh;
+      border-radius: 0;
+      padding-top: env(safe-area-inset-top);
+    }
+    .lb-media img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+    .lb-media iframe { width: 100%; height: auto; }
+    .lb-side { padding: 16px 16px calc(env(safe-area-inset-bottom) + 32px); gap: 12px; }
+    .lb-title { font-size: 17px; line-height: 1.25; }
+    .lb-tags { margin-top: 12px; }
+    /* Full-height tap strips over the media, so the arrows always sit on the
+       image rather than halfway down the whole scrolling sheet. */
+    .lb-nav {
+      top: env(safe-area-inset-top); transform: none;
+      height: 58vh; width: 52px;
+      background: transparent; border: 0; backdrop-filter: none;
+      border-radius: 0; font-size: 34px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    }
+    .lb-nav:hover, .lb-nav:active { background: transparent; color: #fff; transform: none; }
+    .lb-nav-prev { left: 0; justify-content: flex-start; padding-left: 10px; }
+    .lb-nav-next { right: 0; justify-content: flex-end; padding-right: 10px; }
+    .lb-close { top: calc(env(safe-area-inset-top) + 10px); right: 12px; z-index: 6; background: rgba(0,0,0,0.55); }
+    .lb-pos { top: calc(env(safe-area-inset-top) + 14px); }
+  }
+
   /* OTHER CLIENTS RAIL */
   .other-clients { margin-top: 60px; padding-top: 32px; border-top: 1px solid var(--line-2); }
   .sec-label { font-size: 10px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; font-weight: 700; margin-bottom: 18px; text-align: center; }
@@ -224,14 +264,32 @@
     // Client profile uses the canonical order from data.js (no shuffle).
     // Photo IG feed + grid are the shuffled views; the artist's own page is curated.
     currentClient.displayMedia = (c.media || []).slice();
+
+    // Shorts credited to this client live in VERTICALS, not in c.media, so they
+    // never showed up on the profile. Fold them in as posts, skipping any whose
+    // guid is already in media[] (Surfaces' CMWYH Concept 2 sits in both lists).
+    const ownVerticals = (window.VERTICALS || [])
+      .filter(v => v.client === c.id && v.guid)
+      .filter(v => !(c.media || []).some(m => m.embedId === v.guid))
+      .map(v => ({
+        type: 'video', bunny: true, embedId: v.guid,
+        title: v.title || v.label || 'Vertical',
+        year: ((v.tag || '').match(/\b(20\d\d)\b/) || [])[1] || '',
+        tags: (v.role ? v.role.split('·').map(s => s.trim()).filter(Boolean) : []).concat('Vertical'),
+        vertical: true
+      }));
+    currentClient.displayMedia = currentClient.displayMedia.concat(ownVerticals);
     let thumb = window.clientThumb(c);
     if (thumb && /\.webp(\?|$)/i.test(thumb)) thumb = null;  // letterboxed animated webp → use initials instead
     const initials = window.clientInitials(c);
     const avatarBg = thumb ? `style="background-image: url('${thumb}');"` : '';
     const avatarLabel = thumb ? '' : initials;
-    const videoCount = c.media.filter(m => m.type === 'video').length;
-    const photoCount = c.media.filter(m => m.type === 'photo').length;
-    const totalCount = c.media.length;
+    const all = currentClient.displayMedia;
+    const isVertical = m => (m.tags || []).indexOf('Vertical') !== -1;
+    const videoCount = all.filter(m => m.type === 'video').length;
+    const photoCount = all.filter(m => m.type === 'photo').length;
+    const verticalCount = all.filter(isVertical).length;
+    const totalCount = all.length;
 
     document.title = `${c.name} (@${(c.handle||'').replace('@','')}) — Landbound`;
 
@@ -269,11 +327,10 @@
       </div>
 
       <div class="tabs">
-        <div class="tab ${currentTab==='all'?'active':''}" onclick="setTab('all')">▦ Posts <span class="ct">${totalCount}</span></div>
-        ${(videoCount > 0 && photoCount > 0) ? `
-        <div class="tab ${currentTab==='video'?'active':''}" onclick="setTab('video')">▶ Videos <span class="ct">${videoCount}</span></div>
-        <div class="tab ${currentTab==='photo'?'active':''}" onclick="setTab('photo')">▢ Photos <span class="ct">${photoCount}</span></div>
-        ` : ''}
+        <div class="tab ${currentTab==='all'?'active':''}" data-tab="all" onclick="setTab('all')">▦ Posts <span class="ct">${totalCount}</span></div>
+        ${videoCount > 0 ? `<div class="tab ${currentTab==='video'?'active':''}" data-tab="video" onclick="setTab('video')">▶ Videos <span class="ct">${videoCount}</span></div>` : ''}
+        ${photoCount > 0 ? `<div class="tab ${currentTab==='photo'?'active':''}" data-tab="photo" onclick="setTab('photo')">▢ Photos <span class="ct">${photoCount}</span></div>` : ''}
+        ${verticalCount > 0 ? `<div class="tab ${currentTab==='vertical'?'active':''}" data-tab="vertical" onclick="setTab('vertical')">▯ Verticals <span class="ct">${verticalCount}</span></div>` : ''}
       </div>
 
       <div id="gridMount"></div>
@@ -293,6 +350,7 @@
     let items = currentClient.displayMedia;
     if (currentTab === 'video') items = items.filter(m => m.type === 'video');
     if (currentTab === 'photo') items = items.filter(m => m.type === 'photo');
+    if (currentTab === 'vertical') items = items.filter(m => (m.tags || []).indexOf('Vertical') !== -1);
 
     if (items.length === 0) {
       mount.innerHTML = `
@@ -353,9 +411,7 @@
   function setTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    const i = tab==='all'?0:tab==='video'?1:2;
-    const tabs = document.querySelectorAll('.tab');
-    if (tabs[i]) tabs[i].classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
     renderGrid();
   }
 
