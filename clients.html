@@ -87,6 +87,153 @@
   .card-blurb { font-size: 12px; color: var(--ink-2); line-height: 1.45; }
   .card-meta { font-size: 9px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line-2); display: flex; gap: 14px; }
   .card-meta strong { color: var(--ink-3); font-weight: 700; }
+
+  /* ==================================================================
+     MOBILE SPOTLIGHT  (≤820px only — desktop is untouched)
+     A swipeable card reel over a draggable sheet that holds the real
+     client list. Everything below is scoped inside the media query, and
+     every colour/typeface is pulled from the site theme so it reads as
+     the same product, not a bolted-on widget.
+     ================================================================== */
+  #spot { display: none; }
+
+  @media (max-width: 820px) {
+    /* The desktop page head + grid step aside; the sheet owns the list now. */
+    body.spot-on .main { display: none !important; }
+    body.spot-on { overflow: hidden; }
+
+    #spot {
+      display: block; position: fixed; inset: 0; z-index: 5;
+      background: var(--bg); overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Ambient wash behind the reel, tinted from the active client's palette
+       but kept in the site's warm register rather than the mock's blue. */
+    #spotAmb {
+      position: absolute; left: 0; right: 0; top: 0; height: 62%;
+      z-index: 0; opacity: 0.5; pointer-events: none;
+      transition: background 1s ease;
+      background: radial-gradient(85% 70% at 50% 20%, var(--amb1, rgba(245,176,66,0.4)) 0%, transparent 62%);
+    }
+    #spotDim { position: absolute; inset: 0; z-index: 8; background: rgba(6,5,4,0.62); opacity: 0; pointer-events: none; }
+
+    .spot-top {
+      position: relative; z-index: 6;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: calc(env(safe-area-inset-top) + 16px) 18px 8px;
+    }
+    .spot-top { touch-action: none; }
+    .spot-top h1 { font-size: 30px; font-weight: 900; letter-spacing: -0.03em; line-height: 0.95; }
+    .spot-top .idx {
+      font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.2em;
+      color: var(--ink-4); text-transform: uppercase; text-align: right; line-height: 1.7; padding-top: 4px;
+    }
+    .spot-top .idx b { color: var(--amber); font-weight: 800; font-size: 12px; }
+
+    /* ---- the reel ---- */
+    .spot-hero { position: relative; z-index: 2; overflow: hidden; touch-action: none; }
+    .spot-track { position: absolute; inset: 0; }
+    .spot-card {
+      position: absolute; left: 50%; top: 18px; bottom: 18px;
+      border-radius: 18px; overflow: hidden;
+      border: 1px solid var(--line); background: var(--bg-2);
+      box-shadow: 0 20px 46px rgba(0,0,0,0.55);
+      will-change: transform;
+    }
+    .spot-card .bgimg {
+      position: absolute; inset: 0; background-size: cover; background-position: center;
+      display: grid; place-items: center;
+      font-family: 'SF Mono', Menlo, monospace; font-weight: 900; font-size: 58px;
+      color: rgba(255,255,255,0.9);
+    }
+    .spot-card .scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,8,6,0.96) 12%, rgba(10,8,6,0.35) 48%, transparent 70%);
+    }
+    .spot-card .info { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 17px; z-index: 2; }
+    .spot-card .cn {
+      font-size: 19px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1;
+      color: var(--ink); display: flex; align-items: center; gap: 7px;
+    }
+    .spot-card .ch {
+      font-family: 'SF Mono', Menlo, monospace; font-size: 10.5px; color: var(--ink-2);
+      letter-spacing: 0.04em; margin-top: 4px; opacity: 0.9;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .spot-card .cr {
+      font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.12em;
+      color: var(--amber); text-transform: uppercase; font-weight: 700; margin-top: 9px; line-height: 1.6;
+    }
+    .spot-card .cd {
+      color: var(--ink-2); font-size: 12px; line-height: 1.45; margin-top: 8px;
+      max-height: 0; opacity: 0; overflow: hidden; transition: max-height .4s ease, opacity .4s ease;
+    }
+    .spot-card .cc {
+      font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.18em;
+      color: var(--ink-4); text-transform: uppercase; margin-top: 10px;
+    }
+    .spot-card.active .cd { max-height: 92px; opacity: 1; }
+    .spot-card.active { box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(245,176,66,0.28); }
+    .spot-ribbon {
+      position: absolute; top: 12px; left: 12px; z-index: 3;
+      font-family: 'SF Mono', Menlo, monospace; font-size: 8px; letter-spacing: 0.16em;
+      text-transform: uppercase; font-weight: 800;
+      color: #1a1408; background: var(--amber); padding: 3px 8px; border-radius: 999px;
+    }
+    .spot-star { color: var(--amber); font-size: 0.6em; }
+
+    .spot-dots {
+      position: relative; z-index: 2; display: flex; gap: 5px; justify-content: center;
+      flex-wrap: wrap; padding: 4px 34px 8px; max-height: 24px; overflow: hidden;
+    }
+    .spot-dots { touch-action: none; }
+    .spot-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-4); opacity: 0.5; transition: .25s; flex: none; }
+    .spot-dots i.star { background: rgba(245,176,66,0.4); opacity: 1; }
+    .spot-dots i.on { background: var(--amber); opacity: 1; transform: scale(1.5); }
+
+    /* ---- the sheet ---- */
+    .spot-sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 20;
+      background: var(--bg-2); border-top: 1px solid var(--line);
+      border-radius: 20px 20px 0 0; box-shadow: 0 -22px 60px rgba(0,0,0,0.6);
+      display: flex; flex-direction: column; will-change: transform;
+    }
+    .spot-grab { padding: 9px 18px 10px; touch-action: none; flex: none; }
+    .spot-grab .bar { width: 40px; height: 4px; border-radius: 3px; background: var(--ink-4); margin: 2px auto 11px; transition: background .2s; }
+    body.spot-drag .spot-grab .bar { background: var(--amber); }
+    .spot-hd { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .spot-hd .t { font-family: 'SF Mono', Menlo, monospace; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink); font-weight: 700; }
+    .spot-hd .s { font-family: 'SF Mono', Menlo, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: var(--ink-4); text-transform: uppercase; }
+
+    .spot-chips {
+      display: flex; gap: 8px; overflow-x: auto; padding: 12px 18px;
+      flex: none; scrollbar-width: none; border-bottom: 1px solid var(--line-2);
+      touch-action: pan-x;
+    }
+    .spot-chips::-webkit-scrollbar { display: none; }
+    .spot-chip {
+      font-family: 'SF Mono', Menlo, monospace; font-size: 9.5px; letter-spacing: 0.14em;
+      text-transform: uppercase; font-weight: 700; color: var(--ink-3);
+      background: rgba(255,255,255,0.03); border: 1px solid var(--line-2);
+      padding: 7px 13px; border-radius: 999px; white-space: nowrap; cursor: pointer;
+      transition: .16s; flex: none; -webkit-appearance: none;
+    }
+    .spot-chip:active { transform: scale(0.96); }
+    .spot-chip.on { color: #1a1408; background: var(--amber); border-color: var(--amber); }
+
+    /* The list itself keeps the existing card formatting, verbatim. */
+    .spot-list {
+      overflow-y: auto; overflow-x: hidden; flex: 1;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      overscroll-behavior: contain; touch-action: pan-y;
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 12px 14px calc(env(safe-area-inset-bottom) + 96px);
+    }
+    .spot-list::-webkit-scrollbar { display: none; }
+    .spot-list .card.cur { border-color: var(--amber); background: var(--bg-3); }
+    .spot-empty { padding: 26px 18px; text-align: center; font-family: 'SF Mono', Menlo, monospace; font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.14em; text-transform: uppercase; }
+  }
 </style>
 <link rel="stylesheet" href="mobile.css?v=32">
 </head>
@@ -127,43 +274,383 @@
   <div class="grid" id="clientGrid"></div>
 </main>
 
+<!-- Mobile-only spotlight. Hidden entirely above 820px. -->
+<div id="spot" aria-hidden="true">
+  <div id="spotAmb"></div>
+  <div class="spot-top">
+    <h1>Clients</h1>
+    <div class="idx"><b id="spotCur">1</b> / <span id="spotTotal">0</span><br>2022 — NOW</div>
+  </div>
+  <div class="spot-hero" id="spotHero"><div class="spot-track" id="spotTrack"></div></div>
+  <div class="spot-dots" id="spotDots"></div>
+  <div id="spotDim"></div>
+  <div class="spot-sheet" id="spotSheet">
+    <div class="spot-grab" id="spotGrab">
+      <div class="bar"></div>
+      <div class="spot-hd"><div class="t">All Clients</div><div class="s" id="spotCount">0 shown</div></div>
+    </div>
+    <div class="spot-chips" id="spotChips"></div>
+    <div class="spot-list" id="spotList"></div>
+  </div>
+</div>
+
 <script src="data.js?v=4"></script>
 <script>
+  /* ---------------------------------------------------------------
+     Shared helpers — used by BOTH the desktop grid and the mobile
+     spotlight sheet, so the list formatting is identical by
+     construction rather than by copy-paste.
+     --------------------------------------------------------------- */
+  function clientHref(c) { return c.href || ('client.html?id=' + c.id); }
+
+  function clientPhoto(c) {
+    let t = window.clientThumb(c);
+    // Animated Bunny preview.webp avatars arrive letterboxed and never fill the
+    // circle (cover can't crop baked-in bars). Drop them so those cards fall back
+    // to the clean palette + initials instead. Applies uniformly to any webp avatar.
+    if (t && /\.webp(\?|$)/i.test(t)) t = null;
+    return t;
+  }
+
+  function clientStats(c) {
+    const videoCount = (c.media || []).filter(m => m.type === 'video').length;
+    const photoCount = (c.media || []).filter(m => m.type === 'photo').length;
+    const stats = [];
+    if (videoCount) stats.push('<span><strong>' + videoCount + '</strong> ' + (videoCount === 1 ? 'video' : 'videos') + '</span>');
+    if (photoCount) stats.push('<span><strong>' + photoCount + '</strong> ' + (photoCount === 1 ? 'photo' : 'photos') + '</span>');
+    if (c.egg) stats.push('<span>▶ Try it now</span>');
+    else if (!stats.length) stats.push('<span>Coming soon</span>');
+    return stats;
+  }
+
+  function cardHTML(c) {
+    const t = clientPhoto(c);
+    const initials = window.clientInitials(c);
+    const avatarBg = t ? 'style="background-image: url(\'' + t + '\');"' : '';
+    return ''
+      + '<a class="card" data-id="' + c.id + '" href="' + clientHref(c) + '">'
+      +   '<div class="card-head">'
+      +     '<div class="av-ring"><div class="av-inner"><div class="av-img ' + (t ? '' : c.palette) + '" ' + avatarBg + '>' + (t ? '' : initials) + '</div></div></div>'
+      +     '<div class="card-id"><div class="card-name">' + c.name + '</div><div class="card-handle">' + (c.handle || '') + '</div></div>'
+      +   '</div>'
+      +   '<div class="card-role">' + (c.role || '') + '</div>'
+      +   '<div class="card-blurb">' + (c.blurb || '') + '</div>'
+      +   '<div class="card-meta">' + clientStats(c).join('') + '</div>'
+      + '</a>';
+  }
+
   function render() {
     const grid = document.getElementById('clientGrid');
     const counter = document.getElementById('ph-r');
     if (!grid || !window.CLIENTS) return;
     const clients = window.CLIENTS;
     counter.innerHTML = '<strong>' + clients.length + '</strong> clients<br>2022 — present';
-    grid.innerHTML = clients.map(c => {
-      let t = window.clientThumb(c);
-      // Animated Bunny preview.webp avatars arrive letterboxed and never fill the
-      // circle (cover can't crop baked-in bars). Drop them so those cards fall back
-      // to the clean palette + initials instead. Applies uniformly to any webp avatar.
-      if (t && /\.webp(\?|$)/i.test(t)) t = null;
-      const initials = window.clientInitials(c);
-      const avatarBg = t ? 'style="background-image: url(\'' + t + '\');"' : '';
-      const handle = c.handle || '';
-      const videoCount = (c.media || []).filter(m => m.type === 'video').length;
-      const photoCount = (c.media || []).filter(m => m.type === 'photo').length;
-      const stats = [];
-      if (videoCount) stats.push('<span><strong>' + videoCount + '</strong> ' + (videoCount === 1 ? 'video' : 'videos') + '</span>');
-      if (photoCount) stats.push('<span><strong>' + photoCount + '</strong> ' + (photoCount === 1 ? 'photo' : 'photos') + '</span>');
-      if (c.egg) stats.push('<span>▶ Try it now</span>');
-      else if (!stats.length) stats.push('<span>Coming soon</span>');
-      return ''
-        + '<a class="card" href="' + (c.href || ('client.html?id=' + c.id)) + '">'
-        +   '<div class="card-head">'
-        +     '<div class="av-ring"><div class="av-inner"><div class="av-img ' + (t ? '' : c.palette) + '" ' + avatarBg + '>' + (t ? '' : initials) + '</div></div></div>'
-        +     '<div class="card-id"><div class="card-name">' + c.name + '</div><div class="card-handle">' + handle + '</div></div>'
-        +   '</div>'
-        +   '<div class="card-role">' + (c.role || '') + '</div>'
-        +   '<div class="card-blurb">' + (c.blurb || '') + '</div>'
-        +   '<div class="card-meta">' + stats.join('') + '</div>'
-        + '</a>';
-    }).join('');
+    grid.innerHTML = clients.map(cardHTML).join('');
   }
   render();
+</script>
+
+<script>
+/* =====================================================================
+   MOBILE SPOTLIGHT
+   Card reel on top, draggable sheet underneath holding the real client
+   list. Only ever initialised at ≤820px; desktop never touches this.
+
+   Gesture contract (per spec):
+     · horizontal drag ANYWHERE  -> moves the reel
+     · vertical  drag ANYWHERE   -> moves the sheet
+     · vertical drag inside an OPEN sheet -> scrolls the list natively,
+       unless the list is already at the top and you're pulling down,
+       in which case the sheet closes. That handoff is what makes the
+       whole thing feel like one surface instead of two.
+   ===================================================================== */
+(function () {
+  var MQ = '(max-width: 820px)';
+  if (!window.matchMedia || !window.matchMedia(MQ).matches) return;
+  if (!window.CLIENTS || !window.CLIENTS.length) return;
+
+  var spot   = document.getElementById('spot');
+  var track  = document.getElementById('spotTrack');
+  var hero   = document.getElementById('spotHero');
+  var dotsEl = document.getElementById('spotDots');
+  var listEl = document.getElementById('spotList');
+  var chipsEl= document.getElementById('spotChips');
+  var sheet  = document.getElementById('spotSheet');
+  var amb    = document.getElementById('spotAmb');
+  var dim    = document.getElementById('spotDim');
+  var curEl  = document.getElementById('spotCur');
+  var cntEl  = document.getElementById('spotCount');
+
+  document.body.classList.add('spot-on');
+  spot.setAttribute('aria-hidden', 'false');
+
+  /* Reel order: the strongest names lead. Curation only — every client
+     still appears, and nothing here invents a credit. */
+  var NOTABLE = ['yungblud', 'grace-vanderwaal', 'smashing-pumpkins', 'surfaces',
+                 'gym-class-heroes', 'mike-posner', 'two-feet', 'saint-motel', 'landbound'];
+  var isNotable = function (c) { return NOTABLE.indexOf(c.id) !== -1; };
+
+  var CL = window.CLIENTS.slice().sort(function (a, b) {
+    var ra = isNotable(a) ? NOTABLE.indexOf(a.id) : 100 + window.CLIENTS.indexOf(a);
+    var rb = isNotable(b) ? NOTABLE.indexOf(b.id) : 100 + window.CLIENTS.indexOf(b);
+    return ra - rb;
+  });
+  document.getElementById('spotTotal').textContent = CL.length;
+
+  function hue(n) { var h = 0; for (var i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 360; return h; }
+
+  /* ---- build reel cards + dots + list rows ---- */
+  var cards = CL.map(function (c, i) {
+    var t = clientPhoto(c);
+    var el = document.createElement('div');
+    el.className = 'spot-card';
+    el.innerHTML =
+      '<div class="bgimg ' + (t ? '' : (c.palette || '')) + '"' +
+        (t ? ' style="background-image:url(\'' + t + '\')"' : '') + '>' +
+        (t ? '' : window.clientInitials(c)) + '</div>' +
+      (isNotable(c) ? '<div class="spot-ribbon">◆ Notable</div>' : '') +
+      '<div class="scrim"></div>' +
+      '<div class="info">' +
+        '<div class="cn">' + c.name + (isNotable(c) ? ' <span class="spot-star">◆</span>' : '') + '</div>' +
+        '<div class="ch">' + (c.handle || '') + '</div>' +
+        '<div class="cr">' + (c.role || '') + '</div>' +
+        '<div class="cd">' + (c.blurb || '') + '</div>' +
+        '<div class="cc">' + clientStats(c).map(function (s) { return s.replace(/<[^>]*>/g, ''); }).join(' · ') + '</div>' +
+      '</div>';
+    // Tapping the front card opens that client. Guarded so a swipe never
+    // counts as a tap.
+    el.addEventListener('click', function () {
+      if (suppressClick) return;
+      if (i === active) location.href = clientHref(c);
+      else go(i);
+    });
+    track.appendChild(el);
+
+    var dot = document.createElement('i');
+    if (isNotable(c)) dot.className = 'star';
+    dot.addEventListener('click', function () { go(i); });
+    dotsEl.appendChild(dot);
+
+    // List row: the site's existing card markup, unchanged.
+    var wrap = document.createElement('div');
+    wrap.innerHTML = cardHTML(c);
+    var row = wrap.firstChild;
+    listEl.appendChild(row);
+
+    return { el: el, dot: dot, row: row, c: c };
+  });
+
+  var empty = document.createElement('div');
+  empty.className = 'spot-empty';
+  empty.style.display = 'none';
+  empty.textContent = 'No clients in this role';
+  listEl.appendChild(empty);
+
+  /* ---- role chips ---- */
+  var ROLES = ['All', 'Director', 'DP', 'Editor', 'VFX', 'Photographer', 'Writer'];
+  var activeRole = 'All';
+  function hasRole(c, role) {
+    if (role === 'All') return true;
+    var r = (c.role || '').toLowerCase();
+    if (role === 'Photographer') return /photo/.test(r);
+    if (role === 'Director') return /director/.test(r);
+    if (role === 'DP') return /\bdp\b|cinematograph/.test(r);
+    return r.indexOf(role.toLowerCase()) !== -1;
+  }
+  ROLES.forEach(function (r) {
+    var b = document.createElement('button');
+    b.className = 'spot-chip' + (r === 'All' ? ' on' : '');
+    b.textContent = r;
+    b.addEventListener('click', function () {
+      activeRole = r;
+      Array.prototype.forEach.call(chipsEl.children, function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      applyFilter();
+      if (sheetY > PEEK * 0.5) snapTo(OPEN);
+    });
+    chipsEl.appendChild(b);
+  });
+  function applyFilter() {
+    var n = 0;
+    cards.forEach(function (cd) {
+      var ok = hasRole(cd.c, activeRole);
+      cd.row.style.display = ok ? 'flex' : 'none';
+      if (ok) n++;
+    });
+    empty.style.display = n ? 'none' : 'block';
+    cntEl.textContent = n + ' shown';
+  }
+
+  /* ---- reel geometry + render ---- */
+  var active = 0, dragX = 0, swiping = false, suppressClick = false;
+  var CARD_W = 256, STEP = 196;
+
+  function sizeReel() {
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    CARD_W = Math.min(256, Math.round(vw * 0.66));
+    STEP = Math.round(CARD_W * 0.766);          // same card-to-step ratio as the mock
+    hero.style.height = Math.round(Math.min(452, Math.max(300, vh * 0.50))) + 'px';
+    cards.forEach(function (cd) {
+      cd.el.style.width = CARD_W + 'px';
+      cd.el.style.marginLeft = (-CARD_W / 2) + 'px';
+    });
+  }
+
+  function renderReel(withAnim) {
+    cards.forEach(function (cd, i) {
+      var pos = (i - active) + dragX / STEP, a = Math.abs(pos);
+      var x = pos * STEP;
+      var s = Math.max(0.82, 1 - a * 0.09);
+      var op = Math.max(0, 1 - a * 0.4);
+      var near = Math.abs(i - active) < 0.5;
+      var tilt = (swiping && near) ? Math.max(-6, Math.min(6, dragX * 0.028)) : 0;
+      cd.el.style.transition = withAnim
+        ? 'transform .42s cubic-bezier(.25,.9,.3,1),opacity .42s,box-shadow .42s'
+        : 'none';
+      cd.el.style.transform = 'translateX(' + x + 'px) scale(' + s + ') rotate(' + tilt + 'deg)';
+      cd.el.style.opacity = op;
+      cd.el.style.zIndex = String(200 - Math.round(a * 10));
+      cd.el.style.pointerEvents = a <= 0.5 ? 'auto' : (a <= 2.5 ? 'auto' : 'none');
+      cd.el.classList.toggle('active', i === active && Math.abs(dragX) < STEP * 0.5);
+      cd.dot.classList.toggle('on', i === active);
+      cd.row.classList.toggle('cur', i === active);
+    });
+    curEl.textContent = active + 1;
+    amb.style.setProperty('--amb1', 'hsla(' + hue(CL[active].name) + ',62%,42%,.55)');
+  }
+
+  function go(i) {
+    active = Math.max(0, Math.min(CL.length - 1, i));
+    dragX = 0;
+    renderReel(true);
+    restart();
+  }
+
+  /* ---- sheet geometry ---- */
+  var PEEK = 0, OPEN = 0, sheetY = 0, opened = false;
+  function measure() {
+    sizeReel();
+    var H = window.innerHeight;
+    var OPEN_TOP = Math.round(Math.max(96, H * 0.15));   // sheet top when fully open
+    var sheetH = H - OPEN_TOP;
+    sheet.style.height = sheetH + 'px';
+    OPEN = 0;
+    PEEK = Math.max(120, sheetH - 208);                  // leave handle + header + chips + ~1 card
+    if (!opened) sheetY = PEEK;
+    setSheet(sheetY, false);
+    renderReel(false);
+  }
+
+  function setSheet(y, anim) {
+    sheetY = Math.max(OPEN, Math.min(PEEK, y));
+    sheet.style.transition = anim ? 'transform .4s cubic-bezier(.22,.9,.28,1)' : 'none';
+    sheet.style.transform = 'translateY(' + sheetY + 'px)';
+    var prog = PEEK > 0 ? (1 - sheetY / PEEK) : 0;
+    dim.style.transition = anim ? 'opacity .4s' : 'none';
+    dim.style.opacity = (prog * 0.5).toFixed(3);
+    opened = sheetY < PEEK * 0.5;
+    if (sheetY > PEEK * 0.85) play(); else pause();
+  }
+  function snapTo(target) { setSheet(target, true); }
+
+  /* ---- one unified gesture handler for the whole surface ---- */
+  var sx = 0, sy = 0, sy0 = 0, decided = false, axis = null;
+  var lastY = 0, vy = 0, moved = 0, inList = false, onGrab = false, inChips = false;
+
+  function pt(e) { return e.touches ? e.touches[0] : e; }
+
+  spot.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) return;
+    var p = pt(e);
+    sx = p.clientX; sy = p.clientY; lastY = p.clientY;
+    sy0 = sheetY; dragX = 0; vy = 0; moved = 0;
+    decided = false; axis = null; swiping = true; suppressClick = false;
+    inList = !!(e.target.closest && e.target.closest('.spot-list'));
+    onGrab  = !!(e.target.closest && e.target.closest('.spot-grab'));
+    inChips = !!(e.target.closest && e.target.closest('.spot-chips'));
+    pause();
+  }, { passive: true });
+
+  spot.addEventListener('touchmove', function (e) {
+    if (!swiping || e.touches.length !== 1) return;
+    var p = pt(e);
+    var dx = p.clientX - sx, dy = p.clientY - sy;
+    vy = p.clientY - lastY; lastY = p.clientY; moved += Math.abs(vy) + Math.abs(dx);
+
+    if (!decided && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+      decided = true;
+      axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      // The chip rail owns its own horizontal scroll.
+      if (axis === 'x' && inChips) axis = 'native';
+      // Inside an open list, vertical belongs to the list — except at the very
+      // top pulling down, which hands the gesture back to the sheet.
+      if (axis === 'y' && inList && !onGrab && opened) {
+        if (!(listEl.scrollTop <= 0 && dy > 0)) axis = 'native';
+      }
+      if (axis !== 'native') suppressClick = true;
+    }
+
+    if (axis === 'x') { e.preventDefault(); dragX = dx; renderReel(false); }
+    else if (axis === 'y') { e.preventDefault(); document.body.classList.add('spot-drag'); setSheet(sy0 + dy, false); }
+  }, { passive: false });
+
+  function endGesture() {
+    if (!swiping) return;
+    swiping = false;
+    document.body.classList.remove('spot-drag');
+
+    if (axis === 'x') {
+      var nx = active;
+      if (dragX < -STEP * 0.34) nx = active + 1;
+      else if (dragX > STEP * 0.34) nx = active - 1;
+      active = Math.max(0, Math.min(CL.length - 1, nx));
+      dragX = 0;
+      renderReel(true);
+      restart();
+    } else if (axis === 'y') {
+      var target;
+      if (vy < -1.2) target = OPEN;              // flick up  -> open
+      else if (vy > 1.2) target = PEEK;          // flick down -> peek
+      else target = (sheetY < PEEK * 0.5) ? OPEN : PEEK;
+      snapTo(target);
+    } else if (!decided && onGrab) {
+      snapTo(sheetY > PEEK * 0.5 ? OPEN : PEEK); // tap the handle to toggle
+    }
+    axis = null;
+    restart();
+    setTimeout(function () { suppressClick = false; }, 350);
+  }
+  spot.addEventListener('touchend', endGesture);
+  spot.addEventListener('touchcancel', endGesture);
+
+  // A drag that ends over a list row must not navigate.
+  listEl.addEventListener('click', function (e) {
+    if (suppressClick || moved > 10) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+
+  /* ---- autoplay: only while the reel is actually the thing on screen ---- */
+  var timer = null;
+  function play() {
+    if (timer) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    timer = setInterval(function () {
+      active = (active + 1) % CL.length;
+      dragX = 0;
+      renderReel(true);
+    }, 4400);
+  }
+  function pause() { if (timer) { clearInterval(timer); timer = null; } }
+  function restart() { pause(); if (sheetY > PEEK * 0.85) play(); }
+  document.addEventListener('visibilitychange', function () { if (document.hidden) pause(); else restart(); });
+
+  applyFilter();
+  measure();
+  renderReel(true);
+  requestAnimationFrame(function () { measure(); play(); });
+  window.addEventListener('resize', measure);
+  window.addEventListener('orientationchange', function () { setTimeout(measure, 250); });
+})();
 </script>
 </body>
 </html>
