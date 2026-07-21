@@ -174,26 +174,6 @@ window.CLIENTS = [
   // Smashing Pumpkins — Billy Corgan in frame. Photo 14 is SP-only;
   // other SP shots are co-credit on the multi-subject frames above.
   {
-    id: 'smashing-pumpkins',
-    name: 'Smashing Pumpkins',
-    short: 'Smashing P.',
-    handle: '@smashingpumpkins',
-    role: 'Photographer',
-    blurb: 'BTS portrait of Billy Corgan during the Hagendorf Show sit-down.',
-    palette: 'sa-2',
-    thumb: 'photos/clients/allison-yungblud-bts/yungblud-bts-14.jpg',
-    media: [
-      // Photo 14: Billy Corgan solo — SP is primary author here
-      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-14.jpg', title: 'Billy Corgan — portrait', year: '2024', camera: '35mm', location: 'Hagendorf Show · Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
-      // Co-author entries for the multi-subject frames (same src dedupes into one feed post with both clients credited)
-      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-1.jpg', title: 'Hagendorf Show BTS — 01', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Allison Hagendorf, Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
-      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-2.jpg', title: 'Hagendorf Show BTS — 02', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Allison Hagendorf, Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
-      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-3.jpg', title: 'Hagendorf Show BTS — 03', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Allison Hagendorf, Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
-      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-5.jpg', title: 'Hagendorf Show BTS — 05', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
-      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-8.jpg', title: 'Hagendorf Show BTS — 08', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] }
-    ]
-  },
-  {
     id: 'allison-hagendorf',
     name: 'Allison Hagendorf',
     short: 'Allison H.',
@@ -261,25 +241,6 @@ window.CLIENTS = [
     media: []
   },
   {
-    id: 'screamfest',
-    name: 'SCREAMFEST',
-    short: 'SCREAMFEST',
-    handle: 'Festival selection',
-    role: 'Director · Writer',
-    blurb: 'Forgive & Forget: 2022 official selection.',
-    palette: 'sa-9',
-    thumb: null,
-    media: [
-      { type: 'video', embedId: 'oD42T1md068', title: 'Forgive & Forget', year: '2022', tags: ['Director','Writer','Editor','DP','VFX Sup'],
-        sub: '<strong>Horror Short Film</strong> · 2022',
-        credits: [
-          ['Directed by', '<strong>Jacob Boehme</strong>'],
-          ['Year', '2022'],
-          ['Premiere', 'ScreamFest · Chinese Theatre, Hollywood Blvd']
-        ] }
-    ]
-  },
-  {
     id: 'landbound',
     name: 'Landbound',
     short: 'Landbound',
@@ -289,7 +250,14 @@ window.CLIENTS = [
     palette: 'sa-1',
     thumb: 'headshot.jpg',
     media: [
-      { type: 'video', embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true, title: "Director's Reel", year: '2025', tags: ['Director','VFX','Editor','DP'] }
+      { type: 'video', embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true, title: "Director's Reel", year: '2025', tags: ['Director','VFX','Editor','DP'] },
+      { type: 'video', embedId: 'oD42T1md068', title: 'Forgive & Forget', year: '2022', tags: ['Director','Writer','Editor','DP','VFX Sup'],
+        sub: '<strong>Horror Short Film</strong> · 2022',
+        credits: [
+          ['Directed by', '<strong>Jacob Boehme</strong>'],
+          ['Year', '2022'],
+          ['Premiere', 'ScreamFest · Chinese Theatre, Hollywood Blvd']
+        ] }
     ]
   },
   {
@@ -461,6 +429,26 @@ window.CLIENTS = [
   // experience (o-superman-interactive.html) instead of a profile page. It has
   // NO media and is flagged `egg`, so it never surfaces in any video feed, the
   // VFX reel, the verticals, the home stories row, or the home post feed.
+  {
+    id: 'smashing-pumpkins',
+    name: 'Smashing Pumpkins',
+    short: 'Smashing P.',
+    handle: '@smashingpumpkins',
+    role: 'Photographer',
+    blurb: 'BTS portrait of Billy Corgan during the Hagendorf Show sit-down.',
+    palette: 'sa-2',
+    thumb: 'photos/clients/allison-yungblud-bts/yungblud-bts-14.jpg',
+    media: [
+      // Photo 14: Billy Corgan solo — SP is primary author here
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-14.jpg', title: 'Billy Corgan — portrait', year: '2024', camera: '35mm', location: 'Hagendorf Show · Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
+      // Co-author entries for the multi-subject frames (same src dedupes into one feed post with both clients credited)
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-1.jpg', title: 'Hagendorf Show BTS — 01', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Allison Hagendorf, Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-2.jpg', title: 'Hagendorf Show BTS — 02', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Allison Hagendorf, Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-3.jpg', title: 'Hagendorf Show BTS — 03', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Allison Hagendorf, Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-5.jpg', title: 'Hagendorf Show BTS — 05', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] },
+      { type: 'photo', src: 'photos/clients/allison-yungblud-bts/yungblud-bts-8.jpg', title: 'Hagendorf Show BTS — 08', year: '2024', camera: '35mm', location: 'Hagendorf Show · w/ Billy Corgan (Smashing Pumpkins)', tags: ['BTS','Black & White','35mm','Photographer'] }
+    ]
+  },
   {
     id: 'laurie-anderson',
     name: 'Laurie Anderson',
