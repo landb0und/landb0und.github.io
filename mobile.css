@@ -18,33 +18,31 @@
   .nav-fab {
     display: flex !important; align-items: center; justify-content: center;
     position: fixed; left: 14px; bottom: calc(env(safe-area-inset-bottom) + 16px);
-    width: 56px; height: 56px; padding: 0;
+    width: 60px; height: 60px; padding: 0;
     border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.13);
-    background: linear-gradient(150deg, rgba(30,30,35,0.97), rgba(13,13,16,0.97));
-    -webkit-backdrop-filter: blur(18px) saturate(170%);
-    backdrop-filter: blur(18px) saturate(170%);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.62);
+    border: none;
+    background: linear-gradient(150deg, #ffc978, var(--amber) 55%, #e09a2e);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.55), 0 0 0 6px rgba(245,176,66,0.13), 0 0 26px rgba(245,176,66,0.42);
     z-index: 650; cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     transition: transform .25s cubic-bezier(.2,.9,.25,1), border-color .25s;
   }
   .nav-fab:active { transform: scale(0.93); }
-  body.nav-open .nav-fab { border-color: rgba(245,176,66,0.45); }
+  body.nav-open .nav-fab { background: linear-gradient(150deg, #ffd79a, var(--amber)); }
 
   /* Hamburger that morphs into an X when open */
-  .nav-fab-bars { position: relative; display: block; width: 20px; height: 14px; }
+  .nav-fab-bars { position: relative; display: block; width: 22px; height: 15px; }
   .nav-fab-bars i {
     position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px;
-    background: var(--amber);
+    background: #17130a;
     transition: transform .3s cubic-bezier(.2,.9,.25,1), opacity .18s ease;
   }
   .nav-fab-bars i:nth-child(1) { top: 0; }
-  .nav-fab-bars i:nth-child(2) { top: 6px; }
-  .nav-fab-bars i:nth-child(3) { top: 12px; }
-  body.nav-open .nav-fab-bars i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-fab-bars i:nth-child(2) { top: 6.5px; }
+  .nav-fab-bars i:nth-child(3) { top: 13px; }
+  body.nav-open .nav-fab-bars i:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
   body.nav-open .nav-fab-bars i:nth-child(2) { opacity: 0; }
-  body.nav-open .nav-fab-bars i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  body.nav-open .nav-fab-bars i:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
   /* First-time affordance: gentle bob, an expanding ring, and a MENU tag.
      All of it stops permanently once the button has been opened once. */
@@ -64,6 +62,11 @@
       animation: fabHint 3.4s ease-in-out infinite;
     }
   }
+  .nav-fab { animation: fabGlow 2.8s ease-in-out infinite; }
+  @keyframes fabGlow {
+    0%, 100% { box-shadow: 0 10px 26px rgba(0,0,0,0.55), 0 0 0 5px rgba(245,176,66,0.10), 0 0 22px rgba(245,176,66,0.34); }
+    50%      { box-shadow: 0 10px 26px rgba(0,0,0,0.55), 0 0 0 9px rgba(245,176,66,0.16), 0 0 34px rgba(245,176,66,0.55); }
+  }
   @keyframes fabAttn {
     0%, 46%, 100% { transform: translateY(0) scale(1); }
     54%           { transform: translateY(-13px) scale(1.10); }
@@ -79,8 +82,8 @@
     100%    { transform: scale(1); opacity: 0; }
   }
   @keyframes fabHint {
-    0%, 44%, 100% { opacity: 0; transform: translateX(-10px) scale(0.94); }
-    54%, 90%      { opacity: 1; transform: translateX(0) scale(1); }
+    0%, 100% { opacity: 1; transform: translateX(0) scale(1); }
+    46%      { opacity: 1; transform: translateX(3px) scale(1.04); }
   }
 
   /* Dim + blur the page behind the open menu; tap it to dismiss */
@@ -97,7 +100,7 @@
   .nav {
     position: fixed !important;
     top: auto !important; right: auto !important;
-    bottom: calc(env(safe-area-inset-bottom) + 82px) !important;
+    bottom: calc(env(safe-area-inset-bottom) + 88px) !important;
     left: 14px !important;
     width: max-content !important; min-width: 0 !important; max-width: calc(100vw - 28px) !important; height: auto !important;
     flex-direction: column !important;
@@ -126,15 +129,15 @@
   }
   .nav-item {
     position: relative;
-    flex: none !important; flex-direction: row !important; gap: 11px !important;
+    flex: none !important; flex-direction: row !important; gap: 13px !important;
     justify-content: flex-start !important; align-items: center !important; text-align: left !important;
-    padding: 10px 13px !important; border-radius: 11px !important;
-    font-size: 11px !important; font-weight: 700 !important;
-    letter-spacing: 0.13em !important; text-transform: uppercase !important;
-    color: rgba(255,255,255,0.6) !important;
+    padding: 13px 16px !important; border-radius: 12px !important;
+    font-size: 12.5px !important; font-weight: 700 !important;
+    letter-spacing: 0.11em !important; text-transform: uppercase !important;
+    color: rgba(255,255,255,0.72) !important;
     -webkit-tap-highlight-color: transparent;
   }
-  .nav-item::before { width: 19px !important; height: 19px !important; }
+  .nav-item::before { width: 21px !important; height: 21px !important; }
   .nav-item.active { color: var(--amber) !important; background: rgba(245,176,66,0.13) !important; }
   .nav-item.active::before { transform: none; filter: none; }
   .nav-item.active::after { display: none !important; }
@@ -151,6 +154,10 @@
   }
   @keyframes navItemIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
 
+  /* ---- HEADER RHYTHM (mobile) ---- */
+  .profile-name-row { gap: 6px !important; margin: 0 0 3px !important; }
+  .profile-handle { margin: 0 0 9px !important; }
+
   /* ---- PROFILE TYPE — mobile scale for the stepped bio + chips ---- */
   .profile-bio { font-size: 11.5px !important; line-height: 1.4 !important; margin-bottom: 10px !important; }
   .profile-bio .lane-1 { font-size: 13.5px !important; margin-bottom: 6px !important; }
@@ -158,8 +165,8 @@
   .profile-bio .lane-edu { font-size: 10.5px !important; margin-bottom: 4px !important; }
   .profile-bio .lane-2 { font-size: 11px !important; }
   .profile-bio .lane-ai { font-size: 10px !important; margin-top: 8px !important; padding-top: 8px !important; }
-  .profile-proof { gap: 7px 6px !important; margin-bottom: 0 !important; }
-  .profile-proof .pf { font-size: 8.5px !important; padding: 4px 7px !important; letter-spacing: 0.05em !important; }
+  .profile-proof { gap: 9px 8px !important; margin: 3px 0 2px !important; }
+  .profile-proof .pf { font-size: 8.5px !important; padding: 5px 9px !important; letter-spacing: 0.05em !important; }
   .profile-stats .num { font-size: 15px !important; }
   .profile-stats .lbl { font-size: 6.5px !important; color: var(--ink-4) !important; }
 
@@ -221,9 +228,6 @@
   /* ---------- HOME: profile / hero card ---------- */
   .hero-card { border-radius: 12px; }
   .hero-body { padding: 15px 15px 14px !important; }
-  /* Kill the desktop sidebar theme switcher on mobile — it was injected into
-     .nav and collided with the bottom tab bar. */
-  .theme-switcher { display: none !important; }
 
   /* Profile: compact avatar-left / info-right (the proportional "hybrid" look),
      just sized down for the phone so it reads balanced, not oversized. */

@@ -131,6 +131,10 @@
   .profile-bio .lane-2 { color: var(--ink-2); }
   .profile-bio .lane-ai { color: var(--ink-3); font-size: 12px; font-style: italic; }
   /* Proof line — short editorial run of credentials, sans-serif, sentence case */
+  /* ---- Header rhythm: even, deliberate spacing down the stack ---- */
+  .profile-name-row { display: flex; align-items: center; gap: 7px; line-height: 1.1; margin: 0 0 4px; }
+  .profile-handle { line-height: 1.25; margin: 0 0 11px; }
+
   /* ---- Profile bio: stepped hierarchy instead of five equal-weight lines.
      The <br>s are hidden and each lane becomes a block, so spacing is
      controlled properly and every line has one clear job. ---- */
@@ -144,14 +148,14 @@
   .profile-bio .lane-ai { font-size: 11px; font-style: italic; color: var(--ink-4); margin-top: 9px; padding-top: 9px; border-top: 1px solid rgba(255,255,255,0.07); }
 
   /* ---- Credentials as chips: scannable badges, not a blue paragraph ---- */
-  .profile-proof { display: flex; flex-wrap: wrap; gap: 8px 7px; margin-bottom: 14px; line-height: 1; }
+  .profile-proof { display: flex; flex-wrap: wrap; gap: 10px 9px; margin: 4px 0 15px; line-height: 1; }
   .profile-proof .sep { display: none; }
   .profile-proof .pf {
     display: inline-flex; align-items: center;
     font-size: 9.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
     color: var(--ink-2); background: rgba(255,255,255,0.045);
     border: 1px solid rgba(255,255,255,0.09);
-    padding: 5px 9px; border-radius: 7px; white-space: nowrap;
+    padding: 6px 11px; border-radius: 8px; white-space: nowrap;
   }
   .profile-proof .pf.hero { color: var(--amber); background: rgba(245,176,66,0.11); border-color: rgba(245,176,66,0.34); }
 
@@ -159,7 +163,13 @@
      carry the weight in near-white and a single amber "+" keeps it alive. ---- */
   .profile-stats .num { color: var(--ink); }
   .profile-stats .num .plus { color: var(--amber); opacity: 0.95; }
-  .profile-stats .lbl { color: var(--ink-4); }
+  .profile-stats .lbl { color: var(--ink-3); display: inline-flex; align-items: center; gap: 5px; }
+  /* A small accent dot per metric — colour, but quiet. */
+  .profile-stats .lbl::before { content: ""; width: 5px; height: 5px; border-radius: 50%; flex: 0 0 auto; }
+  .profile-stats .stat:nth-child(1) .lbl::before { background: var(--amber); }
+  .profile-stats .stat:nth-child(2) .lbl::before { background: #46c8d8; }
+  .profile-stats .stat:nth-child(3) .lbl::before { background: #e8589a; }
+  .profile-stats .stat:nth-child(4) .lbl::before { background: #f5c518; }
   .profile-proof .sep { color: rgba(245,176,66,0.45); margin: 0 7px; font-weight: 400; }
   .profile-proof strong { color: var(--amber); font-weight: 800; }
 
@@ -551,7 +561,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=23">
+<link rel="stylesheet" href="mobile.css?v=24">
 </head>
 <body>
 
@@ -1116,21 +1126,74 @@
     // feed builds ~50+). Detect touch devices to (a) cap the feed length and
     // (b) skip the autoplay engine so each post just shows its static poster.
     const IS_MOBILE = navigator.maxTouchPoints > 1 || /iPhone|iPad|iPod|Android|Mobile|Silk/i.test(navigator.userAgent);
-    let items = filteredHomeFeed();
-    if (IS_MOBILE) items = items.slice(0, 20);  // keep the DOM light on phones
+    const items = filteredHomeFeed();
     if (!items.length) {
       mount.innerHTML = '<div style="padding: 60px 20px; text-align: center; color: var(--ink-3); font-size: 13px;">No posts in this category yet.</div>';
       return;
     }
-    mount.innerHTML = items.map(item => {
+    // Progressive rendering. Phones used to get a hard 20-item cap (to avoid
+    // Mobile Safari choking on dozens of decoding <video>s) which silently hid
+    // most of the feed. Instead we render in batches and append as the user
+    // reaches the end, so everything is reachable while the DOM stays light.
+    window.__feedItems = items;
+    window.__feedShown = 0;
+    window.__feedBatch = IS_MOBILE ? 8 : 24;
+    mount.innerHTML = '';
+    appendFeedBatch();
+    appendFeedBatch();  // two batches so there is something to scroll
+    mountFeedSentinel();
+    initFeedVideoPlayback(mount);
+  }
+
+
+  // Append the next slice of feed posts and (re)bind playback for them.
+  function appendFeedBatch() {
+    const mount = document.getElementById('homeFeed');
+    const items = window.__feedItems || [];
+    const start = window.__feedShown || 0;
+    if (!mount || start >= items.length) return false;
+    const slice = items.slice(start, start + (window.__feedBatch || 12));
+    mount.insertAdjacentHTML('beforeend', slice.map(item => {
       if (item.type === 'photo') return renderPhotoPost(item);
       if (item.type === 'vertical') return renderVerticalPost(item);
       if (item.type === 'video') return renderVideoPost(item);
       return '';
-    }).join('');
-    if (!IS_MOBILE) initFeedVideoPlayback(mount);
+    }).join(''));
+    window.__feedShown = start + slice.length;
+    initFeedVideoPlayback(mount);
+    return true;
   }
 
+  // Watches the bottom of the feed: loads more, or confirms the end.
+  function mountFeedSentinel() {
+    const mount = document.getElementById('homeFeed');
+    if (!mount) return;
+    let s = document.getElementById('feedSentinel');
+    if (s) s.remove();
+    s = document.createElement('div');
+    s.id = 'feedSentinel';
+    s.style.cssText = 'padding:26px 20px 10px;text-align:center;color:var(--ink-4);font-size:11px;letter-spacing:.18em;text-transform:uppercase;';
+    s.textContent = '';
+    mount.parentNode.insertBefore(s, mount.nextSibling);
+    const total = (window.__feedItems || []).length;
+    function sync() {
+      if ((window.__feedShown || 0) >= total) {
+        s.textContent = 'You\u2019ve seen all ' + total + ' posts';
+      } else {
+        s.textContent = 'Loading\u2026';
+      }
+    }
+    sync();
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        appendFeedBatch();
+        sync();
+      });
+    }, { rootMargin: '700px 0px' });
+    io.observe(s);
+  }
   // ============= FEED VIDEO PLAYBACK ENGINE =============
   // Goals (IG-style):
   //   - Videos autoplay muted as they scroll into view; pause when out of view.
@@ -1140,7 +1203,8 @@
   //     If the user unmutes a second video, the first auto-mutes.
   function initFeedVideoPlayback(scope) {
     if (!('IntersectionObserver' in window)) return;
-    const videos = Array.from(scope.querySelectorAll('video[data-src]'));
+    const videos = Array.from(scope.querySelectorAll('video[data-src]')).filter(function (v) { return !v.dataset.fvBound; });
+    videos.forEach(function (v) { v.dataset.fvBound = '1'; });
     if (!videos.length) return;
 
     // Fullscreen button (pinned hero post) — bound once on the persistent mount.
@@ -1213,6 +1277,9 @@
           safePlay(v);
         } else if (en.intersectionRatio < 0.35) {
           v.pause();
+          if (en.intersectionRatio === 0 && (navigator.maxTouchPoints > 1) && v.src) {
+            v.removeAttribute('src'); v.load();
+          }
           // releasing audio? recompute owner
           if (window.__feedAudioOwner === v) { window.__feedAudioOwner = null; }
         }
