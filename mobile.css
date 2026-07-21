@@ -230,7 +230,11 @@
 
   /* ---------- MAIN: full width, clear the bottom bar ---------- */
   .main, .main-page {
-    margin-left: 0 !important; max-width: 100% !important;
+    /* width matters as much as margin here: client.html sets an explicit
+       width: calc(100vw - max(280px, ...)) for its desktop sidebar gutter,
+       which resolved to ~110px on a phone and crushed the page into a strip. */
+    margin-left: 0 !important; margin-right: 0 !important;
+    width: auto !important; max-width: 100% !important;
     padding: 14px 12px calc(30px + env(safe-area-inset-bottom)) !important;
   }
   /* Hire's wrapper — drop the sidebar gap; the rotunda stage stays full-bleed */
