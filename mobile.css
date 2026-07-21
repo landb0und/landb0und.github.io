@@ -159,29 +159,7 @@
   .profile-stats .num { font-size: 15px !important; }
   .profile-stats .lbl { font-size: 6.5px !important; color: var(--ink-4) !important; display: block !important; text-align: center !important; }
 
-  /* ---- THEME SWITCHER — inside the menu, reduced to a swatch row ---- */
-  .theme-switcher {
-    display: block !important; width: auto !important;
-    margin: 5px 3px 1px !important; padding: 9px 10px 4px !important;
-    border-top: 1px solid rgba(255,255,255,0.08) !important;
-    background: none !important; border-radius: 0 !important;
-  }
-  .theme-switcher .ts-label {
-    font-size: 7.5px !important; font-weight: 700 !important;
-    letter-spacing: 0.24em !important; text-transform: uppercase !important;
-    color: rgba(255,255,255,0.34) !important; margin: 0 0 9px !important;
-  }
-  .theme-switcher .ts-row { display: flex !important; gap: 9px !important; flex-wrap: nowrap !important; }
-  .theme-switcher .ts-sw {
-    width: 20px !important; height: 20px !important; padding: 0 !important; margin: 0 !important;
-    border-radius: 50% !important; background: transparent !important;
-    border: 1.5px solid rgba(255,255,255,0.18) !important;
-    display: inline-flex !important; align-items: center !important; justify-content: center !important;
-    transition: border-color .18s ease, transform .18s ease;
-  }
-  .theme-switcher .ts-sw .ts-text { display: none !important; }
-  .theme-switcher .ts-sw .ts-dot { width: 12px !important; height: 12px !important; border-radius: 50% !important; }
-  .theme-switcher .ts-sw.active { border-color: var(--amber) !important; transform: scale(1.1); }
+  /* (Theme switcher intentionally hidden on mobile — see the hide rule above.) */
 
   /* ---- STORY ROW — force parity across Home / Work / Photo ---- */
   #homeStories.stories, #workStories.stories, #photoStories.stories, #feedStories.stories {
