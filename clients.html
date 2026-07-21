@@ -536,7 +536,14 @@
     var sheetH = H - OPEN_TOP;
     sheet.style.height = sheetH + 'px';
     OPEN = 0;
-    PEEK = Math.max(120, sheetH - 208);                  // leave handle + header + chips + ~1 card
+    // Peek height is derived, not guessed: the sheet parks just under the dot
+    // rail so there's no dead gap between the reel and the list. Falls back to
+    // the fixed 208px only if the rail hasn't laid out yet.
+    var railBottom = dotsEl.getBoundingClientRect().bottom;
+    var peekTop = railBottom > 0
+      ? Math.min(H - 150, Math.round(railBottom) + 14)
+      : H - 208;
+    PEEK = Math.max(120, Math.min(sheetH, peekTop - (H - sheetH)));
     if (!opened) sheetY = PEEK;
     setSheet(sheetY, false);
     renderReel(false);
