@@ -179,27 +179,54 @@
   }
 
 
-  /* ---------- CLIENTS LIST: stop the grid blowout ----------
-     clients.html uses `grid-template-columns: repeat(2, 1fr)`. In CSS Grid a
-     `1fr` track is really `minmax(auto, 1fr)`, so columns refuse to shrink
-     below their content's min-content width and burst out of the container —
-     the page measured 524px inside a 390px viewport. `minmax(0, 1fr)` lets the
-     tracks actually shrink; the rest just re-scales the card for phone width. */
-  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
-  .card { padding: 12px !important; gap: 10px !important; min-width: 0 !important; }
-  .card-head { gap: 9px !important; }
-  .av-ring { width: 44px !important; height: 44px !important; }
-  .card-id, .card-name, .card-handle, .card-role, .card-blurb, .card-meta {
-    min-width: 0 !important; overflow-wrap: anywhere; word-break: break-word;
-  }
-  .card-name { font-size: 13px !important; line-height: 1.2 !important; }
-  .card-handle { font-size: 10.5px !important; }
-  .card-role, .card-blurb { font-size: 11px !important; }
-  .card-meta { font-size: 9.5px !important; }
+  /* ---------- CLIENTS LIST (phones) ----------
+     Two columns at phone width forced names to break ("Grace / VanderWaal")
+     and handles to snap mid-word. One full-width column per card gives the
+     text room, so nothing has to break unnaturally. Handles get an ellipsis
+     rather than a mid-word break. */
+  #clientGrid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .card { padding: 14px !important; gap: 10px !important; min-width: 0 !important; }
+  .card-head { gap: 12px !important; align-items: center !important; }
+  .av-ring { width: 48px !important; height: 48px !important; }
+  .card-id { min-width: 0 !important; }
+  .card-name { font-size: 15px !important; line-height: 1.25 !important; overflow-wrap: normal !important; word-break: normal !important; }
+  .card-handle { font-size: 11.5px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; word-break: normal !important; }
+  .card-role { font-size: 10.5px !important; line-height: 1.5 !important; word-break: normal !important; overflow-wrap: normal !important; }
+  .card-blurb { font-size: 12.5px !important; line-height: 1.5 !important; word-break: normal !important; overflow-wrap: normal !important; }
+  .card-meta { font-size: 10px !important; }
   .ph { margin-bottom: 20px !important; padding-bottom: 14px !important; gap: 8px !important; }
   .ph-l h1 { font-size: 30px !important; }
   .ph-l p { font-size: 12px !important; }
   .ph-r { text-align: left !important; font-size: 9px !important; letter-spacing: 0.14em !important; }
+
+  /* ---------- CLIENT PROFILE (client.html) ----------
+     Desktop uses a 180px avatar column + 56px gutter, which on a phone left
+     ~130px for all the copy and blew the 168px ring up into a giant empty
+     circle. Stack it instead: compact avatar, then everything full width,
+     with the post grid kept at Instagram's 3-across. */
+  .profile-head {
+    display: flex !important; flex-direction: column !important;
+    align-items: flex-start !important; gap: 14px !important;
+    padding-bottom: 16px !important; margin-bottom: 14px !important;
+  }
+  .ph-avatar { width: 86px !important; height: 86px !important; padding: 3px !important; flex: 0 0 auto !important; }
+  .ph-avatar-inner { padding: 3px !important; }
+  .ph-avatar-img { font-size: 24px !important; }
+  .ph-info { gap: 11px !important; width: 100% !important; min-width: 0 !important; }
+  .ph-row1 { gap: 10px !important; }
+  .ph-handle { font-size: 19px !important; }
+  .ph-cta { padding: 8px 13px !important; font-size: 9.5px !important; letter-spacing: 0.1em !important; }
+  .ph-row2 { gap: 20px !important; }
+  .ph-stat { font-size: 12.5px !important; }
+  .ph-name { font-size: 14px !important; }
+  .ph-blurb { font-size: 12.5px !important; margin-top: 2px !important; max-width: 100% !important; }
+  .ph-landbound-credit { margin-top: 10px !important; padding: 10px 12px !important; max-width: 100% !important; }
+  .ph-credit-role { font-size: 12px !important; }
+  .ph-credit-by { font-size: 10px !important; }
+  .tabs { gap: 20px !important; }
+  .tab { font-size: 9.5px !important; letter-spacing: 0.16em !important; padding: 11px 0 !important; }
+  /* Instagram-style post grid stays 3 across on phones */
+  .grid { grid-template-columns: repeat(3, 1fr) !important; gap: 2px !important; }
 
   /* ---------- MAIN: full width, clear the bottom bar ---------- */
   .main, .main-page {
