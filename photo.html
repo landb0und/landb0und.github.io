@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>jacobboehme.com — Photo</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=9"></script>
+<script src="theme.js?v=10"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -298,7 +298,7 @@
 
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=35">
+<link rel="stylesheet" href="mobile.css?v=36">
 </head>
 <body>
 
@@ -753,19 +753,25 @@
       // jump (only the scrollbar repositions) — you can scroll through the photos
       // forever instead of hitting the page bottom. Scrolling UP still lets you
       // leave the wall and reach the top of the page normally.
-      if (runway && d > 0) {
-        const range = runway.offsetHeight - window.innerHeight;
-        const into = -runway.getBoundingClientRect().top; // distance past the runway top
-        // Loop back EARLY (halfway) with a big margin so even a fast momentum
-        // flick can't overshoot to the runway bottom and expose the void below.
-        if (range > 0 && into > range * 0.5) {
-          const jump = Math.floor(range * 0.4);
-          lastScrollY = y - jump;
-          window.scrollTo(0, y - jump);
-        }
-      }
     };
     window.addEventListener('scroll', wallScrollHandler, { passive: true });
+
+    // HARD CEILING against the void: a scroll-event handler can lose the race
+    // with iOS momentum (scrollTo is often ignored mid-fling). So we ALSO clamp
+    // every animation frame — if the scroll ever passes 42% of the runway, snap
+    // it back up. Running per-frame catches an overshoot the instant it happens,
+    // and the columns are delta-driven so the wall never visibly jumps.
+    function clampRunway() {
+      if (!runway) return;
+      const range = runway.offsetHeight - window.innerHeight;
+      if (range <= 0) return;
+      const into = -runway.getBoundingClientRect().top;
+      if (into > range * 0.42) {
+        const back = Math.floor(range * 0.32);
+        lastScrollY = window.scrollY - back;
+        window.scrollTo(0, Math.max(0, window.scrollY - back));
+      }
+    }
 
     let last = performance.now();
     function tick(now) {
@@ -776,6 +782,7 @@
           cols[i].style.transform = 'translateY(' + (-offs[i]) + 'px)';
         }
       }
+      clampRunway();
       wallRAF = requestAnimationFrame(tick);
     }
     wallRAF = requestAnimationFrame(tick);

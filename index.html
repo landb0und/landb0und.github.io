@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jacob Boehme — Director · VFX Editor · DP · Los Angeles</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=9"></script>
+<script src="theme.js?v=10"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -572,7 +572,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=35">
+<link rel="stylesheet" href="mobile.css?v=36">
 </head>
 <body>
 
@@ -609,8 +609,13 @@
   <!-- HERO PROFILE -->
   <div class="hero-card" id="heroCard">
     <div class="hero-bar">
-      <span class="badge-status"><span class="d"></span>Accepting Work · Available Now</span>
+      <span class="badge-status"><span class="d"></span>Accepting Work · Available <span id="availMonth">Now</span></span>
     </div>
+    <script>
+      // Always show the live current month, so the pill is never stale.
+      (function(){var el=document.getElementById('availMonth');
+       if(el){try{el.textContent=new Date().toLocaleString('en-US',{month:'long'});}catch(e){}}})();
+    </script>
 
     <div class="hero-body">
       <div class="profile">

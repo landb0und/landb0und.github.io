@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>jacobboehme.com — VFX &amp; AI</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=9"></script>
+<script src="theme.js?v=10"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -116,6 +116,13 @@
   /* WHAT DO YOU NEED */
   .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .svc-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; transition: border-color .15s; }
+  /* Per-option accent for the mobile title gradient (white-left → accent-right). */
+  .svc-card:nth-child(1) { --svc-accent: #f5b042; }
+  .svc-card:nth-child(2) { --svc-accent: #8caf3a; }
+  .svc-card:nth-child(3) { --svc-accent: #e8589a; }
+  .svc-card:nth-child(4) { --svc-accent: #b388f0; }
+  .svc-card:nth-child(5) { --svc-accent: #5fb0c4; }
+  .svc-card:nth-child(6) { --svc-accent: #f5b042; }
   .svc-card:hover { border-color: rgba(245,176,66,0.3); }
   .svc-card.onset { background: transparent; border: 1px dashed rgba(245,176,66,0.3); }
   .svc-card.onset .svc-type { color: var(--ink-3); }
@@ -151,9 +158,14 @@
     .svc-card:first-child { border-top: 1px solid var(--line-2); }
     .svc-head { position: relative; padding: 17px 40px 17px 3px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     .svc-head .svc-type { margin-bottom: 5px; font-size: 9.5px; letter-spacing: 0.22em; color: var(--amber); opacity: 0.8; font-weight: 800; }
-    .svc-head .svc-name { margin-bottom: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; transition: color .25s; }
-    .svc-card.onset .svc-name { color: var(--ink); }
-    .svc-card.open .svc-name { color: var(--amber); }
+    .svc-head .svc-name {
+      margin-bottom: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.08;
+      /* Each title starts pure WHITE at the far left and shifts SUBTLY to that
+         option's own accent toward the RIGHT — clean, never dark on the left. */
+      background: linear-gradient(90deg, #fff 0%, #fff 46%, var(--svc-accent, #f5b042) 108%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
 
     /* Down chevron; rotates to point up when the card is open. */
     .svc-plus {
@@ -271,7 +283,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=35">
+<link rel="stylesheet" href="mobile.css?v=36">
 </head>
 <body>
 
@@ -500,8 +512,6 @@
   </div>
 
 </main>
-
-<div class="banner">VFX & AI PAGE</div>
 
 <script src="data.js?v=9"></script>
 <script>

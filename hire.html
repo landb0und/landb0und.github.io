@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>jacobboehme.com — Hire</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=9"></script>
+<script src="theme.js?v=10"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -51,7 +51,10 @@
   .hire-main { margin-left: 220px; position: relative; z-index: 2; }
 
   /* ─── HERO / ROTUNDA (sticky, fills the content area) ─── */
-  .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; z-index: 1; background: radial-gradient(ellipse 65% 62% at 50% 44%, #2a2013 0%, #16120c 56%, #0d0b08 100%); }
+  /* height uses svh (stable "small" viewport) so the sticky rotunda doesn't
+     resize as the mobile URL bar shows/hides — that resize was the feedback
+     loop making the sheet glitch up and down when scrolled. vh is the fallback. */
+  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; z-index: 1; background: radial-gradient(ellipse 65% 62% at 50% 44%, #2a2013 0%, #16120c 56%, #0d0b08 100%); }
   .scene { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 44%; z-index: 1; }
   .tilt { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(-6deg); animation: float 10s ease-in-out infinite; }
   @keyframes float { 0%,100% { transform: rotateX(-6deg) translateY(0); } 50% { transform: rotateX(-6deg) translateY(-16px); } }
@@ -168,7 +171,20 @@
   .track .tk-title { font-size: 17px; font-weight: 900; color: var(--ink); letter-spacing: -0.01em; margin-bottom: 7px; }
   .track .tk-body { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; line-height: 1.5; flex: 1; margin-bottom: 12px; }
   .track .tk-for { font-size: 11px; color: var(--ink-2); font-family: Georgia, serif; font-style: italic; line-height: 1.4; margin-bottom: 14px; }
-  .track .tk-cta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; cursor: pointer; transition: all .15s; justify-content: center; }
+  .track .tk-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; cursor: pointer; transition: all .15s; justify-content: center; }
+  /* Occasional shimmer sweep across each CTA, each track offset a little. */
+  @media (prefers-reduced-motion: no-preference) {
+    .track .tk-cta::after {
+      content: ''; position: absolute; top: 0; left: 0; width: 55%; height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: translateX(-160%) skewX(-18deg); pointer-events: none;
+      animation: ctaShimmer 6.5s ease-in-out infinite;
+    }
+    .track.t-project .tk-cta::after  { animation-delay: 0s; }
+    .track.t-retainer .tk-cta::after { animation-delay: .45s; }
+    .track.t-staff .tk-cta::after    { animation-delay: .9s; }
+    @keyframes ctaShimmer { 0%, 84%, 100% { transform: translateX(-160%) skewX(-18deg); } 92% { transform: translateX(280%) skewX(-18deg); } }
+  }
   .track.t-staff .tk-cta { background: rgba(232,88,154,0.12); border: 1px solid rgba(232,88,154,0.4); color: var(--rose); }
   .track.t-staff .tk-cta:hover { background: rgba(232,88,154,0.2); }
   .track.t-retainer .tk-cta { background: var(--amber); border: 1px solid var(--amber); color: var(--bg); }
@@ -300,6 +316,20 @@
       left: calc(50% + 27px); width: calc(100% - 38px); height: 2px;
       background: linear-gradient(90deg, var(--amber), var(--rose)); opacity: 0.55;
     }
+    /* Illusion of ONE continuous path: after the top-right circle (02) the line
+       runs off the right edge, then re-enters from off the left edge into the
+       bottom-left circle (03) — so it reads as Inquiry → … → Execute unbroken.
+       body has overflow-x:hidden, so the 100vw tails clip at the screen edge. */
+    .tl-node:nth-child(3)::after {
+      content: ''; position: absolute; top: 26px;
+      left: calc(50% + 27px); width: 100vw; height: 2px;
+      background: linear-gradient(90deg, var(--amber), var(--rose)); opacity: 0.5;
+    }
+    .tl-node:nth-child(4)::before {
+      content: ''; position: absolute; top: 26px;
+      right: calc(50% + 27px); width: 100vw; height: 2px;
+      background: linear-gradient(90deg, var(--rose), var(--amber)); opacity: 0.5;
+    }
   }
   @media (max-width: 900px) { .tracks, .services, .low-grid, .contact-split { grid-template-columns: 1fr; } }
   /* Worked-With concert poster: desktop type (58/38/25/16px) overflows a phone
@@ -316,7 +346,7 @@
     .poster-name.sm  { font-size: 12.5px; margin: 0 5px; }
   }
 </style>
-<link rel="stylesheet" href="mobile.css?v=35">
+<link rel="stylesheet" href="mobile.css?v=36">
 </head>
 <body>
 
@@ -447,7 +477,7 @@
           <div class="tk-title">Staff / Full-Time</div>
           <div class="tk-body">Head of content, creative director, senior editor or VFX lead. I've done the job — built and ran a content division from scratch, with real budgets and accountability.</div>
           <div class="tk-for">Best for: teams that need a creative leader who can also do the work.</div>
-          <a href="mailto:jacob.t.boehme@gmail.com?subject=Staff Role Inquiry" class="tk-cta">Talk about a role →</a>
+          <a href="mailto:jacob.t.boehme@gmail.com?subject=Staff Role Inquiry" class="tk-cta">Talk about a staff role →</a>
         </div>
       </div>
     </div>

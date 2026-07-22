@@ -51,7 +51,7 @@
     const wrap = document.createElement('div');
     wrap.className = 'theme-switcher';
     wrap.innerHTML = ''
-      + '<div class="ts-label">Color Themes</div>'
+      + '<div class="ts-label">Color Palettes</div>'
       + '<div class="ts-row">'
       +   THEMES.map(t => '<button type="button" class="ts-sw' + (current === t.key ? ' active' : '') + '" data-theme="' + t.key + '" title="' + t.name + '" aria-label="Switch to ' + t.name + ' theme"><span class="ts-dot"></span><span class="ts-text">' + t.name + '</span></button>').join('')
       + '</div>';
@@ -90,12 +90,26 @@
     document.body.appendChild(scrim);
     document.body.appendChild(fab);
 
+    // The mobile menu panel (.nav) uses a transform for its spring animation,
+    // which would make it the containing block for the "fixed" color-swatch
+    // pill — causing the pill to ride the panel from the button then snap to
+    // the top. Reparent the switcher to <body> while open so its fixed
+    // positioning is viewport-relative (stable), and restore it on close.
+    var mqMobile = function () { return window.matchMedia && window.matchMedia("(max-width: 820px)").matches; };
+    function reparentSwitcher(toBody) {
+      var sw = document.querySelector(".theme-switcher");
+      if (!sw) return;
+      if (toBody) { if (sw.parentNode !== document.body) document.body.appendChild(sw); }
+      else if (sw.parentNode === document.body && nav) { nav.appendChild(sw); }
+    }
     function close() {
       document.body.classList.remove("nav-open");
       fab.setAttribute("aria-expanded", "false");
       fab.setAttribute("aria-label", "Open menu");
+      reparentSwitcher(false);
     }
     function open() {
+      if (mqMobile()) reparentSwitcher(true);
       document.body.classList.add("nav-open");
       fab.setAttribute("aria-expanded", "true");
       fab.setAttribute("aria-label", "Close menu");
