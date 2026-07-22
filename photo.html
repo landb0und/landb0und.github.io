@@ -14,7 +14,7 @@
     --ink: #f1e6cd; --ink-2: #c7b893; --ink-3: #8a7a5e; --ink-4: #5d4f3a;
     --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
   }
-  body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; }
+  body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; overscroll-behavior-y: none; }
   body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.5; mix-blend-mode: overlay; }
   body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%); }
   a { color: inherit; text-decoration: none; }
@@ -332,23 +332,19 @@
   <!-- ============= GRID VIEW (default) ============= -->
   <div class="view-grid">
 
+    <!-- CLIENTS STORIES now lead, above the page title (rendered from data.js) -->
+    <div class="stories" id="photoStories" style="margin-bottom: 16px;"></div>
+
     <div class="page-hero">
       <div>
         <h1>Professional photos &amp; retouching</h1>
       </div>
-      <div class="meta">
-        <strong>247</strong> frames<br>
-        2018 — present
-      </div>
     </div>
 
-    <!-- Stories + photo-type tabs + the wall live in ONE sticky block so the
-         header stays pinned at top while scrolling only drives the wall parallax. -->
+    <!-- Tabs + the wall live in ONE sticky block so the header stays pinned at
+         top while scrolling only drives the wall parallax. -->
     <div class="wall-scroll" id="wallScroll">
       <div class="wall-sticky" id="wallSticky">
-
-        <!-- CLIENTS STORIES (rendered from data.js) -->
-        <div class="stories" id="photoStories" style="margin-bottom: 4px;"></div>
 
         <!-- TABS — filter by derived category, counts auto-update from PHOTOS -->
         <div class="tabs" id="photoTabs">
@@ -640,8 +636,8 @@
   const WALL_GAP = 12;
   const WALL_SPEEDS = [14, 22, 10, 18, 12]; // px/sec per column — intentionally uneven
   // Mobile: closer speeds + alternating directions => true omnidirectional drift.
-  const WALL_SPEEDS_M = [13, 15, 12, 14];
-  const WALL_DIRS_M   = [1, -1, 1, -1];   // +1 drifts up, -1 drifts down
+  const WALL_SPEEDS_M = [17, 22, 15, 20];  // a touch faster so the drift reads
+  const WALL_DIRS_M   = [1, -1, 1, -1];    // +1 drifts up, -1 drifts down (omnidirectional)
   function escAttr(s) { return String(s == null ? '' : s).replace(/"/g, '&quot;'); }
   function escHtml(s) { return String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
 
@@ -760,8 +756,10 @@
       if (runway && d > 0) {
         const range = runway.offsetHeight - window.innerHeight;
         const into = -runway.getBoundingClientRect().top; // distance past the runway top
-        if (range > 0 && into > range * 0.85) {
-          const jump = Math.floor(range * 0.5);
+        // Loop back EARLY (halfway) with a big margin so even a fast momentum
+        // flick can't overshoot to the runway bottom and expose the void below.
+        if (range > 0 && into > range * 0.5) {
+          const jump = Math.floor(range * 0.4);
           lastScrollY = y - jump;
           window.scrollTo(0, y - jump);
         }
