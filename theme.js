@@ -113,24 +113,23 @@
 
     try { if (localStorage.getItem("navSeen")) document.body.classList.add("nav-seen"); } catch (e) {}
 
-    // First load of a visit: briefly EXPAND the menu then collapse it, so a new
-    // visitor sees what the button does instead of guessing at a bobbing icon.
-    function demoNav() {
+    // First load of a visit: draw the eye to the button with a pop + glow pulse
+    // on the button ITSELF — no longer auto-expanding the menu, which collided
+    // with the page's own intro animations and read as distracting.
+    function introFab() {
       var seen = false;
-      try { seen = !!sessionStorage.getItem("navDemo"); } catch (e) {}
+      try { seen = !!sessionStorage.getItem("navIntro"); } catch (e) {}
       if (seen) return;
-      try { sessionStorage.setItem("navDemo", "1"); } catch (e) {}
+      try { sessionStorage.setItem("navIntro", "1"); } catch (e) {}
       if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       if (!window.matchMedia || !window.matchMedia("(max-width: 820px)").matches) return;
       setTimeout(function () {
         if (document.body.classList.contains("nav-open")) return;
-        document.body.classList.add("nav-open", "nav-demo");
-        setTimeout(function () {
-          document.body.classList.remove("nav-open", "nav-demo");
-        }, 900);
-      }, 500);
+        fab.classList.add("fab-intro");
+        setTimeout(function () { fab.classList.remove("fab-intro"); }, 1600);
+      }, 650);
     }
-    demoNav();
+    introFab();
   }
 
   function initChrome() { buildSwitcher(); buildNavFab(); }

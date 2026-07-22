@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>jacobboehme.com — VFX &amp; AI</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=8"></script>
+<script src="theme.js?v=9"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -149,9 +149,9 @@
       border: 0; border-bottom: 1px solid var(--line-2); border-radius: 0;
     }
     .svc-card:first-child { border-top: 1px solid var(--line-2); }
-    .svc-head { position: relative; padding: 15px 36px 15px 2px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .svc-head .svc-type { margin-bottom: 3px; }
-    .svc-head .svc-name { margin-bottom: 0; font-size: 16px; letter-spacing: -0.02em; transition: color .25s; }
+    .svc-head { position: relative; padding: 17px 40px 17px 3px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .svc-head .svc-type { margin-bottom: 5px; font-size: 9.5px; letter-spacing: 0.22em; color: var(--amber); opacity: 0.8; font-weight: 800; }
+    .svc-head .svc-name { margin-bottom: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; transition: color .25s; }
     .svc-card.onset .svc-name { color: var(--ink); }
     .svc-card.open .svc-name { color: var(--amber); }
 
@@ -182,16 +182,20 @@
 
   /* ---- MOBILE: VFX reels peek + CGI/Compositing/AI stacking ---- */
   @media (max-width: 820px) {
-    /* One big vertical with the next clearly peeking in from the right, so the
-       strip obviously reads as swipeable. Snap gives it a clean rest position. */
-    .vfx-strip { scroll-snap-type: x mandatory; scroll-padding-left: 2px; gap: 12px; -webkit-overflow-scrolling: touch; }
-    .vfx-strip .vfx-short, .vfx-strip .vfx-cta { flex: 0 0 60vw; max-width: 250px; scroll-snap-align: start; }
+    /* Show ~2.5 verticals per view: full two + a half peeking in from the
+       right, so the row obviously reads as swipeable. Snap for a clean rest. */
+    .vfx-strip { scroll-snap-type: x proximity; scroll-padding-left: 2px; gap: 10px; -webkit-overflow-scrolling: touch; }
+    .vfx-strip .vfx-short, .vfx-strip .vfx-cta { flex: 0 0 37vw; max-width: 178px; scroll-snap-align: start; }
 
     /* CGI · Compositing · AI: three dense text columns are unreadable on a
        phone. Stack them full-width with real breathing room. (Beats the inline
        repeat(3) via !important.) */
     .stack { grid-template-columns: 1fr !important; gap: 12px !important; }
     .stack-col { padding: 15px 16px; }
+
+    /* Selected VFX Work: 272px frames showed ~1 at a time on a phone. Shrink
+       them so a few 16:9 frames read across the strip. */
+    .frame { flex: 0 0 42vw !important; max-width: 210px; }
   }
 
   /* THE LAYERS */
@@ -267,7 +271,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=34">
+<link rel="stylesheet" href="mobile.css?v=35">
 </head>
 <body>
 

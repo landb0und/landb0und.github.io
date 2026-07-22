@@ -38,8 +38,8 @@
   .nav-fab-bars { position: relative; display: block; width: 22px; height: 15px; }
   .nav-fab-bars i {
     position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px;
-    /* Brighter than the flat accent so the control reads clearly in the corner */
-    background: color-mix(in srgb, var(--amber) 72%, #ffffff);
+    /* Bright, near-luminous bars so the control reads clearly in the corner */
+    background: color-mix(in srgb, var(--amber) 52%, #ffffff);
     transition: transform .3s cubic-bezier(.2,.9,.25,1), opacity .18s ease;
   }
   .nav-fab-bars i:nth-child(1) { top: 0; }
@@ -67,8 +67,21 @@
     body:not(.nav-open) .nav-fab-bars { animation: barPulse 2.6s ease-in-out infinite; }
   }
   @keyframes barPulse {
-    0%, 100% { opacity: 0.9; filter: none; }
-    50%      { opacity: 1; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--amber) 60%, transparent)); }
+    0%, 100% { opacity: 0.94; filter: none; }
+    50%      { opacity: 1; filter: drop-shadow(0 0 4px color-mix(in srgb, var(--amber) 75%, transparent)); }
+  }
+
+  /* First-visit attention: a single pop + glow burst on the button itself
+     (theme.js adds .fab-intro for ~1.5s). Overrides the steady fabGlow while
+     it runs, then hands back. No menu auto-open. */
+  .nav-fab.fab-intro { animation: fabIntro 1.5s cubic-bezier(.2,.9,.25,1) 1; }
+  @keyframes fabIntro {
+    0%   { transform: scale(1);    box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 0 0 color-mix(in srgb, var(--amber) 55%, transparent); }
+    16%  { transform: scale(1.14); box-shadow: 0 10px 26px rgba(0,0,0,0.5), 0 0 22px 6px color-mix(in srgb, var(--amber) 62%, transparent); }
+    34%  { transform: scale(0.97); }
+    50%  { transform: scale(1.07); box-shadow: 0 10px 26px rgba(0,0,0,0.5), 0 0 28px 9px color-mix(in srgb, var(--amber) 72%, transparent); }
+    72%  { transform: scale(1); }
+    100% { transform: scale(1);    box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 9px 0 color-mix(in srgb, var(--amber) 26%, transparent); }
   }
   @keyframes fabAttn {
     0%, 55%, 100% { transform: translateY(0) scale(1); }
@@ -92,8 +105,8 @@
   /* Dim + blur the page behind the open menu; tap it to dismiss */
   .nav-scrim {
     display: block !important; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.52);
-    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    background: rgba(0,0,0,0.72);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
     opacity: 0; visibility: hidden; z-index: 590;
     transition: opacity .25s ease, visibility .25s ease;
   }
@@ -125,6 +138,31 @@
   body.nav-open .nav { opacity: 1; visibility: visible; transform: none; }
   .nav::after { display: none !important; }
   .nav-brand, .nav-socials, .nav-bottom, .theme-switcher { display: none !important; }
+
+  /* Color themes: hidden by default, but when the menu opens they surface as a
+     frosted swatch pill centered at the TOP of the screen — dots only, tappable,
+     so the palette is reachable straight from the menu. */
+  body.nav-open .theme-switcher {
+    display: flex !important; flex-direction: row !important; align-items: center !important;
+    position: fixed !important; top: calc(env(safe-area-inset-top) + 14px) !important;
+    left: 50% !important; transform: translateX(-50%) !important;
+    margin: 0 !important; padding: 8px 12px !important; gap: 8px !important;
+    border: 1px solid rgba(255,255,255,0.12) !important; border-top: 1px solid rgba(255,255,255,0.12) !important;
+    border-radius: 100px !important;
+    background: rgba(14,14,17,0.94) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
+    box-shadow: 0 14px 44px rgba(0,0,0,0.6) !important;
+    z-index: 620 !important;
+    animation: tsPop .32s cubic-bezier(.2,.9,.25,1) both;
+  }
+  @keyframes tsPop { from { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(0.94); } to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } }
+  body.nav-open .theme-switcher .ts-label { display: none !important; }
+  body.nav-open .theme-switcher .ts-row { flex-direction: row !important; gap: 8px !important; }
+  body.nav-open .theme-switcher .ts-sw { width: auto !important; padding: 4px !important; border-radius: 50% !important; }
+  body.nav-open .theme-switcher .ts-sw .ts-text { display: none !important; }
+  body.nav-open .theme-switcher .ts-sw .ts-dot { width: 24px !important; height: 24px !important; border-radius: 50% !important; }
+  body.nav-open .theme-switcher .ts-sw.active { background: transparent !important; }
+  body.nav-open .theme-switcher .ts-sw.active .ts-dot { box-shadow: 0 0 0 2px var(--amber) !important; }
 
   .nav-items {
     flex-direction: column !important; flex: none !important;
@@ -255,11 +293,12 @@
      text, and a fully-rounded 58px-tall shape that echoes the round button next
      to it. Hidden while the menu is open so it never floats over the panel. */
   .back-btn {
+    display: inline-flex !important; /* force-shown on mobile (clients.html hides it on desktop) */
     position: fixed !important; top: auto !important; right: auto !important;
     left: calc(14px + 58px + 12px) !important;
     bottom: calc(env(safe-area-inset-bottom) + 16px) !important;
     height: 58px !important; padding: 0 22px !important; margin: 0 !important;
-    display: inline-flex !important; align-items: center !important; gap: 8px !important;
+    align-items: center !important; gap: 8px !important;
     border-radius: 29px !important;
     background: linear-gradient(150deg, rgba(32,32,37,0.97), rgba(14,14,17,0.97)) !important;
     border: 1px solid color-mix(in srgb, var(--amber) 42%, transparent) !important;

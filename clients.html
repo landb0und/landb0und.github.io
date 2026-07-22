@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>All Clients — Landbound</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=8"></script>
+<script src="theme.js?v=9"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   :root {
@@ -47,6 +47,9 @@
   @keyframes pulse { 50% { opacity: 0.3; } }
 
   .main { margin-left: 220px; padding: 32px 40px 60px; max-width: 1280px; position: relative; z-index: 2; }
+  /* Clients is a top-level nav page on desktop, so no BACK there. On mobile it's
+     often reached by drilling in, so mobile.css docks a BACK button by the FAB. */
+  .back-btn { display: none; }
 
   /* Page head */
   .ph { margin-bottom: 36px; padding-bottom: 22px; border-bottom: 1px solid var(--line-2); display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
@@ -262,7 +265,7 @@
     .spot-empty { padding: 26px 18px; text-align: center; font-family: 'SF Mono', Menlo, monospace; font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.14em; text-transform: uppercase; }
   }
 </style>
-<link rel="stylesheet" href="mobile.css?v=34">
+<link rel="stylesheet" href="mobile.css?v=35">
 </head>
 <body>
 <nav class="nav">
@@ -291,6 +294,7 @@
 </nav>
 
 <main class="main">
+  <a href="javascript:history.length>1?history.back():window.location.href='/'" class="back-btn">← BACK</a>
   <div class="ph">
     <div class="ph-l">
       <h1>Clients</h1>
