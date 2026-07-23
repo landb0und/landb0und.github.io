@@ -172,9 +172,11 @@
   .track .tk-body { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; line-height: 1.5; flex: 1; margin-bottom: 12px; }
   .track .tk-for { font-size: 11px; color: var(--ink-2); font-family: Georgia, serif; font-style: italic; line-height: 1.4; margin-bottom: 14px; }
   .track .tk-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; cursor: pointer; transition: all .15s; justify-content: center; }
-  /* A constant, very subtle sheen drifting across each CTA — always moving, never
-     a hard flash. Each button differs: its own tint (matching the track accent),
-     its own speed, and staff drifts the opposite direction. */
+  /* A constant sheen drifting across each CTA — three deliberately DIFFERENT
+     textures so the buttons don't read as identical: project is a thin, subtle
+     band; retainer is a wide, bright shine (it's the amber "best fit" button, so
+     it earns the strongest treatment); staff is a double pink band that reads as
+     a distinct two-pass sweep. All still smooth loops, never a hard flash. */
   @media (prefers-reduced-motion: no-preference) {
     .track .tk-cta::after {
       content: ''; position: absolute; inset: 0; pointer-events: none;
@@ -182,9 +184,12 @@
       background-size: 240% 100%;
       animation: ctaSheen linear infinite;
     }
+    /* 1 — Project: thin, subtle (baseline). */
     .track.t-project  .tk-cta::after { animation-duration: 5.5s; background-image: linear-gradient(105deg, transparent 36%, rgba(140,175,58,0.13) 50%, transparent 64%); }
-    .track.t-retainer .tk-cta::after { animation-duration: 7s;   background-image: linear-gradient(105deg, transparent 36%, rgba(255,255,255,0.09) 50%, transparent 64%); }
-    .track.t-staff    .tk-cta::after { animation-duration: 6.2s; animation-direction: reverse; background-image: linear-gradient(105deg, transparent 36%, rgba(232,88,154,0.13) 50%, transparent 64%); }
+    /* 2 — Retainer: wide, bright shine — clearly more obvious than project. */
+    .track.t-retainer .tk-cta::after { animation-duration: 3.4s; background-image: linear-gradient(105deg, transparent 24%, rgba(255,255,255,0.32) 50%, transparent 76%); }
+    /* 3 — Staff: double pink band — a different texture from both. */
+    .track.t-staff    .tk-cta::after { animation-duration: 4s; background-image: linear-gradient(105deg, transparent 8%, rgba(232,88,154,0.24) 22%, transparent 36%, transparent 64%, rgba(232,88,154,0.24) 78%, transparent 92%); }
     @keyframes ctaSheen { from { background-position: 120% 0; } to { background-position: -120% 0; } }
   }
   .track.t-staff .tk-cta { background: rgba(232,88,154,0.12); border: 1px solid rgba(232,88,154,0.4); color: var(--rose); }
@@ -361,6 +366,18 @@
     .scope-row .desc { font-size: 12.5px; }
     .fit-card { padding: 15px 15px; }
     .fit-card .fc-head { margin-bottom: 11px; }
+
+    /* Contact panels were running off the right edge on phones: the two-up field
+       grid wouldn't shrink (grid items default to min-width:auto, and an input's
+       intrinsic min-width is ~180px, so two + a gap overflowed a 390px screen),
+       and the long email string in "skip the form" didn't wrap. Stack the fields
+       full-width and let every box shrink/wrap inside the viewport. */
+    .field-row { grid-template-columns: 1fr; gap: 0; }
+    .field { min-width: 0; }
+    .field input, .field select, .field textarea { width: 100%; max-width: 100%; }
+    .form-card, .direct-card { min-width: 0; }
+    .direct-btn { min-width: 0; }
+    .direct-btn .val, .direct-card .val { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
   }
 </style>
 <link rel="stylesheet" href="mobile.css?v=37">

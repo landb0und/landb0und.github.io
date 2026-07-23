@@ -654,58 +654,53 @@
     revealWhenReady();
     setTimeout(() => { if (!revealed) { revealed = true; cont.classList.add('ba-ready'); } }, 2000); // safety: never stay black
 
-    // ---- PHASE LOCK -------------------------------------------------------
-    // The old aligner checked 4x a second and let BOTH clips loop natively.
-    // Two <video> elements never wrap at the same instant, so every loop
-    // re-introduced an offset that the slow corrector then spent a second
-    // easing out — which is exactly the drift you could see.
-    //
-    // Now: "before" is the sole master and the only one that loops. "After"
-    // is a slave with loop OFF, corrected once per rendered frame via
-    // requestVideoFrameCallback (falling back to rAF). Mid-clip drift is
-    // eased with playbackRate so it stays smooth; the loop boundary and any
-    // gross desync (tab throttling, a decode stall) are snapped hard, where
-    // a seek is invisible because the picture is changing anyway.
-    bv.loop = true;
-    av.loop = false;
+    // ---- LOCK (decoder-friendly) ------------------------------------------
+    // The old aligner corrected the slave EVERY rendered frame — nudging its
+    // playbackRate and seeking via requestVideoFrameCallback. That constant
+    // chase was thrashing the "Finished" (left) decoder, which is exactly why
+    // that clip stuttered the whole time. Gone. Now both clips just loop
+    // natively at 1×, and the ONLY correction is a light 250ms watchdog that
+    // hard-snaps the slave to the master right after the master wraps (or if
+    // they drift past ~1/6 s) — a jump that lands while the picture is already
+    // cutting on the loop, so it's invisible. No per-frame work, no stutter.
+    bv.loop = true; av.loop = true;
+    bv.playbackRate = 1; av.playbackRate = 1;
 
-    let lastMasterT = 0;
-    function phaseLock() {
-      if (!bv.paused && bv.duration) {
-        const sd = av.duration || bv.duration;
-        const mt = bv.currentTime;
-        const target = sd ? mt % sd : mt;
-        let d = av.currentTime - target;                  // +: slave ahead
-        if (sd) { if (d > sd / 2) d -= sd; else if (d < -sd / 2) d += sd; }
-        const looped = mt < lastMasterT - 0.05;           // master just wrapped
-        if (looped || Math.abs(d) > 0.25) {
-          try { av.currentTime = target; } catch (_) {}
-          av.playbackRate = 1;
-        } else if (Math.abs(d) > 0.012) {                 // sub-frame: ease, don't seek
-          av.playbackRate = Math.max(0.94, Math.min(1.06, 1 - d * 0.5));
-        } else if (av.playbackRate !== 1) {
-          av.playbackRate = 1;
-        }
-        lastMasterT = mt;
-        if (av.paused) av.play().catch(() => {});
-      }
-      schedule();
+    // Both-ways gate (the brief: "don't start one until the other's for sure
+    // playing, and vice versa"): if EITHER clip stalls to buffer, pause BOTH so
+    // neither ever plays solo and drifts; resume together, re-aligned, only once
+    // both have data again.
+    var baStalled = false;
+    function baOnWaiting() { if (baStalled) return; baStalled = true; bv.pause(); av.pause(); }
+    function baOnResume() {
+      if (!baStalled) return;
+      if (bv.readyState < 3 || av.readyState < 3) return;   // wait for BOTH
+      baStalled = false;
+      try { av.currentTime = bv.currentTime; } catch (_) {}
+      bv.play().catch(function () {}); av.play().catch(function () {});
     }
-    function schedule() {
-      if (bv.requestVideoFrameCallback) bv.requestVideoFrameCallback(phaseLock);
-      else requestAnimationFrame(phaseLock);
-    }
-    schedule();
+    bv.addEventListener('waiting', baOnWaiting); av.addEventListener('waiting', baOnWaiting);
+    bv.addEventListener('canplay', baOnResume); av.addEventListener('canplay', baOnResume);
+    bv.addEventListener('playing', baOnResume); av.addEventListener('playing', baOnResume);
+
+    var lastMasterT = 0;
+    setInterval(function () {
+      if (baStalled || bv.paused || !bv.duration) return;
+      var sd = av.duration || bv.duration;
+      var mt = bv.currentTime;
+      var d = av.currentTime - mt;                          // +: slave ahead
+      if (sd) { if (d > sd / 2) d -= sd; else if (d < -sd / 2) d += sd; }
+      var looped = mt < lastMasterT - 0.05;                 // master just wrapped
+      if (looped || Math.abs(d) > 0.16) { try { av.currentTime = mt; } catch (_) {} }
+      if (av.paused && !bv.paused) av.play().catch(function () {});
+      lastMasterT = mt;
+    }, 250);
 
     // Coming back from a backgrounded tab, both clocks are garbage — resync hard.
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', function () {
       if (document.hidden) return;
-      try {
-        const sd = av.duration || bv.duration || 0;
-        av.currentTime = sd ? bv.currentTime % sd : bv.currentTime;
-      } catch (_) {}
-      av.playbackRate = 1;
-      bv.play().catch(() => {}); av.play().catch(() => {});
+      try { av.currentTime = bv.currentTime; } catch (_) {}
+      bv.play().catch(function () {}); av.play().catch(function () {});
     });
 
     // Once BOTH clips are actually playing (and the lock loop has aligned them),
