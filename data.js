@@ -30,6 +30,19 @@ window.CLIENTS = [
     ]
   },
   {
+    id: 'll-cool-j',
+    name: 'LL Cool J',
+    short: 'LL Cool J',
+    handle: '@llcoolj',
+    role: 'VFX · LED Wall / Virtual Production',
+    blurb: 'Built the LED-wall background environment that played live on set for "Passion," and created every on-screen visual effect. Virtual production + VFX.',
+    palette: 'sa-6',
+    thumb: null,
+    media: [
+      { type: 'video', embedId: '03I2Dse1B3Y', bunny: false, title: 'Passion', year: '2024', tags: ['VFX','LED Wall','Virtual Production'], aiNote: 'No AI' }
+    ]
+  },
+  {
     id: 'christian-gates',
     name: 'Christian Gates',
     short: 'Christian G.',
