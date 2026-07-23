@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>jacobboehme.com — VFX</title>
+<link rel="stylesheet" href="theme.css?v=10">
+<script src="theme.js?v=10"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #12100c; --bg-2: #1a1612; --bg-3: #221c16;
+    --line: #2d251c; --line-2: #1f1a14;
+    --ink: #f1e6cd; --ink-2: #c7b893; --ink-3: #8a7a5e; --ink-4: #5d4f3a;
+    --amber: #f5b042; --rose: #e8589a; --leaf: #8caf3a;
+  }
+  body { font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; position: relative; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1000; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.65 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23g)'/%3E%3C/svg%3E"); opacity: 0.5; mix-blend-mode: overlay; }
+  body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%); }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  .nav { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg-2); border-right: 1px solid var(--line); padding: 24px 0; z-index: 20; display: flex; flex-direction: column; }
+  .nav-brand { padding: 0 22px 22px; border-bottom: 1px solid var(--line-2); margin-bottom: 18px; }
+  .nav-brand .logo { font-size: 15px; font-weight: 900; letter-spacing: 0.04em; color: var(--amber); }
+  .nav-brand .tag { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; margin-top: 6px; }
+  .nav-items { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; font-size: 12px; color: var(--ink-2); cursor: pointer; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--ink); }
+  .nav-item.active { background: rgba(245,176,66,0.12); color: var(--amber); }
+  .nav-socials { margin: 22px 14px 0; padding: 16px 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--line-2); border-radius: 8px; }
+  .nav-socials-h { font-size: 9px; color: var(--amber); letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; margin-bottom: 10px; }
+  .nav-soc { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+  .nav-soc:not(:last-child) { border-bottom: 1px solid var(--line-2); }
+  .nav-soc-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+  .nav-soc-icon svg { width: 16px; height: 16px; }
+  .nav-soc-icon.tt { background: linear-gradient(135deg, var(--rose), #25f4ee); }
+  .nav-soc-icon.tt svg { color: #000; }
+  .nav-soc-icon.ig { background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); }
+  .nav-soc-icon.ig svg { color: #fff; }
+  .nav-soc-icon.li { background: #0a66c2; color: #fff; font-size: 11px; }
+  .nav-soc-icon.li svg { color: #fff; }
+  .nav-soc-icon.im { background: #f5c518; color: #000; font-size: 10px; }
+  .nav-soc-info { flex: 1; min-width: 0; }
+  .nav-soc-h { font-size: 11px; color: var(--ink); font-weight: 700; line-height: 1.1; }
+  .nav-soc-m { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; margin-top: 1px; }
+  .nav-bottom { margin-top: auto; padding: 20px 22px 0; font-size: 10px; color: var(--ink-4); line-height: 1.6; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; }
+  .nav-bottom .status { display: flex; align-items: center; gap: 6px; color: var(--leaf); margin-bottom: 4px; }
+  .nav-bottom .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  .main { margin-left: 220px; padding: 40px 40px 60px; max-width: 1400px; position: relative; z-index: 2; }
+
+  /* HERO */
+  .page-hero { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--line-2); }
+  .page-hero h1 { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; color: var(--ink); line-height: 0.95; margin-bottom: 12px; }
+  .page-hero h1 .amp { color: var(--amber); font-family: Georgia, serif; font-style: italic; font-weight: 700; }
+  .page-hero .lede { font-size: 14px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; max-width: 560px; }
+  .page-hero .stats-mini { display: flex; gap: 24px; }
+  .stat-mini { text-align: right; }
+  .stat-mini .v { font-size: 28px; font-weight: 900; color: var(--ink); letter-spacing: -0.02em; line-height: 1; font-family: 'SF Mono', Menlo, monospace; }
+  .stat-mini .v .plus { color: var(--amber); }
+  .stat-mini .k { font-size: 9px; color: var(--ink-4); letter-spacing: 0.22em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-top: 4px; }
+
+  .section { margin-bottom: 44px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
+  .section-head .num { display: none; }
+  .section-head .label { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
+  .section-head .hint { margin-left: auto; font-size: 11px; color: var(--ink-4); font-family: Georgia, serif; font-style: italic; }
+
+  /* VFX REELS STRIP */
+  .vfx-strip-head { display: flex; align-items: baseline; gap: 14px; margin: 6px 0 12px; }
+  .vfx-strip-head .num { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.14em; }
+  .vfx-strip-head .lbl { font-size: 13px; color: var(--ink); font-weight: 800; letter-spacing: 0.26em; text-transform: uppercase; }
+  .vfx-strip-head .sub { font-size: 11px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+  .vfx-strip-head .all { margin-left: auto; font-size: 11px; color: var(--amber); font-weight: 800; letter-spacing: 0.1em; text-decoration: none; }
+  .vfx-strip-head .all:hover { color: var(--ink); }
+  .vfx-strip { display: flex; gap: 10px; overflow-x: auto; padding-top: 6px; padding-bottom: 8px; margin-bottom: 40px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .vfx-strip::-webkit-scrollbar { height: 6px; }
+  .vfx-strip::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; }
+  .vfx-strip .vfx-short { flex: 0 0 180px; aspect-ratio: 9/16; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--line); transition: transform .15s, border-color .15s; text-decoration: none; background: #000 center/cover no-repeat; }
+  .vfx-strip .vfx-short:hover { transform: translateY(-3px); border-color: var(--amber); }
+  .vfx-strip .vfx-short video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .3s; }
+  .vfx-strip .vfx-short video.live { opacity: 1; }
+  .vfx-strip .vfx-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); z-index: 2; pointer-events: none; }
+  .vfx-strip .vfx-meta { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 3; }
+  .vfx-strip .vfx-meta .cap { font-size: 11px; color: #fff; font-weight: 700; line-height: 1.25; }
+  .vfx-strip .vfx-tag { position: absolute; top: 10px; left: 10px; z-index: 3; padding: 3px 8px; background: rgba(245,176,66,0.85); color: var(--bg); font-size: 8px; letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; text-transform: uppercase; border-radius: 100px; backdrop-filter: blur(4px); }
+  .vfx-strip .vfx-cta { flex: 0 0 180px; aspect-ratio: 9/16; border-radius: 10px; border: 1px dashed var(--amber); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--amber); cursor: pointer; padding: 20px; text-align: center; text-decoration: none; }
+  .vfx-strip .vfx-cta:hover { background: rgba(245,176,66,0.06); }
+  .vfx-strip .vfx-cta .arr { font-size: 24px; }
+  .vfx-strip .vfx-cta .t { font-size: 13px; font-weight: 800; letter-spacing: 0.04em; }
+  .vfx-strip .vfx-cta .m { font-size: 10px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* BEFORE / AFTER */
+  .ba-container { width: 100%; height: 380px; position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); cursor: ew-resize; user-select: none; }
+  .ba-before { position: absolute; inset: 0; overflow: hidden; background: #000; }
+  .ba-after  { position: absolute; inset: 0; overflow: hidden; background: #000; clip-path: inset(0 50% 0 0); }
+  .ba-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity .4s ease; }
+  .ba-container.ba-ready .ba-vid { opacity: 1; }
+  .ba-scan { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px); pointer-events: none; z-index: 2; }
+  .ba-handle { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--amber); left: 50%; transform: translateX(-50%); z-index: 10; cursor: ew-resize; }
+  .ba-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; }
+  .ba-grip svg { width: 14px; height: 14px; }
+  .ba-label { position: absolute; bottom: 12px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 9px; background: rgba(0,0,0,0.65); border-radius: 3px; font-weight: 700; z-index: 4; }
+  .ba-label.before { right: 14px; color: var(--ink-4); }
+  .ba-label.after  { left: 14px; color: var(--amber); }
+  /* Make the slider read as interactive: pulsing grip + a fading "drag" hint. */
+  .ba-grip { animation: baPulse 1.8s ease-in-out infinite; }
+  @keyframes baPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(245,176,66,0.55); } 60% { box-shadow: 0 0 0 12px rgba(245,176,66,0); } }
+  .ba-drag-hint { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 11; font-size: 10px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber); background: rgba(0,0,0,0.6); padding: 4px 12px; border-radius: 100px; pointer-events: none; transition: opacity .35s; }
+  .ba-container.ba-touched .ba-drag-hint { opacity: 0; }
+  .ba-container.ba-touched .ba-grip { animation: none; }
+  .ba-credit { margin-top: 8px; font-size: 10px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
+
+  /* WHAT DO YOU NEED */
+  .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .svc-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; transition: border-color .15s; }
+  /* Per-option accent for the mobile title gradient (white-left → accent-right). */
+  .svc-card:nth-child(1) { --svc-accent: #f5b042; }
+  .svc-card:nth-child(2) { --svc-accent: #8caf3a; }
+  .svc-card:nth-child(3) { --svc-accent: #e8589a; }
+  .svc-card:nth-child(4) { --svc-accent: #b388f0; }
+  .svc-card:nth-child(5) { --svc-accent: #5fb0c4; }
+  .svc-card:nth-child(6) { --svc-accent: #f5b042; }
+  .svc-card:hover { border-color: rgba(245,176,66,0.3); }
+  .svc-card.onset { background: transparent; border: 1px dashed rgba(245,176,66,0.3); }
+  .svc-card.onset .svc-type { color: var(--ink-3); }
+  .svc-card.onset .svc-name { color: var(--ink-2); }
+  .svc-type { font-size: 9px; color: var(--amber); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
+  .svc-name { font-size: 13px; font-weight: 900; color: var(--ink); margin-bottom: 5px; }
+  .svc-desc { font-size: 11px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; margin-bottom: 8px; }
+  .svc-tech { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.05em; line-height: 1.5; }
+  .ai-chip { display: inline-flex; align-items: center; gap: 4px; margin-top: 9px; padding: 3px 8px; background: rgba(232,88,154,0.1); border: 1px solid rgba(232,88,154,0.35); color: var(--rose); border-radius: 100px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; }
+  .ai-chip::before { content: '⚡'; }
+  .onset-badge { display: inline-flex; align-items: center; gap: 5px; margin-top: 9px; padding: 3px 9px; background: rgba(245,176,66,0.06); border: 1px solid rgba(245,176,66,0.2); color: var(--ink-3); border-radius: 100px; font-size: 9px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; }
+  .onset-badge::before { content: '●'; color: var(--amber); font-size: 7px; }
+
+  /* Small proof clip inside the "I'm On Set" card — a real supervised shot.
+     Floated so the copy wraps beside it instead of stacking tall. */
+  .onset-clip { float: right; width: 82px; aspect-ratio: 9/16; margin: 2px 0 6px 12px; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid var(--line); background: #000; }
+  .onset-clip video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .onset-clip .cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; font-size: 7.5px; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,0.88)); padding: 12px 5px 4px; line-height: 1.25; }
+
+  .svc-plus { display: none; }
+
+  /* On mobile six 3-up cards become an unreadable pile. Collapse them into a
+     typographic index — each service is just its category and its name — and
+     let a tap open the one you care about. One open at a time, so the whole
+     list stays on screen and reads as a menu rather than a wall. */
+  @media (max-width: 820px) {
+    .svc-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+    .svc-card,
+    .svc-card.onset {
+      background: transparent; padding: 0;
+      border: 0; border-bottom: 1px solid var(--line-2); border-radius: 0;
+    }
+    .svc-card:first-child { border-top: 1px solid var(--line-2); }
+    .svc-head { position: relative; padding: 17px 40px 17px 3px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .svc-head .svc-type { margin-bottom: 5px; font-size: 9.5px; letter-spacing: 0.22em; color: var(--amber); opacity: 0.8; font-weight: 800; }
+    .svc-head .svc-name {
+      margin-bottom: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.08;
+      /* Each title starts pure WHITE at the far left and shifts SUBTLY to that
+         option's own accent toward the RIGHT — clean, never dark on the left. */
+      background: linear-gradient(90deg, #fff 0%, #fff 46%, var(--svc-accent, #f5b042) 108%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+
+    /* Down chevron; rotates to point up when the card is open. */
+    .svc-plus {
+      display: block; position: absolute; right: 7px; top: 50%; width: 10px; height: 10px;
+      margin-top: -8px; opacity: 0.55; box-sizing: border-box;
+      border-right: 1.6px solid var(--amber); border-bottom: 1.6px solid var(--amber);
+      transform: rotate(45deg);
+      transition: opacity .25s, transform .32s cubic-bezier(.25,.9,.3,1), margin-top .32s cubic-bezier(.25,.9,.3,1);
+    }
+    .svc-card.open .svc-plus { opacity: 1; transform: rotate(-135deg); margin-top: -3px; }
+
+    .svc-body {
+      max-height: 0; opacity: 0; overflow: hidden; padding: 0 2px;
+      transition: max-height .38s cubic-bezier(.25,.9,.3,1), opacity .26s ease, padding .38s ease;
+    }
+    .svc-card.open .svc-body { max-height: 420px; opacity: 1; padding: 0 2px 16px; }
+
+    /* First-scroll cascade hint: JS ripples .svc-peek across the cards in
+       sequence so the menu visibly opens-and-closes once, signalling it's
+       interactive. A shallow peek keeps the motion subtle. */
+    .svc-card.svc-peek .svc-body { max-height: 46px; opacity: 0.85; padding: 0 2px 6px; }
+    .svc-card.svc-peek .svc-plus { opacity: 1; }
+    .svc-desc { font-size: 12.5px; margin-bottom: 9px; }
+    .svc-tech { font-size: 9.5px; line-height: 1.6; }
+  }
+
+  /* ---- MOBILE: VFX reels peek + CGI/Compositing/AI stacking ---- */
+  @media (max-width: 820px) {
+    /* Show ~2.5 verticals per view: full two + a half peeking in from the
+       right, so the row obviously reads as swipeable. Snap for a clean rest. */
+    .vfx-strip { scroll-snap-type: x proximity; scroll-padding-left: 2px; gap: 10px; -webkit-overflow-scrolling: touch; }
+    .vfx-strip .vfx-short, .vfx-strip .vfx-cta { flex: 0 0 37vw; max-width: 178px; scroll-snap-align: start; }
+
+    /* CGI · Compositing · AI: three dense text columns are unreadable on a
+       phone. Stack them full-width with real breathing room. (Beats the inline
+       repeat(3) via !important.) */
+    .stack { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .stack-col { padding: 15px 16px; }
+
+    /* Selected VFX Work: 272px frames showed ~1 at a time on a phone. Shrink
+       them so a few 16:9 frames read across the strip. */
+    .frame { flex: 0 0 42vw !important; max-width: 210px; }
+  }
+
+  /* THE LAYERS */
+  .layers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .lcard { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: 150px 1fr; transition: border-color .3s; }
+  .lcard.lit { border-color: rgba(245,176,66,0.35); }
+  .lcard-img { position: relative; overflow: hidden; }
+  .lcard-img img, .lcard-img .lcard-ph { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter .7s ease; }
+  .l-tag { position: absolute; top: 8px; left: 8px; z-index: 2; padding: 3px 7px; background: rgba(0,0,0,0.85); border: 1px solid var(--amber); color: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; border-radius: 3px; }
+  .lcard-body { padding: 13px 15px; display: flex; flex-direction: column; gap: 8px; }
+  .lcard-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .lcard-project { font-size: 9px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+  .hrs-badge .hv { font-size: 15px; font-weight: 900; color: var(--ink); font-family: 'SF Mono', Menlo, monospace; line-height: 1; text-align: right; }
+  .hrs-badge .hk { font-size: 8px; color: var(--ink-4); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.12em; text-transform: uppercase; text-align: right; }
+  .lcard-steps { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .lstep { display: grid; grid-template-columns: 20px 1fr; gap: 4px; align-items: baseline; }
+  .lstep-n { font-family: 'SF Mono', Menlo, monospace; font-size: 9px; font-weight: 800; letter-spacing: 0.1em; transition: color .5s; }
+  .lstep-t { line-height: 1.3; transition: color .5s, font-size .4s, font-weight .4s; }
+  .lstep.active .lstep-n { color: var(--amber); }
+  .lstep.active .lstep-t { font-size: 12px; font-weight: 700; color: var(--ink); }
+  .lstep.done .lstep-n { color: var(--ink-4); }
+  .lstep.done .lstep-t { font-size: 11px; color: var(--ink-4); }
+  .lstep.inactive .lstep-n { color: var(--line); }
+  .lstep.inactive .lstep-t { font-size: 11px; color: var(--line); }
+  .lcard-bar { height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .lcard-fill { height: 100%; background: var(--amber); border-radius: 2px; transition: width .7s ease; }
+
+  /* FILM STRIP */
+  .strip-outer { position: relative; border-radius: 5px; overflow: hidden; border: 1px solid rgba(245,176,66,0.35); box-shadow: 0 0 0 1px rgba(0,0,0,0.8), inset 0 1px 0 rgba(245,176,66,0.1), inset 0 -1px 0 rgba(245,176,66,0.1); }
+  .strip-fade-l, .strip-fade-r { position: absolute; top: 0; bottom: 0; width: 90px; z-index: 5; pointer-events: none; }
+  /* Side fades use color-mix so the mid-stop tracks the active theme's bg */
+  .strip-fade-l { left: 0; background: linear-gradient(90deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 80%, transparent) 40%, transparent 100%); }
+  .strip-fade-r { right: 0; background: linear-gradient(270deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 80%, transparent) 40%, transparent 100%); }
+  .strip-scroll { overflow-x: auto; overflow-y: hidden; cursor: grab; scrollbar-width: none; background: var(--bg); }
+  .strip-scroll::-webkit-scrollbar { display: none; }
+  .strip-scroll:active { cursor: grabbing; }
+  .strip-body { display: flex; flex-direction: column; width: max-content; }
+  .perf-row { height: 26px; background: var(--bg-2); position: relative; flex-shrink: 0; border-bottom: 1px solid rgba(245,176,66,0.08); }
+  .perf-row.bot { border-bottom: none; border-top: 1px solid rgba(245,176,66,0.08); }
+  .perf-hole { position: absolute; top: 50%; transform: translateY(-50%); width: 12px; height: 17px; background: var(--bg); border-radius: 2px; border: 1px solid rgba(245,176,66,0.5); box-shadow: 0 0 6px rgba(245,176,66,0.15), inset 0 1px 0 rgba(245,176,66,0.08); }
+  .frames-row { display: flex; gap: 2px; background: var(--bg); }
+  .frame { flex: 0 0 272px; display: flex; flex-direction: column; cursor: pointer; transition: transform .3s ease; }
+  .frame:hover { transform: translateY(-1px); }
+  .frame-img { aspect-ratio: 16/9; position: relative; overflow: hidden; background: var(--bg-2); }
+  .frame-img img, .frame-img .frame-pg { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+  .frame:hover .frame-img img, .frame:hover .frame-img .frame-pg { transform: scale(1.04); }
+  .frame-img::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,0.4) 0%, transparent 18%, transparent 82%, rgba(0,0,0,0.4) 100%), linear-gradient(180deg, rgba(0,0,0,0.08) 0%, transparent 25%, transparent 55%, rgba(0,0,0,0.8) 100%); }
+  .frame-meta { background: var(--bg-2); padding: 8px 11px 9px; border-top: 1px solid rgba(245,176,66,0); transition: border-color .2s; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .frame:hover .frame-meta { border-top-color: rgba(245,176,66,0.4); }
+  .frame-num { font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: rgba(245,176,66,0.4); letter-spacing: 0.12em; flex-shrink: 0; transition: color .2s; }
+  .frame:hover .frame-num { color: rgba(245,176,66,0.8); }
+  .frame-title { font-size: 11px; font-weight: 800; color: var(--ink); letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; text-align: center; }
+  .frame-detail { font-family: 'SF Mono', Menlo, monospace; font-size: 9px; color: rgba(241,230,205,0.3); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; transition: color .2s; }
+  .frame:hover .frame-detail { color: rgba(241,230,205,0.6); }
+
+  /* STACK */
+  .stack { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stack-col { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+  .stack-col h4 { font-size: 10px; color: var(--amber); letter-spacing: 0.24em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; font-weight: 800; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
+  .stack-col ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .stack-col li { font-size: 12px; color: var(--ink); font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; }
+  .stack-col li .yr { color: var(--ink-4); font-weight: 500; margin-left: 6px; font-size: 10px; }
+
+  /* CTA */
+  .cta-band { margin-top: 40px; padding: 32px 36px; background: linear-gradient(135deg, rgba(245,176,66,0.08) 0%, var(--bg-2) 60%); border: 1px solid rgba(245,176,66,0.3); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .cta-band .text h3 { font-size: 22px; font-weight: 900; color: var(--ink); margin-bottom: 6px; }
+  .cta-band .text p { font-size: 13px; color: var(--ink-3); font-family: Georgia, serif; font-style: italic; line-height: 1.5; }
+  .cta-band a { padding: 14px 22px; background: var(--amber); color: var(--bg); font-weight: 800; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 6px; font-family: 'SF Mono', Menlo, monospace; transition: all .15s; white-space: nowrap; }
+  .cta-band a:hover { background: #ffc555; transform: translateY(-1px); }
+
+  .footer { margin-top: 50px; padding-top: 26px; border-top: 1px solid var(--line-2); display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--ink-4); letter-spacing: 0.18em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+  .clapper { display: inline-flex; align-items: center; gap: 8px; color: var(--amber); }
+  .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
+  .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
+</style>
+<link rel="stylesheet" href="mobile.css?v=36">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <a class="logo" href="/" style="text-decoration:none;color:var(--amber);cursor:pointer;">JACOB BOEHME</a>
+    <div class="tag">LANDBOUND · LA</div>
+  </div>
+  <div class="nav-items">
+    <a class="nav-item" href="/">Home</a>
+    <a class="nav-item" href="/work">Work</a>
+    <a class="nav-item" href="/photo">Photo</a>
+    <a class="nav-item active" href="/vfx">VFX</a>
+    <a class="nav-item" href="/hire">Hire</a>
+  </div>
+  <div class="nav-socials">
+    <div class="nav-socials-h">Follow</div>
+    <a class="nav-soc" href="https://www.tiktok.com/@landbound" target="_blank" rel="noopener"><div class="nav-soc-icon tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></a>
+    <a class="nav-soc" href="https://www.instagram.com/landbound" target="_blank" rel="noopener"><div class="nav-soc-icon ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 11K</div></div></a>
+    <a class="nav-soc" href="https://www.linkedin.com/in/jacobtboehme" target="_blank" rel="noopener"><div class="nav-soc-icon li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></a>
+    <a class="nav-soc" href="https://www.imdb.com/name/nm13209955/" target="_blank" rel="noopener"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></a>
+  </div>
+  <div class="nav-bottom">
+    <div class="status"><div class="dot"></div> Available Now</div>
+    <div>Los Angeles, CA</div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div>
+      <h1>VFX</h1>
+      <div class="lede">On set VFX supervision, cleanup, compositing, or CGi.</div>
+    </div>
+    <div class="stats-mini">
+      <div class="stat-mini"><div class="v">250<span class="plus">+</span></div><div class="k">Feature Shots</div></div>
+      <div class="stat-mini"><div class="v">8</div><div class="k">Years VFX</div></div>
+      <div class="stat-mini"><div class="v">3</div><div class="k">Years AI</div></div>
+    </div>
+  </div>
+
+  <!-- 01. VFX REELS — rendered from window.VERTICALS via data.js -->
+  <div class="vfx-strip-head">
+    <span class="num">—</span>
+    <span class="lbl">VFX Reels</span>
+    <span class="sub">Verticals</span>
+    <a class="all" href="/work/#shorts/0?cat=vfx">Open VFX feed →</a>
+  </div>
+  <div class="vfx-strip" id="vfxStrip"></div>
+
+  <!-- 02. BEFORE / AFTER -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">02.</span>
+      <span class="label">Before → After</span>
+      <span class="hint">Drag the handle</span>
+    </div>
+    <div class="ba-container" id="baContainer">
+      <div class="ba-before"><video class="ba-vid" id="baBeforeVid" src="https://vz-5dfccea4-b84.b-cdn.net/6591f6cc-e4c2-43b1-aeee-ffe5c7bb7c24/play_720p.mp4" muted autoplay loop playsinline webkit-playsinline preload="auto" disablepictureinpicture></video></div>
+      <div class="ba-after" id="baAfter"><video class="ba-vid" id="baAfterVid" src="https://vz-5dfccea4-b84.b-cdn.net/68caab30-9fda-4898-98c8-ef81c0668668/play_720p.mp4" muted autoplay loop playsinline webkit-playsinline preload="auto" disablepictureinpicture></video></div>
+      <div class="ba-scan"></div>
+      <div class="ba-handle" id="baHandle">
+        <div class="ba-grip">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M4 7H1M4 7L2.5 5.5M4 7L2.5 8.5M10 7H13M10 7L11.5 5.5M10 7L11.5 8.5" stroke="#12100c" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <span class="ba-label before">Raw</span>
+      <span class="ba-label after">Finished</span>
+      <span class="ba-drag-hint">⟵ drag ⟶</span>
+    </div>
+  </div>
+
+  <!-- 03. WHAT DO YOU NEED -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">03.</span>
+      <span class="label">What do you need?</span>
+      <span class="hint">Not sure? Describe the shot and I'll tell you.</span>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <div class="svc-head">
+          <div class="svc-type">Cleanup</div>
+          <div class="svc-name">Make It Disappear</div>
+          <span class="svc-plus"></span>
+        </div>
+        <div class="svc-body">
+          <div class="svc-desc">Wires. Rigs. A crew member who walked through. Removed.</div>
+          <div class="svc-tech">Seen in: Chloe Star stunt fall · 2024</div>
+          <div class="ai-chip">AI-accelerated option</div>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head">
+          <div class="svc-type">Compositing</div>
+          <div class="svc-name">Wrong Location</div>
+          <span class="svc-plus"></span>
+        </div>
+        <div class="svc-body">
+          <div class="svc-desc">Sky's off. Background doesn't fit. Fixed in post.</div>
+          <div class="svc-tech">Seen in: The First Circle · 250+ shots · 2023</div>
+          <div class="ai-chip">AI-accelerated option</div>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head">
+          <div class="svc-type">CGI</div>
+          <div class="svc-name">Built From Nothing</div>
+          <span class="svc-plus"></span>
+        </div>
+        <div class="svc-body">
+          <div class="svc-desc">3D element that wasn't on set. Object, creature, environment. Built, lit, dropped in.</div>
+          <div class="svc-tech">Seen in: The First Circle · creature work · 2023</div>
+          <div class="ai-chip">AI-accelerated option</div>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head">
+          <div class="svc-type">Stunt &amp; Action</div>
+          <div class="svc-name">Make It Land</div>
+          <span class="svc-plus"></span>
+        </div>
+        <div class="svc-body">
+          <div class="svc-desc">The stunt happened. Now make it read. Blood, debris, impact. Augmented so it hits.</div>
+          <div class="svc-tech">Seen in: LL Cool J "Passion" · Chloe Star · 2024</div>
+          <div class="ai-chip">AI-accelerated option</div>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head">
+          <div class="svc-type">Pre-Production</div>
+          <div class="svc-name">Pitch It First</div>
+          <span class="svc-plus"></span>
+        </div>
+        <div class="svc-body">
+          <div class="svc-desc">Treatment frames and pre-vis before you shoot. Label needs to see it first.</div>
+          <div class="svc-tech">Seen in: CHILDSTAR · Bleed treatments · 2025</div>
+          <div class="ai-chip">AI-accelerated option</div>
+        </div>
+      </div>
+      <div class="svc-card onset">
+        <div class="svc-head">
+          <div class="svc-type">Supervision</div>
+          <div class="svc-name">I'm On Set</div>
+          <span class="svc-plus"></span>
+        </div>
+        <div class="svc-body">
+          <div class="onset-clip">
+            <video src="https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/play_480p.mp4" poster="https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg" muted loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>
+            <span class="cap">Chloe Star · Stunt Fall · VFX sup</span>
+          </div>
+          <div class="svc-desc">Problems found on set are cheap. Problems found in post are expensive. I'm in pre-production too — planning the shots with you before the camera rolls, so the fix is designed in, not bolted on.</div>
+          <div class="svc-tech">Seen in: Chloe Star "Stunt Fall" · The First Circle · LL Cool J · 2023–24</div>
+          <div class="onset-badge">Pre-Production → Set</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04. THE LAYERS — hidden for now (Jacob will revisit) -->
+  <div class="section" style="display:none;">
+    <div class="section-head">
+      <span class="label">The Layers</span>
+      <span class="hint">How a shot gets built</span>
+    </div>
+    <div class="layers-grid" id="layersGrid"></div>
+  </div>
+
+  <!-- 05. SELECTED VFX WORK — film strip -->
+  <div class="section">
+    <div class="section-head">
+      <span class="num">05.</span>
+      <span class="label">Selected VFX Work</span>
+      <span class="hint">Drag to explore</span>
+    </div>
+    <div class="strip-outer">
+      <div class="strip-fade-l"></div>
+      <div class="strip-fade-r"></div>
+      <div class="strip-scroll" id="filmScroll">
+        <div class="strip-body" id="stripBody">
+          <div class="perf-row" id="perfTop"></div>
+          <div class="frames-row" id="filmRow"></div>
+          <div class="perf-row bot" id="perfBot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06. CGI · COMPOSITING · AI -->
+  <div class="section">
+    <div class="section-head">
+      <span class="label">CGI · Compositing · AI</span>
+    </div>
+    <div class="stack" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="stack-col">
+        <h4>CGI</h4>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.6; margin-top:2px;">Anything that wasn't on set, built in 3D and dropped in — creatures, vehicles, props, full environments and set extensions, plus simulated fire, water, smoke and destruction. Modeled, lit, rendered, then comped into the plate.</p>
+      </div>
+      <div class="stack-col">
+        <h4>Compositing</h4>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.6; margin-top:2px;">Combining and cleaning real footage so the seams vanish — wire and rig removal, sky and background replacement, screen inserts, green-screen keys, multi-plate blends, and color/grain matching. The shot was captured; comp makes it read.</p>
+      </div>
+      <div class="stack-col">
+        <h4>What AI Can Do</h4>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.6; margin-top:2px;">Accelerates the grunt work and opens options — rotoscoping, upscaling, denoise, gen-fill cleanup, style frames and previs, and generative plates or elements when a real shoot isn't feasible. A tool in the pipeline, not the whole pipeline.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <div class="text">
+      <h3>Need VFX on a real timeline?</h3>
+      <p>Music video, commercial, feature sup, or AI pipeline build. Send a brief and I'll tell you what it takes.</p>
+    </div>
+    <a href="/hire">Send a Brief →</a>
+  </div>
+
+  <div class="footer">
+    <span class="clapper">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h18M3 8v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8M3 8l3-5h12l3 5M9 3L7 8M15 3l-2 5"/></svg>
+      © 2026 Landbound
+    </span>
+    <span>Los Angeles</span>
+  </div>
+
+</main>
+
+<script src="data.js?v=10"></script>
+<script>
+// ── VFX REELS STRIP (from data.js VERTICALS) ──
+// Verticals tagged VFX render here. Thumbnails auto-animate when they scroll
+// into view (matches the home strip behavior). Safari/iOS: declarative
+// muted+autoplay+playsinline, preload=metadata, play() fired on loadedmetadata
+// since sync play() right after setting src is silently rejected on iOS.
+(function renderVfxStrip() {
+  const mount = document.getElementById('vfxStrip');
+  if (!mount || !window.VERTICALS) return;
+  const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+  const items = window.VERTICALS
+    .map((v, idx) => ({ v, idx }))
+    .filter(({ v }) => ((v.role || '') + ' ' + ((v.tags || []).join(' '))).toLowerCase().includes('vfx'));
+  if (!items.length) { mount.style.display = 'none'; return; }
+  mount.innerHTML = items.map(({ v, idx }) => {
+    const thumb = window.bunnyThumb ? window.bunnyThumb(v.guid) : 'https://' + CDN + '/' + v.guid + '/thumbnail.jpg';
+    const mp4   = 'https://' + CDN + '/' + v.guid + '/play_480p.mp4';
+    const cap   = v.label || v.title || '';
+    const tag   = (v.type === 'bts') ? 'BTS' : 'VFX';
+    return '<a class="vfx-short" href="/work/#shorts/' + idx + '?cat=vfx" data-vsrc="' + mp4 + '" style="background-image: url(\'' + thumb + '\');">'
+      + '<video poster="' + thumb + '" muted autoplay loop playsinline webkit-playsinline preload="metadata" disableRemotePlayback></video>'
+      + '<span class="vfx-tag">' + tag + '</span>'
+      + '<div class="vfx-overlay"></div>'
+      + '<div class="vfx-meta"><div class="cap">' + cap + '</div></div>'
+      + '</a>';
+  }).join('')
+  + '<a class="vfx-cta" href="/work/#shorts/0?cat=vfx"><span class="arr">↗</span><span class="t">Open VFX feed</span><span class="m">All clips</span></a>';
+
+  // Safari-safe play helper — reasserts muted+playsinline and waits for
+  // loadedmetadata/canplay before calling play() (iOS Safari rejects sync play
+  // immediately after src assignment).
+  function safePlay(v) {
+    v.muted = true;
+    v.playsInline = true;
+    const go = () => { const p = v.play(); if (p && p.catch) p.catch(()=>{}); };
+    if (v.readyState >= 1) go();
+    else v.addEventListener('loadedmetadata', go, { once: true });
+    v.addEventListener('canplay', () => { v.classList.add('live'); go(); }, { once: true });
+  }
+
+  // IntersectionObserver: load + play when tile enters viewport, pause when it
+  // leaves. Loading every MP4 at once would crush mobile bandwidth + memory.
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const a = e.target;
+        const vid = a.querySelector('video');
+        if (!vid) return;
+        if (e.isIntersecting) {
+          if (!vid.src && a.dataset.vsrc) { vid.src = a.dataset.vsrc; vid.load(); }
+          safePlay(vid);
+        } else {
+          vid.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    mount.querySelectorAll('.vfx-short').forEach(a => io.observe(a));
+  } else {
+    mount.querySelectorAll('.vfx-short').forEach(a => {
+      const vid = a.querySelector('video');
+      if (!vid) return;
+      if (!vid.src && a.dataset.vsrc) { vid.src = a.dataset.vsrc; vid.load(); }
+      safePlay(vid);
+    });
+  }
+})();
+
+// ── BEFORE / AFTER ──
+(function initBA() {
+  const cont = document.getElementById('baContainer');
+  const after = document.getElementById('baAfter');
+  const handle = document.getElementById('baHandle');
+  let drag = false;
+  function pos(x) {
+    const r = cont.getBoundingClientRect();
+    const p = Math.min(100, Math.max(0, ((x - r.left) / r.width) * 100));
+    after.style.clipPath = 'inset(0 ' + (100 - p) + '% 0 0)';
+    handle.style.left = p + '%';
+  }
+  handle.addEventListener('mousedown', e => { drag = true; e.preventDefault(); });
+  document.addEventListener('mouseup', () => drag = false);
+  document.addEventListener('mousemove', e => { if (drag) pos(e.clientX); });
+  handle.addEventListener('touchstart', e => { drag = true; e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchend', () => drag = false);
+  document.addEventListener('touchmove', e => { if (drag) pos(e.touches[0].clientX); }, { passive: true });
+
+  // First interaction stops the pulsing grip + the "drag" hint. (No auto-wiggle —
+  // the divider stays put at 50% until the user grabs it; the pulse is the cue.)
+  ['mousedown', 'touchstart'].forEach(ev => cont.addEventListener(ev, () => cont.classList.add('ba-touched'), { once: true, passive: true }));
+
+  // Before/after VIDEOS — both autoplay muted and LOOP natively at their own
+  // native rate. We deliberately DON'T chase/seek/rate-adjust the "after" clip
+  // frame-by-frame anymore: that constant correction was thrashing its decoder,
+  // which is exactly why the Finished side played choppy while the untouched
+  // "before" stayed smooth. Both clips are the exact same length, framerate and
+  // encode, so starting them together keeps them aligned with ZERO per-frame
+  // manipulation — the after now decodes as smoothly as the before.
+  const bv = document.getElementById('baBeforeVid');
+  const av = document.getElementById('baAfterVid');
+  if (bv && av) {
+    bv.muted = true;  av.muted = true;
+    bv.loop = true;   av.loop = true;   // native looping = smoothest possible
+    bv.playbackRate = 1; av.playbackRate = 1;
+    function startBoth() {
+      try { if (Math.abs(av.currentTime - bv.currentTime) > 0.05) av.currentTime = bv.currentTime; } catch (_) {}
+      bv.play().catch(() => {}); av.play().catch(() => {});
+    }
+    const kick = () => { if (bv.paused || av.paused) startBoth(); };
+    // Slave has loop:false now — if it ever runs off the end, put it back.
+    av.addEventListener('ended', () => {
+      try { av.currentTime = bv.currentTime % (av.duration || bv.duration || 1); } catch (_) {}
+      av.play().catch(() => {});
+    });
+    bv.addEventListener('canplay', startBoth, { once: true });
+    av.addEventListener('canplay', () => { av.play().catch(() => {}); }, { once: true });
+    startBoth();
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) kick(); })).observe(cont);
+    ['pointerdown', 'touchstart'].forEach(ev => window.addEventListener(ev, kick, { once: true, passive: true }));
+
+    // Hide BOTH clips (the panel stays solid black) until BOTH have a frame ready
+    // and are playing, THEN fade them in together. This hides the fact that the
+    // two videos decode/start a beat apart — instead of popping on separately,
+    // they appear as one.
+    let revealed = false;
+    function revealWhenReady() {
+      if (revealed) return;
+      if (bv.readyState >= 3 && av.readyState >= 3) {
+        revealed = true;
+        try { av.currentTime = bv.currentTime; } catch (_) {}   // align the first frame
+        bv.play().catch(() => {}); av.play().catch(() => {});
+        cont.classList.add('ba-ready');                          // fade both in at once
+      }
+    }
+    ['canplay', 'canplaythrough', 'playing', 'loadeddata'].forEach(ev => {
+      bv.addEventListener(ev, revealWhenReady);
+      av.addEventListener(ev, revealWhenReady);
+    });
+    revealWhenReady();
+    setTimeout(() => { if (!revealed) { revealed = true; cont.classList.add('ba-ready'); } }, 2000); // safety: never stay black
+
+    // ---- PHASE LOCK -------------------------------------------------------
+    // The old aligner checked 4x a second and let BOTH clips loop natively.
+    // Two <video> elements never wrap at the same instant, so every loop
+    // re-introduced an offset that the slow corrector then spent a second
+    // easing out — which is exactly the drift you could see.
+    //
+    // Now: "before" is the sole master and the only one that loops. "After"
+    // is a slave with loop OFF, corrected once per rendered frame via
+    // requestVideoFrameCallback (falling back to rAF). Mid-clip drift is
+    // eased with playbackRate so it stays smooth; the loop boundary and any
+    // gross desync (tab throttling, a decode stall) are snapped hard, where
+    // a seek is invisible because the picture is changing anyway.
+    bv.loop = true;
+    av.loop = false;
+
+    let lastMasterT = 0;
+    function phaseLock() {
+      if (!bv.paused && bv.duration) {
+        const sd = av.duration || bv.duration;
+        const mt = bv.currentTime;
+        const target = sd ? mt % sd : mt;
+        let d = av.currentTime - target;                  // +: slave ahead
+        if (sd) { if (d > sd / 2) d -= sd; else if (d < -sd / 2) d += sd; }
+        const looped = mt < lastMasterT - 0.05;           // master just wrapped
+        if (looped || Math.abs(d) > 0.25) {
+          try { av.currentTime = target; } catch (_) {}
+          av.playbackRate = 1;
+        } else if (Math.abs(d) > 0.012) {                 // sub-frame: ease, don't seek
+          av.playbackRate = Math.max(0.94, Math.min(1.06, 1 - d * 0.5));
+        } else if (av.playbackRate !== 1) {
+          av.playbackRate = 1;
+        }
+        lastMasterT = mt;
+        if (av.paused) av.play().catch(() => {});
+      }
+      schedule();
+    }
+    function schedule() {
+      if (bv.requestVideoFrameCallback) bv.requestVideoFrameCallback(phaseLock);
+      else requestAnimationFrame(phaseLock);
+    }
+    schedule();
+
+    // Coming back from a backgrounded tab, both clocks are garbage — resync hard.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) return;
+      try {
+        const sd = av.duration || bv.duration || 0;
+        av.currentTime = sd ? bv.currentTime % sd : bv.currentTime;
+      } catch (_) {}
+      av.playbackRate = 1;
+      bv.play().catch(() => {}); av.play().catch(() => {});
+    });
+
+    // Once BOTH clips are actually playing (and the lock loop has aligned them),
+    // do ONE smooth back-and-forth sweep of the divider so it's obvious it drags,
+    // then leave it centered. Sine-eased = no jumpiness. Skipped if the user has
+    // already grabbed the handle; the grip keeps pulsing until they do.
+    let swept = false, bvPlaying = false, avPlaying = false;
+    function runSweep() {
+      if (cont.classList.contains('ba-touched')) return;
+      const amp = 26, dur = 2600, t0 = performance.now();
+      const setPos = p => { after.style.clipPath = 'inset(0 ' + (100 - p) + '% 0 0)'; handle.style.left = p + '%'; };
+      (function frame(now) {
+        if (cont.classList.contains('ba-touched')) { setPos(50); return; }
+        const t = (now - t0) / dur;
+        if (t >= 1) { setPos(50); return; }
+        setPos(50 + amp * Math.sin(t * Math.PI * 2)); // 50 → right → 50 → left → 50
+        requestAnimationFrame(frame);
+      })(t0);
+    }
+    function maybeSweep() {
+      if (swept || !bvPlaying || !avPlaying || cont.classList.contains('ba-touched')) return;
+      swept = true;
+      setTimeout(runSweep, 700); // let the sync lock settle both clips first
+    }
+    bv.addEventListener('playing', () => { bvPlaying = true; maybeSweep(); });
+    av.addEventListener('playing', () => { avPlaying = true; maybeSweep(); });
+    // Robustness: if a clip is already playing by the time we attach (the 'playing'
+    // event may have fired first), seed the flag and re-check. Also poll briefly so
+    // a slightly-late autoplay still triggers the sweep exactly once.
+    let tries = 0;
+    (function poll() {
+      if (swept || cont.classList.contains('ba-touched')) return;
+      if (!bv.paused && bv.readyState >= 3) bvPlaying = true;
+      if (!av.paused && av.readyState >= 3) avPlaying = true;
+      maybeSweep();
+      if (!swept && tries++ < 30) setTimeout(poll, 300); // ~9s window for autoplay to kick in
+    })();
+  }
+})();
+
+// ── THE LAYERS ──
+const SHOTS = [
+  {
+    tag: 'Wire Removal', project: 'Chloe Star · 2024', hrs: '3–5',
+    img: 'https://vz-5dfccea4-b84.b-cdn.net/e155dcd4-733a-489c-9d89-3417e3333cfe/thumbnail.jpg',
+    filters: ['saturate(0) brightness(1.05) contrast(0.85)', 'saturate(0.2) contrast(1.1)', 'saturate(0.55)', 'saturate(1)'],
+    steps: ['Raw plate — wire still in frame', 'Track wire motion frame by frame', 'Rebuild background behind it', 'Match grain · shot is clean']
+  },
+  {
+    tag: 'Particle FX', project: 'Bleed · Christian Gates · 2025', hrs: '4–6',
+    vsrc: 'https://vz-5dfccea4-b84.b-cdn.net/9e6f327c-1d83-4545-b88c-3193d7dd4274/play_720p.mp4', seek: 35,
+    filters: ['saturate(0) brightness(1.0)', 'saturate(0.3) contrast(1.15)', 'saturate(0.7) brightness(1.05)', 'saturate(1)'],
+    steps: ['Raw plate — no effects', 'Build particle system for that motion', 'Match lighting to footage', 'Comp at the right depth · done']
+  },
+  {
+    tag: 'Set Extension', project: 'Surfaces · 2024', hrs: '2–4',
+    img: 'https://vz-5dfccea4-b84.b-cdn.net/8d669bba-e779-4860-84b1-ffc3055d1b96/thumbnail.jpg',
+    filters: ['saturate(0.2) contrast(0.9)', 'saturate(0.2) contrast(1.6) brightness(1.1)', 'saturate(0.6)', 'saturate(1)'],
+    steps: ['Original sky and set as shot', 'Key out background cleanly', 'Paint in new sky · extend the set', 'Match light to talent · invisible']
+  },
+  {
+    tag: 'CGI Paper', project: 'TBD', hrs: '8–15',
+    ph: 'linear-gradient(160deg,#1a0a18,#3a1040,#8b3a9e)',
+    filters: ['brightness(0.35) saturate(0)', 'brightness(0.55) saturate(0.3)', 'brightness(0.78) saturate(0.65)', 'brightness(1) saturate(1)'],
+    steps: ['Empty plate — nothing there yet', 'Paper geometry built and rigged in 3D', 'Physics sim run · shadows rendered', 'Comped into plate · reads as real']
+  },
+  {
+    tag: 'Adding People', project: 'TBD', hrs: '15–30',
+    ph: 'linear-gradient(160deg,#0a1a10,#1a3a28,#2a6a44)',
+    filters: ['brightness(0.35) saturate(0)', 'brightness(0.55) saturate(0.3)', 'brightness(0.78) saturate(0.6)', 'brightness(1) saturate(1)'],
+    steps: ['Clean plate — location is empty', 'Figures positioned · animation locked', 'Rendered with scene lighting', "Integrated · no one knows they're CG"]
+  }
+];
+
+const MAX_STEPS = Math.max(...SHOTS.map(s => s.steps.length));
+let layerTick = 0;
+
+(function buildLayers() {
+  document.getElementById('layersGrid').innerHTML = SHOTS.map((s, i) => {
+    const media = s.vsrc
+      ? '<video class="lcard-cm frame-vid" src="' + s.vsrc + '#t=' + (s.seek || 5) + '" data-seek="' + (s.seek || 5) + '" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;display:block;filter:' + s.filters[0] + '"></video>'
+      : (s.img
+        ? '<img class="lcard-cm" src="' + s.img + '" alt="" style="filter:' + s.filters[0] + '">'
+        : '<div class="lcard-cm lcard-ph" style="background:' + s.ph + ';filter:' + s.filters[0] + ';"></div>');
+    const steps = s.steps.map((t, j) =>
+      '<div class="lstep ' + (j === 0 ? 'active' : 'inactive') + '"><span class="lstep-n">0' + (j + 1) + '</span><span class="lstep-t">' + t + '</span></div>'
+    ).join('');
+    const span = i === 4 ? ' style="grid-column:1/-1;grid-template-columns:150px 1fr;"' : '';
+    return '<div class="lcard" id="lc' + i + '"' + span + '>'
+      + '<div class="lcard-img">' + media + '<span class="l-tag">' + s.tag + '</span></div>'
+      + '<div class="lcard-body">'
+      + '<div class="lcard-top"><div class="lcard-project">' + s.project + '</div><div class="hrs-badge"><div class="hv">' + s.hrs + '</div><div class="hk">hrs / shot</div></div></div>'
+      + '<div class="lcard-steps">' + steps + '</div>'
+      + '<div class="lcard-bar"><div class="lcard-fill" style="width:0%"></div></div>'
+      + '</div></div>';
+  }).join('');
+})();
+
+function updateLayers() {
+  SHOTS.forEach((s, i) => {
+    const cur = Math.min(layerTick, s.steps.length - 1);
+    const card = document.getElementById('lc' + i);
+    if (!card) return;
+    card.querySelector('.lcard-cm').style.filter = s.filters[cur];
+    card.classList.toggle('lit', cur > 0);
+    card.querySelector('.lcard-fill').style.width = ((cur / (s.steps.length - 1)) * 100) + '%';
+    card.querySelectorAll('.lstep').forEach((el, j) => {
+      el.classList.remove('active', 'done', 'inactive');
+      el.classList.add(j < cur ? 'done' : j === cur ? 'active' : 'inactive');
+    });
+  });
+}
+setInterval(() => {
+  layerTick = layerTick >= MAX_STEPS - 1 ? 0 : layerTick + 1;
+  updateLayers();
+}, 2400);
+
+// ── FILM STRIP — auto-built from EVERY VFX-tagged project in data.js, so any
+// video tagged with VFX (in CLIENTS media or VERTICALS) lands in the reel. ──
+function buildFilmFrames() {
+  const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+  const frames = [], seen = new Set();
+  const isVfx = (role, tags) => /vfx/.test(((role || '') + ' ' + (tags || []).join(' ')).toLowerCase());
+  function push(embedId, bunny, title, year) {
+    if (!embedId || seen.has(embedId)) return;
+    seen.add(embedId);
+    const thumb = bunny
+      ? (window.bunnyThumb ? window.bunnyThumb(embedId) : 'https://' + CDN + '/' + embedId + '/thumbnail.jpg')
+      : 'https://img.youtube.com/vi/' + embedId + '/maxresdefault.jpg';
+    const f = { num: String(frames.length + 1).padStart(3, '0'), title: (title || '').replace(/\.(mp4|mov)$/i, ''), detail: (year || '') };
+    // If the only working thumb is an animated preview.webp, render a seeked
+    // <video> still instead so the frame doesn't loop.
+    if (bunny && /preview\.webp/.test(thumb)) { f.vsrc = 'https://' + CDN + '/' + embedId + '/play_720p.mp4'; f.seek = 4; }
+    else f.src = thumb;
+    frames.push(f);
+  }
+  (window.CLIENTS || []).forEach(c => (c.media || []).forEach(m => {
+    if (m.type === 'video' && isVfx('', m.tags)) push(m.embedId, m.bunny, m.title, m.year);
+  }));
+  (window.VERTICALS || []).forEach(v => {
+    if (isVfx(v.role, v.tags)) { const yr = (v.tag || '').match(/\d{4}/); push(v.guid, true, v.label || v.title, yr ? yr[0] : ''); }
+  });
+  return frames;
+}
+const FILM_FRAMES = buildFilmFrames();
+
+function makeFilmFrame(f) {
+  // f.vsrc → a muted <video> seeked to a still frame (used when the Bunny
+  // thumbnail.jpg 404s and the animated preview.webp would otherwise loop).
+  const img = f.vsrc
+    ? '<video class="frame-vid" src="' + f.vsrc + '#t=' + (f.seek || 5) + '" data-seek="' + (f.seek || 5) + '" preload="metadata" muted playsinline webkit-playsinline disablepictureinpicture tabindex="-1" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;display:block;"></video>'
+    : (f.src
+        ? '<img src="' + f.src + '" alt="">'
+        : '<div class="frame-pg" style="background:' + f.pg + '"></div>');
+  return '<div class="frame">'
+    + '<div class="frame-img">' + img + '</div>'
+    + '<div class="frame-meta">'
+    + '<span class="frame-num">' + f.num + '</span>'
+    + '<span class="frame-title">' + f.title + '</span>'
+    + '<span class="frame-detail">' + f.detail + '</span>'
+    + '</div></div>';
+}
+
+document.getElementById('filmRow').innerHTML = [...FILM_FRAMES, ...FILM_FRAMES].map(makeFilmFrame).join('');
+// Paint a static seeked frame for any video-backed frames (film strip + layers)
+// so they show a still instead of looping an animated preview.
+document.querySelectorAll('video.frame-vid').forEach(vid => {
+  const t = parseFloat(vid.dataset.seek) || 5;
+  const go = () => { try { vid.currentTime = Math.min(t, (vid.duration || t) - 0.1); } catch (_) {} };
+  if (vid.readyState >= 1) go(); else vid.addEventListener('loadedmetadata', go, { once: true });
+});
+
+function renderPerfs() {
+  const totalW = document.getElementById('filmRow').scrollWidth;
+  const pitch = 40;
+  const holes = Math.ceil(totalW / pitch) + 1;
+  const html = Array.from({ length: holes }, (_, i) =>
+    '<div class="perf-hole" style="left:' + (i * pitch + 14) + 'px"></div>'
+  ).join('');
+  document.getElementById('perfTop').innerHTML = html;
+  document.getElementById('perfBot').innerHTML = html;
+}
+setTimeout(renderPerfs, 400);
+
+const filmScroll = document.getElementById('filmScroll');
+let filmPaused = false, filmTimer;
+
+(function filmTick() {
+  if (!filmPaused) {
+    filmScroll.scrollLeft += 0.5;
+    if (filmScroll.scrollLeft >= filmScroll.scrollWidth / 2)
+      filmScroll.scrollLeft -= filmScroll.scrollWidth / 2;
+  }
+  requestAnimationFrame(filmTick);
+})();
+
+filmScroll.addEventListener('mouseenter', () => filmPaused = true);
+filmScroll.addEventListener('mouseleave', () => filmPaused = false);
+filmScroll.addEventListener('touchstart', () => { filmPaused = true; clearTimeout(filmTimer); }, { passive: true });
+filmScroll.addEventListener('touchend', () => { filmTimer = setTimeout(() => filmPaused = false, 1500); }, { passive: true });
+// Manual scroll also loops seamlessly — frames are duplicated, so wrap at the
+// halfway point in either direction when the user drags to an edge.
+filmScroll.addEventListener('scroll', () => {
+  const half = filmScroll.scrollWidth / 2;
+  if (filmScroll.scrollLeft >= half) filmScroll.scrollLeft -= half;
+  else if (filmScroll.scrollLeft <= 0) filmScroll.scrollLeft += half;
+}, { passive: true });
+</script>
+<script>
+/* Service index accordion — mobile only. Desktop keeps all six cards open,
+   so the click handler no-ops above 820px. All cards start CLOSED; a one-time
+   cascade on first scroll-in shows they open. */
+(function () {
+  var cards = [].slice.call(document.querySelectorAll('.svc-card'));
+  if (!cards.length) return;
+  var mq = '(max-width: 820px)';
+  var isMobile = function () { return window.matchMedia && window.matchMedia(mq).matches; };
+
+  // Play the proof clip only while its card is open; pause it when closed so a
+  // collapsed card isn't decoding video off-screen.
+  function syncClip(card) {
+    var v = card.querySelector('.onset-clip video');
+    if (!v) return;
+    if (card.classList.contains('open') || card.classList.contains('svc-peek')) {
+      v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {});
+    } else { try { v.pause(); } catch (e) {} }
+  }
+
+  cards.forEach(function (card) {
+    var head = card.querySelector('.svc-head');
+    if (!head) return;
+    head.addEventListener('click', function () {
+      if (!isMobile()) return;
+      var isOpen = card.classList.contains('open');
+      cards.forEach(function (c) { c.classList.remove('open'); syncClip(c); });
+      if (!isOpen) { card.classList.add('open'); syncClip(card); }
+    });
+  });
+
+  // Default: nothing open. On desktop the CSS shows every body regardless.
+  function initClosed() { cards.forEach(function (c) { c.classList.remove('open'); syncClip(c); }); }
+  initClosed();
+  window.addEventListener('resize', initClosed);
+
+  // One-time cascade hint: as the menu first scrolls into view on mobile,
+  // ripple each card open→closed in turn so the accordion reads as interactive.
+  var grid = document.querySelector('.svc-grid');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (grid && !reduce && 'IntersectionObserver' in window) {
+    var fired = false;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting || fired) return;
+        fired = true; io.disconnect();
+        if (!isMobile()) return;
+        cards.forEach(function (c, i) {
+          setTimeout(function () { c.classList.add('svc-peek'); syncClip(c); }, 170 * i);
+          setTimeout(function () { c.classList.remove('svc-peek'); syncClip(c); }, 170 * i + 500);
+        });
+      });
+    }, { threshold: 0.4 });
+    io.observe(grid);
+  }
+})();
+</script>
+</body>
+</html>

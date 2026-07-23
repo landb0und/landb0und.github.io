@@ -172,18 +172,20 @@
   .track .tk-body { font-size: 12px; color: var(--ink-3); font-family: Georgia, serif; line-height: 1.5; flex: 1; margin-bottom: 12px; }
   .track .tk-for { font-size: 11px; color: var(--ink-2); font-family: Georgia, serif; font-style: italic; line-height: 1.4; margin-bottom: 14px; }
   .track .tk-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; cursor: pointer; transition: all .15s; justify-content: center; }
-  /* Occasional shimmer sweep across each CTA, each track offset a little. */
+  /* A constant, very subtle sheen drifting across each CTA — always moving, never
+     a hard flash. Each button differs: its own tint (matching the track accent),
+     its own speed, and staff drifts the opposite direction. */
   @media (prefers-reduced-motion: no-preference) {
     .track .tk-cta::after {
-      content: ''; position: absolute; top: 0; left: 0; width: 55%; height: 100%;
-      background: linear-gradient(100deg, transparent, rgba(255,255,255,0.4), transparent);
-      transform: translateX(-160%) skewX(-18deg); pointer-events: none;
-      animation: ctaShimmer 6.5s ease-in-out infinite;
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(105deg, transparent 36%, rgba(255,255,255,0.10) 50%, transparent 64%);
+      background-size: 240% 100%;
+      animation: ctaSheen linear infinite;
     }
-    .track.t-project .tk-cta::after  { animation-delay: 0s; }
-    .track.t-retainer .tk-cta::after { animation-delay: .45s; }
-    .track.t-staff .tk-cta::after    { animation-delay: .9s; }
-    @keyframes ctaShimmer { 0%, 84%, 100% { transform: translateX(-160%) skewX(-18deg); } 92% { transform: translateX(280%) skewX(-18deg); } }
+    .track.t-project  .tk-cta::after { animation-duration: 5.5s; background-image: linear-gradient(105deg, transparent 36%, rgba(140,175,58,0.13) 50%, transparent 64%); }
+    .track.t-retainer .tk-cta::after { animation-duration: 7s;   background-image: linear-gradient(105deg, transparent 36%, rgba(255,255,255,0.09) 50%, transparent 64%); }
+    .track.t-staff    .tk-cta::after { animation-duration: 6.2s; animation-direction: reverse; background-image: linear-gradient(105deg, transparent 36%, rgba(232,88,154,0.13) 50%, transparent 64%); }
+    @keyframes ctaSheen { from { background-position: 120% 0; } to { background-position: -120% 0; } }
   }
   .track.t-staff .tk-cta { background: rgba(232,88,154,0.12); border: 1px solid rgba(232,88,154,0.4); color: var(--rose); }
   .track.t-staff .tk-cta:hover { background: rgba(232,88,154,0.2); }
@@ -310,26 +312,25 @@
        dots on the top row (01–02) and again on the bottom row (03–04). It runs
        dot-edge to dot-edge (54px dots, centers at 27px) so it never sits under a
        dot and needs no z-index games. Left-column nodes are nth-child 2 & 4. */
+    /* All four connector segments share a soft amber↔rose gradient that flows
+       continuously (subtle, always moving) so the whole path feels alive. */
     .tl-node:nth-child(2)::after,
-    .tl-node:nth-child(4)::after {
-      content: ''; position: absolute; top: 26px;
-      left: calc(50% + 27px); width: calc(100% - 38px); height: 2px;
-      background: linear-gradient(90deg, var(--amber), var(--rose)); opacity: 0.55;
-    }
-    /* Illusion of ONE continuous path: after the top-right circle (02) the line
-       runs off the right edge, then re-enters from off the left edge into the
-       bottom-left circle (03) — so it reads as Inquiry → … → Execute unbroken.
-       body has overflow-x:hidden, so the 100vw tails clip at the screen edge. */
-    .tl-node:nth-child(3)::after {
-      content: ''; position: absolute; top: 26px;
-      left: calc(50% + 27px); width: 100vw; height: 2px;
-      background: linear-gradient(90deg, var(--amber), var(--rose)); opacity: 0.5;
-    }
+    .tl-node:nth-child(4)::after,
+    .tl-node:nth-child(3)::after,
     .tl-node:nth-child(4)::before {
-      content: ''; position: absolute; top: 26px;
-      right: calc(50% + 27px); width: 100vw; height: 2px;
-      background: linear-gradient(90deg, var(--rose), var(--amber)); opacity: 0.5;
+      content: ''; position: absolute; top: 26px; height: 2px; opacity: 0.55;
+      background: linear-gradient(90deg, var(--amber), var(--rose), var(--amber), var(--rose));
+      background-size: 300% 100%;
+      animation: tlConnFlow 3.4s linear infinite;
     }
+    /* Per-segment geometry. The gap connectors span dot-edge to dot-edge; the
+       off-screen tails run 100vw so the path reads as one unbroken Inquiry→Execute
+       line (body has overflow-x:hidden, so the tails clip at the screen edge). */
+    .tl-node:nth-child(2)::after,
+    .tl-node:nth-child(4)::after { left: calc(50% + 27px); width: calc(100% - 38px); }
+    .tl-node:nth-child(3)::after { left: calc(50% + 27px); width: 100vw; opacity: 0.5; }
+    .tl-node:nth-child(4)::before { right: calc(50% + 27px); width: 100vw; opacity: 0.5; }
+    @keyframes tlConnFlow { from { background-position: 0 0; } to { background-position: -300% 0; } }
   }
   @media (max-width: 900px) { .tracks, .services, .low-grid, .contact-split { grid-template-columns: 1fr; } }
   /* Worked-With concert poster: desktop type (58/38/25/16px) overflows a phone
@@ -344,6 +345,15 @@
     .poster-name.big { font-size: 23px; margin: 0 9px; }
     .poster-name.med { font-size: 17px; margin: 0 7px; }
     .poster-name.sm  { font-size: 12.5px; margin: 0 5px; }
+
+    /* Engagements & Fit: the scope rows use a fixed 160px label column that
+       squeezed the description on a phone. Stack them so each row fits cleanly. */
+    .scope-row { grid-template-columns: 1fr; gap: 4px; padding: 12px 14px; min-height: 0; }
+    .scope-row.featured { padding-left: 11px; }
+    .scope-row .type { font-size: 12.5px; }
+    .scope-row .desc { font-size: 12.5px; }
+    .fit-card { padding: 15px 15px; }
+    .fit-card .fc-head { margin-bottom: 11px; }
   }
 </style>
 <link rel="stylesheet" href="mobile.css?v=36">
@@ -359,7 +369,7 @@
     <a class="nav-item" href="/">Home</a>
     <a class="nav-item" href="/work">Work</a>
     <a class="nav-item" href="/photo">Photo</a>
-    <a class="nav-item" href="/vfx-ai">VFX &amp; AI</a>
+    <a class="nav-item" href="/vfx">VFX</a>
     <a class="nav-item active" href="/hire">Hire</a>
   </div>
   <div class="nav-socials">
@@ -728,11 +738,50 @@
       animateScroll(Math.round(el.getBoundingClientRect().top + window.scrollY - 12), 650);
     }));
     if (grab) {
+      // Desktop / mouse: pointer events are fine here (no native touch-scroll to
+      // fight). Touch is explicitly excluded and handled below.
       let down = false, startY = 0, startScroll = 0, moved = 0;
-      grab.addEventListener('pointerdown', e => { down = true; startY = e.clientY; startScroll = window.scrollY; moved = 0; try { grab.setPointerCapture(e.pointerId); } catch (_) {} });
+      grab.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; down = true; startY = e.clientY; startScroll = window.scrollY; moved = 0; try { grab.setPointerCapture(e.pointerId); } catch (_) {} });
       grab.addEventListener('pointermove', e => { if (!down) return; const dy = e.clientY - startY; moved = Math.max(moved, Math.abs(dy)); window.scrollTo(0, Math.max(0, startScroll - dy)); }); // drag up → page folds up
       grab.addEventListener('pointerup', () => { if (!down) return; down = false; if (moved < 6) foldUp(); }); // treat a tap as a click
       grab.addEventListener('pointercancel', () => { down = false; });
+
+      // Mobile: OWN the touch gesture the way the clients spotlight sheet does —
+      // preventDefault every move so iOS never starts its own scroll to fight us,
+      // drive the fold directly, then snap open/closed on release (flick-aware).
+      // This is the mechanism ported from clients.html; the page here still scrolls
+      // (it's long), so we fold via scroll rather than a translated overlay.
+      let tDown = false, tStartY = 0, tStartScroll = 0, tMoved = 0, tLastY = 0, tVy = 0, openY = 0;
+      grab.addEventListener('touchstart', e => {
+        if (e.touches.length !== 1) return;
+        tDown = true;
+        tStartY = e.touches[0].clientY; tStartScroll = window.scrollY;
+        tMoved = 0; tLastY = tStartY; tVy = 0;
+        // Document-absolute scroll position at which the sheet top meets the
+        // viewport top == fully folded. Invariant, but re-read per gesture.
+        openY = Math.round(sheet.getBoundingClientRect().top + window.scrollY);
+      }, { passive: true });
+      grab.addEventListener('touchmove', e => {
+        if (!tDown || e.touches.length !== 1) return;
+        e.preventDefault();
+        const y = e.touches[0].clientY;
+        tVy = y - tLastY; tLastY = y;
+        const dy = y - tStartY;                 // finger up → dy negative
+        tMoved = Math.max(tMoved, Math.abs(dy));
+        window.scrollTo(0, Math.max(0, Math.min(openY, tStartScroll - dy))); // up folds the sheet up
+      }, { passive: false });
+      function endTouch() {
+        if (!tDown) return;
+        tDown = false;
+        if (tMoved < 6) { foldUp(); return; }   // a tap toggles open
+        let target;
+        if (tVy < -1.2) target = openY;         // flick up   → open
+        else if (tVy > 1.2) target = 0;         // flick down → close
+        else target = window.scrollY > openY * 0.4 ? openY : 0;  // else nearest
+        animateScroll(Math.round(target), 420);
+      }
+      grab.addEventListener('touchend', endTouch);
+      grab.addEventListener('touchcancel', endTouch);
     }
   })();
 </script>
