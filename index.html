@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jacob Boehme — Director · VFX Editor · DP · Los Angeles</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=10"></script>
+<script src="theme.js?v=11"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -263,6 +263,8 @@
      beside a sticky hashtag rail. Same 1fr/300px grid + 56px gap so the visual
      rhythm matches across the two tabs. */
   .feed-layout { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: start; max-width: 1080px; margin: 18px auto 40px; }
+  /* Hidden on desktop (the sticky hashtag rail covers this); mobile.css shows it. */
+  .feed-cat-pills { display: none; }
   .home-feed { display: flex; flex-direction: column; gap: 22px; max-width: 580px; justify-self: center; width: 100%; }
   /* Right rail — sticky filter pills with #tag styling */
   .feed-rail { position: sticky; top: 30px; display: flex; flex-direction: column; gap: 20px; }
@@ -575,7 +577,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=37">
+<link rel="stylesheet" href="mobile.css?v=38">
 </head>
 <body>
 
@@ -637,7 +639,7 @@
             <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
           </div>
           <div class="profile-proof">
-<span class="pf hero">3× ADDY</span><span class="pf">ScreamFest</span><span class="pf">TikTok Partner</span><span class="pf">Chinese Theatre Premiere</span>
+<span class="pf">3× ADDY</span><span class="pf">ScreamFest</span><span class="pf">TikTok Partner</span>
           </div>
           <div class="profile-stats">
             <div class="stat">
@@ -684,6 +686,8 @@
   <!-- HOME FEED — unified IG-style feed mixing photos, verticals, and wide-screen video -->
   <div class="page-section-head" style="margin-top: 38px;"><span class="label">— Feed</span></div>
   <div class="section-sub"><span>Recent work: photos, shorts, and music content.</span><a href="/work">FULL ARCHIVE →</a></div>
+  <!-- Mobile-only: the desktop hashtag rail, brought back as a compact scrollable pill row. -->
+  <div class="feed-cat-pills" id="feedCatPills"></div>
   <div class="feed-layout">
     <div class="home-feed" id="homeFeed"></div>
     <aside class="feed-rail">
@@ -1030,10 +1034,31 @@
     });
   }
 
+  // Mobile pill row — same categories + filter as the desktop rail, rendered as a
+  // compact horizontally-scrollable strip under the Feed header.
+  function renderFeedPills() {
+    const mount = document.getElementById('feedCatPills');
+    if (!mount) return;
+    const avail = HOME_RAIL_CATS.filter(cat => HOME_FEED_ALL.some(it => (it.categories || []).includes(cat.key)));
+    const pills = [{ key: 'all', label: 'All' }].concat(avail);
+    mount.innerHTML = pills.map(cat => {
+      const active = homeFilter === cat.key ? ' active' : '';
+      return '<button type="button" class="feed-pill' + active + '" data-cat="' + cat.key + '">' + cat.label + '</button>';
+    }).join('');
+    mount.querySelectorAll('.feed-pill').forEach(el => {
+      el.addEventListener('click', () => {
+        const cat = el.dataset.cat;
+        setHomeFilter((cat !== 'all' && homeFilter === cat) ? 'all' : cat);
+        try { el.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); } catch (_) {}
+      });
+    });
+  }
+
   function setHomeFilter(cat) {
     homeFilter = cat || 'all';
     renderHomeFeed();
     renderHomeRail();
+    renderFeedPills();
   }
 
   // Bunny MP4 stream URL (same pattern used in work.html)
@@ -1352,6 +1377,7 @@
 
   renderHomeFeed();
   renderHomeRail();
+  renderFeedPills();
   (function() {
     const clearBtn = document.getElementById('railClearFilter');
     if (clearBtn) clearBtn.addEventListener('click', () => setHomeFilter('all'));
@@ -1438,7 +1464,7 @@
         }, 560);
       }
     }
-    setInterval(() => { if (!paused) adv(); }, 2800);
+    setInterval(() => { if (!paused) adv(); }, 2240);
     if (btn) {
       btn.addEventListener('mouseenter', () => paused = true);
       btn.addEventListener('mouseleave', () => paused = false);

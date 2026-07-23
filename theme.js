@@ -6,8 +6,6 @@
 (function() {
   const THEMES = [
     { key: 'noir',     name: 'Noir' },
-    { key: 'slate',    name: 'Slate' },
-    { key: 'graphite', name: 'Graphite' },
     { key: 'ember',    name: 'Ember' },
     { key: 'neonoir',  name: 'Neonoir' }
   ];
