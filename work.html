@@ -1363,7 +1363,19 @@
   renderShortsFeed();
 
   // ============= SHORTS — TikTok-style scroll =============
+  // The main reel is a Bunny/YouTube IFRAME — .pause() can't touch it. But the
+  // shorts overlay covers the whole screen, so reloading the iframe to a paused
+  // state (autoplay forced off) is invisible AND the only cross-provider way to
+  // truly stop it. Only reload if it was actually set to autoplay/playing.
+  function stopMainPlayer() {
+    const mp = document.getElementById('mainPlayer');
+    if (!mp || !mp.src) return;
+    if (/autoplay=(true|1)/i.test(mp.src)) {
+      mp.src = mp.src.replace(/autoplay=true/gi, 'autoplay=false').replace(/autoplay=1/g, 'autoplay=0');
+    }
+  }
   function openShorts(slideIdx) {
+    stopMainPlayer();                       // kill the work-tab reel before the vertical takes over
     document.getElementById('shorts').classList.add('open');
     // Reset rail-scroll guard so the first IO firing actually scrolls the rail
     window.__lastActiveSrIdx = -1;

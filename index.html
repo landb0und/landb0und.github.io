@@ -183,7 +183,7 @@
      a single brand tone on the unit glyphs (M / K / the decimal) gives the row
      life while staying cohesive. The units also sit slightly lighter so the
      figures themselves stay dominant. */
-  .profile-stats .num .u { color: var(--amber); opacity: 0.78; font-weight: 600; }
+  .profile-stats .num .u { color: var(--amber); opacity: 1; font-weight: 700; }
   .profile-proof .sep { color: rgba(245,176,66,0.45); margin: 0 7px; font-weight: 400; }
   .profile-proof strong { color: var(--amber); font-weight: 800; }
 
@@ -195,7 +195,7 @@
   .profile-stats .stat:last-child { border-right: none; }
   .profile-stats .num { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1; letter-spacing: -0.02em; }
   .profile-stats .num .plus { color: var(--amber); }
-  .profile-stats .lbl { font-size: 9px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; margin-top: 4px; }
+  .profile-stats .lbl { font-size: 9px; color: var(--ink-2); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; margin-top: 4px; }
 
   /* IG-style action buttons — sentence case, system sans, readable at any size */
   .profile-actions { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
@@ -631,7 +631,7 @@
           <div class="profile-handle">@landbound<span class="dot">·</span>Los Angeles</div>
           <div class="profile-bio">
             <span class="lane-1">Director · DP · VFX Editor</span><br>
-            <span class="lane-role">Head of Creative · Raw Content <span class="lane-x">×</span> <a href="client.html?id=raw-material">Raw Material</a></span><br>
+            <span class="lane-role">Head of Creative at Raw Content</span><br>
             <span class="lane-edu">B.A. Film Production · Advertising Minor</span><br>
             <span class="lane-2">Music content · commercials · short-form</span><br>
             <span class="lane-ai">Independent AI / VFX practice — not on every project</span>
@@ -1478,6 +1478,39 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
   else run();
+})();
+</script>
+<script>
+/* Stop the home-feed videos whenever we leave the feed context, so nothing keeps
+   playing (or bleeding audio) behind whatever opened:
+     · a post going native-fullscreen  -> pause every OTHER feed video; resume the
+       centered one when fullscreen exits (the IntersectionObserver won't refire
+       on its own since the video never left the viewport).
+     · leaving the page for the vertical / shorts view -> pause them all.
+   Handlers are bound once and query the DOM at event time, so dynamically
+   rendered feed videos are always covered. */
+(function feedPauseGuards() {
+  if (window.__feedPauseGuards) return;
+  window.__feedPauseGuards = true;
+  function feedVids() { return document.querySelectorAll('video[data-src]'); }
+  function pauseFeed(except) { feedVids().forEach(function (v) { if (v !== except) { try { v.pause(); } catch (_) {} } }); }
+  function inView(v) { var r = v.getBoundingClientRect(); var h = window.innerHeight || 0; return r.bottom > h * 0.45 && r.top < h * 0.55; }
+  function resumeInView() {
+    feedVids().forEach(function (v) {
+      if (!inView(v)) return;
+      if (!v.src && v.dataset.src) { v.src = v.dataset.src; v.load(); }
+      v.muted = true; v.playsInline = true;
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    });
+  }
+  function onFsChange() {
+    var el = document.fullscreenElement || document.webkitFullscreenElement;
+    if (el) pauseFeed(el.tagName === 'VIDEO' ? el : null);
+    else resumeInView();
+  }
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
+  window.addEventListener('pagehide', function () { pauseFeed(null); });
 })();
 </script>
 </body>
