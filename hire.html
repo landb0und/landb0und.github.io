@@ -332,7 +332,14 @@
     .tl-node:nth-child(4)::before { right: calc(50% + 27px); width: 100vw; opacity: 0.5; }
     @keyframes tlConnFlow { from { background-position: 0 0; } to { background-position: -300% 0; } }
   }
-  @media (max-width: 900px) { .tracks, .services, .low-grid, .contact-split { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) {
+    .tracks, .services, .low-grid, .contact-split { grid-template-columns: 1fr; }
+    /* Once the scope column is full-width it no longer needs the equal-height
+       flex trick (flex:1 1 0) that matched it to the fit column on desktop —
+       and that trick, with min-height:0 below, collapses the rows on top of
+       each other. Let each row size to its own content instead. */
+    .scope-row { flex: none; }
+  }
   /* Worked-With concert poster: desktop type (58/38/25/16px) overflows a phone
      and the rows wrapped raggedly. Scale it down so the lineup reads as a clean
      vertical poster; inline-block names still wrap centered per row. */
@@ -356,7 +363,7 @@
     .fit-card .fc-head { margin-bottom: 11px; }
   }
 </style>
-<link rel="stylesheet" href="mobile.css?v=36">
+<link rel="stylesheet" href="mobile.css?v=37">
 </head>
 <body>
 

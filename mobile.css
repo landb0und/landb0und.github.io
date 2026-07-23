@@ -306,8 +306,16 @@
     color: rgba(255,255,255,0.92) !important;
     box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important;
     z-index: 640 !important;
+    /* Match the site's label system: mono, uppercase, tracked — reads as an
+       intentional control rather than a plain inherited-font link. */
+    font-family: 'SF Mono', Menlo, monospace !important;
+    font-size: 11px !important; font-weight: 700 !important;
+    letter-spacing: 0.16em !important; text-transform: uppercase !important;
+    text-decoration: none !important; line-height: 1 !important; white-space: nowrap !important;
+    padding: 0 20px !important;
     transition: opacity .2s ease, transform .2s ease, border-color .2s !important;
   }
+  .back-btn:hover { border-color: color-mix(in srgb, var(--amber) 70%, transparent) !important; }
   .back-btn:active { transform: scale(0.95) !important; }
   body.nav-open .back-btn { opacity: 0 !important; pointer-events: none !important; transform: translateY(6px) !important; }
 
