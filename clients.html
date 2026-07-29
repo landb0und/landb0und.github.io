@@ -264,6 +264,74 @@
     .spot-list .card.cur { border-color: var(--amber); background: var(--bg-3); }
     .spot-empty { padding: 26px 18px; text-align: center; font-family: 'SF Mono', Menlo, monospace; font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.14em; text-transform: uppercase; }
   }
+
+  /* ==================================================================
+     DESKTOP CLIENT CAROUSEL  (#dspot — >820px only)
+     A coverflow reel above the grid, mirroring the mobile spotlight's
+     card language + draggable dot scrubber, with arrow controls added
+     for desktop. Mobile keeps #spot; this never renders at ≤820px.
+     ================================================================== */
+  #dspot { display: none; }
+  @media (min-width: 821px) {
+    #dspot { display: block; position: relative; margin: 2px 0 42px; }
+    .dspot-amb {
+      position: absolute; left: 0; right: 0; top: 0; height: 80%; z-index: 0;
+      opacity: 0.42; pointer-events: none; transition: background 1s ease;
+      background: radial-gradient(58% 72% at 50% 24%, var(--amb1, rgba(245,176,66,0.4)) 0%, transparent 64%);
+    }
+    .dspot-stage { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .dspot-hero { position: relative; flex: 1; height: 452px; overflow: hidden; cursor: grab; touch-action: pan-y; outline: none; }
+    .dspot-hero.grabbing { cursor: grabbing; }
+    .dspot-track { position: absolute; inset: 0; }
+    .dspot-card {
+      position: absolute; left: 50%; top: 22px; bottom: 22px; width: 300px; margin-left: -150px;
+      border-radius: 20px; overflow: hidden; border: 1px solid var(--line); background: var(--bg-2);
+      box-shadow: 0 22px 50px rgba(0,0,0,0.5); cursor: pointer; will-change: transform; user-select: none;
+    }
+    .dspot-card .bgimg {
+      position: absolute; inset: 0; background-size: cover; background-position: center;
+      display: grid; place-items: center; font-family: 'SF Mono', Menlo, monospace;
+      font-weight: 900; font-size: 66px; color: rgba(255,255,255,0.9);
+    }
+    .dspot-card .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,8,6,0.96) 12%, rgba(10,8,6,0.35) 48%, transparent 70%); }
+    .dspot-card .frost {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 52%; z-index: 1; pointer-events: none;
+      -webkit-mask-image: linear-gradient(to top, #000 0%, #000 46%, transparent 100%);
+              mask-image: linear-gradient(to top, #000 0%, #000 46%, transparent 100%);
+    }
+    .dspot-card.active .frost { -webkit-backdrop-filter: blur(13px) saturate(0.85); backdrop-filter: blur(13px) saturate(0.85); }
+    .dspot-card .info { position: absolute; left: 0; right: 0; bottom: 0; padding: 20px; z-index: 2; }
+    .dspot-card .cn { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+    .dspot-card .ch { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--ink-2); letter-spacing: 0.04em; margin-top: 5px; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dspot-card .cr { font-family: 'SF Mono', Menlo, monospace; font-size: 9.5px; letter-spacing: 0.12em; color: var(--amber); text-transform: uppercase; font-weight: 700; margin-top: 10px; line-height: 1.6; }
+    .dspot-card .cd {
+      color: var(--ink-2); font-size: 12.5px; line-height: 1.5; margin-top: 9px;
+      max-height: 0; opacity: 0; overflow: hidden;
+      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4;
+      transition: max-height .4s ease, opacity .4s ease;
+    }
+    .dspot-card .cc { font-family: 'SF Mono', Menlo, monospace; font-size: 9px; letter-spacing: 0.18em; color: var(--ink-4); text-transform: uppercase; margin-top: 11px; }
+    .dspot-card.active .cd { max-height: 92px; opacity: 1; }
+    .dspot-card.active { box-shadow: 0 26px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(245,176,66,0.30); }
+    .dspot-ribbon { position: absolute; top: 14px; left: 14px; z-index: 3; font-family: 'SF Mono', Menlo, monospace; font-size: 8.5px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; color: #1a1408; background: var(--amber); padding: 3px 9px; border-radius: 999px; }
+    .dspot-star { color: var(--amber); font-size: 0.6em; }
+    .dspot-nav {
+      flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
+      cursor: pointer; z-index: 5; background: var(--bg-2); border: 1px solid var(--line); color: var(--ink);
+      font-size: 24px; line-height: 1; padding-bottom: 3px; -webkit-appearance: none;
+      transition: transform .16s, border-color .16s, color .16s, opacity .16s;
+    }
+    .dspot-nav:hover { border-color: var(--amber); color: var(--amber); transform: scale(1.06); }
+    .dspot-nav:active { transform: scale(0.94); }
+    .dspot-nav:disabled { opacity: 0.26; cursor: default; transform: none; border-color: var(--line); color: var(--ink-4); }
+    .dspot-dots {
+      display: flex; justify-content: center; align-items: center; flex-wrap: nowrap;
+      gap: var(--dotgap, 7px); max-width: 640px; margin: 20px auto 0; padding: 8px 24px;
+      cursor: ew-resize; touch-action: none;
+    }
+    .dspot-dots i { width: var(--dot, 8px); height: var(--dot, 8px); border-radius: 50%; opacity: 0.3; transition: opacity .25s, transform .25s; flex: none; }
+    .dspot-dots i.on { opacity: 1; transform: scale(1.5); }
+  }
 </style>
 <link rel="stylesheet" href="mobile.css?v=38">
 </head>
@@ -283,7 +351,7 @@
   <div class="nav-socials">
     <div class="nav-socials-h">Follow</div>
     <a class="nav-soc" href="https://www.tiktok.com/@landbound" target="_blank" rel="noopener"><div class="nav-soc-icon tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></a>
-    <a class="nav-soc" href="https://www.instagram.com/landbound" target="_blank" rel="noopener"><div class="nav-soc-icon ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 11K</div></div></a>
+    <a class="nav-soc" href="https://www.instagram.com/landbound" target="_blank" rel="noopener"><div class="nav-soc-icon ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 12.2K</div></div></a>
     <a class="nav-soc" href="https://www.linkedin.com/in/jacobtboehme" target="_blank" rel="noopener"><div class="nav-soc-icon li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></a>
     <a class="nav-soc" href="https://www.imdb.com/name/nm13209955/" target="_blank" rel="noopener"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></a>
   </div>
@@ -305,6 +373,18 @@
     </div>
     <div class="ph-r" id="ph-r"></div>
   </div>
+
+  <!-- Desktop-only client carousel (>820px). Mobile uses #spot instead. -->
+  <section id="dspot" aria-label="Featured clients">
+    <div class="dspot-amb" id="dspotAmb"></div>
+    <div class="dspot-stage">
+      <button class="dspot-nav" id="dspotPrev" type="button" aria-label="Previous client">‹</button>
+      <div class="dspot-hero" id="dspotHero" tabindex="0" aria-label="Client carousel — drag or use arrows"><div class="dspot-track" id="dspotTrack"></div></div>
+      <button class="dspot-nav" id="dspotNext" type="button" aria-label="Next client">›</button>
+    </div>
+    <div class="dspot-dots" id="dspotDots" aria-hidden="true"></div>
+  </section>
+
   <div class="grid" id="clientGrid"></div>
 </main>
 
@@ -742,6 +822,207 @@
   requestAnimationFrame(function () { measure(); play(); });
   window.addEventListener('resize', measure);
   window.addEventListener('orientationchange', function () { setTimeout(measure, 250); });
+})();
+</script>
+
+<script>
+/* =====================================================================
+   DESKTOP CLIENT CAROUSEL  (#dspot)
+   A coverflow reel above the grid, initialised only at >820px. Mirrors
+   the mobile spotlight's card visuals + draggable dot scrubber, and adds
+   arrow buttons + click-drag + horizontal-wheel for desktop. Reuses the
+   shared cardHTML helpers + window.CLIENTS. The mobile #spot is a wholly
+   separate component and is never touched here.
+   ===================================================================== */
+(function () {
+  if (!window.matchMedia || !window.matchMedia('(min-width: 821px)').matches) return;
+  if (!window.CLIENTS || !window.CLIENTS.length) return;
+
+  var root  = document.getElementById('dspot');
+  var track = document.getElementById('dspotTrack');
+  var hero  = document.getElementById('dspotHero');
+  var dotsEl= document.getElementById('dspotDots');
+  var amb   = document.getElementById('dspotAmb');
+  var prevB = document.getElementById('dspotPrev');
+  var nextB = document.getElementById('dspotNext');
+  if (!root || !track || !hero || !dotsEl) return;
+
+  /* Same curation as the mobile reel; Laurie Anderson stays out of the reel. */
+  var NOTABLE = ['surfaces', 'yungblud', 'grace-vanderwaal', 'll-cool-j',
+                 'gym-class-heroes', 'mike-posner', 'two-feet', 'saint-motel', 'landbound'];
+  var isNotable = function (c) { return NOTABLE.indexOf(c.id) !== -1; };
+  var CL = window.CLIENTS.slice().sort(function (a, b) {
+    var ra = isNotable(a) ? NOTABLE.indexOf(a.id) : 100 + window.CLIENTS.indexOf(a);
+    var rb = isNotable(b) ? NOTABLE.indexOf(b.id) : 100 + window.CLIENTS.indexOf(b);
+    return ra - rb;
+  }).filter(function (c) { return c.id !== 'laurie-anderson'; });
+  if (!CL.length) return;
+
+  function hue(n) { var h = 0; for (var i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 360; return h; }
+
+  var cards = CL.map(function (c, i) {
+    var t = window.clientThumb(c);
+    var el = document.createElement('div');
+    el.className = 'dspot-card';
+    el.innerHTML =
+      '<div class="bgimg ' + (t ? '' : (c.palette || '')) + '"' +
+        (t ? ' style="background-image:url(\'' + t + '\')"' : '') + '>' +
+        (t ? '' : window.clientInitials(c)) + '</div>' +
+      (isNotable(c) ? '<div class="dspot-ribbon">◆ Notable</div>' : '') +
+      '<div class="scrim"></div><div class="frost"></div>' +
+      '<div class="info">' +
+        '<div class="cn">' + c.name + (isNotable(c) ? ' <span class="dspot-star">◆</span>' : '') + '</div>' +
+        '<div class="ch">' + (c.handle || '') + '</div>' +
+        '<div class="cr">' + (c.role || '') + '</div>' +
+        '<div class="cd">' + (c.blurb || '') + '</div>' +
+        '<div class="cc">' + clientStats(c).map(function (s) { return s.replace(/<[^>]*>/g, ''); }).join(' · ') + '</div>' +
+      '</div>';
+    // A real click opens the front card; a click that follows a drag does not.
+    el.addEventListener('click', function () {
+      if (moved > 6) return;
+      if (i === active) location.href = clientHref(c);
+      else go(i);
+    });
+    track.appendChild(el);
+
+    var dot = document.createElement('i');
+    var stop = CL.length > 1 ? Math.round((1 - i / (CL.length - 1)) * 100) : 100;
+    dot.style.background = 'color-mix(in srgb, var(--amber) ' + stop + '%, var(--rose))';
+    dot.addEventListener('click', function () { go(i); });
+    dotsEl.appendChild(dot);
+
+    return { el: el, dot: dot, c: c };
+  });
+
+  var active = 0, dragX = 0, swiping = false, moved = 0;
+  var CARD_W = 300, STEP = 246;
+
+  function sizeReel() {
+    var w = hero.clientWidth || 900;
+    CARD_W = Math.max(240, Math.min(320, Math.round(w * 0.34)));
+    STEP = Math.round(CARD_W * 0.82);
+    cards.forEach(function (cd) {
+      cd.el.style.width = CARD_W + 'px';
+      cd.el.style.marginLeft = (-CARD_W / 2) + 'px';
+    });
+    var railAvail = Math.min(640, root.clientWidth || 640) - 48;
+    var gap = 7;
+    var dotPx = Math.floor((railAvail - (CL.length - 1) * gap) / CL.length);
+    dotPx = Math.max(4, Math.min(8, dotPx));
+    dotsEl.style.setProperty('--dot', dotPx + 'px');
+    dotsEl.style.setProperty('--dotgap', gap + 'px');
+  }
+
+  function renderReel(anim) {
+    cards.forEach(function (cd, i) {
+      var pos = (i - active) + dragX / STEP, a = Math.abs(pos);
+      var x = pos * STEP;
+      var s = Math.max(0.8, 1 - a * 0.11);
+      var op = Math.max(0, 1 - a * 0.34);
+      cd.el.style.transition = anim
+        ? 'transform .42s cubic-bezier(.25,.9,.3,1),opacity .42s,box-shadow .42s'
+        : 'none';
+      cd.el.style.transform = 'translateX(' + x + 'px) scale(' + s + ')';
+      cd.el.style.opacity = op;
+      cd.el.style.zIndex = String(200 - Math.round(a * 10));
+      cd.el.style.pointerEvents = a <= 2.6 ? 'auto' : 'none';
+      cd.el.classList.toggle('active', i === active && Math.abs(dragX) < STEP * 0.5);
+      cd.dot.classList.toggle('on', i === active);
+    });
+    if (amb) amb.style.setProperty('--amb1', 'hsla(' + hue(CL[active].name) + ',62%,42%,.5)');
+    if (prevB) prevB.disabled = active <= 0;
+    if (nextB) nextB.disabled = active >= CL.length - 1;
+  }
+
+  function go(i) {
+    active = Math.max(0, Math.min(CL.length - 1, i));
+    dragX = 0; renderReel(true); restart();
+  }
+
+  /* ---- click-drag on the reel (pointer events cover mouse + trackpad) ---- */
+  var downX = 0;
+  hero.addEventListener('pointerdown', function (e) {
+    swiping = true; moved = 0; downX = e.clientX; dragX = 0;
+    hero.classList.add('grabbing'); pause();
+    try { hero.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  hero.addEventListener('pointermove', function (e) {
+    if (!swiping) return;
+    dragX = e.clientX - downX; moved = Math.abs(dragX);
+    renderReel(false);
+  });
+  function endDrag() {
+    if (!swiping) return;
+    swiping = false; hero.classList.remove('grabbing');
+    var nx = active;
+    if (dragX < -STEP * 0.34) nx = active + 1;
+    else if (dragX > STEP * 0.34) nx = active - 1;
+    active = Math.max(0, Math.min(CL.length - 1, nx));
+    dragX = 0; renderReel(true); restart();
+    setTimeout(function () { moved = 0; }, 60);
+  }
+  hero.addEventListener('pointerup', endDrag);
+  hero.addEventListener('pointercancel', endDrag);
+
+  /* ---- the dot rail doubles as a scrubber: drag across it to fly through ---- */
+  var scrubbing = false;
+  function scrubTo(clientX) {
+    var b = dotsEl.getBoundingClientRect();
+    var pad = 24;
+    var usable = Math.max(1, b.width - pad * 2);
+    var frac = (clientX - b.left - pad) / usable;
+    var i = Math.round(Math.max(0, Math.min(1, frac)) * (CL.length - 1));
+    if (i !== active) { active = i; dragX = 0; renderReel(true); }
+  }
+  dotsEl.addEventListener('pointerdown', function (e) {
+    scrubbing = true; pause(); scrubTo(e.clientX);
+    try { dotsEl.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  dotsEl.addEventListener('pointermove', function (e) { if (scrubbing) scrubTo(e.clientX); });
+  function endScrub() { if (scrubbing) { scrubbing = false; restart(); } }
+  dotsEl.addEventListener('pointerup', endScrub);
+  dotsEl.addEventListener('pointercancel', endScrub);
+
+  /* ---- arrows ---- */
+  if (prevB) prevB.addEventListener('click', function () { go(active - 1); });
+  if (nextB) nextB.addEventListener('click', function () { go(active + 1); });
+
+  /* ---- horizontal wheel / trackpad swipe (vertical wheel still scrolls page) ---- */
+  var wheelLock = false;
+  hero.addEventListener('wheel', function (e) {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;   // let vertical scroll pass through
+    if (Math.abs(e.deltaX) < 8) return;
+    e.preventDefault();
+    if (wheelLock) return;
+    wheelLock = true;
+    go(active + (e.deltaX > 0 ? 1 : -1));
+    setTimeout(function () { wheelLock = false; }, 260);
+  }, { passive: false });
+
+  /* ---- keyboard when the reel is focused ---- */
+  hero.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(active - 1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); go(active + 1); }
+    else if (e.key === 'Enter') { location.href = clientHref(CL[active]); }
+  });
+
+  /* ---- gentle autoplay: respects reduced-motion, pauses on hover/interaction ---- */
+  var timer = null;
+  function play() {
+    if (timer) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    timer = setInterval(function () { active = (active + 1) % CL.length; dragX = 0; renderReel(true); }, 4600);
+  }
+  function pause() { if (timer) { clearInterval(timer); timer = null; } }
+  function restart() { pause(); play(); }
+  root.addEventListener('mouseenter', pause);
+  root.addEventListener('mouseleave', restart);
+  document.addEventListener('visibilitychange', function () { if (document.hidden) pause(); else restart(); });
+
+  sizeReel();
+  renderReel(false);
+  window.addEventListener('resize', function () { sizeReel(); renderReel(false); });
+  requestAnimationFrame(function () { sizeReel(); renderReel(false); play(); });
 })();
 </script>
 </body>
