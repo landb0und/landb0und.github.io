@@ -358,6 +358,11 @@
   .post-caption { padding: 8px 14px; font-size: 13px; color: var(--ink); line-height: 1.4; }
   .post-caption .nm { font-weight: 800; margin-right: 6px; text-decoration: none; color: var(--ink); }
   .post-caption .nm:hover { color: var(--amber); }
+  /* Tappable #hashtag pills under each post — filter the feed on tap. */
+  .post-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 14px 12px; }
+  .post-tag { font-family: 'SF Mono', Menlo, monospace; font-size: 10.5px; letter-spacing: 0.02em; color: var(--amber); background: rgba(245,176,66,0.08); border: 1px solid rgba(245,176,66,0.25); padding: 3px 9px; border-radius: 999px; cursor: pointer; -webkit-appearance: none; transition: background .15s, color .15s, border-color .15s; }
+  .post-tag:hover { background: var(--amber); color: var(--bg); border-color: var(--amber); }
+  .post-tag:active { transform: scale(0.96); }
   .post-credit { font-size: 12.5px; color: var(--ink-2); padding: 4px 14px 8px; line-height: 1.45; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.02em; }
   .post-meta { padding: 4px 14px 14px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.14em; font-family: 'SF Mono', Menlo, monospace; text-transform: uppercase; display: flex; gap: 14px; }
   .post-meta span strong { color: var(--ink-3); font-weight: 700; }
@@ -1096,12 +1101,24 @@
       + '</div>';
   }
 
+  // Tappable #hashtag pills for a post, from its feed categories. Labels mirror
+  // the filter rail (e.g. #musicvideos), and a tap filters the feed to that tag.
+  function catPills(item) {
+    const cats = item.categories || [];
+    if (!cats.length) return '';
+    const lab = k => { const c = HOME_RAIL_CATS.find(x => x.key === k); return c ? c.label : ('#' + k); };
+    return '<div class="post-tags">'
+      + cats.map(c => '<button type="button" class="post-tag" data-cat="' + c + '">' + lab(c) + '</button>').join('')
+      + '</div>';
+  }
+
   function commonFooter(item, captionLine) {
     const primary = item.authors[0];
     const handle = primary.handle && primary.handle.startsWith('@') ? primary.handle.replace('@', '') : primary.id.replace(/-/g, '');
     return ''
       + '<div class="post-actions"><span class="icn heart">♡</span><span class="icn">💬</span><span class="icn">↗</span></div>'
-      + '<div class="post-caption"><a class="nm" href="client.html?id=' + primary.id + '">' + handle + '</a> ' + (captionLine || '') + '</div>';
+      + '<div class="post-caption"><a class="nm" href="client.html?id=' + primary.id + '">' + handle + '</a> ' + (captionLine || '') + '</div>'
+      + catPills(item);
   }
 
   function renderPhotoPost(item) {
@@ -1380,6 +1397,20 @@
   (function() {
     const clearBtn = document.getElementById('railClearFilter');
     if (clearBtn) clearBtn.addEventListener('click', () => setHomeFilter('all'));
+  })();
+  // Tapping a post's #hashtag pill filters the feed to that category. Delegated
+  // on the persistent feed mount so it survives re-renders.
+  (function() {
+    const feed = document.getElementById('homeFeed');
+    if (!feed) return;
+    feed.addEventListener('click', (e) => {
+      const pill = e.target.closest('.post-tag');
+      if (!pill) return;
+      e.preventDefault(); e.stopPropagation();
+      setHomeFilter(pill.dataset.cat || 'all');
+      const anchor = document.getElementById('feedCatPills') || feed;
+      try { anchor.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (_) {}
+    });
   })();
 
   // ============= FEED BACK-TO-TOP =============

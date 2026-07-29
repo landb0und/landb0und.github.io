@@ -1870,6 +1870,31 @@
     }
   })();
 
+  /* ---- Desktop scroll-chaining: the page scrolls normally, and once you hit
+     the very bottom the wheel feeds into the Up-Next rail — so people discover
+     there are more videos without needing the cursor over the rail. Scrolling
+     back up hands control to the page again. A wheel already over the rail uses
+     its own native scroll. Desktop only; mobile stacks the rail normally. ---- */
+  (function upNextChain() {
+    var side = document.querySelector('.side');
+    if (!side) return;
+    var mq = window.matchMedia('(min-width: 901px)');
+    function atBottom() {
+      return Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 1;
+    }
+    window.addEventListener('wheel', function (e) {
+      if (!mq.matches || !e.deltaY) return;
+      if (side.contains(e.target)) return;               // over Up Next → native scroll
+      var down = e.deltaY > 0;
+      var canDown = side.scrollTop + side.clientHeight < side.scrollHeight - 1;
+      var canUp = side.scrollTop > 0;
+      if (atBottom() && ((down && canDown) || (!down && canUp))) {
+        e.preventDefault();
+        side.scrollTop += e.deltaY;
+      }
+    }, { passive: false });
+  })();
+
 </script>
 </body>
 </html>
