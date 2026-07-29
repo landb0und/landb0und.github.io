@@ -130,6 +130,13 @@
   .photo-wall.reduced { position: static; height: auto; min-height: 0; overflow: visible; display: flex; gap: 12px;
     -webkit-mask-image: none; mask-image: none; }
   .photo-wall.reduced .pcol { position: static; left: auto !important; width: auto !important; flex: 1 1 0; }
+  /* MOBILE: no 600vh runway and no scroll-hijack (that fight lost to iOS
+     momentum and let you scroll into the void). Instead a finite ambient-drift
+     band — the columns keep drifting on their own while the PAGE scrolls past
+     it completely normally, so there's nothing below to fall into. */
+  .wall-scroll.bounded { height: auto; }
+  .wall-scroll.bounded .wall-sticky { position: static; height: auto; display: block; }
+  .photo-wall.bounded { height: 78vh; flex: none; }
   .p1 { background: linear-gradient(160deg, #2a1f15 0%, #6b3a1a 60%, #f5b042 100%); }
   .p2 { background: linear-gradient(200deg, #050505 0%, #1a2a3a 50%, #4a7aa8 100%); }
   .p3 { background: linear-gradient(45deg, #0a0806 0%, #3a1418 60%, #e8589a 100%); }
@@ -647,7 +654,7 @@
     if (!wrap) return;
     if (wallRAF) { cancelAnimationFrame(wallRAF); wallRAF = null; }
     if (wallScrollHandler) { window.removeEventListener('scroll', wallScrollHandler); wallScrollHandler = null; }
-    wrap.classList.remove('ready', 'reduced');
+    wrap.classList.remove('ready', 'reduced', 'bounded');
     wrap.style.overflowY = '';
     const photos = filteredPhotos();
     if (!photos.length) {
@@ -657,11 +664,15 @@
     }
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const runway = document.getElementById('wallScroll'); // collapse its tall runway when reduced
-    if (runway) runway.classList.toggle('reduced', reduce);
     const w = window.innerWidth;
     // Mobile gets 4 columns (desktop stays exactly as it was at 5).
     const IS_MOBILE_WALL = w <= 700;
     const NCOL = IS_MOBILE_WALL ? 4 : 5;
+    // Mobile = a finite ambient-drift band (no runway, no scroll-hijack). Desktop
+    // keeps the scroll-driven parallax runway exactly as before.
+    const bounded = IS_MOBILE_WALL && !reduce;
+    if (runway) { runway.classList.toggle('reduced', reduce); runway.classList.toggle('bounded', bounded); }
+    if (bounded) wrap.classList.add('bounded');
 
     // round-robin into columns, preserving each photo's feed index
     const buckets = Array.from({ length: NCOL }, () => []);
@@ -755,7 +766,7 @@
       // forever instead of hitting the page bottom. Scrolling UP still lets you
       // leave the wall and reach the top of the page normally.
     };
-    window.addEventListener('scroll', wallScrollHandler, { passive: true });
+    if (!bounded) window.addEventListener('scroll', wallScrollHandler, { passive: true });
 
     // HARD CEILING against the void: a scroll-event handler can lose the race
     // with iOS momentum (scrollTo is often ignored mid-fling). So we ALSO clamp
@@ -783,7 +794,7 @@
           cols[i].style.transform = 'translateY(' + (-offs[i]) + 'px)';
         }
       }
-      clampRunway();
+      if (!bounded) clampRunway();
       wallRAF = requestAnimationFrame(tick);
     }
     wallRAF = requestAnimationFrame(tick);

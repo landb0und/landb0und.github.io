@@ -118,9 +118,8 @@
   .profile-info { min-width: 0; }
   .profile-name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
   .profile-name { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
-  /* Nudged up 1px: the name has no descenders, so its visual mass sits high in
-     the line box — a flex-centered badge otherwise reads a hair low. */
-  .profile-verified { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: var(--amber); color: var(--bg); flex: none; transform: translateY(-1px); }
+  /* Centre the badge on the name via flex; align to the row's true middle. */
+  .profile-verified { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: var(--amber); color: var(--bg); flex: none; align-self: center; }
   .profile-verified svg { display: block; }
   .profile-handle { font-size: 12px; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.04em; margin-bottom: 14px; }
   .profile-handle .dot { color: var(--ink-4); margin: 0 6px; }
@@ -1102,7 +1101,6 @@
     const handle = primary.handle && primary.handle.startsWith('@') ? primary.handle.replace('@', '') : primary.id.replace(/-/g, '');
     return ''
       + '<div class="post-actions"><span class="icn heart">♡</span><span class="icn">💬</span><span class="icn">↗</span></div>'
-      + '<div class="post-likes"><strong>' + item.likes + '</strong> likes</div>'
       + '<div class="post-caption"><a class="nm" href="client.html?id=' + primary.id + '">' + handle + '</a> ' + (captionLine || '') + '</div>';
   }
 
@@ -1491,12 +1489,20 @@
       var unit = m[2] || "", plus = m[3] || "";
       var decimals = (m[1].split(".")[1] || "").length;
       var dur = 1200, delay = idx * 90, start = null;
-      el.textContent = (0).toFixed(decimals) + unit + plus;
+      // Keep the amber accent on the unit/plus THROUGHOUT the count. It used to
+      // stay plain white until the very end because textContent dropped the
+      // styled spans, then snapped to colour when the original markup restored.
+      var fmt = function (v) {
+        return v.toFixed(decimals)
+          + (unit ? '<span class="u">' + unit + '</span>' : '')
+          + (plus ? '<span class="plus">' + plus + '</span>' : '');
+      };
+      el.innerHTML = fmt(0);
       function tick(now) {
         if (start === null) start = now;
         var p = Math.min(1, (now - start) / dur);
         var e = 1 - Math.pow(1 - p, 3);
-        el.textContent = (target * e).toFixed(decimals) + unit + plus;
+        el.innerHTML = fmt(target * e);
         if (p < 1) requestAnimationFrame(tick);
         else el.innerHTML = html;
       }
