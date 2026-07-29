@@ -365,6 +365,13 @@
   .related-verticals .rv-tile:hover { border-color: var(--amber); transform: translateY(-2px); }
   .related-verticals .rv-tile .rv-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.92) 100%); }
   .related-verticals .rv-tile .rv-cap { position: absolute; left: 10px; right: 10px; bottom: 10px; font-size: 11px; color: #fff; font-weight: 700; line-height: 1.25; }
+  /* Mobile-only full verticals strip under the player (replaces the sidebar
+     card on phones). Desktop keeps the sidebar card and hides this. */
+  .work-vert-mobile { display: none; }
+  @media (max-width: 900px) {
+    .work-vert-mobile { display: block; margin: 6px 0 22px; }
+    .side .verticals-card { display: none; }
+  }
   /* Playlist tile in Up Next — 2x2 thumbnail grid + episode-count chip so it
      clearly reads as a series, not a single video. Each cell shows one
      episode's thumb; the amber overlay badge anchors the "PLAYLIST · N" meta. */
@@ -595,6 +602,14 @@
         <div class="row"><span class="k">Format</span><span class="v">Director sizzle</span></div>
         <div class="row"><span class="k">Year</span><span class="v">2025</span></div>
         <div class="row"><span class="k">Role</span><span class="v">Director</span></div>
+      </div>
+
+      <!-- MOBILE ONLY: full horizontal verticals list (like the home strip),
+           shuffled every load. Replaces the sidebar verticals-card on phones;
+           hidden on desktop, where the sidebar card stays. -->
+      <div class="related-verticals work-vert-mobile" id="allVertMobile">
+        <div class="rv-head">Verticals · @landbound</div>
+        <div class="rv-strip" id="allVertStrip"></div>
       </div>
 
       <!-- WORK FEATURED — curated highlight reel under the player, styled like the
@@ -1192,6 +1207,29 @@
   }
   // Initial render for whatever's loaded by default (CHILDSTAR sizzle reel)
   renderRelatedVerticals('e0374508-213f-47a2-ae0d-dd50d9df695d');
+
+  // MOBILE verticals strip — every vertical, shuffled fresh on each page load,
+  // rendered like the home strip. Tiles open the shorts viewer at their real
+  // index. (CSS shows this only ≤900px and hides the sidebar card there.)
+  (function renderAllVerticalsStrip() {
+    const strip = document.getElementById('allVertStrip');
+    if (!strip || !window.VERTICALS || !window.VERTICALS.length) return;
+    const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net';
+    const items = window.VERTICALS.map((v, idx) => ({ v, idx }));
+    for (let k = items.length - 1; k > 0; k--) {      // Fisher–Yates, fresh each load
+      const j = Math.floor(Math.random() * (k + 1));
+      [items[k], items[j]] = [items[j], items[k]];
+    }
+    strip.innerHTML = items.map(({ v, idx }) => {
+      const thumb = window.verticalThumb ? window.verticalThumb(v) : ('https://' + CDN + '/' + v.guid + '/thumbnail.jpg');
+      const cap = v.label || v.title || '';
+      return ''
+        + '<a class="rv-tile" href="#shorts/' + idx + '" onclick="openShorts(' + idx + ');return false;" style="background-image:url(\'' + thumb + '\');">'
+        +   '<div class="rv-overlay"></div>'
+        +   '<div class="rv-cap">' + cap + '</div>'
+        + '</a>';
+    }).join('');
+  })();
 
   // ============= FILTER BAR =============
   (function() {
