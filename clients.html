@@ -810,7 +810,7 @@
       active = (active + 1) % CL.length;
       dragX = 0;
       renderReel(true);
-    }, 4400);
+    }, 3520);
   }
   function pause() { if (timer) { clearInterval(timer); timer = null; } }
   function restart() { pause(); if (sheetY > PEEK * 0.85) play(); }
@@ -857,6 +857,12 @@
     return ra - rb;
   }).filter(function (c) { return c.id !== 'laurie-anderson'; });
   if (!CL.length) return;
+  var N = CL.length;
+
+  // Nearest wrapped offset of card i from the active card, in (-N/2, N/2].
+  // This is what makes the reel loop: a card past the halfway point reappears
+  // on the opposite side instead of leaving the near side empty.
+  function wrapRel(d) { d = ((d % N) + N) % N; if (d > N / 2) d -= N; return d; }
 
   function hue(n) { var h = 0; for (var i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 360; return h; }
 
@@ -915,11 +921,15 @@
 
   function renderReel(anim) {
     cards.forEach(function (cd, i) {
-      var pos = (i - active) + dragX / STEP, a = Math.abs(pos);
+      var pos = wrapRel(i - active) + dragX / STEP, a = Math.abs(pos);
       var x = pos * STEP;
       var s = Math.max(0.8, 1 - a * 0.11);
       var op = Math.max(0, 1 - a * 0.34);
-      cd.el.style.transition = anim
+      // Cards out past the visible fan sit at the wrap seam; skip their
+      // transition so a re-wrap teleports invisibly instead of streaking
+      // across the stage.
+      var far = a > 3.2;
+      cd.el.style.transition = (anim && !far)
         ? 'transform .42s cubic-bezier(.25,.9,.3,1),opacity .42s,box-shadow .42s'
         : 'none';
       cd.el.style.transform = 'translateX(' + x + 'px) scale(' + s + ')';
@@ -930,12 +940,10 @@
       cd.dot.classList.toggle('on', i === active);
     });
     if (amb) amb.style.setProperty('--amb1', 'hsla(' + hue(CL[active].name) + ',62%,42%,.5)');
-    if (prevB) prevB.disabled = active <= 0;
-    if (nextB) nextB.disabled = active >= CL.length - 1;
   }
 
   function go(i) {
-    active = Math.max(0, Math.min(CL.length - 1, i));
+    active = ((i % N) + N) % N;   // wrap: a looping reel has no first/last
     dragX = 0; renderReel(true); restart();
   }
 
@@ -954,10 +962,10 @@
   function endDrag() {
     if (!swiping) return;
     swiping = false; hero.classList.remove('grabbing');
-    var nx = active;
-    if (dragX < -STEP * 0.34) nx = active + 1;
-    else if (dragX > STEP * 0.34) nx = active - 1;
-    active = Math.max(0, Math.min(CL.length - 1, nx));
+    // Distance-based: land on the card nearest where you dragged to, so a big
+    // drag carries you several cards instead of snapping just one ahead.
+    var nx = Math.round(active - dragX / STEP);
+    active = ((nx % N) + N) % N;
     dragX = 0; renderReel(true); restart();
     setTimeout(function () { moved = 0; }, 60);
   }
@@ -1011,7 +1019,7 @@
   function play() {
     if (timer) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    timer = setInterval(function () { active = (active + 1) % CL.length; dragX = 0; renderReel(true); }, 4600);
+    timer = setInterval(function () { active = (active + 1) % CL.length; dragX = 0; renderReel(true); }, 3680);
   }
   function pause() { if (timer) { clearInterval(timer); timer = null; } }
   function restart() { pause(); play(); }
