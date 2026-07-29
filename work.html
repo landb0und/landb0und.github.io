@@ -1222,13 +1222,37 @@
     }
     strip.innerHTML = items.map(({ v, idx }) => {
       const thumb = window.verticalThumb ? window.verticalThumb(v) : ('https://' + CDN + '/' + v.guid + '/thumbnail.jpg');
+      const mp4 = window.verticalMp4 ? window.verticalMp4(v) : ('https://' + CDN + '/' + v.guid + '/play_720p.mp4');
       const cap = v.label || v.title || '';
       return ''
         + '<a class="rv-tile" href="#shorts/' + idx + '" onclick="openShorts(' + idx + ');return false;" style="background-image:url(\'' + thumb + '\');">'
+        +   '<video data-vsrc="' + mp4 + '" poster="' + thumb + '" muted loop playsinline webkit-playsinline preload="none" disableRemotePlayback style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s;pointer-events:none;"></video>'
         +   '<div class="rv-overlay"></div>'
         +   '<div class="rv-cap">' + cap + '</div>'
         + '</a>';
     }).join('');
+    // Lazy autoplay — same engine as the home verticals strip: set src + play
+    // only when a tile is (near) in view, pause when it leaves. Safari-safe.
+    function safariSafePlay(v) {
+      v.muted = true; v.playsInline = true;
+      const go = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+      if (v.readyState >= 1) go(); else v.addEventListener('loadedmetadata', go, { once: true });
+      v.addEventListener('canplay', () => { v.style.opacity = '1'; go(); }, { once: true });
+    }
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          const v = e.target;
+          if (e.isIntersecting) {
+            if (!v.src && v.dataset.vsrc) { v.src = v.dataset.vsrc; v.load(); }
+            safariSafePlay(v);
+          } else { v.pause(); }
+        });
+      }, { threshold: 0, rootMargin: '250px 0px 250px 0px' });
+      strip.querySelectorAll('video[data-vsrc]').forEach(v => io.observe(v));
+    } else {
+      strip.querySelectorAll('video[data-vsrc]').forEach(v => { v.src = v.dataset.vsrc; v.load(); safariSafePlay(v); });
+    }
   })();
 
   // ============= FILTER BAR =============
