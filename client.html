@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Client — Landbound</title>
 <link rel="stylesheet" href="theme.css?v=10">
-<script src="theme.js?v=11"></script>
+<script src="theme.js?v=12"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
   :root {
@@ -107,6 +107,17 @@
   .tile-overlay .lab { font-size: 11px; color: #fff; letter-spacing: 0.12em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; }
   .tile-badge { position: absolute; top: 8px; right: 8px; padding: 3px 8px; background: rgba(0,0,0,0.7); color: var(--amber); font-size: 9px; letter-spacing: 0.16em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; }
   .tile-vidicon { position: absolute; top: 8px; left: 8px; color: #fff; font-size: 14px; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+  .tile-pin { position: absolute; bottom: 8px; left: 8px; z-index: 3; padding: 4px 9px 4px 8px; background: var(--amber); color: var(--bg); font-size: 8.5px; letter-spacing: 0.12em; font-family: 'SF Mono', Menlo, monospace; font-weight: 800; border-radius: 100px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(0,0,0,0.45); }
+  /* Jacob's socials row on his own profile */
+  .ph-socials { display: flex; gap: 10px; align-items: center; margin-top: 2px; }
+  .ph-soc { width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); color: var(--ink-2); text-decoration: none; transition: transform .15s, color .15s, background .15s, border-color .15s; font-family: 'SF Mono', Menlo, monospace; font-size: 9px; font-weight: 800; }
+  .ph-soc svg { width: 18px; height: 18px; }
+  .ph-soc:hover { transform: translateY(-2px); }
+  .ph-soc.ig:hover { color: #fff; background: linear-gradient(135deg, var(--amber), var(--rose), #c084fc); border-color: transparent; }
+  .ph-soc.tt:hover { color: #000; background: linear-gradient(135deg, var(--rose), #25f4ee); border-color: transparent; }
+  .ph-soc.yt:hover { color: #fff; background: #ff0000; border-color: transparent; }
+  .ph-soc.li:hover { color: #fff; background: #0a66c2; border-color: transparent; }
+  .ph-soc.im:hover { color: #000; background: #f5c518; border-color: transparent; }
   .tile.empty { background: var(--bg-2); border: 1px dashed var(--line); display: flex; align-items: center; justify-content: center; cursor: default; color: var(--ink-4); font-size: 32px; font-family: 'SF Mono', Menlo, monospace; }
   .tile.empty:hover img { transform: none; }
 
@@ -232,7 +243,7 @@
     <a class="nav-soc" href="https://www.instagram.com/landbound" target="_blank" rel="noopener"><div class="nav-soc-icon ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">Instagram · 12.2K</div></div></a>
     <a class="nav-soc" href="https://www.tiktok.com/@landbound" target="_blank" rel="noopener"><div class="nav-soc-icon tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">TikTok · 100K</div></div></a>
     <a class="nav-soc" href="https://www.youtube.com/@landbound" target="_blank" rel="noopener"><div class="nav-soc-icon yt" style="background:#ff0000;color:#fff;"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">@landbound</div><div class="nav-soc-m">YouTube</div></div></a>
-    <a class="nav-soc" href="https://www.linkedin.com/in/jacobtboehme" target="_blank" rel="noopener"><div class="nav-soc-icon li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">jacobtboehme</div><div class="nav-soc-m">LinkedIn</div></div></a>
+    <a class="nav-soc" href="https://www.linkedin.com/in/jacobboehme" target="_blank" rel="noopener"><div class="nav-soc-icon li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div><div class="nav-soc-info"><div class="nav-soc-h">jacobboehme</div><div class="nav-soc-m">LinkedIn</div></div></a>
     <a class="nav-soc" href="https://www.imdb.com/name/nm13209955/" target="_blank" rel="noopener"><div class="nav-soc-icon im">IMDb</div><div class="nav-soc-info"><div class="nav-soc-h">Jacob Boehme</div><div class="nav-soc-m">IMDb · 24 credits</div></div></a>
   </div>
   <div class="nav-bottom">
@@ -288,6 +299,16 @@
         vertical: true
       }));
     currentClient.displayMedia = currentClient.displayMedia.concat(ownVerticals);
+    // Pin Jacob's reels to the front of his own profile: Director's Reel first,
+    // Commercial Directing & Cinematography Reel second, everything else after
+    // (stable — keeps its existing order).
+    if (currentClient.id === 'landbound') {
+      const PIN = ['e0374508-213f-47a2-ae0d-dd50d9df695d', 'a134b54c-bd99-4a06-b275-a5362aea33ee'];
+      currentClient.displayMedia.sort((a, b) => {
+        const ia = PIN.indexOf(a.embedId), ib = PIN.indexOf(b.embedId);
+        return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+      });
+    }
     let thumb = window.clientThumb(c);
     if (thumb && /\.webp(\?|$)/i.test(thumb)) thumb = null;  // letterboxed animated webp → use initials instead
     const initials = window.clientInitials(c);
@@ -306,6 +327,15 @@
     const ctaCol = c.handle && c.handle.startsWith('@')
       ? `<a href="https://instagram.com/${handleClean}" target="_blank" rel="noopener" class="ph-cta">Visit IG ↗</a>`
       : '';
+    // Jacob's full social set — only on his own (Landbound) profile.
+    const landboundSocials = c.id === 'landbound' ? `
+          <div class="ph-socials">
+            <a class="ph-soc ig" href="https://www.instagram.com/landbound" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+            <a class="ph-soc tt" href="https://www.tiktok.com/@landbound" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/></svg></a>
+            <a class="ph-soc yt" href="https://www.youtube.com/@landbound" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            <a class="ph-soc li" href="https://www.linkedin.com/in/jacobboehme" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+            <a class="ph-soc im" href="https://www.imdb.com/name/nm13209955/" target="_blank" rel="noopener" aria-label="IMDb">IMDb</a>
+          </div>` : '';
 
     document.getElementById('main').innerHTML = `
       <a href="javascript:history.length>1?history.back():window.location.href='/work/'" class="back-btn">← BACK</a>
@@ -318,6 +348,7 @@
             ${ctaCol}
             <a href="mailto:hello@landbound.co?subject=${encodeURIComponent('Project — '+c.name)}" class="ph-cta ghost">Hire Landbound →</a>
           </div>
+          ${landboundSocials}
           <div class="ph-row2">
             <div class="ph-stat"><strong>${totalCount}</strong> ${totalCount === 1 ? 'post' : 'posts'}</div>
             <div class="ph-stat"><strong>${videoCount}</strong> ${videoCount === 1 ? 'video' : 'videos'}</div>
@@ -370,6 +401,9 @@
       return;
     }
 
+    // Pinned reels on Jacob's own profile: Director's Reel, then the Commercial reel.
+    const PINNED = currentClient.id === 'landbound'
+      ? ['e0374508-213f-47a2-ae0d-dd50d9df695d', 'a134b54c-bd99-4a06-b275-a5362aea33ee'] : [];
     mount.innerHTML = `<div class="grid">${items.map((m, idx) => {
       // Get a thumb for the tile
       let tileImg = '';
@@ -404,6 +438,7 @@
           ${mediaTag}
           ${badge}
           ${vicon}
+          ${PINNED.indexOf(m.embedId) !== -1 ? '<span class="tile-pin">📌 Pinned</span>' : ''}
           <div class="tile-overlay">
             <span class="ico">${m.type==='video'?'▶':'⤢'}</span>
             <span class="lab">${m.type==='video'?'Play':'View'}</span>

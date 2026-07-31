@@ -5,9 +5,9 @@
 
 (function() {
   const THEMES = [
-    { key: 'noir',     name: 'Noir' },
+    { key: 'noir',     name: 'Steel' },
     { key: 'ember',    name: 'Ember' },
-    { key: 'neonoir',  name: 'Neonoir' }
+    { key: 'neonoir',  name: 'Synth' }
   ];
   const VALID = new Set(THEMES.map(t => t.key));
   const DEFAULT_THEME = 'noir';
