@@ -270,6 +270,7 @@ window.CLIENTS = [
     thumb: 'headshot.jpg',
     media: [
       { type: 'video', embedId: 'e0374508-213f-47a2-ae0d-dd50d9df695d', bunny: true, title: "Director's Reel", year: '2025', tags: ['Director','VFX','Editor','DP'] },
+      { type: 'video', embedId: 'a134b54c-bd99-4a06-b275-a5362aea33ee', bunny: true, title: 'Commercial Directing and Cinematography Reel', year: '2025', tags: ['Director','DP'] },
       { type: 'video', embedId: 'oD42T1md068', title: 'Forgive & Forget', year: '2022', tags: ['Director','Writer','Editor','DP','VFX Sup'],
         sub: '<strong>Horror Short Film</strong> · 2022',
         credits: [
