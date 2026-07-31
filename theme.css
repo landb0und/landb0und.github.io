@@ -220,6 +220,21 @@ html[data-theme="neonoir"] {
   }
 }
 
+/* ── Palette crossfade (desktop) ──────────────────────────────────────────
+   Switching palettes swaps CSS variables instantly. During the swap theme.js
+   adds .theme-anim to <html> for ~0.5s; this eases the color-bearing
+   properties so the whole page melts from one palette into the next instead of
+   hard-cutting. Desktop only, and never overrides motion-reduced preferences. */
+@media (min-width: 821px) {
+  html.theme-anim, html.theme-anim * {
+    transition: background-color .5s ease, color .5s ease, border-color .5s ease,
+                border-top-color .5s ease, box-shadow .5s ease, fill .5s ease, stroke .5s ease !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.theme-anim, html.theme-anim * { transition: none !important; }
+  }
+}
+
 /* =============================================================
    MOBILE (touch) CRASH MITIGATION
    These long pages paint a full-screen fixed SVG grain overlay (feTurbulence)

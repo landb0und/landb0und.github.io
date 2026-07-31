@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Client — Landbound</title>
-<link rel="stylesheet" href="theme.css?v=11">
-<script src="theme.js?v=12"></script>
+<link rel="stylesheet" href="theme.css?v=12">
+<script src="theme.js?v=13"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
   :root {
@@ -139,12 +139,13 @@
   .lb.open { display: flex; }
   .lb-inner { max-width: 1100px; width: 100%; max-height: 92vh; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; overflow: visible; display: grid; grid-template-columns: 1.4fr 360px; position: relative; }
   .lb-media { position: relative; background: #000; display: flex; align-items: center; justify-content: center; min-height: 480px; max-height: 92vh; overflow: hidden; border-radius: 12px 0 0 12px; }
-  .lb-media img { max-width: 100%; max-height: 92vh; object-fit: contain; display: block; }
-  /* Player sized to the clip's real shape so nothing is pillarboxed/cropped. */
-  .lb-vidwrap { position: relative; max-width: 100%; max-height: 92vh; margin: auto; }
-  .lb-vidwrap.wide { width: 100%; aspect-ratio: 16 / 9; }
-  .lb-vidwrap.vert { height: 82vh; aspect-ratio: 9 / 16; }
-  .lb-vidwrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  /* The media frame is sized in JS (layoutLightbox) to the media's REAL aspect
+     ratio — measured from the photo itself or the video's poster — so 4:3,
+     16:9 and vertical clips each fit their true shape with no pillarbox,
+     letterbox, or scaling-down. */
+  .lb-frame { position: relative; flex: 0 0 auto; max-width: 100%; max-height: 92vh; overflow: hidden; }
+  .lb-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .lb-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
   .lb-side { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
   .lb-head { display: flex; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--line-2); }
   .lb-avatar { width: 36px; height: 36px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
@@ -190,21 +191,18 @@
       border-radius: 0;
       padding-top: env(safe-area-inset-top);
     }
-    .lb-media img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
-    .lb-vidwrap { max-height: 100%; }
-    .lb-vidwrap.wide { width: 100%; }
-    .lb-vidwrap.vert { height: 100%; }
+    .lb-frame { max-width: 100%; max-height: 100%; }
     .lb-side { flex: 0 0 auto; padding: 14px 16px calc(env(safe-area-inset-bottom) + 20px); gap: 10px; }
     .lb-title { font-size: 17px; line-height: 1.25; }
     .lb-tags { margin-top: 10px; }
-    /* Left / right side strips of the media are prev / next tap zones — not just
-       the little arrows. They're deliberately narrower (32% each, center ~36%
-       free) and stop short of the bottom (top 74% only) so a video's own
-       playback bar — scrubber + fullscreen button, which sit bottom-right —
-       stays fully tappable instead of firing the "next" zone. Zones live inside
-       .lb-media, so they cover exactly the media. */
+    /* Prev / next are transparent edge strips over the media. Their exact
+       geometry is set per-clip in JS (layoutLightbox) so they hug the REAL
+       media box, stay narrow (a wide dead zone runs down the center), and stop
+       above the video's control bar — keeping play/pause, scrubber, volume and
+       fullscreen tappable on 4:3, 16:9 and vertical alike. The values below are
+       only a pre-JS fallback. */
     .lb-nav {
-      top: 0; transform: none; height: 74%; width: 32%;
+      top: 0; transform: none; height: 80%; width: 24%;
       background: transparent; border: 0; backdrop-filter: none;
       border-radius: 0; font-size: 34px; align-items: center;
       text-shadow: 0 2px 10px rgba(0,0,0,0.9);
@@ -512,17 +510,21 @@
     const avatarBg = cThumb ? `background-image: url('${cThumb}');` : '';
     const tagsHTML = (m.tags||[]).map(t => `<span class="lb-tag">${t}</span>`).join('');
 
-    let mediaHTML;
+    // Seed the frame with a sensible aspect ratio, then refine it once the real
+    // media (photo) or its poster (video) has loaded — see the measure step
+    // after innerHTML is set. Vertical clips are tagged; everything else starts
+    // 16:9 until measured.
+    const isVert = (m.tags || []).includes('Vertical');
+    let mediaHTML, seedAR;
     if (m.type === 'video') {
       const embedSrc = m.bunny
         ? `https://iframe.mediadelivery.net/embed/675985/${m.embedId}?autoplay=true&preload=true&responsive=true`
         : `https://www.youtube.com/embed/${m.embedId}?rel=0&modestbranding=1&autoplay=1`;
-      // Size the player to the clip's real shape so verticals + 4:3 aren't
-      // pillarboxed inside a 16:9 frame. Vertical is tagged; everything else wide.
-      const isVert = (m.tags || []).includes('Vertical');
-      mediaHTML = `<div class="lb-vidwrap ${isVert ? 'vert' : 'wide'}"><iframe src="${embedSrc}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
+      seedAR = isVert ? (9 / 16) : (16 / 9);
+      mediaHTML = `<iframe src="${embedSrc}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     } else {
-      mediaHTML = `<img src="${m.src}" alt="${m.title}">`;
+      seedAR = 16 / 9;
+      mediaHTML = `<img class="lb-img" src="${m.src}" alt="${m.title}">`;
     }
 
     const showNav = total > 1;
@@ -547,7 +549,7 @@
     const subLine = [typeLabel, m.year].filter(Boolean).join(' · ');
 
     document.getElementById('lbInner').innerHTML = `
-      <div class="lb-media">${mediaHTML}${posIndicator}${prevBtn}${nextBtn}</div>
+      <div class="lb-media"><div class="lb-frame" id="lbFrame">${mediaHTML}</div>${posIndicator}${prevBtn}${nextBtn}</div>
       <div class="lb-side">
         <div class="lb-head">
           <div class="lb-avatar" style="${avatarBg}"></div>
@@ -560,7 +562,76 @@
         ${tagsHTML ? `<div class="lb-tags">${tagsHTML}</div>` : ''}
       </div>`;
     document.getElementById('lightbox').classList.add('open');
+
+    // Fit the frame to the seed ratio right away, then measure the real media
+    // and refit so 4:3 / 16:9 / vertical each land at their true shape.
+    lbAR = seedAR;
+    layoutLightbox();
+    if (m.type === 'photo') {
+      const img = document.querySelector('#lbFrame .lb-img');
+      if (img) {
+        const apply = () => { if (img.naturalWidth && img.naturalHeight) { lbAR = img.naturalWidth / img.naturalHeight; layoutLightbox(); } };
+        if (img.complete) apply(); else img.addEventListener('load', apply, { once: true });
+      }
+    } else {
+      // Video posters share the clip's aspect ratio; measure one off-screen.
+      const tsrc = window.mediaThumb ? window.mediaThumb(m) : null;
+      if (tsrc) {
+        const pre = new Image();
+        pre.onload = () => {
+          if (pre.naturalWidth && pre.naturalHeight) {
+            const r = pre.naturalWidth / pre.naturalHeight;
+            if (r > 0.4 && r < 2.7) { lbAR = r; layoutLightbox(); }
+          }
+        };
+        pre.src = tsrc;
+      }
+    }
   }
+
+  // Size the media frame to fit its real aspect ratio inside the media column,
+  // and (on mobile) align the prev/next tap strips to that fitted box.
+  let lbAR = 16 / 9;
+  function layoutLightbox() {
+    const frame = document.getElementById('lbFrame');
+    if (!frame) return;
+    const media = frame.parentElement; // .lb-media
+    const isMobile = window.matchMedia('(max-width: 820px)').matches;
+    const availW = media.clientWidth || window.innerWidth;
+    const availH = isMobile ? (media.clientHeight || window.innerHeight) : Math.round(window.innerHeight * 0.9);
+    if (!availW || !availH || !lbAR) return;
+    let w, h;
+    if (availW / availH > lbAR) { h = availH; w = Math.round(h * lbAR); }
+    else { w = availW; h = Math.round(w / lbAR); }
+    w = Math.min(w, availW); h = Math.min(h, availH);
+    frame.style.width = w + 'px';
+    frame.style.height = h + 'px';
+
+    const prev = media.querySelector('.lb-nav-prev');
+    const next = media.querySelector('.lb-nav-next');
+    if (!prev || !next) return;
+    if (isMobile) {
+      // Hug the real media box; narrow strips leave a wide center dead zone, and
+      // stopping at 80% height frees the bottom control bar for touch.
+      const offX = Math.max(0, Math.round((availW - w) / 2));
+      const offY = Math.max(0, Math.round((availH - h) / 2));
+      const zw = Math.round(w * 0.22);
+      const zh = Math.round(h * 0.80);
+      [prev, next].forEach((el, i) => {
+        el.style.top = offY + 'px';
+        el.style.height = zh + 'px';
+        el.style.width = zw + 'px';
+        el.style.bottom = 'auto';
+        el.style.right = 'auto';
+        el.style.left = (i === 0 ? offX : offX + w - zw) + 'px';
+      });
+    } else {
+      // Desktop keeps the CSS-positioned edge arrows — clear any mobile inline geometry.
+      [prev, next].forEach(el => { el.style.top = el.style.height = el.style.width = el.style.left = el.style.right = el.style.bottom = ''; });
+    }
+  }
+  window.addEventListener('resize', () => { if (document.getElementById('lightbox').classList.contains('open')) layoutLightbox(); });
+  window.addEventListener('orientationchange', () => { setTimeout(() => { if (document.getElementById('lightbox').classList.contains('open')) layoutLightbox(); }, 250); });
   function lightboxNav(delta) {
     if (!currentClient || currentLightboxIdx < 0) return;
     const total = currentClient.displayMedia.length;

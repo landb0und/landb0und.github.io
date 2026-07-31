@@ -38,6 +38,17 @@
   function apply(t) {
     document.documentElement.setAttribute('data-theme', t || DEFAULT_THEME);
   }
+  // Apply a theme WITH a brief crossfade: theme.css transitions the color
+  // properties while <html> carries .theme-anim, so the page melts between
+  // palettes instead of hard-cutting. (CSS gates the effect to desktop +
+  // motion-allowed; the class is harmless elsewhere.)
+  function animatedApply(t) {
+    var root = document.documentElement;
+    root.classList.add('theme-anim');
+    apply(t);
+    clearTimeout(animatedApply._t);
+    animatedApply._t = setTimeout(function () { root.classList.remove('theme-anim'); }, 560);
+  }
 
   // Apply ASAP — this script should be in <head> so it runs before paint
   apply(getSaved());
@@ -58,7 +69,7 @@
     wrap.querySelectorAll('.ts-sw').forEach(btn => {
       btn.addEventListener('click', () => {
         const t = btn.dataset.theme;
-        apply(t);
+        animatedApply(t);
         save(t);
         wrap.querySelectorAll('.ts-sw').forEach(b => b.classList.toggle('active', b.dataset.theme === t));
       });
