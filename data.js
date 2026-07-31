@@ -134,7 +134,7 @@ window.CLIENTS = [
     short: 'Surfaces',
     handle: '@surfacesmusic',
     role: 'Director · DP · Editor · VFX · Photographer',
-    blurb: "Promotional visuals for the All the Space Between album rollout — music videos, vertical cuts, VFX and stills across the campaign.",
+    blurb: "Promotional visuals for the All the Space Between album rollout: music videos, vertical cuts, VFX and stills across the campaign.",
     palette: 'sa-5',
     thumb: null,
     media: [
@@ -516,6 +516,9 @@ window.BUNNY = { LIB: '675985', CDN: 'vz-5dfccea4-b84.b-cdn.net' };
 // same videos — they're reliable and globally cached. Remove an entry here
 // the moment Bunny's storage starts serving the file again.
 window.BUNNY_THUMB_OVERRIDES = {
+  // Director's Reel opens on a dark fade-in, so Bunny's auto-thumbnail is
+  // near-black. Use the LANDBOUND title card as the poster instead.
+  'e0374508-213f-47a2-ae0d-dd50d9df695d': 'photos/stills/directors-reel.jpg',
   'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8': 'https://img.youtube.com/vi/wCQzcM3Z_bo/maxresdefault.jpg',
   'b58d5348-c997-4338-8a9d-f83302bf948a': 'photos/stills/secrets.png',
   // These videos' thumbnail.jpg 404s on Bunny's CDN (same bug as above). Their
@@ -529,6 +532,20 @@ window.BUNNY_THUMB_OVERRIDES = {
 window.bunnyThumb = function(guid) {
   if (window.BUNNY_THUMB_OVERRIDES[guid]) return window.BUNNY_THUMB_OVERRIDES[guid];
   return 'https://vz-5dfccea4-b84.b-cdn.net/' + guid + '/thumbnail.jpg';
+};
+
+// PROFILE PINS — posts locked to the front of a client profile, in this exact
+// order. Everything else on the profile shuffles on each load. Keyed by client
+// id; values are media embedIds/guids.
+window.PROFILE_PINS = {
+  'landbound': [
+    'e0374508-213f-47a2-ae0d-dd50d9df695d', // Director's Reel
+    'a134b54c-bd99-4a06-b275-a5362aea33ee', // Commercial Directing & Cinematography Reel
+    'oD42T1md068'                           // Forgive & Forget (horror short)
+  ],
+  'grace-vanderwaal': [
+    'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8'  // CHILDSTAR: Final Act
+  ]
 };
 window.mediaThumb = function(m) {
   if (m.type === 'photo') return m.src;

@@ -5,7 +5,7 @@
 <!-- Desktop-on-mobile: full desktop layout scaled to fit (not a responsive build). -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Work — YouTube + Shorts</title>
-<link rel="stylesheet" href="/theme.css?v=10">
+<link rel="stylesheet" href="/theme.css?v=11">
 <script src="/theme.js?v=12"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -520,7 +520,7 @@
   .vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
   .vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
 </style>
-<link rel="stylesheet" href="/mobile.css?v=39">
+<link rel="stylesheet" href="/mobile.css?v=40">
 </head>
 <body>
 
@@ -704,7 +704,7 @@
 
 <button class="toggle-btn" onclick="openShorts()">↗ Open Verticals</button>
 
-<script src="/data.js?v=11"></script>
+<script src="/data.js?v=12"></script>
 <script>
   // ============= WORK / YouTube — VIDEOS auto-populated from CLIENTS =============
   // Auto-pulls horizontal (non-Vertical-tagged) video media from each client in
@@ -1153,13 +1153,13 @@
 
   // ===== WORK FEATURED — curated highlight strip under the player (Allison format) =====
   const WF_IDS = [
+    'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', // CHILDSTAR: Final Act (Grace — recommends others)
+    'b58d5348-c997-4338-8a9d-f83302bf948a', // Secrets
+    'b054d114-131a-479e-88b2-184bdcb39600', // Proud (Grace)
     '9e6f327c-1d83-4545-b88c-3193d7dd4274', // Bleed
     'd097b1a0-4ce4-48c1-83d9-62275775e699', // Fade (Grace)
-    'b054d114-131a-479e-88b2-184bdcb39600', // Proud (Grace)
-    'fb65780e-f6b3-4a5b-a58e-1eb1c8e0e0e8', // CHILDSTAR: Final Act (Grace — recommends others)
     '4f84800d-811b-4218-83a4-56880a993486', // Broken Wings
-    'ae99920a-46b4-4765-9c3b-408a23eb8508', // Claudia Live Performance
-    'b58d5348-c997-4338-8a9d-f83302bf948a'  // Secrets
+    'ae99920a-46b4-4765-9c3b-408a23eb8508'  // Claudia Live Performance
   ];
   // Proud is a vertical (not in the Up Next VIDEOS list) — minimal play entry.
   const WF_FALLBACK = {

@@ -189,6 +189,37 @@ html[data-theme="neonoir"] {
 .theme-switcher .ts-sw[data-theme="ember"]    .ts-dot { background: linear-gradient(135deg, #ff4818 0%, #ff4818 50%, #c41818 50%, #c41818 100%); }
 .theme-switcher .ts-sw[data-theme="neonoir"]  .ts-dot { background: linear-gradient(135deg, #d957a8 0%, #d957a8 50%, #5fa8c4 50%, #5fa8c4 100%); }
 
+/* ── Desktop switcher glow-up ─────────────────────────────────────────────
+   Brighten the "Color Palettes" label into text that fades through all three
+   palettes, and give each swatch a soft, slowly-pulsing glow tinted to its
+   own accent. Desktop only — the mobile menu keeps its flat, compact styling. */
+@media (min-width: 821px) {
+  .theme-switcher .ts-label {
+    color: var(--ink-2); /* fallback if background-clip:text is unsupported */
+    background: linear-gradient(90deg, #6a9dc7, #ff8a52, #ff4818, #d957a8, #5fa8c4, #6a9dc7);
+    background-size: 280% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: ts-label-flow 9s linear infinite;
+  }
+  @keyframes ts-label-flow {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 280% 50%; }
+  }
+  .theme-switcher .ts-sw[data-theme="noir"]    .ts-dot { --glow: #6a9dc7; }
+  .theme-switcher .ts-sw[data-theme="ember"]   .ts-dot { --glow: #ff5a2a; }
+  .theme-switcher .ts-sw[data-theme="neonoir"] .ts-dot { --glow: #e06bb4; }
+  .theme-switcher .ts-sw .ts-dot { animation: ts-dot-glow 3.6s ease-in-out infinite; }
+  @keyframes ts-dot-glow {
+    0%, 100% { filter: drop-shadow(0 0 2px var(--glow, rgba(255,255,255,0.4))); }
+    50%      { filter: drop-shadow(0 0 8px var(--glow, rgba(255,255,255,0.6))); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-switcher .ts-label { animation: none; }
+    .theme-switcher .ts-sw .ts-dot { animation: none; filter: drop-shadow(0 0 4px var(--glow, rgba(255,255,255,0.45))); }
+  }
+}
+
 /* =============================================================
    MOBILE (touch) CRASH MITIGATION
    These long pages paint a full-screen fixed SVG grain overlay (feTurbulence)

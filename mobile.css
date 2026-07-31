@@ -299,7 +299,7 @@
   .tab { font-size: 9.5px !important; letter-spacing: 0.16em !important; padding: 11px 0 !important; }
   /* Posts: 2-across on phones so each tile reads properly (3-across left them
      ~121px, too small to see the work). ~181px each at 390px wide. */
-  .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 3px !important; }
+  .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
   /* "Other clients" circles were 72px rings — larger than the story circles
      elsewhere on the site. Bring them down to match. */
   .oc { flex: 0 0 64px !important; gap: 5px !important; }

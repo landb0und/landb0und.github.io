@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>jacobboehme.com — Hire</title>
-<link rel="stylesheet" href="theme.css?v=10">
+<link rel="stylesheet" href="theme.css?v=11">
 <script src="theme.js?v=12"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -414,7 +414,7 @@
     .direct-btn .val, .direct-card .val { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
   }
 </style>
-<link rel="stylesheet" href="mobile.css?v=39">
+<link rel="stylesheet" href="mobile.css?v=40">
 </head>
 <body>
 
@@ -660,7 +660,7 @@
 
 <div class="lb" id="lb"><div class="lb-in"><button class="lb-x" id="lbx">✕</button><iframe id="lbf" src="" allow="autoplay;encrypted-media" allowfullscreen></iframe></div></div>
 
-<script src="data.js?v=11"></script>
+<script src="data.js?v=12"></script>
 <script>
   // ─── THE ROTUNDA — vertical tiles pulled live from window.VERTICALS (data.js) ───
   const CDN = (window.BUNNY && window.BUNNY.CDN) || 'vz-5dfccea4-b84.b-cdn.net', LIB = '675985';
@@ -702,8 +702,9 @@
           if (wasPlay) v.play().catch(() => {});
         }
       });
+      // Keep every tile playing — hovering just re-asserts play; leaving no
+      // longer pauses (the whole rotunda should stay alive in the background).
       t.addEventListener('mouseenter', () => { t.classList.add('play'); v.play().catch(() => {}); });
-      t.addEventListener('mouseleave', () => { t.classList.remove('play'); v.pause(); });
     });
   });
   // Pause a ring while the cursor is over its half of the rotunda — position based,
@@ -727,12 +728,27 @@
 
   const IS_TOUCH = navigator.maxTouchPoints > 1 || /iPhone|iPad|iPod|Android|Mobile/i.test(navigator.userAgent);
   const tiles = [...document.querySelectorAll('.tile')];
-  function ambient() {
-    tiles.forEach(t => { if (t.dataset.amb && Math.random() < .5) { t.dataset.amb = ''; if (!t.matches(':hover')) { t.classList.remove('play'); t.querySelector('video').pause(); } } });
-    let on = tiles.filter(t => t.dataset.amb).length;
-    while (on < 4) { const t = tiles[Math.floor(Math.random() * tiles.length)]; if (!t.dataset.amb) { t.dataset.amb = '1'; t.classList.add('play'); t.querySelector('video').play().catch(() => {}); on++; } }
+  // Bring the whole rotunda to life: every tile plays its clip. On desktop
+  // that's all of them; touch devices cap the concurrent decoders (and many
+  // mobile browsers only allow muted autoplay after a first interaction, so we
+  // also kick playback on the first touch) to keep things smooth.
+  const PLAY_CAP = IS_TOUCH ? 8 : tiles.length;
+  function startTile(t) {
+    const v = t.querySelector('video');
+    if (!v) return;
+    t.classList.add('play');
+    v.play().catch(() => {});
   }
-  if (!IS_TOUCH && tiles.length) { ambient(); setInterval(ambient, 3000); }
+  function playAll() { tiles.slice(0, PLAY_CAP).forEach(startTile); }
+  if (tiles.length) {
+    playAll();
+    // Re-assert periodically in case a clip stalls or a decoder drops it.
+    setInterval(playAll, 4000);
+    if (IS_TOUCH) {
+      const kick = () => { playAll(); };
+      document.addEventListener('touchstart', kick, { once: true, passive: true });
+    }
+  }
 
   const lb = document.getElementById('lb'), lbf = document.getElementById('lbf');
   document.querySelectorAll('.tile').forEach(t => t.addEventListener('click', () => { lbf.src = `https://iframe.mediadelivery.net/embed/${LIB}/${t.dataset.g}?autoplay=true&preload=true&responsive=true`; lb.classList.add('open'); }));
