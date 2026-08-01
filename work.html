@@ -449,10 +449,14 @@
   .phone-slide .phone-actions,
   .phone-slide .phone-play,
   .phone-slide .phone-progress { z-index: 5; }
-  /* TikTok-style overlay system for verticals — opacity-fade controlled by JS via .show-overlay class */
+  /* TikTok-style overlay system for verticals — two tiers:
+       peek-info    → just the title + description (auto-shown briefly on scroll)
+       show-overlay → EVERYTHING (play/pause, mute, like/share, title + desc);
+                      only on tap. */
   .phone-slide .phone-overlay,
   .phone-slide .phone-actions { opacity: 0; transition: opacity .35s ease; pointer-events: none; }
-  .phone-slide.show-overlay .phone-overlay,
+  .phone-slide.peek-info .phone-overlay,
+  .phone-slide.show-overlay .phone-overlay { opacity: 1; pointer-events: auto; }
   .phone-slide.show-overlay .phone-actions { opacity: 1; pointer-events: auto; }
 
   /* Center controls — mute (small) above play (large), column layout, vertically centered */
@@ -520,7 +524,7 @@
   .vg3 { background: linear-gradient(180deg, #2a1f15 0%, #6b3a1a 50%, var(--amber) 100%); }
   .vg4 { background: linear-gradient(45deg, #1a0a18 0%, #4a1838 50%, #c084fc 100%); }
 </style>
-<link rel="stylesheet" href="/mobile.css?v=40">
+<link rel="stylesheet" href="/mobile.css?v=41">
 </head>
 <body>
 
@@ -1444,6 +1448,8 @@
     document.getElementById('shorts').classList.add('open');
     // Reset rail-scroll guard so the first IO firing actually scrolls the rail
     window.__lastActiveSrIdx = -1;
+    // Re-arm the one-time "menu peek" hint for this feed session.
+    window.__menuHinted = false;
     // Scroll to target slide and explicitly start the video. We use <video>
     // elements, not iframes — dead postMessage code removed.
     setTimeout(() => {
@@ -1668,6 +1674,7 @@
     }
 
     function showOverlayFor(slide, autoFade = true) {
+      slide.classList.remove('peek-info');       // full overlay supersedes the info-only peek
       slide.classList.add('show-overlay');
       // Mobile: the overlay (and the Back/menu topbar) stay up until tapped away.
       if (isMobileUI()) { if (shortsEl) shortsEl.classList.add('ui-open'); autoFade = false; }
@@ -1677,9 +1684,21 @@
         fadeTimers.set(slide, t);
       }
     }
+    // Info-only peek: on scroll, surface just the title + description, then fade
+    // it out after 1.5s. Play/pause, mute and the action rail stay hidden until
+    // the user taps the screen (which calls showOverlayFor).
+    function peekInfoFor(slide) {
+      slide.classList.remove('show-overlay');
+      if (shortsEl) shortsEl.classList.remove('ui-open');
+      slide.classList.add('peek-info');
+      if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
+      const t = setTimeout(() => slide.classList.remove('peek-info'), 1500);
+      fadeTimers.set(slide, t);
+    }
     function hideOverlayFor(slide) {
       if (fadeTimers.get(slide)) clearTimeout(fadeTimers.get(slide));
       slide.classList.remove('show-overlay');
+      slide.classList.remove('peek-info');
       if (shortsEl) shortsEl.classList.remove('ui-open');
     }
 
@@ -1714,6 +1733,8 @@
     document.querySelectorAll('.phone-tap').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
+        // Ignore the click a horizontal swipe leaves behind.
+        if (window.__vSwipeAt && Date.now() - window.__vSwipeAt < 350) return;
         const slide = btn.closest('.phone-slide');
         if (isMobileUI()) {
           if (shortsEl && shortsEl.classList.contains('rail-open')) { shortsEl.classList.remove('rail-open'); return; }
@@ -1750,6 +1771,26 @@
       e.stopPropagation();
       if (shortsEl) shortsEl.classList.toggle('rail-open');
     });
+
+    // Horizontal swipe (mobile): right-to-left opens the clip list, left-to-right
+    // closes it. Only fires for clearly-horizontal gestures so vertical scroll /
+    // snap is untouched.
+    let swX = 0, swY = 0, swT = 0;
+    if (shortsEl) {
+      shortsEl.addEventListener('touchstart', (e) => {
+        const t = e.changedTouches[0]; swX = t.clientX; swY = t.clientY; swT = Date.now();
+      }, { passive: true });
+      shortsEl.addEventListener('touchend', (e) => {
+        if (!isMobileUI()) return;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - swX, dy = t.clientY - swY, dt = Date.now() - swT;
+        if (dt < 700 && Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.7) {
+          if (dx < 0) shortsEl.classList.add('rail-open');     // swipe left → open list
+          else shortsEl.classList.remove('rail-open');          // swipe right → close list
+          window.__vSwipeAt = Date.now();                       // suppress the trailing tap
+        }
+      }, { passive: true });
+    }
 
     function updatePlayIcon(slide, vid) {
       const btn = slide.querySelector('.phone-ctl[data-action="play"] svg');
@@ -1788,7 +1829,21 @@
               const muteBtn = slide.querySelector('.phone-ctl[data-action="mute"]');
               if (muteBtn) updateMuteIcon(muteBtn, vid);
             }
-            showOverlayFor(slide, true);
+            // On mobile, a fresh vertical shows only its title + description then
+            // fades (tap reveals the full controls). Desktop keeps the full auto
+            // overlay it always had.
+            if (isMobileUI()) {
+              peekInfoFor(slide);
+              // First vertical after entering the feed → bounce the top-right menu
+              // out once so the user knows the clip list is there.
+              if (!window.__menuHinted && shortsEl) {
+                window.__menuHinted = true;
+                shortsEl.classList.add('menu-hint');
+                setTimeout(() => shortsEl.classList.remove('menu-hint'), 1700);
+              }
+            } else {
+              showOverlayFor(slide, true);
+            }
             // Sync sidebar + auto-scroll the rail so the active item stays in view.
             // GUARDED on lastActiveSrIdx — without this, the IO fires for every
             // slide it intersects during fast scrolling and queues smooth-scroll

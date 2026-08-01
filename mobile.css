@@ -295,8 +295,12 @@
   .ph-landbound-credit { margin-top: 10px !important; padding: 10px 12px !important; max-width: 100% !important; }
   .ph-credit-role { font-size: 12px !important; }
   .ph-credit-by { font-size: 10px !important; }
-  .tabs { gap: 20px !important; }
-  .tab { font-size: 9.5px !important; letter-spacing: 0.16em !important; padding: 11px 0 !important; }
+  /* Profile filter row on phones: icons only, evenly spread (Instagram-style),
+     so the labels + counts never wrap under the text. */
+  .tabs { gap: 0 !important; justify-content: space-around !important; }
+  .tab { flex: 1 1 0 !important; justify-content: center !important; padding: 12px 0 !important; gap: 0 !important; }
+  .tab .tab-label, .tab .ct { display: none !important; }
+  .tab .tab-ico { width: 23px !important; height: 23px !important; }
   /* Posts: 2-across on phones so each tile reads properly (3-across left them
      ~121px, too small to see the work). ~181px each at 390px wide. */
   .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
@@ -560,6 +564,17 @@
   /* Back-to-Work + the menu button stay hidden until the user taps the video. */
   .shorts-topbar { opacity: 0 !important; transition: opacity .25s ease; }
   .shorts.ui-open .shorts-topbar { opacity: 1 !important; }
+  /* One-time hint on the first vertical: briefly reveal the topbar and bounce the
+     menu button out from the right edge so the clip list is discoverable. */
+  .shorts.menu-hint .shorts-topbar { opacity: 1 !important; }
+  .shorts.menu-hint .shorts-menu { animation: shorts-menu-peek 1.4s cubic-bezier(.5,1.5,.4,1) 1; }
+  @keyframes shorts-menu-peek {
+    0%   { transform: translateX(70px); }
+    45%  { transform: translateX(-9px); }
+    68%  { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+  }
+  @media (prefers-reduced-motion: reduce) { .shorts.menu-hint .shorts-menu { animation: none; } }
   .shorts-menu { display: inline-flex !important; }
   /* The clip list slides in from the right (it was cropped off-screen). */
   .shorts-rail {

@@ -100,10 +100,17 @@
   .ph-credit a { color: var(--amber); text-decoration: none; font-weight: 700; }
 
   /* TABS */
-  .tabs { display: flex; gap: 36px; border-top: 1px solid var(--line-2); padding-top: 12px; margin-top: 8px; justify-content: center; }
-  .tab { padding: 14px 0; font-size: 11px; letter-spacing: 0.22em; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; font-weight: 800; cursor: pointer; text-transform: uppercase; border-top: 2px solid transparent; margin-top: -1px; }
-  .tab.active { color: var(--ink); border-top-color: var(--ink); }
-  .tab .ct { color: var(--ink-4); margin-left: 6px; font-weight: 600; }
+  .tabs { position: relative; display: flex; gap: 44px; border-top: 1px solid var(--line-2); margin-top: 8px; justify-content: center; }
+  .tab { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 15px 2px; font-size: 11px; letter-spacing: 0.2em; color: var(--ink-3); font-family: 'SF Mono', Menlo, monospace; font-weight: 800; cursor: pointer; text-transform: uppercase; white-space: nowrap; margin-top: -1px; transition: color .25s ease; }
+  .tab .tab-ico { width: 16px; height: 16px; flex-shrink: 0; display: block; }
+  .tab.active { color: var(--ink); }
+  .tab:hover { color: var(--ink-2); }
+  .tab .ct { color: var(--ink-4); font-weight: 600; letter-spacing: 0.08em; }
+  .tab.active .ct { color: var(--amber); }
+  /* Sliding highlight bar — JS moves it to the active tab, so switching tabs
+     glides the underline over instead of hard-cutting the border. */
+  .tab-ind { position: absolute; top: -1px; left: 0; width: 0; height: 2px; background: var(--ink); border-radius: 0 0 2px 2px; transform: translateX(0); transition: transform .32s cubic-bezier(.4,0,.2,1), width .32s cubic-bezier(.4,0,.2,1); pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { .tab-ind { transition: none; } }
 
   /* GRID */
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
@@ -232,7 +239,7 @@
   .notfound p { color: var(--ink-3); margin-bottom: 22px; }
   .notfound a { color: var(--amber); text-decoration: none; font-weight: 800; letter-spacing: 0.12em; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=40">
+<link rel="stylesheet" href="mobile.css?v=41">
 </head>
 <body>
 <nav class="nav">
@@ -288,6 +295,26 @@
 
   let currentClient = null;
   let currentTab = 'all';
+
+  // Clean line-icons for the profile filter row (replaces the old ▦ ▶ ▢ ▯ glyphs).
+  const TAB_ICONS = {
+    all:      '<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>',
+    video:    '<svg class="tab-ico" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5.5v13a1 1 0 0 0 1.5.87l11-6.5a1 1 0 0 0 0-1.74l-11-6.5A1 1 0 0 0 8 5.5z"/></svg>',
+    photo:    '<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15l-5-5L5 21"/></svg>',
+    vertical: '<svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 8.5l4 3.5-4 3.5z" fill="currentColor" stroke="none"/></svg>'
+  };
+
+  // Slide the active-tab highlight bar under the selected filter.
+  function positionTabIndicator() {
+    const tabs = document.getElementById('pfTabs');
+    const ind = document.getElementById('pfTabInd');
+    if (!tabs || !ind) return;
+    const active = tabs.querySelector('.tab.active');
+    if (!active) return;
+    ind.style.width = active.offsetWidth + 'px';
+    ind.style.transform = 'translateX(' + active.offsetLeft + 'px)';
+  }
+  window.addEventListener('resize', positionTabIndicator);
 
   function renderClient(c) {
     currentClient = c;
@@ -380,11 +407,12 @@
         </div>
       </div>
 
-      <div class="tabs">
-        <div class="tab ${currentTab==='all'?'active':''}" data-tab="all" onclick="setTab('all')">▦ Posts <span class="ct">${totalCount}</span></div>
-        ${videoCount > 0 ? `<div class="tab ${currentTab==='video'?'active':''}" data-tab="video" onclick="setTab('video')">▶ Videos <span class="ct">${videoCount}</span></div>` : ''}
-        ${photoCount > 0 ? `<div class="tab ${currentTab==='photo'?'active':''}" data-tab="photo" onclick="setTab('photo')">▢ Photos <span class="ct">${photoCount}</span></div>` : ''}
-        ${verticalCount > 0 ? `<div class="tab ${currentTab==='vertical'?'active':''}" data-tab="vertical" onclick="setTab('vertical')">▯ Verticals <span class="ct">${verticalCount}</span></div>` : ''}
+      <div class="tabs" id="pfTabs">
+        <div class="tab-ind" id="pfTabInd"></div>
+        <div class="tab ${currentTab==='all'?'active':''}" data-tab="all" onclick="setTab('all')">${TAB_ICONS.all}<span class="tab-label">Posts</span><span class="ct">${totalCount}</span></div>
+        ${videoCount > 0 ? `<div class="tab ${currentTab==='video'?'active':''}" data-tab="video" onclick="setTab('video')">${TAB_ICONS.video}<span class="tab-label">Videos</span><span class="ct">${videoCount}</span></div>` : ''}
+        ${photoCount > 0 ? `<div class="tab ${currentTab==='photo'?'active':''}" data-tab="photo" onclick="setTab('photo')">${TAB_ICONS.photo}<span class="tab-label">Photos</span><span class="ct">${photoCount}</span></div>` : ''}
+        ${verticalCount > 0 ? `<div class="tab ${currentTab==='vertical'?'active':''}" data-tab="vertical" onclick="setTab('vertical')">${TAB_ICONS.vertical}<span class="tab-label">Verticals</span><span class="ct">${verticalCount}</span></div>` : ''}
       </div>
 
       <div id="gridMount"></div>
@@ -397,6 +425,9 @@
     renderGrid();
     renderOtherStrip();
     wireAvatarEasterEgg();
+    // Position the sliding tab indicator after layout settles (fonts/icons in).
+    positionTabIndicator();
+    requestAnimationFrame(positionTabIndicator);
   }
 
   // Tapping the profile photo (which otherwise does nothing) plays a cute
@@ -495,6 +526,7 @@
     currentTab = tab;
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    positionTabIndicator();
     renderGrid();
   }
 

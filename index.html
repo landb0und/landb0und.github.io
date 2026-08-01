@@ -103,8 +103,14 @@
 
   .hero-card { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 36px; }
   .hero-bar { padding: 11px 18px; background: var(--bg-3); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; font-size: 11px; min-height: 42px; }
-  .hero-bar .badge-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(140,175,58,0.12); border: 1px solid rgba(140,175,58,0.4); color: var(--leaf); border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; }
+  .hero-bar .badge-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(140,175,58,0.12); border: 1px solid rgba(140,175,58,0.4); color: var(--leaf); border-radius: 100px; font-size: 9px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'SF Mono', Menlo, monospace; animation: badge-pulse 2.2s ease-in-out infinite; will-change: transform, box-shadow; }
   .hero-bar .badge-status .d { width: 5px; height: 5px; border-radius: 50%; background: var(--leaf); animation: pulse 1.8s infinite; }
+  /* The whole "Accepting Work" pill breathes — a soft scale + green halo pulse. */
+  @keyframes badge-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(140,175,58,0.0); }
+    50%      { transform: scale(1.045); box-shadow: 0 0 14px 1px rgba(140,175,58,0.35); }
+  }
+  @media (prefers-reduced-motion: reduce) { .hero-bar .badge-status { animation: none; } }
 
   /* ===== NEW: IG profile layout ===== */
   .hero-body { padding: 22px 24px; }
@@ -582,7 +588,7 @@
   .clapper svg { width: 18px; height: 18px; opacity: 0.7; }
   .banner { position: fixed; bottom: 12px; right: 14px; padding: 6px 12px; background: rgba(0,0,0,0.6); border: 1px solid var(--line); border-radius: 6px; font-size: 10px; color: var(--ink-4); letter-spacing: 0.06em; font-family: 'SF Mono', Menlo, monospace; z-index: 1500; }
 </style>
-<link rel="stylesheet" href="mobile.css?v=40">
+<link rel="stylesheet" href="mobile.css?v=41">
 </head>
 <body>
 
@@ -642,7 +648,7 @@
             <span class="lane-1">Director · DP · VFX Editor</span><br>
             <span class="lane-role">Head of Creative at Raw Content</span><br>
             <span class="lane-edu">B.A. Film Production · Advertising Minor</span><br>
-            <span class="lane-2">Music content · commercials · short-form</span><br>
+            <span class="lane-2">Music content · commercials · short-form & more</span><br>
             <span class="lane-ai">VFX and AI work independently: either, or both together</span>
           </div>
           <div class="profile-proof">
