@@ -125,6 +125,7 @@
       // Once used, stop the attention animation for good.
       document.body.classList.add("nav-seen");
       try { localStorage.setItem("navSeen", "1"); } catch (e) {}
+      if (fab._hintTimer) { clearInterval(fab._hintTimer); fab._hintTimer = null; }
     }
     fab.addEventListener("click", function (e) {
       e.stopPropagation();
@@ -136,21 +137,33 @@
 
     try { if (localStorage.getItem("navSeen")) document.body.classList.add("nav-seen"); } catch (e) {}
 
-    // First load of a visit: draw the eye to the button with a pop + glow pulse
-    // on the button ITSELF — no longer auto-expanding the menu, which collided
-    // with the page's own intro animations and read as distracting.
+    // Draw the eye to the button with a pop + glow pulse on the button ITSELF.
+    // It keeps bouncing every few seconds until the user opens the menu for the
+    // FIRST time ever (persisted via navSeen) — so a first-time visitor can't
+    // miss it, but it's gentle and never nags anyone who's already used it.
     function introFab() {
       var seen = false;
-      try { seen = !!sessionStorage.getItem("navIntro"); } catch (e) {}
-      if (seen) return;
-      try { sessionStorage.setItem("navIntro", "1"); } catch (e) {}
+      try { seen = !!localStorage.getItem("navSeen"); } catch (e) {}
+      if (seen) return;  // they've opened it before — never bounce again
       if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       if (!window.matchMedia || !window.matchMedia("(max-width: 820px)").matches) return;
-      setTimeout(function () {
-        if (document.body.classList.contains("nav-open")) return;
+
+      function pulse() {
+        var seenNow = false;
+        try { seenNow = !!localStorage.getItem("navSeen"); } catch (e) {}
+        if (seenNow || document.body.classList.contains("nav-seen")) {
+          if (fab._hintTimer) { clearInterval(fab._hintTimer); fab._hintTimer = null; }
+          return;
+        }
+        if (document.body.classList.contains("nav-open")) return;  // don't bounce while it's open
+        fab.classList.remove("fab-intro");
+        void fab.offsetWidth;                 // reflow so the animation can retrigger
         fab.classList.add("fab-intro");
         setTimeout(function () { fab.classList.remove("fab-intro"); }, 1600);
-      }, 650);
+      }
+
+      setTimeout(pulse, 650);                       // first nudge shortly after load
+      fab._hintTimer = setInterval(pulse, 5000);    // then every ~5s until opened
     }
     introFab();
   }

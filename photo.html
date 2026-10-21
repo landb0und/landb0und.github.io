@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>jacobboehme.com — Photo</title>
 <link rel="stylesheet" href="theme.css?v=12">
-<script src="theme.js?v=13"></script>
+<script src="theme.js?v=14"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -131,6 +131,16 @@
   .photo-wall.reduced { position: static; height: auto; min-height: 0; overflow: visible; display: flex; gap: 12px;
     -webkit-mask-image: none; mask-image: none; }
   .photo-wall.reduced .pcol { position: static; left: auto !important; width: auto !important; flex: 1 1 0; }
+  /* Mobile masonry: on-scroll fade-in — the only motion, GPU-cheap, buttery. */
+  .photo-wall.fadein .pw-tile { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
+  .photo-wall.fadein .pw-tile.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .photo-wall.fadein .pw-tile { opacity: 1 !important; transform: none !important; } }
+  /* Mobile: drop the full-screen grain's blend/opacity — compositing a fixed
+     mix-blend layer over the scrolling wall was a big part of the jank. Keeps a
+     faint static grain so the theme still reads. */
+  @media (max-width: 820px) {
+    body::before { mix-blend-mode: normal; opacity: 0.14; }
+  }
   /* MOBILE: no 600vh runway and no scroll-hijack (that fight lost to iOS
      momentum and let you scroll into the void). Instead a finite ambient-drift
      band — the columns keep drifting on their own while the PAGE scrolls past
@@ -667,14 +677,16 @@
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const runway = document.getElementById('wallScroll'); // collapse its tall runway when reduced
     const w = window.innerWidth;
-    // Mobile gets 4 columns (desktop stays exactly as it was at 5).
     const IS_MOBILE_WALL = w <= 700;
-    const NCOL = IS_MOBILE_WALL ? 4 : 5;
-    // Mobile = a finite ambient-drift band (no runway, no scroll-hijack). Desktop
-    // keeps the scroll-driven parallax runway exactly as before.
-    const bounded = IS_MOBILE_WALL && !reduce;
-    if (runway) { runway.classList.toggle('reduced', reduce); runway.classList.toggle('bounded', bounded); }
-    if (bounded) wrap.classList.add('bounded');
+    // Mobile now uses a plain, native-scrolling masonry (same engine as the
+    // reduced-motion layout) instead of the drifting parallax band — the
+    // per-frame column transforms + scroll-hijack fought iOS momentum and made
+    // it glitchy. The theme (colors, scanlines, hover, lightbox) is unchanged; a
+    // cheap on-scroll fade-in keeps it feeling alive. Desktop keeps the parallax.
+    const staticWall = IS_MOBILE_WALL || reduce;
+    const NCOL = IS_MOBILE_WALL ? 2 : 5;   // 2 big, tappable columns on phones
+    const bounded = false;                  // drift band retired on mobile
+    if (runway) { runway.classList.toggle('reduced', staticWall); runway.classList.toggle('bounded', false); }
 
     // round-robin into columns, preserving each photo's feed index
     const buckets = Array.from({ length: NCOL }, () => []);
@@ -703,9 +715,9 @@
       // originals load eagerly so the loop period measures correctly right away;
       // duplicates lazy-load as they drift into view (saves bandwidth).
       const originals = bucket.map(tileHTML).join('').replace(/LAZY_PLACEHOLDER/g, 'eager');
-      const dupes = reduce ? '' : bucket.map(tileHTML).join('').replace(/LAZY_PLACEHOLDER/g, 'lazy');
+      const dupes = staticWall ? '' : bucket.map(tileHTML).join('').replace(/LAZY_PLACEHOLDER/g, 'lazy');
       col.innerHTML = originals + dupes;
-      if (!reduce) {
+      if (!staticWall) {
         col.addEventListener('mouseenter', () => { paused[c] = true; });
         col.addEventListener('mouseleave', () => { paused[c] = false; });
       }
@@ -718,7 +730,21 @@
       el.addEventListener('click', () => enterFeed(parseInt(el.dataset.photo, 10)));
     });
 
-    if (reduce) { wrap.classList.add('reduced', 'ready'); return; }
+    if (staticWall) {
+      wrap.classList.add('reduced', 'ready');
+      // Cheap, smooth "alive" touch: fade each tile in as it scrolls into view.
+      // Skipped for reduced-motion (tiles just show). No rAF, no transforms on
+      // scroll — native momentum stays buttery.
+      if (!reduce && 'IntersectionObserver' in window) {
+        wrap.classList.add('fadein');
+        const io = new IntersectionObserver((es) => {
+          es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+        }, { rootMargin: '0px 0px -6% 0px' });
+        wrap.querySelectorAll('.pw-tile').forEach(t => io.observe(t));
+        setTimeout(() => wrap.querySelectorAll('.pw-tile:not(.in)').forEach(t => t.classList.add('in')), 1400);
+      }
+      return;
+    }
 
     // period = (scrollHeight + gap) / 2 — exact seamless loop point (accounts
     // for the flex gap between the two duplicated halves).
