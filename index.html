@@ -833,19 +833,23 @@
       }, { threshold: 0, rootMargin: '250px 0px 250px 0px' });
       strip.querySelectorAll('.short[data-clone] video[data-vsrc]').forEach(v => io.observe(v));
     }
-    // Drift loop — ~20px/s. scrollLeft climbing = content slides left (RTL).
-    const SPEED = 0.34;
-    let paused = false, resumeT = null, raf = null;
+    // Drift loop. scrollLeft climbing = content slides LEFT (right-to-left).
+    // Track position as a float and WRITE it each frame: reading scrollLeft back
+    // and doing += stalls, because most mobile browsers round scrollLeft to an
+    // integer on read, so a sub-1px/frame step never accumulates. ~30px/s.
+    const SPEED = 0.5;
+    let pos = strip.scrollLeft || 0, paused = false, resumeT = null, raf = null;
     function step() {
       if (!paused) {
-        strip.scrollLeft += SPEED;
         const half = strip.scrollWidth / 2;
-        if (half > 0 && strip.scrollLeft >= half) strip.scrollLeft -= half;
+        pos += SPEED;
+        if (half > 0 && pos >= half) pos -= half;
+        strip.scrollLeft = pos;
       }
       raf = requestAnimationFrame(step);
     }
     const pause = () => { paused = true; clearTimeout(resumeT); };
-    const resumeSoon = () => { clearTimeout(resumeT); resumeT = setTimeout(() => { paused = false; }, 2500); };
+    const resumeSoon = () => { clearTimeout(resumeT); resumeT = setTimeout(() => { pos = strip.scrollLeft || 0; paused = false; }, 2500); };
     strip.addEventListener('touchstart', pause, { passive: true });
     strip.addEventListener('touchend', resumeSoon, { passive: true });
     strip.addEventListener('touchcancel', resumeSoon, { passive: true });
