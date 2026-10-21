@@ -801,10 +801,11 @@
   }
   renderVerticalsStrip();
 
-  // MOBILE: slowly drift the verticals strip right-to-left on its own. The tiles
-  // are duplicated once so scrollLeft wraps seamlessly (no jump). Touching the
-  // strip pauses the drift so you can flick through manually; it resumes after a
-  // couple seconds idle. Desktop + reduced-motion are untouched.
+  // MOBILE: gently drift the verticals strip right-to-left on its own, slowly,
+  // and ONCE — it eases to the end of the row and stops (no endless loop).
+  // Touching or scrolling the strip pauses it; a couple seconds after you let go
+  // it picks the slow drift back up from wherever you left off and carries on to
+  // the end, then stops again. Desktop + reduced-motion are untouched.
   (function autoScrollVerticals() {
     if (!window.matchMedia || !window.matchMedia('(max-width: 820px)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -812,50 +813,39 @@
     const vs = document.getElementById('verticalsStrip');
     if (!strip || !vs) return;
     const tiles = Array.from(vs.children).filter(el => el.classList && el.classList.contains('short'));
-    if (tiles.length < 3) return;                      // not worth looping a tiny set
-    const cta = strip.querySelector('.short-cta');
-    // Duplicate the full repeating unit (tiles + CTA) so the loop is seamless.
-    const frag = document.createDocumentFragment();
-    tiles.forEach(t => { const c = t.cloneNode(true); c.setAttribute('aria-hidden', 'true'); c.dataset.clone = '1'; frag.appendChild(c); });
-    if (cta) { const cc = cta.cloneNode(true); cc.setAttribute('aria-hidden', 'true'); cc.dataset.clone = '1'; frag.appendChild(cc); }
-    strip.appendChild(frag);
-    // Lazy-play the cloned videos the same way the originals do.
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          const v = e.target;
-          if (e.isIntersecting) {
-            if (!v.src && v.dataset.vsrc) { v.src = v.dataset.vsrc; v.load(); }
-            v.muted = true; v.playsInline = true; v.style.opacity = '1';
-            const p = v.play(); if (p && p.catch) p.catch(() => {});
-          } else { v.pause(); }
-        });
-      }, { threshold: 0, rootMargin: '250px 0px 250px 0px' });
-      strip.querySelectorAll('.short[data-clone] video[data-vsrc]').forEach(v => io.observe(v));
-    }
-    // Drift loop. scrollLeft climbing = content slides LEFT (right-to-left).
-    // Track position as a float and WRITE it each frame: reading scrollLeft back
-    // and doing += stalls, because most mobile browsers round scrollLeft to an
-    // integer on read, so a sub-1px/frame step never accumulates. ~30px/s.
-    const SPEED = 0.5;
+    if (tiles.length < 3) return;
+    // Slow + steady (~20px/s). Track the position as a float and WRITE it each
+    // frame: reading scrollLeft back and doing += stalls, because most mobile
+    // browsers round scrollLeft to an integer on read, so a sub-1px/frame step
+    // never accumulates.
+    const SPEED = 0.33;
+    const maxScroll = () => strip.scrollWidth - strip.clientWidth;
     let pos = strip.scrollLeft || 0, paused = false, resumeT = null, raf = null;
     function step() {
       if (!paused) {
-        const half = strip.scrollWidth / 2;
+        const max = maxScroll();
         pos += SPEED;
-        if (half > 0 && pos >= half) pos -= half;
+        if (pos >= max) { pos = max; strip.scrollLeft = pos; raf = null; return; } // reached the end → stop
         strip.scrollLeft = pos;
       }
       raf = requestAnimationFrame(step);
     }
+    function start() { if (!raf) raf = requestAnimationFrame(step); }
     const pause = () => { paused = true; clearTimeout(resumeT); };
-    const resumeSoon = () => { clearTimeout(resumeT); resumeT = setTimeout(() => { pos = strip.scrollLeft || 0; paused = false; }, 2500); };
+    const resumeSoon = () => {
+      clearTimeout(resumeT);
+      resumeT = setTimeout(() => {
+        pos = strip.scrollLeft || 0;
+        paused = false;
+        if (pos < maxScroll() - 1) start();   // not at the end yet → slowly drift again
+      }, 2500);
+    };
     strip.addEventListener('touchstart', pause, { passive: true });
     strip.addEventListener('touchend', resumeSoon, { passive: true });
     strip.addEventListener('touchcancel', resumeSoon, { passive: true });
     // Pause while the tab is hidden to save battery.
     document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); else resumeSoon(); });
-    raf = requestAnimationFrame(step);
+    start();
   })();
 
   // ============= STORIES (clients) =============
